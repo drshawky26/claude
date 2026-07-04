@@ -254,3 +254,41 @@ firebase deploy --only firestore:rules
   - `reportnow` 📊 — يجبر الجهاز يعيد جمع المواصفات ويكتبها فورًا (لو رجعت unknown/قديمة).
   - رسالة + **صوت تنبيه** (`sound:true` → `beep()` عبر AudioContext، best-effort لأن المتصفح ممكن يمنع الصوت قبل تفاعل المستخدم).
   - **⛔ إيقاف/تفعيل الحساب** (`toggleActive`): الإيقاف بيكتب `active:false` + يبعت أمر `logout` فورًا (الكيك اللحظي؛ الـ auth بيرفض الدخول تاني لـ active===false).
+
+## ملاحظات المراجعين التوجيهية للزملاء (ccCoachNotes) — قناة مباشرة مراجع → زميل كول سنتر (2026-07-05)
+قناة توجيه مباشرة: المراجع يبعت للزميل ملاحظة قصيرة (زي «خد بالك جرعة الدوا الفلاني» / «ركّز على السؤال عن الحساسية») مرتبطة **برقم إمضاء الزميل** (رقم الاستشارة زي 128)، وتظهر للزميل لحظياً في صفحته.
+
+**الكولكشن الجديد `ccCoachNotes/{autoId}`:** `{agentNumber (رقم الإمضاء المستهدف), agentName, reviewerToken, reviewerName, reviewerEmail, note, read:bool, readAt, createdAt}`. مفيش doc id ثابت — `setDoc(doc(collection(db,'ccCoachNotes')), …)`.
+
+**الـ rules (محتاجة `firebase deploy --only firestore:rules`):** `match /ccCoachNotes` — قراءة: أدمن/مراجع/أي زميل بيسجّل استشارات (لأن الربط بالرقم مش بالإيميل، فالزميل بيفلتر client-side بـ query على رقمه). إنشاء: مراجع/أدمن و`reviewerEmail==token.email`. تحديث: المراجع صاحبه/الأدمن، **أو** الزميل بس على `['read','readAt']` (علامة «اتشافت»). مسح: المراجع صاحبه أو الأدمن.
+
+**الربط بالرقم (زي `consultNumCandidates`):** المراجع بيبعت `agentNumber = n` (رقم الكارت من `myAssignment`/ccAssignments). صفحة الزميل بتعمل query `where('agentNumber','in', myNumCandidates())` — الدالة `myNumCandidates()` في agent.html بتبني اتحاد تمثيلات رقم الزميل (agentNumber بتاع البروفايل + رقم الدخول من `agent{N}@` + الأرقام جوه الـ label، ≤10 لحدود `in`). مفيش composite index لأن `in` على حقل واحد.
+
+**my-cc-stats.html?team=callcenter (جهة المراجع):**
+- **أيقونة واتساب على كل `anr-card`** (عمود جديد في `.anr-head`، الجريد بقى 5 أعمدة) → `window.openCoachModal(n)` (بـ `event.stopPropagation()` عشان ماتفتحش الكارت). البادج الدهبي `.anr-msg-dot` بيعدّ الملاحظات المبعوتة للرقم ده (`refreshCardDots()` بيتنده من `render()` بعد بناء الكروت + من مستمع الملاحظات).
+- **مودال الإرسال `#coachModal`** (بريميوم، هيرو واتساب أخضر): بيعرض رقم الزميل + اسمه أوتوماتيك (`agentNameForNum(n)` — بتدوّر في `usersByEmail` بالـ agentNumber ثم في `allRows` بالـ consultNumCandidates) + textarea + إرسال. `window.sendCoachNote()` بيكتب دوك جديد.
+- **أيقونة الهيدر «الملاحظات المرسلة» `#sentWrap`/`#sentBtn`** (جنب `#inboxWrap`، بتعيد استخدام كلاسات `.inbox-panel/.inbox-list`): بادج بعدد الملاحظات + بانل فيها كل ملاحظة بعتّها (رقم+اسم+نص+«شافها/لسه»+**سلة حمرا `.sent-del`**). `window.deleteCoachNote(id)` = `deleteDoc` → بيختفي فوراً من صفحة الزميل كمان (نفس الدوك). المستمع `listenSentNotes()` (query `where('reviewerEmail','==',myEmailRaw)`) متندّه في تمام الأوث لو `TEAM==='callcenter'`؛ الأنصاب في `doLogout`.
+
+**agent.html (جهة الزميل):**
+- **الرِيل اليمين بقى حاوية `.tp-rail`** (fixed) بتضم بانل الترحيب `#tpSide` (اتحوّل لـ `position:relative`) **فوق** بانل جديد `#coachSide` («✦ ملاحظات المراجعين ✦»). حلقة conic خضرا/دهبي زي tp-side.
+- **كروت `.cnote-card` قابلة للفتح:** مقفولة = اسم المراجع + معاينة + نقطة دهبي لو غير مقروءة؛ مفتوحة = النص كامل + المراجع + الوقت. `window.toggleCoachCard(id)` بيفتح **ويعلّم مقروء** (`updateDoc {read:true,readAt}` + `renderCoachNotes()` فوراً). البادج `#coachSideBadge` بعدد غير المقروء. `coachOpenIds` بتحافظ على المفتوح بعد إعادة الرسم.
+- المستمع `listenCoachNotes()` متندّه بعد `listenMyNoteReplies()` في بلوك allowed؛ الأنصاب + إخفاء البانل في فرعَي (غير مسموح/خروج).
+- **🔑 ريسبونسِف (درس):** الفورم عرضه ~900px (وبعض السكاشن لـ 1200px)، والرِيل fixed على 194px من اليمين. لما النافذة تصغّر لـ ~1280–1450px الرِيل كان **يركب على المحتوى** قبل ما يختفي عند 1279. الحل: (1) رفع بريك بوينت الإخفاء لـ **`max-width:1500px`** (يتخطّى منطقة التصادم)؛ (2) الرِيل flex-column بـ `max-height:calc(100vh - 130px)` وبانل الملاحظات `flex:1` + `.coach-list{flex:1;overflow-y:auto}` فمابيخرجش تحت الشاشة أبداً؛ (3) البانل السفلي اتكبّر (عرض الرِيل 176→194، `min-height:150`، والليست بتملأ الارتفاع المتبقي). **قاعدة عامة: أي بانل fixed على اليمين لازم بريك بوينت إخفاء ≥ عرض المحتوى + ~2×عرض البانل، وإلا هيركب على الفورم وقت التصغير.**
+
+**ديبلوي مطلوب لتشغيله live:** `firebase deploy --only firestore:rules` (وإلا الإرسال/المسح = permission denied) + `firebase deploy --only hosting` (الصفحتين). لو التعديلات مش ظاهرة بعد الديبلوي راجع نوت كاش الـ HTML فوق (no-cache) واعمل Ctrl+Shift+R.
+
+## consult-analytics.html — استخراج أدوية مُهيكل (medsStructured) + إعادة بناء (2026-07-05)
+**المشكلة:** `medTokens` (تقسيم نصي ساذج) كان بيطلّع "ساعات" كأعلى دواء، ويخلط "مراجعة طبيب"/"REFER"/"متابعة الاعراض" مع الأدوية، ويكرّر نفس الدوا مقسوم مختلف.
+
+**الحل — محرّك مجاني محلي (مش Anthropic مدفوع، مش Blaze):**
+- **`meds-classify/` (جذر المشروع، جنب fb-classify):** سكربت Node يقرا `prescribedMeds` لكل استشارة approved ويبعتها لـ **Ollama محلي** (`qwen2.5:7b` ديفولت، `http://localhost:11434/api/chat`, `format:"json"`) ويكتب على نفس الدوك:
+  - `medsStructured:{medications:[{name,canonical,dosage,frequency,raw_text}], actions:[{type,detail}]}` + `medsClassifiedAt/Model/Engine`. `type` ∈ referral|follow_up|general_advice|other. **`nonDrugAdvice` ممنوع يتبعت للموديل** (boilerplate).
+  - **مفيش Cloud Function** (Spark) — ده سكربت محلي، يتشغّل يدوي أو Task Scheduler (catch-up تزايدي). **مفيش تعديل firestore.rules** (Admin SDK بيتخطّى القواعد، وبيضيف حقول بس).
+  - Resume: بيتخطّى أي دوك عنده `medsStructured`، commit لكل batch → أي crash يكمّل. Batch ديفولت 5 مع fallback per-item لو الشكل غلط. service account فولباك: `../fb-classify/serviceAccount.json`.
+  - التشغيل: `node classify-meds.js --dry-run --limit 25` بعدين `node classify-meds.js`. فلاجز: `--reclassify --batch N --model NAME --limit N --verbose`.
+- **الداشبورد (`consult-analytics.html`):** `medsFromDoc(d)` بيفضّل `medsStructured` ويرجع لـ `medTokens` legacy للدوكس غير المتصنّفة → **بادج `#aiBadge` «🤖 N% مصنّف بالذكاء»**. الأدوية اتقسمت: كارت **الأدوية** (أسماء نضيفة + جرعة `#medDosage` + تكرار `#medFreq` + اتجاه طلب `#trendTbl` أول/آخر نص الفترة للمخزون + أزواج) وكارت **الإجراءات** (`#actKpis/#actSeg/#actBars` — referral/follow_up/general_advice، **مش بتتخلط مع الأدوية أبداً**).
+- **كارت رحلة العميل (`#journey*`):** مفتاح `phone`(مطبّع أرقام) أو `customerCode`. على **كل التاريخ** (`ALLDOCS` cache مرة كل سيشن) مش المدى: نسبة المتكررين، وسيط فترة العودة، رجعوا بنفس العرض (`#recurTbl`)، تحذير/ريد فلاج متكرر (`#repWarnTbl`)، بقاء الأفواج (`#cohortTbl`).
+- **عمق إضافي:** عدالة المراجعين (`#fairnessBars` انحراف عن المتوسط العام)، زمن المراجعة↔التقييم (`#delayRatingChips`)، توجل ساعات الخطورة (`#hrAll/#hrRF` → `renderHours(A,mode)`, `A.hoursRF`)، كشف طفرات الأعراض (`#spikeChips` من `A.symDay`، mean+2σ). CSV اتوسّع (AI% + إجراءات + جرعة/تكرار).
+- **الحقول اتأكّدت من جهة الكتابة** (agent.html/review.html): `review.status`(+mirror `status`), `review.rating`(+`rating`), `review.reviewerNotes`, `warning.active/note`, `followUp.status/result`, `confirmedRedFlags`+`redFlagApplied`, `teamReviewed`, `symptoms:[{id,name,cat}]`, `customerCode`/`phone` (نص حر ممكن فاضي).
+- **الحالة:** كل ده **محلي لسه** — محتاج `firebase deploy --only hosting` لظهور الداشبورد الجديد live. الـ classifier بيتشغّل من جهاز الأدمن (Ollama + serviceAccount). مفيش rules deploy.
+- **ذاكرة على GitHub:** السياق متزامن على https://github.com/drshawky26/claude (مسار الميموري: `pharma-triage-site/CLAUDE.md`).

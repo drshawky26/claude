@@ -36,8 +36,8 @@ medsClassifiedAt: serverTimestamp ; medsClassifiedModel: "<model>" ; medsClassif
 - **التشغيل:** `node classify-meds.js --dry-run --limit 25` للمعاينة، بعدين `node classify-meds.js` للباك فيل الكامل، وبعدها نفس الأمر = catch-up تزايدي.
 - `AR_NORM` في السكربت مطابق للداشبورد (نفس تطبيع الهمزات/ة/ى) عشان الـ canonical key يتّفق.
 
-## الداش بورد (`public/consult-analytics.html`) — الخطة (شغل جاري)
-لسه **مش متعمل** وقت كتابة الملف ده. الخطة (بترتيب التنفيذ):
+## الداش بورد (`public/consult-analytics.html`) — ✅ اتعمل واتّتأكد (2026-07-05)
+اتنفّذ بالكامل (14/14 اختبار منطق نجحوا، module script بيتفسّر، كل el() ليه id). المكوّنات:
 1. aggregation يفضّل `medsStructured` ويرجع لـ `medTokens` legacy للدوكس غير المتصنّفة + بادج «🤖 N% مصنّف بالذكاء».
 2. تقسيم كارت الأدوية → **Medications** (أسماء نضيفة + جرعة/تكرار + دريل per-symptom + أزواج co-prescription + trend صعود/هبوط لأعلى ~15) و**Actions** منفصل (referral/follow_up/general_advice/other).
 3. كارت **رحلة العميل** (مفتاح `phone`/`customerCode`): نسبة العملاء المتكررين، فترة العودة، تكرار نفس العرض (قائمة flagged)، عملاء بتحذير/ريد فلاج متكرر، cohort retention شهري. محتاج قراءة كل الوقت (`ALLDOCS` cache) مش المدى بس.
