@@ -1,5 +1,7 @@
 node_modules/
 serviceAccount.json
 local-config.json
+harvest-data.json
+harvest-uploaded.json
 *.log
 .env
