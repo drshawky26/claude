@@ -41,12 +41,13 @@
  *
  * USAGE
  * -----
- *   node harvest.js --backfill --until 2026-05-01   # deep one-time backfill (UNLIMITED),
- *                                                   #   pages ALL the way back to this date.
+ *   node harvest.js --backfill --since 2026-06-25   # deep one-time backfill (UNLIMITED),
+ *                                                   #   harvests from this date up to now.
+ *                                                   #   (--until / --from are aliases of --since.)
  *   node harvest.js --backfill --all                # backfill from the very beginning.
  *   node harvest.js                                 # incremental: only NEW activity since
  *                                                   #   last run (seconds). Run on a schedule.
- *   node harvest.js --dry-run --until 2026-07-01    # scan + classify, write NOTHING (preview).
+ *   node harvest.js --dry-run --since 2026-07-01    # scan + classify, write NOTHING (preview).
  *   node harvest.js --verbose                       # per-conversation logging.
  *
  * NOTES
@@ -76,7 +77,8 @@ function parseArgs(argv) {
     const k = argv[i];
     if      (k === "--backfill") a.backfill = true;
     else if (k === "--all")      a.all      = true;
-    else if (k === "--until")    a.until    = String(argv[++i] || "");
+    else if (k === "--until" || k === "--since" || k === "--from")  // all mean "oldest date to harvest back to"
+                                 a.until    = String(argv[++i] || "");
     else if (k === "--dry-run")  a.dryRun   = true;
     else if (k === "--verbose")  a.verbose  = true;
     else if (k === "--max-convs")a.maxConvs = Math.max(0, Number(argv[++i]) || 0);
@@ -186,7 +188,7 @@ async function main() {
   if (args.backfill) {
     if (args.all) fromMs = 0;
     else if (args.until) fromMs = new Date(`${args.until}T00:00:00${CAIRO_OFFSET}`).getTime();
-    else { console.error("✗ --backfill needs --until YYYY-MM-DD or --all."); process.exit(1); }
+    else { console.error("✗ --backfill needs --since YYYY-MM-DD (oldest date) or --all."); process.exit(1); }
     console.log(`▶ BACKFILL mode — harvesting back to ${args.all ? "the beginning" : args.until} (UNLIMITED).`);
   } else {
     // incremental: from last watermark (minus a 10-min safety overlap; idempotent so overlap is harmless)

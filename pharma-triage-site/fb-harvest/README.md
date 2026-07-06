@@ -21,8 +21,8 @@ Graph API مابيسمحش تدوّر على المحادثات بالتاريخ
 
 ## الاستخدام
 ```bash
-# باكفيل عميق مرة واحدة (بلا سقف) — بيقلّب لحد اليوم ده. سيبه بالليل.
-node harvest.js --backfill --until 2026-05-01
+# باكفيل عميق مرة واحدة (بلا سقف) — بيحصد من اليوم ده لحد دلوقتي. سيبه بالليل.
+node harvest.js --backfill --since 2026-06-25       # (--until / --from = نفس الحاجة)
 
 # باكفيل من أول الصفحة خالص
 node harvest.js --backfill --all
@@ -31,7 +31,7 @@ node harvest.js --backfill --all
 node harvest.js
 
 # معاينة من غير كتابة
-node harvest.js --dry-run --until 2026-07-01
+node harvest.js --dry-run --since 2026-07-01
 
 # لوج تفصيلي لكل محادثة
 node harvest.js --verbose
