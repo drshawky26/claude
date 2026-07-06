@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d1d">
+<script src="/lite-mode.js"></script>
+<title>تحليل ردود فيسبوك (الحصاد) — Pharma Triage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --plane:#080d1d; --surface:#111a33; --surface2:#0d1528; --ink:#f2f5ff; --ink2:#b9c2dd; --muted:#8891ad;
+  --grid:#232c47; --border:rgba(255,255,255,.08);
+  --gold:#c9a84c; --blue:#3987e5; --teal:#199e70; --violet:#9085e9; --amber:#c98500; --red:#e66767;
+  --r:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Tajawal',system-ui,sans-serif;background:var(--plane);color:var(--ink);min-height:100vh;line-height:1.5}
+.num{font-variant-numeric:tabular-nums}
+a{color:var(--blue)}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 18px 60px}
+
+/* header */
+.hdr{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.hdr .logo{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:22px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--blue) 30%,transparent),color-mix(in srgb,var(--violet) 30%,transparent));
+  border:1px solid var(--border)}
+.hdr h1{font-size:19px;font-weight:900}
+.hdr .sub{font-size:12px;color:var(--muted);font-weight:700}
+.hdr .spacer{flex:1}
+.hdr .who{font-size:12px;color:var(--ink2);font-weight:700}
+.hdr .home{font-size:12.5px;font-weight:800;text-decoration:none;padding:7px 13px;border-radius:10px;border:1px solid var(--border);color:var(--ink2);background:var(--surface)}
+
+/* harvest status */
+.hstat{display:flex;align-items:center;gap:14px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:12px 16px;margin-bottom:16px;font-size:12.5px;color:var(--ink2);font-weight:700}
+.hstat b{color:var(--ink)}
+.hstat .dot{width:9px;height:9px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px color-mix(in srgb,var(--teal) 22%,transparent)}
+
+/* period bar */
+.pbar{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px 14px;margin-bottom:18px;
+  display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.pbar .chip{border:1px solid var(--border);background:var(--surface2);color:var(--ink2);font-family:inherit;font-weight:800;
+  font-size:12px;padding:7px 13px;border-radius:10px;cursor:pointer;transition:.15s}
+.pbar .chip:hover{border-color:var(--blue);color:var(--blue)}
+.pbar .chip.on{background:linear-gradient(135deg,var(--blue),color-mix(in srgb,var(--blue) 55%,#000));color:#fff;border-color:transparent}
+.pbar .rng{display:flex;align-items:center;gap:6px;margin-inline-start:auto;flex-wrap:wrap}
+.pbar input[type=date]{border:1px solid var(--border);background:var(--surface2);color:var(--ink);border-radius:9px;
+  padding:6px 9px;font-family:inherit;font-size:12px;font-weight:700;color-scheme:dark}
+.pbar .go{border:none;background:linear-gradient(135deg,var(--teal),color-mix(in srgb,var(--teal) 55%,#000));color:#fff;
+  font-family:inherit;font-weight:800;font-size:12px;padding:7px 15px;border-radius:9px;cursor:pointer}
+.pbar .sep{color:var(--muted);font-weight:800}
+
+/* kpi grid */
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:13px;margin-bottom:20px}
+.kcard{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px 17px;overflow:hidden}
+.kcard::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--acc,var(--blue))}
+.kcard .kl{font-size:12px;color:var(--muted);font-weight:800;display:flex;align-items:center;gap:7px}
+.kcard .kv{font-size:30px;font-weight:900;margin-top:8px;letter-spacing:-.5px}
+.kcard .ks{font-size:11.5px;color:var(--ink2);font-weight:700;margin-top:3px}
+
+/* section card */
+.sec{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px 18px 16px;margin-bottom:18px}
+.sec h2{font-size:15px;font-weight:900;margin-bottom:3px;display:flex;align-items:center;gap:8px}
+.sec .h-sub{font-size:12px;color:var(--muted);font-weight:700;margin-bottom:14px}
+
+/* bar rows */
+.brow{display:grid;grid-template-columns:150px 1fr auto;align-items:center;gap:11px;padding:6px 0}
+.brow .bn{font-size:13px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brow .bt{height:10px;border-radius:6px;background:var(--surface2);overflow:hidden}
+.brow .bt i{display:block;height:100%;border-radius:6px;background:var(--acc,var(--blue))}
+.brow .bv{font-size:12.5px;font-weight:900;color:var(--ink2);min-width:44px;text-align:end}
+
+/* table */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th,.tbl td{padding:9px 10px;text-align:start;border-bottom:1px solid var(--border)}
+.tbl th{color:var(--muted);font-size:11.5px;font-weight:800;cursor:pointer;user-select:none}
+.tbl th:hover{color:var(--ink)}
+.tbl td{font-weight:700}
+.tbl td b{color:var(--ink);font-weight:900}
+.tbl tr:last-child td{border-bottom:none}
+.tbl .r-idx{color:var(--muted);width:26px}
+.avpic{width:26px;height:26px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-inline-end:7px;border:1px solid var(--border)}
+
+/* 24h peak */
+.peak{display:flex;align-items:flex-end;gap:3px;height:120px;padding-top:8px}
+.peak .h{flex:1;background:var(--blue);border-radius:4px 4px 0 0;min-height:3px;position:relative;opacity:.85;transition:.15s}
+.peak .h.now,.peak .h.hot{background:var(--gold);opacity:1}
+.peak .h:hover{opacity:1}
+.peak-x{display:flex;gap:3px;margin-top:5px}
+.peak-x span{flex:1;text-align:center;font-size:9px;color:var(--muted);font-weight:700}
+
+/* chips grid (intents/products) */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+.cchip{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:11px 13px}
+.cchip .cn{font-size:12.5px;font-weight:800;color:var(--ink);display:flex;align-items:center;gap:6px}
+.cchip .cv{font-size:22px;font-weight:900;margin-top:5px}
+.cchip .cb{height:5px;border-radius:3px;background:var(--surface);overflow:hidden;margin-top:8px}
+.cchip .cb i{display:block;height:100%;background:var(--acc,var(--teal))}
+
+/* keyword cloud */
+.cloud{display:flex;flex-wrap:wrap;gap:8px}
+.kw{background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:6px 13px;font-weight:800;color:var(--ink2)}
+.kw b{color:var(--blue);font-weight:900;margin-inline-start:5px}
+
+.tools{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:16px}
+.tbtn{border:1px solid var(--border);background:var(--surface);color:var(--ink2);font-family:inherit;font-weight:800;
+  font-size:12.5px;padding:8px 15px;border-radius:10px;cursor:pointer}
+.tbtn:hover{border-color:var(--blue);color:var(--blue)}
+
+.empty{color:var(--muted);font-weight:700;font-size:13px;text-align:center;padding:26px 10px}
+.foot{color:var(--muted);font-size:11.5px;text-align:center;margin-top:30px}
+#loading{text-align:center;padding:30px;color:var(--muted);font-weight:800}
+.spin{display:inline-block;width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:sp 1s linear infinite;vertical-align:middle;margin-inline-end:10px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* gate */
+#gate{position:fixed;inset:0;background:var(--plane);display:grid;place-items:center;z-index:100;padding:20px}
+#gate.hidden{display:none}
+.gate-card{max-width:420px;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:34px 28px}
+.gate-ic{font-size:44px;margin-bottom:12px}
+.gate-t{font-size:19px;font-weight:900;margin-bottom:8px}
+.gate-s{font-size:13.5px;color:var(--ink2);font-weight:700;line-height:1.9}
+@media(max-width:620px){.brow{grid-template-columns:110px 1fr auto}}
+</style>
+</head>
+<body>
+
+<div id="gate"><div class="gate-card" id="gateCard"><div class="spin"></div></div></div>
+
+<div class="wrap" id="app" style="display:none">
+  <div class="hdr">
+    <div class="logo">📊</div>
+    <div>
+      <h1>تحليل ردود فيسبوك — الحصاد الدائم</h1>
+      <div class="sub">من سجل <b>fbReplies</b> + <b>fbCustomerMsgs</b> — بدون إعادة مسح فيسبوك</div>
+    </div>
+    <div class="spacer"></div>
+    <div class="who" id="hdrUser"></div>
+    <a class="home" href="/index.html">← الرئيسية</a>
+  </div>
+
+  <div class="hstat" id="hstat"><span class="dot"></span><span>جارٍ قراءة حالة الحصاد…</span></div>
+
+  <div class="pbar">
+    <button class="chip" data-q="today">اليوم</button>
+    <button class="chip on" data-q="cycle">الدورة (٢١→٢٠)</button>
+    <button class="chip" data-q="7">آخر ٧ أيام</button>
+    <button class="chip" data-q="month">هذا الشهر</button>
+    <button class="chip" data-q="all">كل الوقت</button>
+    <div class="rng">
+      <input type="date" id="fromD" title="من"><span class="sep">→</span><input type="date" id="toD" title="إلى">
+      <button class="go" id="applyBtn">تطبيق</button>
+    </div>
+  </div>
+
+  <div class="tools">
+    <button class="tbtn" id="csvReplies">⬇ تصدير الردود CSV</button>
+    <button class="tbtn" id="csvCust">⬇ تصدير رسائل العملاء CSV</button>
+  </div>
+
+  <div id="loading" style="display:none"><span class="spin"></span> جارٍ تحميل الفترة…</div>
+
+  <div id="results">
+    <div class="kgrid" id="kpis"></div>
+
+    <div class="sec"><h2>👥 لكل زميل</h2><div class="h-sub" id="agSub">ردود + أوردرات في الفترة</div>
+      <div style="overflow-x:auto"><table class="tbl" id="agTbl"></table></div></div>
+
+    <div class="sec"><h2>📅 النشاط اليومي</h2><div class="h-sub">إجمالي الردود لكل يوم</div>
+      <div id="dayBars"></div></div>
+
+    <div class="sec"><h2>🕐 ساعات الذروة</h2><div class="h-sub">توزيع الردود على ٢٤ ساعة (بتوقيت القاهرة) — الذروة بالدهبي</div>
+      <div class="peak" id="peak"></div><div class="peak-x" id="peakX"></div></div>
+
+    <div class="sec"><h2>🎯 نوايا العملاء</h2><div class="h-sub">من رسائل العملاء المستخرَجة (روشتة/طلب/نواقص/سعر…)</div>
+      <div class="cgrid" id="intents"></div></div>
+
+    <div class="sec"><h2>🛍️ طلب المنتجات</h2><div class="h-sub">أكتر فئات المنتجات اللي العملاء بيسألوا عنها</div>
+      <div id="products"></div></div>
+
+    <div class="sec"><h2>🔤 أهم الكلمات</h2><div class="h-sub">أكتر الكلمات المفتاحية تكرارًا في رسائل العملاء</div>
+      <div class="cloud" id="cloud"></div></div>
+  </div>
+</div>
+
+<div class="foot">Pharma Triage · تحليل الحصاد · القراءة من Firestore مباشرة</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, setDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyBvmHh6-KVlKNATzbfMk3hIswbMCrBZwf4",
+  authDomain:        "pharma-triage-5d165.firebaseapp.com",
+  projectId:         "pharma-triage-5d165",
+  storageBucket:     "pharma-triage-5d165.firebasestorage.app",
+  messagingSenderId: "1080517928737",
+  appId:             "1:1080517928737:web:9110f120203d0e6b7b0060"
+};
+const ADMIN_EMAIL = "drshawky530@gmail.com";
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+const el = id => document.getElementById(id);
+const esc = s => String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = n => Number(n||0).toLocaleString('ar-EG');
+const pad2 = n => String(n).padStart(2,'0');
+const isoOf = d => d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
+const todayISO = () => isoOf(new Date());
+
+function gate(state,msg){
+  const g=el('gate'),c=el('gateCard');
+  if(state==='ok'){ g.classList.add('hidden'); el('app').style.display='block'; return; }
+  g.classList.remove('hidden'); el('app').style.display='none';
+  if(state==='denied') c.innerHTML=`<div class="gate-ic">🔒</div><div class="gate-t">الصفحة دي للأدمن بس</div><div class="gate-s">${esc(msg||'محتاج صلاحية أدمن (د. شوقي).')}<br><br><a href="/index.html">← الرجوع للرئيسية</a></div>`;
+  else if(state==='login') c.innerHTML=`<div class="gate-ic">👤</div><div class="gate-t">سجّل الدخول الأول</div><div class="gate-s">ادخل من الرئيسية وارجع هنا.<br><br><a href="/index.html">← تسجيل الدخول</a></div>`;
+}
+
+let profileRole=false;
+onAuthStateChanged(auth, async user=>{
+  if(!user){ gate('login'); return; }
+  let p={};
+  try{ const s=await getDoc(doc(db,'users',user.uid)); p=s.exists()?s.data():{}; }catch(e){ console.error(e); }
+  try{ if(window.PTLite) window.PTLite.sync({db,doc,setDoc,uid:user.uid,profile:p}); }catch(e){}
+  const isAdmin = user.email===ADMIN_EMAIL || p.role==='admin' || p.canAdmin===true;
+  if(!isAdmin){ gate('denied'); return; }
+  profileRole=true;
+  el('hdrUser').textContent = p.displayName || p.name || user.email;
+  gate('ok');
+  loadHarvestStatus();
+  initPeriod();
+});
+
+/* ── harvest status banner ── */
+async function loadHarvestStatus(){
+  try{
+    const s=await getDoc(doc(db,'appConfig','fbHarvest'));
+    const box=el('hstat');
+    if(!s.exists()){ box.innerHTML='<span class="dot" style="background:var(--amber);box-shadow:0 0 0 4px color-mix(in srgb,var(--amber) 22%,transparent)"></span><span>لسه مفيش حصاد — شغّل <b>node harvest.js --backfill --all</b> على جهازك الأول.</span>'; return; }
+    const d=s.data();
+    const last = d.lastRunAt?.toDate ? d.lastRunAt.toDate() : null;
+    const wm = d.lastTs ? new Date(d.lastTs) : null;
+    const st = d.lastStats||{};
+    box.innerHTML = `<span class="dot"></span>`+
+      `<span>آخر حصاد: <b>${last?last.toLocaleString('ar-EG'):'—'}</b></span>`+
+      `<span>·</span><span>الوضع: <b>${esc(d.lastMode||'—')}</b></span>`+
+      (wm?`<span>·</span><span>آخر رسالة محصودة: <b>${wm.toLocaleString('ar-EG')}</b></span>`:'')+
+      (d.backfilledFrom?`<span>·</span><span>باكفيل من: <b>${esc(d.backfilledFrom)}</b></span>`:'')+
+      (st.replies!=null?`<span>·</span><span>آخر تشغيلة: <b>${fmt(st.replies)}</b> رد · <b>${fmt(st.custMsgs)}</b> رسالة عميل</span>`:'');
+  }catch(e){ el('hstat').innerHTML='<span>تعذّر قراءة حالة الحصاد.</span>'; }
+}
+
+/* ── period ── */
+let curFrom, curTo;
+function cycleRange(){
+  const d=new Date(), y=d.getFullYear(), m=d.getMonth();
+  if(d.getDate()>=21) return [new Date(y,m,21), new Date(y,m+1,20,23,59,59,999)];
+  return [new Date(y,m-1,21), new Date(y,m,20,23,59,59,999)];
+}
+function setChip(q){ document.querySelectorAll('.pbar .chip').forEach(c=>c.classList.toggle('on',c.dataset.q===q)); }
+function initPeriod(){
+  document.querySelectorAll('.pbar .chip').forEach(c=> c.onclick=()=>pickQuick(c.dataset.q));
+  el('applyBtn').onclick=()=>{
+    const a=el('fromD').value, b=el('toD').value;
+    if(!a&&!b){ return; }
+    const f=a||b, t=b||a;
+    setChip('');
+    load(new Date(f+'T00:00:00'), new Date(t+'T23:59:59.999'));
+  };
+  el('csvReplies').onclick=()=>exportCSV('replies');
+  el('csvCust').onclick=()=>exportCSV('cust');
+  pickQuick('cycle');
+}
+function pickQuick(q){
+  setChip(q);
+  const now=new Date(), y=now.getFullYear(), m=now.getMonth(), da=now.getDate();
+  let f,t;
+  if(q==='today'){ f=new Date(y,m,da,0,0,0); t=new Date(y,m,da,23,59,59,999); }
+  else if(q==='cycle'){ [f,t]=cycleRange(); }
+  else if(q==='7'){ t=new Date(y,m,da,23,59,59,999); f=new Date(t.getTime()-6*864e5); f.setHours(0,0,0,0); }
+  else if(q==='month'){ f=new Date(y,m,1,0,0,0); t=new Date(y,m,da,23,59,59,999); }
+  else if(q==='all'){ f=new Date(2020,0,1); t=new Date(y,m,da,23,59,59,999); }
+  el('fromD').value=isoOf(f); el('toD').value=isoOf(t);
+  load(f,t);
+}
+
+/* ── load + aggregate ── */
+let _replies=[], _cust=[];
+async function load(from,to){
+  curFrom=from; curTo=to;
+  el('results').style.display='none'; el('loading').style.display='block';
+  const fromMs=from.getTime(), toMs=to.getTime();
+  try{
+    const [rs,cs]=await Promise.all([
+      getDocs(query(collection(db,'fbReplies'),      where('ts','>=',fromMs), where('ts','<=',toMs))),
+      getDocs(query(collection(db,'fbCustomerMsgs'),  where('ts','>=',fromMs), where('ts','<=',toMs)))
+    ]);
+    _replies=rs.docs.map(d=>d.data());
+    _cust=cs.docs.map(d=>d.data());
+    render();
+  }catch(e){
+    console.error(e);
+    el('loading').innerHTML = String(e.message||e).includes('index')
+      ? '⚠ محتاج فهرس Firestore — افتح الكونسول واعمل Create Index (اللينك في رسالة الخطأ بالـ F12)، وجرّب تاني بعد دقيقة.'
+      : '✗ '+esc(e.message||e);
+  }
+}
+
+function render(){
+  el('loading').style.display='none'; el('results').style.display='block';
+  const R=_replies, C=_cust;
+  const convs=new Set(R.map(r=>r.convId)); const custConvs=new Set(C.map(c=>c.convId));
+  const orders=R.filter(r=>r.isOrder).length;
+  el('kpis').innerHTML=
+    kcard('💬 ردود الزملاء',fmt(R.length),`${fmt(convs.size)} محادثة`,'var(--blue)')+
+    kcard('🛒 أوردرات',fmt(orders),'ردود فيها إجمالي','var(--teal)')+
+    kcard('📥 رسائل العملاء',fmt(C.length),`${fmt(custConvs.size)} محادثة`,'var(--violet)')+
+    kcard('👤 زملاء نشطين',fmt(new Set(R.map(r=>r.agentTag)).size),'في الفترة','var(--amber)');
+
+  // per agent
+  const ag={};
+  for(const r of R){ const k=r.agentTag||'?'; (ag[k]=ag[k]||{name:r.agentName||k,replies:0,orders:0,convs:new Set()}); ag[k].replies++; if(r.isOrder) ag[k].orders++; ag[k].convs.add(r.convId); }
+  _agRows=Object.entries(ag).map(([tag,v])=>({tag,name:v.name,replies:v.replies,orders:v.orders,convs:v.convs.size})).sort((a,b)=>b.replies-a.replies);
+  renderAgents();
+
+  // per day
+  const day={}; for(const r of R){ day[r.date]=(day[r.date]||0)+1; }
+  const days=Object.entries(day).sort((a,b)=>a[0]<b[0]?-1:1);
+  const mxD=Math.max(1,...days.map(d=>d[1]));
+  el('dayBars').innerHTML = days.length? days.map(([d,n])=>bar(d,n,mxD,'var(--blue)')).join('') : '<div class="empty">لا ردود في الفترة</div>';
+
+  // peak hours
+  const hr=new Array(24).fill(0);
+  for(const r of R){ const h=new Date(r.ts+3*3600*1000).getUTCHours(); hr[h]++; }
+  const mxH=Math.max(1,...hr);
+  el('peak').innerHTML=hr.map((n,h)=>`<div class="h${n===mxH&&n>0?' hot':''}" style="height:${Math.round(n/mxH*100)}%" title="${pad2(h)}:00 — ${fmt(n)} رد"></div>`).join('');
+  el('peakX').innerHTML=hr.map((n,h)=> h%3===0?`<span>${pad2(h)}</span>`:'<span></span>').join('');
+
+  // customer intents
+  const INT_LBL={prescription:'📋 روشتة',order:'🛒 طلب',shortage:'📦 نواقص',price:'💰 سعر',delivery:'🚚 توصيل',complaint:'⚠️ شكوى',album:'🖼️ ألبوم',greeting:'👋 تحية'};
+  const it={}; for(const c of C){ for(const i of (c.intents||[])) it[i]=(it[i]||0)+1; }
+  const its=Object.entries(it).sort((a,b)=>b[1]-a[1]);
+  const mxI=Math.max(1,...its.map(x=>x[1]));
+  el('intents').innerHTML = its.length? its.map(([k,n],i)=>{
+    const acc=['var(--blue)','var(--teal)','var(--violet)','var(--amber)','var(--red)'][i%5];
+    return `<div class="cchip"><div class="cn">${esc(INT_LBL[k]||k)}</div><div class="cv num">${fmt(n)}</div><div class="cb"><i style="width:${Math.round(n/mxI*100)}%;background:${acc}"></i></div></div>`;
+  }).join('') : '<div class="empty">لا نوايا مستخرجة — شغّل الحصاد الأول</div>';
+
+  // products
+  const PROD_LBL={sunscreen:'صن سكرين',moisturizer:'مرطب',cleanser:'غسول',serum:'سيروم',shampoo:'شامبو',hair_care:'العناية بالشعر',vitamin:'فيتامينات',supplement:'مكملات',baby:'أطفال',makeup:'مكياج',perfume:'عطور',acne:'حب الشباب',whitening:'تفتيح',eye_care:'عناية بالعين',medicine:'أدوية',device:'أجهزة'};
+  const pr={}; for(const c of C){ for(const p of (c.products||[])) pr[p]=(pr[p]||0)+1; }
+  const prs=Object.entries(pr).sort((a,b)=>b[1]-a[1]);
+  const mxP=Math.max(1,...prs.map(x=>x[1]));
+  el('products').innerHTML = prs.length? prs.map(([k,n])=>bar(PROD_LBL[k]||k,n,mxP,'var(--teal)')).join('') : '<div class="empty">لا منتجات مستخرجة</div>';
+
+  // keyword cloud
+  const kw={}; for(const c of C){ for(const w of (c.keywords||[])) kw[w]=(kw[w]||0)+1; }
+  const kws=Object.entries(kw).sort((a,b)=>b[1]-a[1]).slice(0,40);
+  el('cloud').innerHTML = kws.length? kws.map(([w,n])=>`<span class="kw">${esc(w)}<b class="num">${fmt(n)}</b></span>`).join('') : '<div class="empty">لا كلمات</div>';
+}
+
+function kcard(l,v,s,acc){ return `<div class="kcard" style="--acc:${acc}"><div class="kl">${l}</div><div class="kv num">${v}</div><div class="ks">${s}</div></div>`; }
+function bar(name,n,mx,acc){ return `<div class="brow"><div class="bn">${esc(name)}</div><div class="bt"><i style="width:${Math.round(n/mx*100)}%;background:${acc}"></i></div><div class="bv num">${fmt(n)}</div></div>`; }
+
+let _agRows=[], _agSort='replies', _agDir=-1;
+function renderAgents(){
+  const rows=[..._agRows].sort((a,b)=> _agDir*((a[_agSort]<b[_agSort])?-1:(a[_agSort]>b[_agSort])?1:0));
+  const mx=Math.max(1,...rows.map(r=>r.replies));
+  el('agSub').textContent=`${fmt(rows.length)} زميل · ${fmt(_agRows.reduce((s,r)=>s+r.replies,0))} رد إجمالي`;
+  el('agTbl').innerHTML =
+    `<tr><th class="r-idx">#</th><th data-s="name">الزميل</th><th data-s="replies">ردود</th><th data-s="convs">محادثات</th><th data-s="orders">أوردرات</th><th>الحصة</th></tr>`+
+    (rows.length? rows.map((r,i)=>`<tr><td class="r-idx num">${fmt(i+1)}</td><td><b>${esc(r.name)}</b></td><td class="num"><b>${fmt(r.replies)}</b></td><td class="num">${fmt(r.convs)}</td><td class="num">${fmt(r.orders)}</td><td><div class="bt" style="height:8px;border-radius:5px;background:var(--surface2);overflow:hidden;min-width:70px"><i style="display:block;height:100%;width:${Math.round(r.replies/mx*100)}%;background:var(--blue)"></i></div></td></tr>`).join('') : `<tr><td colspan="6" class="empty">لا بيانات</td></tr>`);
+  el('agTbl').querySelectorAll('th[data-s]').forEach(th=> th.onclick=()=>{ const s=th.dataset.s; if(_agSort===s) _agDir*=-1; else{ _agSort=s; _agDir=(s==='name')?1:-1; } renderAgents(); });
+}
+
+function exportCSV(kind){
+  const rows = kind==='replies' ? _replies : _cust;
+  if(!rows.length){ alert('لا بيانات في الفترة'); return; }
+  let head, lines;
+  if(kind==='replies'){
+    head=['date','ts','agentTag','agentName','isOrder','convId','msgId','text'];
+    lines=rows.map(r=>[r.date,new Date(r.ts).toISOString(),r.agentTag,r.agentName,r.isOrder?1:0,r.convId,r.msgId,(r.text||'').replace(/\s+/g,' ')]);
+  }else{
+    head=['date','ts','custName','intents','products','keywords','convId','msgId','text'];
+    lines=rows.map(r=>[r.date,new Date(r.ts).toISOString(),r.custName,(r.intents||[]).join('|'),(r.products||[]).join('|'),(r.keywords||[]).join('|'),r.convId,r.msgId,(r.text||'').replace(/\s+/g,' ')]);
+  }
+  const csv='﻿'+[head.join(','),...lines.map(l=>l.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(','))].join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`fb-${kind}-${isoOf(curFrom)}_${isoOf(curTo)}.csv`; a.click(); URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

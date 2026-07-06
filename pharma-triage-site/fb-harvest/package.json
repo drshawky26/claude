@@ -1,0 +1,14 @@
+{
+  "name": "fb-harvest",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Durable Facebook reply + customer-message harvester into Firestore (local, free).",
+  "type": "commonjs",
+  "scripts": {
+    "harvest": "node harvest.js",
+    "backfill": "node harvest.js --backfill --all"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}

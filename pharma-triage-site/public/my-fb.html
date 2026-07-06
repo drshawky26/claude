@@ -751,9 +751,11 @@ select{color-scheme:light}
 .modal-box .m-sub{color:var(--muted);font-size:12.5px;font-weight:700;margin-bottom:14px}
 .modal-box .m-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .modal-box label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:800;color:var(--muted)}
-.modal-box input[type=time],.modal-box input[type=number]{font-family:inherit;font-size:14px;font-weight:700;color:var(--text);background:var(--card-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px}
-[data-theme="dark"] .modal-box input[type=time],[data-theme="dark"] .modal-box input[type=number]{background:#0b1730;color:var(--ink)}
-.modal-box input:focus{outline:none;border-color:var(--fb)}
+.modal-box input[type=time],.modal-box input[type=number],.modal-box input[type=date]{font-family:inherit;font-size:14px;font-weight:700;color:var(--text);background:var(--card-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;color-scheme:light dark}
+[data-theme="dark"] .modal-box input[type=time],[data-theme="dark"] .modal-box input[type=number],[data-theme="dark"] .modal-box input[type=date]{background:#0b1730;color:var(--ink)}
+.modal-box input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;border-radius:6px;padding:3px;transition:background .15s}
+.modal-box input[type=date]::-webkit-calendar-picker-indicator:hover{background:color-mix(in srgb,var(--fb) 18%,transparent)}
+.modal-box input:focus{outline:none;border-color:var(--fb);box-shadow:0 0 0 3px color-mix(in srgb,var(--fb) 16%,transparent)}
 .modal-box .m-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:6px;align-items:center}
 .modal-x{margin-inline-start:auto;cursor:pointer;color:var(--muted);font-size:22px;line-height:1;font-weight:800;background:none;border:none}
 .modal-x:hover{color:var(--red)}
@@ -4718,7 +4720,7 @@ function initEntry(){
 }
 async function saveEntry(){
   if(!myAgentName) return fbMsg("entryMsg","اختر اسمك في الأعلى أول",false);
-  if(el("slotConflict")&&!el("slotConflict").hidden) return fbMsg("entryMsg","⚠ الفترة دي محجوزة — اختاري فترة تانية",false);
+  // بانر التعارض تنبيه غير مانع بقصد — بيقول "خد بالك" بس مش بيمنع الحفظ (اتصلح 2026-07-07)
   const channel=el("eChannel").value.trim();
   if(!channel) return fbMsg("entryMsg","اختر القناة",false);
   // عدد الرسائل اختياري الآن

@@ -7,6 +7,14 @@
         { "fieldPath": "agent", "order": "ASCENDING" },
         { "fieldPath": "date", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "fbReplies",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "agentTag", "order": "ASCENDING" },
+        { "fieldPath": "ts", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

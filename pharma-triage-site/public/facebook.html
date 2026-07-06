@@ -188,6 +188,39 @@ table.t td.rk{font-weight:800;color:var(--muted);width:34px}
 h4.sub-h{color:var(--ink);font-size:14px;margin:16px 0 6px}
 .foot{color:var(--muted);font-size:12px;text-align:center;margin-top:30px}
 
+/* ── Bulk backfill card (أدمن) — بريميوم متسق مع باقي الصفحة ── */
+.bulkbf-card{position:relative;border-color:color-mix(in srgb,var(--gold,#c9a84c) 35%,var(--border));overflow:hidden}
+.bulkbf-card::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--fb),var(--gold,#c9a84c),var(--teal),transparent);
+  background-size:200% 100%;animation:bulkbfSheen 5s linear infinite}
+@keyframes bulkbfSheen{to{background-position:-200% 0}}
+@media(prefers-reduced-motion:reduce){.bulkbf-card::before{animation:none}}
+.bulkbf-h{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.bulkbf-ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--fb) 22%,transparent),color-mix(in srgb,var(--gold,#c9a84c) 22%,transparent));
+  color:var(--fb)}
+.bulkbf-ico svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.bulkbf-h h3{margin:0 0 3px}
+.bulkbf-h .bulkbf-sub{font-size:12.5px;color:var(--muted);font-weight:700;line-height:1.6}
+.bulkbf-toggle{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:var(--ink);
+  margin-top:10px;padding:9px 12px;background:var(--card-2);border:1px solid var(--border);border-radius:10px;cursor:pointer;user-select:none}
+.bulkbf-toggle input{width:17px;height:17px;accent-color:var(--fb);cursor:pointer;margin:0}
+.bulkbf-btn{display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer;font-family:inherit;
+  font-weight:800;font-size:13.5px;color:#fff;padding:10px 20px;border-radius:11px;
+  background:linear-gradient(135deg,var(--fb),color-mix(in srgb,var(--fb) 55%,#000));
+  box-shadow:0 6px 18px -6px color-mix(in srgb,var(--fb) 60%,transparent);transition:transform .15s,box-shadow .15s}
+.bulkbf-btn:hover{transform:translateY(-1px);box-shadow:0 9px 22px -6px color-mix(in srgb,var(--fb) 65%,transparent)}
+.bulkbf-btn:active{transform:translateY(1px) scale(.985)}
+.bulkbf-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.bulkbf-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* select الزميل: native select — لازم خلفية صلبة في الدارك وإلا الليست بتفتح بيضا ومايبانش الاسم */
+#bulkBfAgent{font-family:inherit;font-size:14px;font-weight:700;color:var(--text);background:var(--card-2);
+  border:1px solid var(--border);border-radius:10px;padding:9px 11px;width:100%;cursor:pointer}
+#bulkBfAgent:focus{outline:none;border-color:var(--fb)}
+[data-theme="dark"] #bulkBfAgent{background:#0e1a30;color:var(--ink)}
+[data-theme="dark"] #bulkBfAgent option{background:#0f1c34;color:var(--ink)}
+.bulkbf-card input[type=date]{color-scheme:light dark}
+
 /* ── Custom searchable dropdown ── */
 .cust-sel{position:relative;user-select:none}
 .cust-sel-val{font-family:inherit;font-size:14px;font-weight:700;color:var(--text);
@@ -959,19 +992,24 @@ section.collapsed{padding-bottom:16px}
     </div>
 
     <!-- Bulk backfill replies (admin only) -->
-    <div class="card" id="bulkBfCard" style="display:none">
-      <h3>🔁 جلب دفعة واحدة لزميل <span class="tag fb">أدمن</span></h3>
-      <div class="note">لزميل عنده سلوتات كتير من غير عدد ردود متسجّل (زي فترة طويلة اتنسيت). بيمسح فيسبوك <b>مرة واحدة بس</b> لكل الفترة ويوزّع الردود تلقائيًا على كل سلوت بتاعه حسب وقته — أسرع بكتير من جلب كل سلوت لوحده.</div>
+    <div class="card bulkbf-card" id="bulkBfCard" style="display:none">
+      <div class="bulkbf-h">
+        <div class="bulkbf-ico"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div>
+          <h3 style="margin:0">جلب دفعة واحدة لزميل <span class="tag fb">أدمن</span></h3>
+          <div class="bulkbf-sub">لزميل عنده سلوتات كتير من غير عدد ردود متسجّل (زي فترة طويلة اتنسيت). بيمسح فيسبوك <b>مرة واحدة بس</b> لكل الفترة ويوزّع الردود تلقائيًا على كل سلوت بتاعه حسب وقته — أسرع بكتير من جلب كل سلوت لوحده.</div>
+        </div>
+      </div>
       <div class="frm">
         <label>الزميل<select id="bulkBfAgent"></select></label>
         <label>من تاريخ<input type="date" id="bulkBfFrom"></label>
         <label>لـ تاريخ<input type="date" id="bulkBfTo"></label>
       </div>
-      <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-top:6px">
+      <label class="bulkbf-toggle">
         <input type="checkbox" id="bulkBfOverwrite"> أعد حساب حتى السلوتات اللي ليها رقم متسجّل بالفعل
       </label>
-      <div class="frm-row" style="margin-top:8px">
-        <button class="btnp" id="bulkBfBtn">🔁 ابدأ الجلب</button>
+      <div class="frm-row" style="margin-top:10px">
+        <button class="bulkbf-btn" id="bulkBfBtn"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>ابدأ الجلب</button>
       </div>
       <div id="bulkBfStatus" class="emsg" style="display:none"></div>
     </div>

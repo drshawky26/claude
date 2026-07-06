@@ -305,6 +305,18 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Facebook harvest — durable log of agent replies + customer messages, written
+    // ONLY by the local harvester (Admin SDK bypasses these rules). Read by the
+    // Facebook team / admins for analytics. Never written from the browser.
+    match /fbReplies/{docId} {
+      allow read:  if canViewFacebook();
+      allow write: if isAdmin();
+    }
+    match /fbCustomerMsgs/{docId} {
+      allow read:  if canViewFacebook();
+      allow write: if isAdmin();
+    }
+
     // Facebook ops — daily slot/entry log (replaces the manual marketing sheets).
     // Editors with canViewFacebook create entries attributed to themselves;
     // they may edit/delete their own; admins manage everything.
