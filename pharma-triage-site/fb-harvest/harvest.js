@@ -80,7 +80,7 @@ const AGENT_TAGS_DEFAULT = {
 function parseArgs(argv) {
   const a = { local:false, upload:false, backfill:false, all:false, until:null,
               out:LOCAL_FILE_DEFAULT, saveConfig:false, refreshConfig:false,
-              dryRun:false, verbose:false, maxConvs:0 };
+              token:null, pageId:null, dryRun:false, verbose:false, maxConvs:0 };
   for (let i = 2; i < argv.length; i++) {
     const k = argv[i];
     if      (k === "--local")      a.local    = true;
@@ -91,6 +91,8 @@ function parseArgs(argv) {
     else if (k === "--out")        a.out      = String(argv[++i] || LOCAL_FILE_DEFAULT);
     else if (k === "--save-config")a.saveConfig = true;
     else if (k === "--refresh-config") a.refreshConfig = true;
+    else if (k === "--token")      a.token    = String(argv[++i] || "");
+    else if (k === "--page-id" || k === "--page") a.pageId = String(argv[++i] || "");
     else if (k === "--dry-run")    a.dryRun   = true;
     else if (k === "--verbose")    a.verbose  = true;
     else if (k === "--max-convs")  a.maxConvs = Math.max(0, Number(argv[++i]) || 0);
@@ -127,12 +129,34 @@ function readLocalConfig() {
   return null;
 }
 async function getConfig(args) {
+  // 1) explicit token/pageId (flags or env) — FULLY OFFLINE, never touches Firestore.
+  //    Use this when Firestore quota is exhausted: --token <t> --page-id <p>
+  const t = args.token || process.env.FB_TOKEN;
+  const p = args.pageId || process.env.FB_PAGE_ID;
+  if (t && p) {
+    const lc = readLocalConfig();
+    const agentTags = { ...AGENT_TAGS_DEFAULT, ...(lc?.agentTags || {}) };
+    if (args.saveConfig) { fs.writeFileSync(LOCAL_CONFIG, JSON.stringify({ token: t, pageId: p, agentTags }, null, 2)); console.log(`✓ saved ${LOCAL_CONFIG} (from flags/env) — --local now runs 100% offline.`); }
+    return { token: t, pageId: p, agentTags, src: "flags/env" };
+  }
+  // 2) local-config.json — offline (created once by --save-config or by hand)
   if (!args.refreshConfig && !args.saveConfig) {
     const lc = readLocalConfig();
     if (lc) return { token: lc.token, pageId: lc.pageId, agentTags: { ...AGENT_TAGS_DEFAULT, ...(lc.agentTags || {}) }, src: "local-config.json" };
   }
+  // 3) Firestore — needs quota + serviceAccount. Fails with RESOURCE_EXHAUSTED if quota is spent.
   const db  = initDb();
-  const cfg = (await db.collection("appConfig").doc("fbLiveConfig").get()).data() || {};
+  let cfg;
+  try { cfg = (await db.collection("appConfig").doc("fbLiveConfig").get()).data() || {}; }
+  catch (e) {
+    if (e.code === 8 || /RESOURCE_EXHAUSTED|Quota exceeded/i.test(e.message || "")) {
+      console.error("✗ Firestore quota is exhausted, so the token can't be read from it right now.");
+      console.error("  → Run fully offline instead: node harvest.js --save-config --token <TOKEN> --page-id <PAGE_ID>");
+      console.error("    (or create local-config.json by hand: { \"token\":\"…\", \"pageId\":\"…\" })");
+      process.exit(1);
+    }
+    throw e;
+  }
   if (!cfg.token || !cfg.pageId) { console.error("✗ token/pageId not set in appConfig/fbLiveConfig."); process.exit(1); }
   const agentTags = { ...AGENT_TAGS_DEFAULT };
   try { const s = await db.collection("appConfig").doc("fbAgentTags").get(); if (s.exists && s.data().tags) Object.assign(agentTags, s.data().tags); } catch {}
