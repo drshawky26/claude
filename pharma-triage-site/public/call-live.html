@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NAZRA — لايف كول سنتر الاستشارات</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap" media="print" onload="this.media='all'">
+<style>
+:root {
+  --navy: #0d1f3c; --navy2: #162d52; --navy3: #1e3d6e;
+  --teal: #0ea5a0; --teal2: #0cc8c2;
+  --indigo: #6366f1; --indigo2: #818cf8; --indigo3: #4f46e5;
+  --ivory: #f9f7f2; --white: #ffffff;
+  --body-text: #2d4060; --muted: #6b82a0;
+  --border: rgba(13,31,60,.10); --border2: rgba(13,31,60,.18);
+  --green: #059669; --red: #dc2626; --amber: #d97706;
+  --r: 16px; --r-sm: 10px; --r-lg: 22px;
+  --sh: 0 4px 20px rgba(13,31,60,.10), 0 1px 4px rgba(13,31,60,.06);
+  --sh-lg: 0 12px 40px rgba(13,31,60,.14);
+  --hdr: 64px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Cairo', sans-serif; font-size: 14px;
+  color: var(--body-text); background: var(--ivory); min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 15% 0%, rgba(99,102,241,.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 10%, rgba(13,31,60,.05) 0%, transparent 55%),
+    linear-gradient(180deg, #f4f6fb 0%, #f9f7f2 100%);
+}
+h1,h2,h3,h4 { font-family:'Noto Kufi Arabic','Cairo',sans-serif; color:var(--navy); font-weight:700; }
+
+/* HEADER */
+header {
+  height: var(--hdr); background: var(--navy);
+  position: sticky; top: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px;
+  box-shadow: 0 2px 24px rgba(13,31,60,.35);
+}
+header::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, var(--indigo), var(--indigo2), var(--indigo3));
+}
+.hdr-brand { display:flex; align-items:center; gap:12px; }
+.hdr-logo-wrap { width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg,var(--indigo),var(--indigo3)); display:flex; align-items:center; justify-content:center; font-size:18px; }
+.hdr-title { font-family:'Noto Kufi Arabic',sans-serif; font-size:18px; font-weight:900; color:#fff; letter-spacing:2px; }
+.hdr-subtitle { font-size:11px; color:rgba(255,255,255,.5); }
+.hdr-live-dot { display:inline-flex; align-items:center; gap:6px; background:rgba(99,102,241,.2); border:1px solid rgba(99,102,241,.4); color:var(--indigo2); border-radius:999px; padding:4px 12px; font-size:11px; font-weight:700; }
+.hdr-live-dot::before { content:''; width:7px; height:7px; border-radius:50%; background:var(--indigo2); animation:livePulse 1.5s ease-in-out infinite; }
+.hdr-back { color:rgba(255,255,255,.65); font-size:13px; font-family:'Cairo',sans-serif; text-decoration:none; display:flex; align-items:center; gap:6px; transition:.2s; }
+.hdr-back:hover { color:#fff; }
+@keyframes livePulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.4;transform:scale(.6);} }
+
+/* MAIN */
+main { max-width: 1400px; margin: 0 auto; padding: 24px 20px 60px; }
+
+/* SYNC STATUS BAR */
+.sync-bar {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r-sm); padding: 10px 16px;
+  margin-bottom: 20px; font-size: 12px; color: var(--muted);
+  box-shadow: var(--sh);
+}
+.sync-dot { width:8px; height:8px; border-radius:50%; background:var(--amber); flex-shrink:0; }
+.sync-dot.ok { background:var(--green); }
+.sync-dot.err { background:var(--red); }
+#syncTime { font-weight:700; color:var(--navy); }
+.sync-bar-right { margin-right:auto; display:flex; gap:8px; align-items:center; }
+.refresh-btn {
+  display:inline-flex; align-items:center; gap:5px;
+  background:rgba(99,102,241,.08); color:var(--indigo3);
+  border:1px solid rgba(99,102,241,.25); border-radius:8px;
+  padding:5px 12px; font-size:12px; font-weight:700; font-family:'Cairo',sans-serif;
+  cursor:pointer; transition:.2s;
+}
+.refresh-btn:hover { background:rgba(99,102,241,.15); }
+.date-badge {
+  background:var(--navy); color:#fff; border-radius:8px;
+  padding:5px 12px; font-size:12px; font-weight:700; font-family:'Cairo',sans-serif;
+}
+
+/* KPI CARDS */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.kpi-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 18px 16px;
+  box-shadow: var(--sh); text-align: center;
+  position: relative; overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+.kpi-card:hover { transform: translateY(-2px); box-shadow: var(--sh-lg); }
+.kpi-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:var(--r) var(--r) 0 0; }
+.kpi-card.blue::before  { background: linear-gradient(90deg,var(--indigo),var(--indigo2)); }
+.kpi-card.green::before { background: linear-gradient(90deg,#059669,#10b981); }
+.kpi-card.red::before   { background: linear-gradient(90deg,#dc2626,#f87171); }
+.kpi-card.amber::before { background: linear-gradient(90deg,#d97706,#fbbf24); }
+.kpi-card.teal::before  { background: linear-gradient(90deg,var(--teal),var(--teal2)); }
+.kpi-card.purple::before{ background: linear-gradient(90deg,#7c3aed,#a78bfa); }
+.kpi-lbl { font-size: 11px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+.kpi-val { font-size: 36px; font-weight: 900; font-family:'Noto Kufi Arabic',sans-serif; color: var(--navy); line-height: 1; }
+.kpi-val.green { color: var(--green); }
+.kpi-val.red   { color: #dc2626; }
+.kpi-val.amber { color: var(--amber); }
+.kpi-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+/* SECTION HEADERS */
+.section-hdr {
+  display: flex; align-items: center; gap: 10px;
+  margin: 28px 0 14px;
+}
+.section-hdr h3 { font-size: 15px; font-weight: 800; color: var(--navy); }
+.section-pill {
+  background: rgba(99,102,241,.1); color: var(--indigo3);
+  border: 1px solid rgba(99,102,241,.25);
+  border-radius: 999px; padding: 2px 10px; font-size: 11px; font-weight: 700;
+}
+.section-pill.green { background:rgba(5,150,105,.1); color:var(--green); border-color:rgba(5,150,105,.25); }
+.section-pill.red   { background:rgba(220,38,38,.08); color:#dc2626; border-color:rgba(220,38,38,.2); }
+
+/* CALLS TABLE */
+.calls-table-wrap {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r); box-shadow: var(--sh); overflow: hidden;
+  margin-bottom: 24px;
+}
+.calls-table-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+  background: #f8fafc;
+}
+.calls-table-title { font-weight: 800; font-size: 14px; color: var(--navy); display:flex; align-items:center; gap:8px; }
+.calls-count-badge {
+  background: rgba(99,102,241,.1); color:var(--indigo3);
+  border-radius:999px; padding:2px 9px; font-size:11px; font-weight:700;
+}
+.calls-table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th {
+  background: #f1f5f9; color: var(--muted); font-weight: 700;
+  padding: 10px 12px; text-align: right; white-space: nowrap;
+  border-bottom: 1px solid var(--border); font-size: 11px; text-transform: uppercase; letter-spacing: .3px;
+}
+tbody tr { border-bottom: 1px solid rgba(13,31,60,.05); transition: background .15s; }
+tbody tr:hover { background: rgba(99,102,241,.03); }
+tbody tr:last-child { border-bottom: none; }
+td { padding: 10px 12px; vertical-align: middle; white-space: nowrap; color: var(--body-text); }
+.status-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700;
+}
+.status-pill.answered { background:rgba(5,150,105,.1); color:var(--green); }
+.status-pill.missed   { background:rgba(220,38,38,.08); color:#dc2626; }
+.status-pill.noanswer { background:rgba(217,119,6,.1); color:var(--amber); }
+.phone-cell { font-family: monospace; font-size: 12px; }
+.dur-cell { font-family: monospace; font-size: 12px; color: var(--muted); }
+.emp-cell { font-weight: 600; color: var(--navy); }
+.did-cell { font-size: 11px; color: var(--muted); font-family: monospace; }
+.did-s { color:#dc2626; font-weight:700; }
+
+/* AGENTS GRID */
+.agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 12px; margin-bottom: 24px; }
+.agent-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 14px 16px;
+  box-shadow: var(--sh);
+}
+.agent-rank { font-size:18px; margin-bottom:4px; }
+.agent-name { font-weight: 800; font-size: 13px; color: var(--navy); margin-bottom: 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.agent-ext { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+.agent-bar-wrap { height:4px; background:rgba(13,31,60,.08); border-radius:4px; margin-bottom:8px; overflow:hidden; }
+.agent-bar { height:100%; background:linear-gradient(90deg,var(--indigo),var(--indigo2)); border-radius:4px; transition:width .6s ease; }
+.agent-has-missed { border-color: rgba(220,38,38,.25); background: rgba(220,38,38,.02); }
+.agent-stats { display: flex; gap: 6px; flex-wrap: wrap; }
+/* Row styling */
+tr.row-missed { background: rgba(220,38,38,.04); }
+tr.row-missed td { border-bottom-color: rgba(220,38,38,.10) !important; }
+tr.row-latest { background: rgba(99,102,241,.04); }
+tr.row-latest td:first-child::before { content:''; display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--indigo); margin-left:6px; vertical-align:middle; animation:livePulse 1.5s ease-in-out infinite; }
+.time-cell { font-variant-numeric:tabular-nums; font-weight:700; color:var(--navy); min-width:70px; }
+.ext-cell { font-weight:700; color:var(--indigo3); }
+.did-badge { display:inline-flex; align-items:center; padding:2px 8px; border-radius:6px; font-size:11px; font-weight:700; background:rgba(13,31,60,.06); color:var(--muted); }
+.did-badge.did-s { background:rgba(220,38,38,.10); color:var(--red); }
+.agent-stat { display:flex; align-items:center; gap:3px; font-size:11px; font-weight:700; }
+.agent-stat.ok { color:var(--green); }
+.agent-stat.miss { color:#dc2626; }
+.agent-stat.dur { color:var(--muted); }
+
+/* EMPTY / LOADING */
+.empty-state { text-align:center; padding:40px 20px; color:var(--muted); font-size:13px; }
+.empty-state svg { margin-bottom:10px; opacity:.4; }
+.loading-shimmer {
+  background: linear-gradient(90deg, #f0f4f8 25%, #e8eef5 50%, #f0f4f8 75%);
+  background-size: 200% 100%; animation: shimmer 1.5s infinite;
+  border-radius: 6px; height: 16px;
+}
+@keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
+
+/* TABS */
+.tabs { display:flex; gap:4px; margin-bottom:16px; background:var(--white); border:1px solid var(--border); border-radius:var(--r-sm); padding:4px; width:fit-content; }
+.tab-btn {
+  padding:7px 18px; border-radius:8px; font-family:'Cairo',sans-serif;
+  font-size:13px; font-weight:700; cursor:pointer; border:none;
+  background:transparent; color:var(--muted); transition:.2s;
+}
+.tab-btn.active { background:var(--indigo3); color:#fff; box-shadow:0 2px 8px rgba(99,102,241,.3); }
+
+/* HIDDEN UTILITY */
+.hidden { display: none !important; }
+
+/* LOGIN WALL */
+#loginWall { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; gap:16px; }
+#loginWall h2 { color:var(--navy); }
+#loginWall p { color:var(--muted); font-size:13px; }
+
+/* RESPONSIVE */
+@media(max-width:700px) {
+  .kpi-grid { grid-template-columns: repeat(2,1fr); }
+  .agents-grid { grid-template-columns: repeat(2,1fr); }
+  header { padding: 0 14px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-brand">
+    <div class="hdr-logo-wrap">📡</div>
+    <div>
+      <div class="hdr-title">NAZRA</div>
+      <div class="hdr-subtitle">لايف كول سنتر الاستشارات</div>
+    </div>
+  </div>
+  <div class="hdr-live-dot">LIVE</div>
+  <a href="/index.html" class="hdr-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    رجوع
+  </a>
+</header>
+
+<main>
+
+  <div id="loginWall" class="hidden">
+    <h2>🔒 غير مصرح</h2>
+    <p>هذه الصفحة متاحة للأدمن والمستخدمين المصرح لهم فقط.</p>
+    <a href="/index.html" style="color:var(--indigo3);font-weight:700">← رجوع للرئيسية</a>
+  </div>
+
+  <div id="mainContent" class="hidden">
+
+    <!-- SYNC BAR -->
+    <div class="sync-bar">
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncStatus">جاري التحميل...</span>
+      <span>·</span>
+      <span>آخر تحديث: <strong id="syncTime">—</strong></span>
+      <div class="sync-bar-right">
+        <span class="date-badge" id="todayBadge"></span>
+        <button class="refresh-btn" onclick="loadAll()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          تحديث
+        </button>
+      </div>
+    </div>
+
+    <!-- MISSED ALERT BANNER -->
+    <div id="missedAlert" class="hidden" style="
+      background:linear-gradient(135deg,rgba(220,38,38,.08),rgba(220,38,38,.04));
+      border:1.5px solid rgba(220,38,38,.30); border-radius:var(--r);
+      padding:14px 20px; margin-bottom:16px;
+      display:flex; align-items:center; gap:12px; font-size:13px;
+    ">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span style="color:#dc2626;font-weight:800" id="missedAlertText">مكالمات مفقودة</span>
+      <span style="color:#7f1d1d;margin-right:auto">تحقق من المكالمات غير المجابة أدناه</span>
+    </div>
+
+    <!-- KPI GRID -->
+    <div class="kpi-grid" id="kpiGrid">
+      <div class="kpi-card blue">
+        <div class="kpi-lbl">إجمالي اليوم</div>
+        <div class="kpi-val" id="kpiTotal">—</div>
+        <div class="kpi-sub">Customer + Stuff</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-lbl">تم الرد</div>
+        <div class="kpi-val green" id="kpiAnswered">—</div>
+        <div class="kpi-sub">مكالمات مكتملة</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-lbl">مفقودة</div>
+        <div class="kpi-val red" id="kpiMissed">—</div>
+        <div class="kpi-sub">NO ANSWER + S</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-lbl">نسبة الرد</div>
+        <div class="kpi-val amber" id="kpiRate">—</div>
+        <div class="kpi-sub">من الإجمالي</div>
+      </div>
+      <div class="kpi-card teal">
+        <div class="kpi-lbl">Customer (110)</div>
+        <div class="kpi-val" id="kpiCustomer">—</div>
+        <div class="kpi-sub" id="kpiCustomerMiss">—</div>
+      </div>
+      <div class="kpi-card purple">
+        <div class="kpi-lbl">Stuff (111)</div>
+        <div class="kpi-val" id="kpiStuff">—</div>
+        <div class="kpi-sub" id="kpiStuffMiss">—</div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('customer')">📞 Customer (110)</button>
+      <button class="tab-btn" onclick="switchTab('stuff')">👥 Stuff (111)</button>
+      <button class="tab-btn" onclick="switchTab('agents')">🏆 أداء الزملاء</button>
+    </div>
+
+    <!-- CUSTOMER CALLS -->
+    <div id="tabCustomer">
+      <div class="calls-table-wrap">
+        <div class="calls-table-header">
+          <div class="calls-table-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.39 19a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 3.07 3.18 2 2 0 0 1 5.07 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L9.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 23 16z"/></svg>
+            مكالمات Customer الواردة
+          </div>
+          <span class="calls-count-badge" id="customerCountBadge">0</span>
+        </div>
+        <div class="calls-table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>التاريخ والوقت</th>
+                <th>الرقم</th>
+                <th>الرقم الداخلي</th>
+                <th>الموظف</th>
+                <th>المدة</th>
+                <th>الحالة</th>
+                <th>DID</th>
+              </tr>
+            </thead>
+            <tbody id="customerTableBody"><tr><td colspan="7" class="empty-state">جاري التحميل...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUFF CALLS -->
+    <div id="tabStuff" class="hidden">
+      <div class="calls-table-wrap">
+        <div class="calls-table-header">
+          <div class="calls-table-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            مكالمات Stuff الداخلية
+          </div>
+          <span class="calls-count-badge" id="stuffCountBadge">0</span>
+        </div>
+        <div class="calls-table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>التاريخ والوقت</th>
+                <th>الرقم</th>
+                <th>الرقم الداخلي</th>
+                <th>الموظف</th>
+                <th>المدة</th>
+                <th>الحالة</th>
+                <th>DID</th>
+              </tr>
+            </thead>
+            <tbody id="stuffTableBody"><tr><td colspan="7" class="empty-state">جاري التحميل...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGENTS TAB -->
+    <div id="tabAgents" class="hidden">
+      <div class="section-hdr">
+        <h3>أداء الزملاء اليوم</h3>
+        <span class="section-pill" id="agentsCountPill">0 زميل</span>
+      </div>
+      <div class="agents-grid" id="agentsGrid">
+        <div class="empty-state">جاري التحميل...</div>
+      </div>
+    </div>
+
+    <!-- NO POLLER WARNING -->
+    <div id="noPollerWarn" class="hidden" style="background:#fffbeb;border:1px solid #fbbf24;border-radius:12px;padding:16px 20px;margin-top:20px;font-size:13px;color:#92400e;">
+      <strong>⚠ الـ Poller مش شغال</strong> — البيانات القديمة. شغّل سكريبت <code>edara-poller/index.js</code> على شبكة إدارة عشان تجي بيانات لايف.
+    </div>
+
+  </div>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getFirestore, doc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBvmHh6-KVlKNATzbfMk3hIswbMCrBZwf4",
+  authDomain: "pharma-triage-5d165.firebaseapp.com",
+  projectId: "pharma-triage-5d165",
+  storageBucket: "pharma-triage-5d165.firebasestorage.app",
+  messagingSenderId: "1080517928737",
+  appId: "1:1080517928737:web:9110f120203d0e6b7b0060"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+const auth = getAuth(app);
+
+const el = id => document.getElementById(id);
+
+// Today badge
+const todayStr = new Date().toLocaleDateString('ar-EG', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+el('todayBadge').textContent = todayStr;
+
+// Current tab
+let currentTab = 'customer';
+
+window.switchTab = function(tab) {
+  currentTab = tab;
+  ['customer','stuff','agents'].forEach(t => {
+    el('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('hidden', t !== tab);
+  });
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['customer','stuff','agents'][i] === tab);
+  });
+};
+
+// Auth gate
+onAuthStateChanged(auth, async user => {
+  if(!user) { el('loginWall').classList.remove('hidden'); return; }
+  try {
+    const snap = await getDoc(doc(db,'users',user.uid));
+    const profile = snap.exists() ? snap.data() : {};
+    const isAdmin = profile.role==='admin' || profile.canAdmin===true || user.email==='drshawky530@gmail.com';
+    const allowed = isAdmin || profile.canViewNazra===true;
+    if(!allowed) { el('loginWall').classList.remove('hidden'); return; }
+    el('mainContent').classList.remove('hidden');
+    listenLive();
+  } catch(e) {
+    el('loginWall').classList.remove('hidden');
+  }
+});
+
+// Live listener
+let unsub = null;
+function listenLive() {
+  if(unsub) unsub();
+  unsub = onSnapshot(doc(db,'nazra_live','snapshot'), snap => {
+    if(!snap.exists()) {
+      setSyncState('warn', 'لا توجد بيانات — شغّل الـ Poller');
+      el('noPollerWarn').classList.remove('hidden');
+      return;
+    }
+    const data = snap.data();
+    renderAll(data);
+  }, err => {
+    setSyncState('err', 'خطأ في الاتصال بـ Firebase');
+  });
+}
+
+window.loadAll = function() {
+  setSyncState('loading', 'جاري التحديث...');
+  listenLive();
+};
+
+function setSyncState(state, msg) {
+  const dot = el('syncDot');
+  dot.className = 'sync-dot' + (state==='ok'?' ok':state==='err'?' err':'');
+  el('syncStatus').textContent = msg;
+  if(state==='ok') el('syncTime').textContent = new Date().toLocaleTimeString('ar-EG');
+}
+
+function isMissed(call) {
+  return call.status === 'NO ANSWER' || (call.status === 'ANSWERED' && String(call.did||'').trim().toUpperCase() === 'S');
+}
+
+function renderAll(data) {
+  const customer = data.customerCalls || [];
+  const stuff    = data.stuffCalls    || [];
+  const updatedAt = data.updatedAt;
+
+  if(updatedAt) {
+    const dt = updatedAt.toDate ? updatedAt.toDate() : new Date(updatedAt);
+    el('syncTime').textContent = dt.toLocaleTimeString('ar-EG');
+    // warn if older than 5 min
+    const ageMin = (Date.now() - dt.getTime()) / 60000;
+    if(ageMin > 5) {
+      setSyncState('warn', `آخر تحديث منذ ${Math.round(ageMin)} دقيقة`);
+      el('noPollerWarn').classList.remove('hidden');
+    } else {
+      setSyncState('ok', 'متصل · بيانات حديثة');
+      el('noPollerWarn').classList.add('hidden');
+    }
+  }
+
+  // KPIs
+  const allCalls   = [...customer, ...stuff];
+  const answered   = allCalls.filter(c => c.status==='ANSWERED' && !isMissed(c));
+  const missed     = allCalls.filter(isMissed);
+  const rate       = allCalls.length ? Math.round(answered.length / allCalls.length * 100) : 0;
+
+  el('kpiTotal').textContent    = allCalls.length;
+  el('kpiAnswered').textContent = answered.length;
+  el('kpiMissed').textContent   = missed.length;
+  el('kpiRate').textContent     = rate + '%';
+  el('kpiCustomer').textContent = customer.length;
+  el('kpiStuff').textContent    = stuff.length;
+
+  const cMissed = customer.filter(isMissed).length;
+  const sMissed = stuff.filter(isMissed).length;
+  el('kpiCustomerMiss').textContent = cMissed > 0 ? `${cMissed} مفقودة ⚠` : 'لا مفقودات ✓';
+  el('kpiCustomerMiss').style.color = cMissed > 0 ? 'var(--red)' : 'var(--green)';
+  el('kpiStuffMiss').textContent    = sMissed > 0 ? `${sMissed} مفقودة ⚠` : 'لا مفقودات ✓';
+  el('kpiStuffMiss').style.color    = sMissed > 0 ? 'var(--red)' : 'var(--green)';
+
+  // Missed alert banner
+  const alertEl = el('missedAlert');
+  if(missed.length > 0) {
+    alertEl.classList.remove('hidden');
+    alertEl.style.display = 'flex';
+    el('missedAlertText').textContent = `⚠ ${missed.length} مكالمة مفقودة اليوم`;
+  } else {
+    alertEl.classList.add('hidden');
+  }
+
+  // Tables — sort latest first
+  const sortByTime = arr => [...arr].sort((a,b) => {
+    const ta = new Date(a.dateTime||0).getTime() || 0;
+    const tb = new Date(b.dateTime||0).getTime() || 0;
+    return tb - ta;
+  });
+
+  renderTable('customerTableBody', sortByTime(customer));
+  renderTable('stuffTableBody',    sortByTime(stuff));
+  el('customerCountBadge').textContent = customer.length;
+  el('stuffCountBadge').textContent    = stuff.length;
+
+  // Agents
+  renderAgents([...customer, ...stuff]);
+}
+
+function fmtTime(raw) {
+  if(!raw) return '—';
+  try {
+    const d = new Date(raw);
+    if(isNaN(d)) return raw.split(' ').pop() || raw; // fallback: return time part
+    return d.toLocaleTimeString('ar-EG', { hour:'2-digit', minute:'2-digit', hour12:true });
+  } catch { return raw; }
+}
+
+function fmtDur(raw) {
+  if(!raw || raw==='00:00:00' || raw==='0') return '<span style="opacity:.3">—</span>';
+  const parts = (raw||'').split(':');
+  if(parts.length === 3) {
+    const h = parseInt(parts[0]||0);
+    const m = parseInt(parts[1]||0);
+    const s = parseInt(parts[2]||0);
+    if(h > 0) return `${h}س ${m}د`;
+    if(m > 0) return `${m}:${parts[2]}`;
+    return `${s}ث`;
+  }
+  return raw;
+}
+
+function renderTable(tbodyId, calls) {
+  const tbody = el(tbodyId);
+  if(!calls.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:.3"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 3.07 3.18 2 2 0 0 1 5.07 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L9.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 23 16z"/></svg>
+      <br>لا توجد مكالمات
+    </div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = calls.map((c, i) => {
+    const missed    = isMissed(c);
+    const isAnsw    = c.status === 'ANSWERED' && !missed;
+    const pillClass = isAnsw ? 'answered' : (c.status === 'NO ANSWER' ? 'noanswer' : 'missed');
+    const pillText  = isAnsw ? '✓ تم الرد'  : (c.status === 'NO ANSWER' ? '✗ لم يرد'   : '✗ مفقودة');
+    const rowClass  = missed ? 'row-missed' : (i === 0 ? 'row-latest' : '');
+    const didBadge  = c.did
+      ? `<span class="did-badge${c.did.toUpperCase()==='S'?' did-s':''}">${c.did}</span>`
+      : '<span style="opacity:.3">—</span>';
+    const phone = c.phone || '—';
+    const phoneMasked = phone.length >= 10
+      ? phone.slice(0,4) + '••••' + phone.slice(-3)
+      : esc(phone);
+    const empName = c.employee && c.employee.trim()
+      ? esc(c.employee)
+      : '<span style="opacity:.35">—</span>';
+    return `<tr class="${rowClass}">
+      <td class="time-cell">${fmtTime(c.dateTime)}</td>
+      <td class="phone-cell" title="${esc(phone)}">${phoneMasked}</td>
+      <td class="ext-cell">${esc(c.extension||'—')}</td>
+      <td class="emp-cell">${empName}</td>
+      <td class="dur-cell">${fmtDur(c.duration)}</td>
+      <td><span class="status-pill ${pillClass}">${pillText}</span></td>
+      <td class="did-cell">${didBadge}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAgents(calls) {
+  const agentMap = {};
+  calls.forEach(c => {
+    const key = (c.employee||'').trim() || '— غير محدد';
+    if(!agentMap[key]) agentMap[key] = { name:key, ext:c.extension||'', total:0, answered:0, missed:0, totalSec:0 };
+    agentMap[key].total++;
+    if(isMissed(c)) agentMap[key].missed++;
+    else if(c.status==='ANSWERED') agentMap[key].answered++;
+    const dur   = (c.duration||'0:0:0').split(':').map(Number);
+    agentMap[key].totalSec += (dur[0]||0)*3600 + (dur[1]||0)*60 + (dur[2]||0);
+  });
+
+  // Sort by answered count desc
+  const agents = Object.values(agentMap)
+    .filter(a => a.name !== '— غير محدد')
+    .sort((a,b) => b.answered - a.answered);
+
+  el('agentsCountPill').textContent = agents.length + ' زميل';
+  if(!agents.length) {
+    el('agentsGrid').innerHTML = '<div class="empty-state">لا توجد بيانات أداء</div>';
+    return;
+  }
+
+  const maxAnswered = Math.max(...agents.map(a => a.answered), 1);
+
+  el('agentsGrid').innerHTML = agents.map((a, i) => {
+    const rate    = a.total ? Math.round(a.answered / a.total * 100) : 0;
+    const avgSec  = a.answered ? Math.round(a.totalSec / a.answered) : 0;
+    const avgFmt  = `${Math.floor(avgSec/60)}:${String(avgSec%60).padStart(2,'0')}`;
+    const barW    = Math.round(a.answered / maxAnswered * 100);
+    const medal   = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
+    const rateColor = rate >= 80 ? 'var(--green)' : rate >= 50 ? 'var(--amber)' : 'var(--red)';
+    return `<div class="agent-card ${a.missed > 2 ? 'agent-has-missed' : ''}">
+      <div class="agent-rank">${medal || (i+1)}</div>
+      <div class="agent-name">${esc(a.name)}</div>
+      <div class="agent-ext">تحويلة ${esc(a.ext)||'—'}</div>
+      <div class="agent-bar-wrap">
+        <div class="agent-bar" style="width:${barW}%"></div>
+      </div>
+      <div class="agent-stats">
+        <span class="agent-stat ok" title="ردّ">✓ ${a.answered}</span>
+        <span class="agent-stat miss" title="فقدان">✗ ${a.missed}</span>
+        <span class="agent-stat rate" style="color:${rateColor}">${rate}%</span>
+        <span class="agent-stat dur" title="متوسط المدة">⏱ ${avgFmt}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>

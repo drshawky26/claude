@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>استيراد سلوتات 22/6</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Cairo",system-ui,sans-serif;background:#0d1f3c;color:#eaf1fb;padding:24px;min-height:100vh}
+h1{font-size:20px;margin-bottom:6px;color:#3b8bf5}
+.sub{font-size:13px;color:#8aa0c2;margin-bottom:20px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;background:#0f1c34;border-radius:12px;overflow:hidden}
+th{background:#162d52;color:#8aa0c2;font-size:11.5px;padding:10px 12px;text-align:start}
+td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.07);color:#cdd9ec}
+td b{color:#eaf1fb}
+tr:last-child td{border-bottom:none}
+tr.notif td{background:rgba(217,154,43,.06)}
+.badge{display:inline-block;font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:999px}
+.badge.slot{background:rgba(59,139,245,.16);color:#3b8bf5}
+.badge.notif{background:rgba(217,154,43,.18);color:#ecb44b}
+.badge.done{background:rgba(40,192,126,.16);color:#28c07e}
+.badge.missing{background:rgba(245,107,88,.16);color:#f56b58}
+#gate{background:#162d52;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:28px;max-width:440px;margin:60px auto;text-align:center}
+#gate h2{font-size:18px;margin-bottom:8px}
+#gate p{color:#8aa0c2;font-size:13px;margin-bottom:16px}
+.btnp{font-family:inherit;font-weight:800;font-size:14px;color:#fff;background:linear-gradient(135deg,#1877f2,#0a52c4);border:none;border-radius:10px;padding:11px 28px;cursor:pointer;transition:.15s}
+.btnp:hover{opacity:.88;transform:translateY(-1px)}
+.btnp:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btnp.teal{background:linear-gradient(135deg,#0ea5a0,#0cc8c2)}
+.btnp.red{background:linear-gradient(135deg,#d34a3a,#b03226)}
+#status{font-size:13.5px;font-weight:800;padding:12px 18px;border-radius:10px;margin-bottom:18px;display:none}
+#status.ok{background:rgba(40,192,126,.16);color:#28c07e;display:block}
+#status.err{background:rgba(245,107,88,.16);color:#f56b58;display:block}
+#status.info{background:rgba(59,139,245,.14);color:#3b8bf5;display:block}
+.actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+.count{font-size:13px;color:#8aa0c2;font-weight:700}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <h2>🔐 جارٍ التحقق من الصلاحية…</h2>
+  <p id="gateMsg">لازم تكون مسجّل دخول كأدمن عشان تستورد الداتا.</p>
+</div>
+
+<div id="appView" style="display:none">
+  <h1>📥 استيراد سلوتات 22 يونيو 2026</h1>
+  <div class="sub">الداتا من الشيت — 41 صف — التاريخ: 2026-06-22</div>
+
+  <div id="status"></div>
+
+  <div class="actions">
+    <button class="btnp teal" id="importBtn">📥 استورد الكل في Firestore</button>
+    <span class="count" id="progressLbl">41 صف جاهزين للاستيراد</span>
+  </div>
+
+  <table>
+    <tr>
+      <th>#</th><th>الاسم (قائمة الإدخال)</th><th>السلوت المقرر</th>
+      <th>فعلي من</th><th>فعلي إلى</th><th>نوع</th>
+    </tr>
+    <tbody id="tBody"></tbody>
+  </table>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBvmHh6-KVlKNATzbfMk3hIswbMCrBZwf4",
+  authDomain:"pharma-triage-5d165.firebaseapp.com",
+  projectId:"pharma-triage-5d165",
+  storageBucket:"pharma-triage-5d165.firebasestorage.app",
+  messagingSenderId:"1080517928737",
+  appId:"1:1080517928737:web:9110f120203d0e6b7b0060"
+};
+const ADMIN_EMAIL = "drshawky530@gmail.com";
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+/* ══════ الداتا ══════ */
+const NAME_MAP = {
+  "YOMNA":"Yomna Mohammed","HAGER":"Hager Ahmed","HUDA":"Hu Da SaEed",
+  "NADA":"Nadah Tarek","AYA":"Aya Hakeem","aya":"Aya Hakeem",
+  "MARYAM":"Mariam Moustafa","SHIXXX":"Sherif Ahmed","Eltayib":"Abdulrahman Mohammed"
+};
+
+// {n: اسم الشيت, sf: fromTime 24h, st: toTime 24h, af: actualFrom, at: actualTo, ch: channel}
+const RAW = [
+  {n:"YOMNA",  sf:"13:35", st:"13:40", af:"13:40", at:"13:47", ch:""},
+  {n:"HAGER",  sf:"13:40", st:"13:45", af:"13:45", at:"14:00", ch:""},
+  {n:"HUDA",   sf:"13:45", st:"13:50", af:"13:52", at:"14:13", ch:""},
+  {n:"NADA",   sf:"13:50", st:"13:55", af:"13:55", at:"14:00", ch:""},
+  {n:"YOMNA",  sf:"13:55", st:"14:00", af:"14:01", at:"14:27", ch:""},
+  {n:"AYA",    sf:"14:00", st:"14:05", af:"14:08", at:"14:34", ch:""},
+  {n:"NADA",   sf:"14:05", st:"14:10", af:"14:10", at:"14:25", ch:""},
+  {n:"MARYAM", sf:"14:10", st:"14:15", af:"14:17", at:"14:26", ch:""},
+  {n:"HUDA",   sf:"14:15", st:"14:20", af:"14:20", at:"14:38", ch:""},
+  {n:"HAGER",  sf:"14:20", st:"14:25", af:"14:26", at:"14:36", ch:""},
+  {n:"MARYAM", sf:"",      st:"",      af:"14:26", at:"14:56", ch:"نوتيفيكيشن"},
+  {n:"NADA",   sf:"14:25", st:"14:30", af:"14:30", at:"14:55", ch:""},
+  {n:"YOMNA",  sf:"14:30", st:"14:35", af:"14:36", at:"15:01", ch:""},
+  {n:"AYA",    sf:"14:35", st:"14:40", af:"14:43", at:"14:48", ch:""},
+  {n:"HUDA",   sf:"14:40", st:"14:45", af:"14:46", at:"14:52", ch:""},
+  {n:"AYA",    sf:"14:45", st:"14:50", af:"14:51", at:"15:15", ch:""},
+  {n:"HUDA",   sf:"14:50", st:"14:55", af:"14:57", at:"15:22", ch:""},
+  {n:"NADA",   sf:"14:55", st:"15:00", af:"15:00", at:"15:15", ch:""},
+  {n:"HAGER",  sf:"15:00", st:"15:05", af:"15:06", at:"15:12", ch:""},
+  {n:"YOMNA",  sf:"15:05", st:"15:10", af:"15:11", at:"15:27", ch:""},
+  {n:"MARYAM", sf:"15:10", st:"15:15", af:"15:16", at:"15:40", ch:""},
+  {n:"HAGER",  sf:"15:15", st:"15:20", af:"15:21", at:"15:33", ch:""},
+  {n:"NADA",   sf:"15:20", st:"15:25", af:"15:30", at:"15:48", ch:""},
+  {n:"HUDA",   sf:"15:25", st:"15:30", af:"15:30", at:"16:09", ch:""},
+  {n:"AYA",    sf:"15:30", st:"15:35", af:"15:37", at:"15:50", ch:""},
+  {n:"YOMNA",  sf:"15:35", st:"15:40", af:"15:41", at:"16:48", ch:""},
+  {n:"HAGER",  sf:"15:40", st:"15:45", af:"15:46", at:"16:00", ch:""},
+  {n:"NADA",   sf:"15:45", st:"15:50", af:"15:52", at:"16:15", ch:""},
+  {n:"YOMNA",  sf:"15:50", st:"15:55", af:"15:56", at:"16:21", ch:""},
+  {n:"MARYAM", sf:"15:55", st:"16:00", af:"16:01", at:"16:18", ch:""},
+  {n:"HAGER",  sf:"16:00", st:"16:05", af:"16:06", at:"16:30", ch:""},
+  {n:"HUDA",   sf:"16:05", st:"16:10", af:"16:15", at:"16:40", ch:""},
+  {n:"NADA",   sf:"16:10", st:"16:15", af:"16:15", at:"16:35", ch:""},
+  {n:"YOMNA",  sf:"16:15", st:"16:20", af:"16:22", at:"",      ch:""},
+  {n:"MARYAM", sf:"16:20", st:"16:25", af:"16:27", at:"16:33", ch:""},
+  {n:"MARYAM", sf:"16:25", st:"16:30", af:"16:34", at:"16:37", ch:""},
+  {n:"SHIXXX", sf:"",      st:"",      af:"16:34", at:"",      ch:"نوتيفيكيشن"},
+  {n:"MARYAM", sf:"16:30", st:"16:35", af:"16:38", at:"16:52", ch:""},
+  {n:"HUDA",   sf:"16:35", st:"16:40", af:"16:44", at:"16:55", ch:""},
+  {n:"HAGER",  sf:"16:40", st:"16:45", af:"16:47", at:"16:54", ch:""},
+  {n:"Eltayib",sf:"16:45", st:"16:50", af:"16:51", at:"",      ch:""},
+];
+
+const DATE = "2026-06-22", YM = "2026-06";
+const esc = s => String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function buildRows(){
+  return RAW.map(r => ({
+    date: DATE,
+    ym: YM,
+    agent: NAME_MAP[r.n] || r.n,
+    channel: r.ch,
+    fromTime: r.sf,
+    toTime:   r.st,
+    actualFrom: r.af,
+    actualTo:   r.at,
+    messages: 0,
+  }));
+}
+
+function renderTable(rows){
+  const tb = document.getElementById("tBody");
+  tb.innerHTML = rows.map((r,i) => {
+    const isNotif = r.channel === "نوتيفيكيشن";
+    const slotTxt = r.fromTime ? `${r.fromTime} – ${r.toTime}` : "—";
+    const typeBadge = isNotif
+      ? '<span class="badge notif">نوتيفيكيشن</span>'
+      : '<span class="badge slot">سلوت</span>';
+    const atBadge = r.actualTo
+      ? `<span class="badge done">${r.actualTo}</span>`
+      : `<span class="badge missing">فاضي</span>`;
+    return `<tr class="${isNotif?'notif':''}">
+      <td style="color:#6b82a0">${i+1}</td>
+      <td><b>${esc(r.agent)}</b></td>
+      <td>${esc(slotTxt)}</td>
+      <td><b>${esc(r.actualFrom||'—')}</b></td>
+      <td>${atBadge}</td>
+      <td>${typeBadge}</td>
+    </tr>`;
+  }).join("");
+}
+
+let adminEmail = "";
+async function doImport(){
+  const rows = buildRows();
+  const btn = document.getElementById("importBtn");
+  const lbl = document.getElementById("progressLbl");
+  const st  = document.getElementById("status");
+  btn.disabled = true;
+  st.className = "info"; st.textContent = "⏳ جارٍ الحفظ في Firestore…";
+  let done = 0, failed = 0;
+  for(const row of rows){
+    try{
+      await addDoc(collection(db,"fbLog"), { ...row, by: adminEmail, at: serverTimestamp() });
+      done++;
+      lbl.textContent = `✅ ${done}/${rows.length}`;
+    }catch(e){
+      failed++;
+      console.error("فشل:", row.agent, e.message);
+    }
+  }
+  if(failed === 0){
+    st.className = "ok";
+    st.textContent = `✅ تم استيراد ${done} صف بنجاح في fbLog — تقدر تمسح الصفحة دي دلوقتي.`;
+  } else {
+    st.className = "err";
+    st.textContent = `⚠ تم ${done} وفشل ${failed} — افتح الـ console عشان تشوف التفاصيل.`;
+  }
+  btn.disabled = false;
+}
+
+onAuthStateChanged(auth, user => {
+  const gate = document.getElementById("gate");
+  const app  = document.getElementById("appView");
+  if(!user || user.email !== ADMIN_EMAIL){
+    gate.style.display = "";
+    document.getElementById("gateMsg").textContent =
+      user ? `الحساب (${user.email}) مش أدمن — لازم تدخل بـ ${ADMIN_EMAIL}` : "ادخل من facebook.html الأول.";
+    return;
+  }
+  adminEmail = user.email;
+  gate.style.display = "none";
+  app.style.display = "";
+  const rows = buildRows();
+  renderTable(rows);
+  document.getElementById("importBtn").onclick = () => {
+    if(confirm(`هتحفظ ${rows.length} صف في Firestore — متأكد؟`)) doImport();
+  };
+});
+</script>
+</body>
+</html>

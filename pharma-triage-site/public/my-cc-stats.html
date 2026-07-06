@@ -1,0 +1,1867 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#070f20">
+<script src="/lite-mode.js"></script>
+<title>إحصائياتي · مراجعة الكول سنتر · Pharma Triage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap"></noscript>
+<style>
+:root{
+  --bg:#070f20; --bg2:#0b1730; --glass:rgba(255,255,255,.055); --glassB:rgba(255,255,255,.10);
+  --glassHov:rgba(255,255,255,.09);
+  --teal:#0ea5a0; --teal2:#0cc8c2; --tglw:rgba(14,165,160,.30);
+  --gold:#c9a84c; --green:#22c55e; --blue:#60a5fa; --amber:#f59e0b; --orange:#f97316; --red:#f87171; --violet:#a78bfa;
+  --text:#e8eeff; --text2:rgba(232,238,255,.70); --text3:rgba(232,238,255,.42);
+  --t:.22s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Cairo',Tahoma,sans-serif;font-size:14px;color:var(--text);background:var(--bg);min-height:100vh;line-height:1.6;overflow-x:hidden;}
+
+.orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.16;}
+.orb1{width:680px;height:680px;background:var(--teal);top:-200px;right:-160px;--d:28s;}
+.orb2{width:520px;height:520px;background:#1e3a8a;bottom:-140px;left:-120px;--d:24s;--dl:-8s;}
+.orb3{width:340px;height:340px;background:var(--gold);top:42%;left:46%;--d:18s;--dl:-5s;opacity:.07;}
+@keyframes orbF{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(36px,-28px) scale(1.06);}66%{transform:translate(-22px,18px) scale(.96);}}
+
+.page{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:0 20px 64px;}
+
+/* Header */
+.hdr{position:sticky;top:0;z-index:100;background:rgba(7,15,32,.85);backdrop-filter:blur(18px);border-bottom:1px solid var(--glassB);padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between;gap:14px;}
+.hdr-brand{display:flex;align-items:center;gap:11px;}
+.hdr-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--teal),var(--teal2));display:grid;place-items:center;flex-shrink:0;}
+.hdr-title{font-size:15.5px;font-weight:800;}
+.hdr-sub{font-size:11px;color:var(--text3);margin-top:-2px;}
+.hdr-right{display:flex;align-items:center;gap:10px;}
+.hdr-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--teal),#0a7c78);display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff;}
+.hdr-name{font-size:13px;font-weight:700;color:var(--text2);}
+.hdr-btn{background:var(--glass);border:1px solid var(--glassB);color:var(--text2);border-radius:9px;padding:7px 13px;font-family:'Cairo',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer;text-decoration:none;transition:var(--t);display:inline-flex;align-items:center;gap:5px;}
+.hdr-btn:hover{background:var(--glassHov);color:var(--text);}
+
+/* ════════ Inbox — premium chat (Messenger / IG-DM style) ════════ */
+.inbox-wrap{position:relative;display:inline-flex;margin-inline:9px;}
+/* Messenger-style circular button + pure-CSS speech bubble (no SVG/emoji) */
+.inbox-btn{position:relative;width:42px;height:42px;border-radius:50%;border:none;background:linear-gradient(140deg,#0cc8c2,#0ea5a0 52%,#0a7c78);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 5px 16px rgba(14,165,160,.42),inset 0 1px 0 rgba(255,255,255,.3);transition:transform var(--t),box-shadow var(--t),filter var(--t);}
+.inbox-btn:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 9px 24px rgba(14,165,160,.55);filter:brightness(1.06);}
+.inbox-btn:active{transform:scale(.92);}
+/* always-on gentle pulse halo (so it reads as "live" even with no new replies) */
+.inbox-btn::before{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;box-shadow:0 0 0 0 rgba(14,165,160,.4);animation:ibHalo 2.9s ease-out infinite;}
+@keyframes ibHalo{0%{box-shadow:0 0 0 0 rgba(14,165,160,.38);}70%{box-shadow:0 0 0 9px rgba(14,165,160,0);}100%{box-shadow:0 0 0 0 rgba(14,165,160,0);}}
+/* unread → stronger, gold halo */
+.inbox-btn.has-unread::before{animation:ibHaloGold 1.7s ease-out infinite;}
+@keyframes ibHaloGold{0%{box-shadow:0 0 0 0 rgba(245,158,11,.6);}70%{box-shadow:0 0 0 11px rgba(245,158,11,0);}100%{box-shadow:0 0 0 0 rgba(245,158,11,0);}}
+.ib-ico{position:relative;display:block;width:21px;height:18px;background:#fff;border-radius:10px 10px 10px 4px;box-shadow:0 1px 2px rgba(0,0,0,.18);}
+.ib-ico::after{content:"";position:absolute;left:2px;bottom:-3px;width:7px;height:7px;background:#fff;transform:rotate(18deg);border-radius:0 0 0 3px;}
+.ib-dots{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:3.2px;height:3.2px;border-radius:50%;background:#0ea5a0;box-shadow:-5.2px 0 0 #0ea5a0,5.2px 0 0 #0ea5a0;}
+/* new reply arrived → bell-ring shake (triggered from JS) */
+.inbox-btn.ring .ib-ico{animation:ibRing .9s ease-in-out;transform-origin:50% 30%;}
+@keyframes ibRing{0%,100%{transform:rotate(0);}12%{transform:rotate(15deg);}24%{transform:rotate(-13deg);}36%{transform:rotate(10deg);}48%{transform:rotate(-8deg);}60%{transform:rotate(5deg);}72%{transform:rotate(-3deg);}84%{transform:rotate(1deg);}}
+@media (prefers-reduced-motion: reduce){ .inbox-btn::before,.inbox-btn.ring .ib-ico{animation:none;} }
+.inbox-badge{position:absolute;top:-6px;inset-inline-end:-6px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-size:11px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;border:2px solid var(--bg);box-shadow:0 3px 9px rgba(239,68,68,.4);}
+.inbox-badge.hidden{display:none;}
+
+/* dropdown panel */
+.inbox-panel{position:absolute;top:52px;inset-inline-end:0;width:min(380px,94vw);background:linear-gradient(180deg,rgba(13,25,52,.99),rgba(9,18,40,.99));border:1px solid rgba(201,168,76,.30);border-radius:20px;box-shadow:0 30px 70px rgba(0,0,0,.6);backdrop-filter:blur(22px);overflow:hidden;z-index:300;animation:inboxPop .2s cubic-bezier(.16,1,.3,1);}
+@keyframes inboxPop{from{opacity:0;transform:translateY(-10px) scale(.98);}to{opacity:1;transform:none;}}
+.inbox-panel.hidden{display:none;}
+.inbox-head{padding:16px 18px 13px;border-bottom:1px solid var(--glassB);background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(14,165,160,.05));}
+.inbox-title{font-family:'Noto Kufi Arabic',sans-serif;font-weight:900;font-size:15px;color:var(--text);letter-spacing:.2px;}
+.inbox-list{max-height:440px;overflow-y:auto;padding:7px;display:flex;flex-direction:column;gap:2px;}
+.inbox-list::-webkit-scrollbar{width:7px;}
+.inbox-list::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--teal),var(--gold));border-radius:999px;border:2px solid transparent;background-clip:padding-box;}
+
+/* conversation row */
+.conv{display:flex;align-items:center;gap:12px;width:100%;text-align:start;background:transparent;border:none;border-radius:15px;padding:11px 12px;cursor:pointer;transition:background .15s;position:relative;}
+.conv:hover{background:rgba(255,255,255,.06);}
+.conv.open::after{content:"";position:absolute;inset-inline-start:3px;top:50%;transform:translateY(-50%);width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ef4444);box-shadow:0 0 8px rgba(245,158,11,.7);}
+.conv.closed{opacity:.62;}
+.conv-av{width:50px;height:50px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;font-family:'Noto Kufi Arabic',sans-serif;font-weight:900;font-size:18px;color:#fff;box-shadow:inset 0 0 0 2px rgba(255,255,255,.14),0 4px 12px rgba(0,0,0,.3);}
+.conv-main{flex:1;min-width:0;}
+.conv-r1{display:flex;align-items:baseline;justify-content:space-between;gap:8px;}
+.conv-name{font-weight:800;font-size:13.5px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.conv-time{flex-shrink:0;font-size:10.5px;color:var(--text3);font-weight:600;}
+.conv-r2{display:flex;align-items:center;gap:6px;margin-top:3px;}
+.conv-prev{flex:1;min-width:0;font-size:12px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.conv.open .conv-prev{color:var(--text);font-weight:600;}
+.conv-tag{flex-shrink:0;font-size:9.5px;font-weight:900;border-radius:999px;padding:2px 8px;}
+.conv-tag.open{background:rgba(245,158,11,.18);color:var(--amber);}
+.conv-tag.closed{background:rgba(34,197,94,.14);color:var(--green);}
+.inbox-empty{padding:34px 16px;text-align:center;color:var(--text3);font-size:13px;}
+.inbox-empty.hidden{display:none;}
+
+/* ── chat modal ── */
+.inbox-overlay{position:fixed;inset:0;z-index:5000;background:rgba(3,8,20,.74);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .22s;}
+.inbox-overlay.open{opacity:1;pointer-events:auto;}
+.cm{display:flex;flex-direction:column;width:min(460px,96vw);height:min(660px,90vh);background:linear-gradient(180deg,#0e1c3a,#0a1530);border:1px solid rgba(201,168,76,.32);border-radius:24px;box-shadow:0 36px 90px rgba(0,0,0,.62);overflow:hidden;transform:translateY(16px) scale(.97);transition:transform .24s cubic-bezier(.16,1,.3,1);}
+.inbox-overlay.open .cm{transform:none;}
+/* head */
+.cm-head{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--glassB);background:linear-gradient(135deg,rgba(14,165,160,.12),rgba(201,168,76,.06));flex-shrink:0;}
+.cm-x{width:34px;height:34px;border-radius:50%;border:none;background:rgba(255,255,255,.07);color:var(--text2);font-size:15px;cursor:pointer;transition:background .15s,color .15s;flex-shrink:0;}
+.cm-x:hover{background:rgba(239,68,68,.22);color:#fff;}
+.cm-del{width:34px;height:34px;border-radius:50%;border:none;background:rgba(239,68,68,.12);color:#f87171;font-size:15px;cursor:pointer;transition:background .15s,transform .12s;flex-shrink:0;}
+.cm-del:hover{background:rgba(239,68,68,.28);color:#fff;transform:scale(1.06);}
+.cm-av{width:44px;height:44px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;font-family:'Noto Kufi Arabic',sans-serif;font-weight:900;font-size:17px;color:#fff;box-shadow:inset 0 0 0 2px rgba(255,255,255,.16),0 4px 12px rgba(0,0,0,.3);}
+.cm-id{flex:1;min-width:0;}
+.cm-name{font-family:'Noto Kufi Arabic',sans-serif;font-weight:900;font-size:15.5px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cm-status{font-size:11px;color:var(--text3);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+/* body / scroll */
+.cm-body{flex:1;overflow-y:auto;padding:16px 14px 8px;display:flex;flex-direction:column;gap:3px;background:radial-gradient(700px 300px at 50% -5%,rgba(14,165,160,.06),transparent 70%);}
+.cm-body::-webkit-scrollbar{width:7px;}
+.cm-body::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--teal),var(--gold));border-radius:999px;border:2px solid transparent;background-clip:padding-box;}
+/* pinned consultation summary */
+.cm-pinned{background:rgba(255,255,255,.04);border:1px solid var(--glassB);border-radius:16px;padding:13px 15px;margin-bottom:8px;}
+.cm-pinned-h{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--gold);margin-bottom:10px;}
+.im-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px 16px;}
+.im-f{min-width:0;}
+.im-f label{display:block;font-size:9.5px;color:var(--text3);font-weight:700;margin-bottom:2px;}
+.im-f span{font-size:12px;color:var(--text);font-weight:600;overflow-wrap:anywhere;}
+.im-f.wide{grid-column:1/-1;}
+.im-summary-text{font-size:12px;color:var(--text2);line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere;}
+.im-status-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px;}
+.im-badge{font-size:10px;font-weight:900;border-radius:999px;padding:4px 10px;}
+.im-badge.approved{background:rgba(34,197,94,.16);color:var(--green);}
+.im-badge.needs{background:rgba(245,158,11,.16);color:var(--amber);}
+.im-badge.incomp{background:rgba(249,115,22,.16);color:var(--orange);}
+.im-badge.warn{background:rgba(248,113,113,.16);color:var(--red);}
+.im-badge.rating{background:rgba(201,168,76,.18);color:var(--gold);}
+/* day divider */
+.cm-divider{align-self:center;font-size:10.5px;color:var(--text3);font-weight:700;background:rgba(255,255,255,.05);border-radius:999px;padding:4px 14px;margin:6px 0 8px;}
+/* chat bubbles */
+.msg{display:flex;margin-top:7px;animation:bubIn .26s cubic-bezier(.16,1,.3,1) both;}
+@keyframes bubIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.msg.them{justify-content:flex-start;}
+.msg.me{justify-content:flex-end;}
+.bub{max-width:80%;padding:10px 14px;border-radius:20px;font-size:13.5px;line-height:1.65;overflow-wrap:anywhere;box-shadow:0 2px 8px rgba(0,0,0,.18);}
+.msg.them .bub{background:rgba(255,255,255,.08);color:var(--text);border:1px solid rgba(255,255,255,.07);border-bottom-inline-start-radius:6px;border-end-start-radius:6px;}
+.msg.me .bub{background:linear-gradient(135deg,var(--teal),#0a7c78);color:#fff;border-end-end-radius:6px;}
+.msg.me.gold .bub{background:linear-gradient(135deg,var(--gold),#a9842f);color:#1b1505;}
+.bub-cap{font-size:10px;font-weight:800;opacity:.8;margin-bottom:4px;}
+/* composer */
+.cm-composer{display:flex;align-items:flex-end;gap:9px;padding:12px 14px;border-top:1px solid var(--glassB);background:rgba(5,11,26,.6);flex-shrink:0;}
+.cm-composer.hidden{display:none;}
+.cm-input{flex:1;min-height:44px;max-height:120px;resize:none;background:rgba(255,255,255,.07);border:1.5px solid var(--glassB);border-radius:22px;padding:12px 16px;color:var(--text);font-family:'Cairo',sans-serif;font-size:13.5px;line-height:1.6;transition:border-color .15s,box-shadow .15s;}
+.cm-input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--tglw);}
+.cm-input::placeholder{color:var(--text3);}
+.cm-send{width:46px;height:46px;flex-shrink:0;border-radius:50%;border:none;background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;font-size:18px;cursor:pointer;display:grid;place-items:center;transition:transform .12s,filter .15s,box-shadow .15s;box-shadow:0 5px 16px var(--tglw);}
+.cm-send:hover{filter:brightness(1.1);transform:translateY(-1px) scale(1.05);}
+.cm-send:active{transform:scale(.92);}
+.cm-send:disabled{opacity:.5;cursor:not-allowed;filter:none;transform:none;box-shadow:none;}
+.cm-closed{padding:13px;text-align:center;font-size:12.5px;font-weight:700;color:var(--green);background:rgba(34,197,94,.08);border-top:1px solid var(--glassB);flex-shrink:0;}
+.cm-closed.hidden{display:none;}
+@media(max-width:560px){.im-grid{grid-template-columns:1fr;}.cm{height:92vh;width:100vw;border-radius:18px;}}
+
+/* Login */
+#loginView{position:fixed;inset:0;z-index:200;background:rgba(7,15,32,.97);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);}
+.login-box{background:var(--glass);border:1px solid var(--glassB);border-radius:20px;padding:38px 34px;width:min(420px,94vw);backdrop-filter:blur(20px);text-align:center;}
+.login-logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--teal),var(--teal2));display:grid;place-items:center;margin:0 auto 16px;}
+.login-title{font-size:20px;font-weight:900;margin-bottom:4px;}
+.login-sub{font-size:13px;color:var(--text3);margin-bottom:24px;}
+.login-field{margin-bottom:13px;text-align:right;}
+.login-field label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px;font-weight:600;}
+.login-field input{width:100%;background:rgba(255,255,255,.07);border:1px solid var(--glassB);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Cairo',sans-serif;font-size:14px;transition:var(--t);}
+.login-field input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--tglw);}
+.btn-login{width:100%;background:linear-gradient(135deg,var(--teal),var(--teal2));border:none;border-radius:12px;padding:13px;color:#fff;font-family:'Cairo',sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px;transition:var(--t);}
+.btn-login:hover{filter:brightness(1.1);box-shadow:0 6px 20px var(--tglw);}
+#loginMsg{min-height:18px;font-size:13px;color:var(--red);margin-top:10px;}
+
+/* Date range */
+.range-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:26px;}
+.range-lbl{font-size:12px;color:var(--text3);font-weight:700;}
+.range-sep{color:var(--text3);font-weight:700;}
+.date-input{background:var(--glass);border:1.5px solid var(--glassB);border-radius:11px;padding:8px 13px;color:var(--text);font-family:'Cairo',sans-serif;font-size:13px;min-height:38px;cursor:pointer;transition:border-color .2s;}
+.date-input:focus{outline:none;border-color:var(--teal);}
+.chip-cycle{background:rgba(14,165,160,.12);border:1px solid rgba(14,165,160,.3);color:var(--teal2);border-radius:999px;padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;transition:var(--t);font-family:'Cairo',sans-serif;}
+.chip-cycle:hover{background:rgba(14,165,160,.22);}
+
+/* HERO — premium personal headline */
+.hero{
+  position:relative;isolation:isolate;--ang:0deg;
+  margin-top:18px;border-radius:24px;overflow:hidden;
+  background:
+    radial-gradient(900px 380px at 88% -10%,rgba(14,165,160,.18),transparent 60%),
+    linear-gradient(135deg,rgba(14,165,160,.12),rgba(10,117,114,.06) 45%,rgba(201,168,76,.06));
+  border:1px solid rgba(14,165,160,.20);
+  padding:30px 34px;
+  display:flex;align-items:center;gap:34px;flex-wrap:wrap;justify-content:space-between;
+  animation:rise .5s cubic-bezier(.16,1,.3,1) both;
+}
+@property --ang{syntax:'<angle>';initial-value:0deg;inherits:false;}
+.hero::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;
+  background:conic-gradient(from var(--ang),var(--teal),var(--gold),var(--violet),var(--teal2),var(--teal));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;opacity:.55;pointer-events:none;
+  animation:spin 7s linear infinite;}
+@keyframes spin{to{--ang:360deg;}}
+@keyframes rise{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
+.hero-left{min-width:240px;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:7px;background:rgba(201,168,76,.14);border:1px solid rgba(201,168,76,.3);color:var(--gold);border-radius:999px;padding:4px 12px;font-size:11.5px;font-weight:800;margin-bottom:12px;}
+.hero-greet{font-family:'Noto Kufi Arabic',sans-serif;font-size:25px;font-weight:900;line-height:1.25;}
+.hero-period{font-size:13px;color:var(--text3);margin-top:5px;}
+
+/* ── صورة البروفايل من teamProfiles (بتترفع من followup.html) — 2026-07-04 ── */
+@property --tpang{syntax:'<angle>';initial-value:0deg;inherits:false;}
+@keyframes tpSpin{to{--tpang:360deg;}}
+@keyframes tpHalo{
+  0%,100%{box-shadow:0 0 0 4px rgba(14,165,160,.13),0 10px 32px rgba(14,165,160,.28);}
+  50%{box-shadow:0 0 0 6px rgba(201,168,76,.15),0 10px 40px rgba(201,168,76,.32);}
+}
+.hero-id{display:flex;align-items:center;gap:16px;}
+.tp-av-ring{--tpang:0deg;position:relative;flex:none;width:88px;height:88px;border-radius:50%;padding:3px;
+  background:conic-gradient(from var(--tpang),var(--teal),var(--gold),var(--violet),var(--teal2),var(--teal));
+  animation:tpSpin 5s linear infinite,tpHalo 3.2s ease-in-out infinite;}
+.tp-av{width:100%;height:100%;border-radius:50%;overflow:hidden;position:relative;
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-family:'Noto Kufi Arabic',sans-serif;font-size:28px;font-weight:900;
+  background:linear-gradient(135deg,var(--teal),var(--teal2));border:2.5px solid var(--bg,#0b1424);}
+.tp-av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;}
+@media(prefers-reduced-motion:reduce){.tp-av-ring{animation:none;}}
+@media(max-width:560px){.tp-av-ring{width:70px;height:70px;}.tp-av{font-size:22px;}.hero-id{gap:12px;}}
+
+/* معاينة مكبّرة عند الهوفر — حلقة دوّارة + هالة (نفس لغة my-fb/followup) */
+@keyframes tpPrevSpin{to{transform:rotate(360deg)}}
+@keyframes tpPrevGlow{
+  0%,100%{box-shadow:0 22px 60px -12px rgba(3,8,30,.7),0 0 0 5px rgba(14,165,160,.16),0 0 34px rgba(14,165,160,.32)}
+  50%{box-shadow:0 22px 60px -12px rgba(3,8,30,.7),0 0 0 8px rgba(201,168,76,.26),0 0 56px rgba(201,168,76,.5)}
+}
+.tp-prev{position:fixed;z-index:9999;width:208px;pointer-events:none;
+  opacity:0;transform:scale(.5) translateY(-16px);transform-origin:top center;
+  transition:opacity .3s cubic-bezier(.34,1.56,.64,1),transform .42s cubic-bezier(.34,1.56,.64,1);}
+.tp-prev.show{opacity:1;transform:scale(1) translateY(0);}
+.tp-prev-halo{position:absolute;inset:-34px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(14,165,160,.32),transparent 68%);filter:blur(8px);}
+.tp-prev-ring{position:relative;width:208px;height:208px;border-radius:50%;padding:5px;overflow:hidden;
+  animation:tpPrevGlow 2.6s ease-in-out infinite;}
+.tp-prev-ring::before{content:'';position:absolute;inset:-30%;border-radius:50%;
+  background:conic-gradient(var(--teal),var(--gold),var(--violet),var(--teal2),var(--teal));
+  animation:tpPrevSpin 3.2s linear infinite;}
+.tp-prev-inner{position:relative;z-index:1;width:100%;height:100%;border-radius:50%;overflow:hidden;
+  background:#0a1028;border:3px solid #0a1028;}
+.tp-prev-inner img{width:100%;height:100%;object-fit:cover;display:block;}
+.tp-av-ring.has-photo{cursor:zoom-in;}
+@media(prefers-reduced-motion:reduce){.tp-prev{transition:opacity .18s}.tp-prev-ring,.tp-prev-ring::before{animation:none}}
+.hero-big{display:flex;align-items:baseline;gap:10px;margin-top:16px;}
+.hero-big-num{font-family:'Noto Kufi Arabic',sans-serif;font-size:64px;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--teal2),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.hero-big-lbl{font-size:14px;color:var(--text2);font-weight:700;}
+
+/* approval ring */
+.ring-wrap{position:relative;width:150px;height:150px;flex:none;display:grid;place-items:center;}
+.ring-wrap svg{transform:rotate(-90deg);}
+.ring-bg{fill:none;stroke:rgba(255,255,255,.08);stroke-width:12;}
+.ring-fg{fill:none;stroke:url(#ringGrad);stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 1.1s cubic-bezier(.16,1,.3,1);}
+.ring-center{position:absolute;text-align:center;}
+.ring-pct{font-family:'Noto Kufi Arabic',sans-serif;font-size:30px;font-weight:900;color:var(--green);line-height:1;}
+.ring-cap{font-size:10.5px;color:var(--text3);font-weight:700;margin-top:3px;}
+
+/* Stat tiles */
+.tiles{display:grid;grid-template-columns:repeat(6,1fr);gap:13px;margin-top:22px;}
+.tile{position:relative;background:var(--glass);border:1px solid var(--glassB);border-radius:16px;padding:16px 14px;text-align:center;overflow:hidden;transition:transform var(--t),background var(--t);animation:rise .5s cubic-bezier(.16,1,.3,1) both;}
+.tile:hover{transform:translateY(-3px);background:var(--glassHov);}
+.tile::before{content:"";position:absolute;top:0;right:0;left:0;height:3px;background:var(--c,var(--teal));opacity:.85;}
+.tile-num{font-family:'Noto Kufi Arabic',sans-serif;font-size:27px;font-weight:900;line-height:1;color:var(--c,var(--teal));}
+.tile-lbl{font-size:11px;color:var(--text3);font-weight:700;margin-top:6px;}
+.tile.approved{--c:var(--green);} .tile.needs{--c:var(--amber);} .tile.incomp{--c:var(--orange);}
+.tile.warn{--c:var(--red);} .tile.fup{--c:var(--blue);} .tile.fud{--c:var(--teal2);}
+
+/* Activity chart */
+.panel{margin-top:24px;background:var(--glass);border:1px solid var(--glassB);border-radius:20px;padding:22px 24px;animation:rise .5s cubic-bezier(.16,1,.3,1) both;}
+.panel-hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+.panel-title{font-family:'Noto Kufi Arabic',sans-serif;font-size:16px;font-weight:900;display:flex;align-items:center;gap:8px;}
+.panel-sub{font-size:12px;color:var(--text3);}
+.chart{display:flex;align-items:flex-end;gap:5px;height:170px;overflow-x:auto;padding-bottom:6px;}
+.bar-col{flex:1;min-width:14px;display:flex;flex-direction:column;align-items:center;gap:6px;justify-content:flex-end;height:100%;}
+.bar{width:100%;max-width:30px;border-radius:7px 7px 3px 3px;background:linear-gradient(180deg,var(--teal2),var(--teal));min-height:3px;height:0;transition:height .9s cubic-bezier(.16,1,.3,1);position:relative;cursor:default;}
+.bar.has:hover{filter:brightness(1.25);box-shadow:0 0 14px var(--tglw);}
+.bar-day{font-size:9px;color:var(--text3);font-weight:700;white-space:nowrap;}
+.bar-tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0b1730;border:1px solid var(--glassB);border-radius:8px;padding:4px 9px;font-size:11px;font-weight:800;color:var(--text);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:3;}
+.bar:hover .bar-tip{opacity:1;}
+.chart-empty{color:var(--text3);font-size:13px;text-align:center;width:100%;align-self:center;padding:40px 0;}
+/* Themed scrollbars — match the premium dark design (was the default OS bar). */
+.chart{scrollbar-width:thin;scrollbar-color:var(--teal2) rgba(255,255,255,.06);}
+.chart::-webkit-scrollbar{height:8px;}
+.chart::-webkit-scrollbar-track{background:rgba(255,255,255,.05);border-radius:999px;}
+.chart::-webkit-scrollbar-thumb{background:linear-gradient(90deg,var(--teal),var(--teal2));border-radius:999px;}
+.chart::-webkit-scrollbar-thumb:hover{filter:brightness(1.15);}
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.13);border-radius:999px;}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.22);}
+
+.deny{margin-top:60px;text-align:center;color:var(--text3);}
+.deny svg{margin-bottom:12px;opacity:.6;}
+.credit{text-align:center;padding:22px;font-size:11px;color:var(--text3);}
+.notif{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(14,165,160,.92);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:11px 20px;font-weight:700;font-size:13.5px;opacity:0;pointer-events:none;transition:.25s;z-index:400;}
+.notif.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.notif.err{background:rgba(248,113,113,.95);}
+
+/* ── ASSIGNMENT PANEL ─────────────────────── */
+.assign-panel{
+  margin-top:22px;
+  background:linear-gradient(135deg,rgba(14,165,160,.10) 0%,rgba(201,168,76,.06) 100%);
+  border:1px solid rgba(14,165,160,.25);
+  border-radius:20px;padding:24px 26px;
+  animation:rise .5s cubic-bezier(.16,1,.3,1) both;
+  position:relative;overflow:hidden;
+}
+.assign-panel::before{
+  content:'';position:absolute;top:-60px;left:-60px;
+  width:220px;height:220px;
+  background:radial-gradient(circle,rgba(14,165,160,.12),transparent 65%);
+  pointer-events:none;
+}
+.assign-panel-hdr{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;flex-wrap:wrap;}
+.assign-title{font-family:'Noto Kufi Arabic',sans-serif;font-size:15.5px;font-weight:900;display:flex;align-items:center;gap:8px;color:var(--teal2);}
+.assign-sub{font-size:12px;color:var(--text3);margin-bottom:16px;}
+.assign-nums{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px;}
+.assign-chip{
+  background:rgba(14,165,160,.10);border:1px solid rgba(14,165,160,.25);
+  border-radius:8px;padding:4px 11px;font-size:12px;font-weight:800;
+  color:var(--teal2);letter-spacing:.4px;
+  transition:var(--t);cursor:default;
+}
+.assign-chip:hover{background:rgba(14,165,160,.20);border-color:rgba(14,165,160,.5);}
+
+/* Per-number breakdown — each assigned agent number with its own counts */
+.assign-breakdown{display:flex;flex-direction:column;gap:7px;margin-bottom:20px;padding-left:2px;}
+.assign-breakdown::-webkit-scrollbar{width:7px;}
+.assign-breakdown::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--teal),var(--teal2));border-radius:999px;}
+.anr{
+  display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:10px;
+  background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);
+  border-radius:11px;padding:9px 13px;transition:var(--t);
+}
+.anr:hover{background:rgba(14,165,160,.08);border-color:rgba(14,165,160,.28);transform:translateX(-2px);}
+.anr.empty{opacity:.5;}
+.anr-num{
+  background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;
+  font-family:'Noto Kufi Arabic',sans-serif;font-weight:900;font-size:13px;
+  min-width:46px;text-align:center;border-radius:8px;padding:5px 8px;letter-spacing:.5px;
+  box-shadow:0 3px 10px var(--tglw);
+}
+.anr-total{font-size:12.5px;font-weight:700;color:var(--text2);}
+.anr-total b{font-family:'Noto Kufi Arabic',sans-serif;color:var(--text);font-size:14px;}
+.anr-app{font-size:12px;font-weight:800;color:var(--green);white-space:nowrap;}
+.anr-pct{
+  font-size:11.5px;font-weight:900;min-width:42px;text-align:center;
+  border-radius:7px;padding:3px 7px;
+  background:rgba(255,255,255,.05);
+}
+.assign-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;}
+.assign-stat{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:18px 12px;text-align:center;
+}
+.assign-stat-num{font-family:'Noto Kufi Arabic',sans-serif;font-size:32px;font-weight:900;line-height:1;}
+.assign-stat-lbl{font-size:11px;color:var(--text3);font-weight:700;margin-top:6px;}
+.assign-stat.req .assign-stat-num{color:var(--blue);}
+.assign-stat.app .assign-stat-num{color:var(--green);}
+.assign-stat.rem .assign-stat-num{color:var(--amber);}
+.assign-bar-lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--text3);margin-bottom:8px;font-weight:700;}
+.assign-bar-track{height:9px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden;}
+.assign-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--teal2));transition:width 1.2s cubic-bezier(.16,1,.3,1);width:0;}
+
+/* ── STAR PODIUM — best-rated CC colleagues in my scope ── */
+.star-panel{
+  margin-top:22px;border-radius:22px;overflow:hidden;position:relative;
+  background:
+    radial-gradient(700px 300px at 90% -20%,rgba(251,191,36,.16),transparent 60%),
+    linear-gradient(135deg,rgba(201,168,76,.10),rgba(14,165,160,.05));
+  border:1px solid rgba(201,168,76,.28);
+  animation:rise .5s cubic-bezier(.16,1,.3,1) both;
+}
+.star-hdr{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:18px 24px 4px;}
+.star-title{font-family:'Noto Kufi Arabic',sans-serif;font-size:15.5px;font-weight:900;display:flex;align-items:center;gap:8px;color:#fbbf24;}
+.star-sub{font-size:11.5px;color:var(--text3);font-weight:700;}
+.star-podium{display:flex;align-items:flex-end;justify-content:center;gap:26px;padding:30px 20px 26px;}
+.sp-step{flex:1;max-width:230px;display:flex;flex-direction:column;align-items:center;gap:10px;animation:spRise .7s cubic-bezier(.34,1.56,.64,1) both;}
+.sp-1{animation-delay:.15s;} .sp-2{animation-delay:.05s;}
+@keyframes spRise{from{opacity:0;transform:translateY(34px);}to{opacity:1;transform:none;}}
+.sp-av-wrap{position:relative;}
+.sp-av{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:22px;color:#fff;border:3px solid;background:linear-gradient(135deg,var(--teal),#0a7c78);position:relative;overflow:hidden;}
+.sp-av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;z-index:2;cursor:zoom-in;}
+.sp-rank{position:absolute;top:-7px;right:-7px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:13px;color:#0c0c0c;border:2px solid var(--bg);}
+.sp-1 .sp-av{border-color:#fbbf24;box-shadow:0 0 0 4px rgba(251,191,36,.18),0 0 38px rgba(251,191,36,.45);}
+.sp-1 .sp-rank{background:linear-gradient(135deg,#fde047,#fbbf24);box-shadow:0 4px 12px rgba(251,191,36,.5);}
+.sp-2 .sp-av{border-color:#cbd5e1;box-shadow:0 0 0 4px rgba(203,213,225,.15),0 0 26px rgba(203,213,225,.35);}
+.sp-2 .sp-rank{background:linear-gradient(135deg,#e2e8f0,#cbd5e1);}
+.sp-info{text-align:center;max-width:100%;}
+.sp-name{font-size:14px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;}
+.sp-num{font-size:11px;color:var(--text3);font-family:'Noto Kufi Arabic',sans-serif;font-weight:800;letter-spacing:.4px;margin-top:1px;}
+.sp-stars{font-size:14px;color:#f59e0b;letter-spacing:1px;line-height:1;margin-top:3px;}
+.sp-stars .e{color:rgba(255,255,255,.16);}
+.sp-meta{font-size:10.5px;color:var(--text3);font-weight:700;margin-top:3px;}
+.sp-block{width:100%;border-radius:16px 16px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;color:rgba(0,0,0,.80);position:relative;overflow:hidden;box-shadow:inset 0 4px 0 rgba(255,255,255,.20),0 -8px 20px rgba(0,0,0,.18);}
+.sp-block::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,.20));}
+.sp-block-num{position:relative;z-index:1;font-family:'Noto Kufi Arabic',sans-serif;font-weight:900;font-size:30px;line-height:1;}
+.sp-block-lbl{position:relative;z-index:1;font-size:9.5px;font-weight:800;opacity:.8;}
+.sp-1 .sp-block{background:linear-gradient(180deg,#fde047,#fbbf24 50%,#d97706);height:120px;}
+.sp-2 .sp-block{background:linear-gradient(180deg,#e2e8f0,#cbd5e1 50%,#64748b);height:88px;}
+.star-empty{text-align:center;color:var(--text3);font-size:13px;padding:26px 20px 30px;}
+.star-note{padding:0 24px 16px;font-size:10.5px;color:var(--text3);font-weight:600;text-align:center;}
+
+@media(max-width:760px){.tiles{grid-template-columns:repeat(3,1fr);}.hero{padding:24px;}.hero-big-num{font-size:52px;}.assign-3{grid-template-columns:1fr 1fr 1fr;}.star-podium{gap:14px;}.sp-av{width:58px;height:58px;font-size:18px;}.sp-1 .sp-block{height:96px;}.sp-2 .sp-block{height:72px;}.sp-block-num{font-size:24px;}}
+@media(max-width:440px){.tiles{grid-template-columns:repeat(2,1fr);}.assign-3{grid-template-columns:1fr;}}
+@media(prefers-reduced-motion:reduce){.hero::after{animation:none;}.orb{animation:none;}}
+
+/* ══════════════════════════════════════════════
+   CC REPORT CARDS — expandable per-number notes
+══════════════════════════════════════════════ */
+.anr-card{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:14px;overflow:hidden;transition:border-color var(--t),box-shadow var(--t);}
+.anr-card+.anr-card{margin-top:7px;}
+.anr-card.empty{opacity:.5;}
+.anr-card:hover{border-color:rgba(14,165,160,.28);box-shadow:0 4px 18px rgba(14,165,160,.10);}
+.anr-head{display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;gap:10px;padding:9px 13px;cursor:pointer;user-select:none;transition:background var(--t);}
+.anr-head:hover{background:rgba(14,165,160,.08);}
+.anr-card.open .anr-head{background:rgba(14,165,160,.05);}
+.anr-num{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;font-family:'Noto Kufi Arabic',sans-serif;font-weight:900;font-size:13px;min-width:46px;text-align:center;border-radius:8px;padding:5px 8px;letter-spacing:.5px;box-shadow:0 3px 10px var(--tglw);}
+.anr-total{font-size:12.5px;font-weight:700;color:var(--text2);}
+.anr-total b{font-family:'Noto Kufi Arabic',sans-serif;color:var(--text);font-size:14px;}
+.anr-pct{font-size:11.5px;font-weight:900;min-width:42px;text-align:center;border-radius:7px;padding:3px 7px;background:rgba(255,255,255,.05);}
+.anr-chevron{font-size:10px;color:var(--text3);transition:transform var(--t);}
+.anr-card.open .anr-chevron{transform:rotate(180deg);}
+.anr-stars-il{display:inline-flex;align-items:center;gap:2px;font-size:13px;color:#f59e0b;}
+.anr-stars-il .e{color:rgba(255,255,255,.15);}
+.anr-body{display:none;border-top:1px solid rgba(255,255,255,.06);padding:15px 16px;background:rgba(0,0,0,.22);}
+.anr-card.open .anr-body{display:block;}
+.anr-auto-lbl{font-size:10.5px;font-weight:800;color:var(--teal2);margin-bottom:6px;letter-spacing:.3px;}
+.anr-auto{font-size:12px;color:var(--text3);line-height:1.7;white-space:pre-wrap;background:rgba(14,165,160,.06);border:1px solid rgba(14,165,160,.14);border-right:3px solid var(--teal);border-radius:9px;padding:10px 13px;margin-bottom:14px;cursor:pointer;transition:background var(--t),border-color var(--t);}
+.anr-auto:hover{background:rgba(14,165,160,.12);border-color:rgba(14,165,160,.3);}
+.anr-auto::after{content:'👆 اضغط لعرض ردود المراجع';display:block;margin-top:8px;font-size:10.5px;color:var(--teal2);opacity:.7;}
+.anr-note-lbl{font-size:12px;color:var(--text2);font-weight:700;margin-bottom:7px;}
+.anr-ta{width:100%;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.10);border-radius:10px;padding:10px 13px;color:var(--text);font-family:'Cairo',sans-serif;font-size:13px;line-height:1.65;resize:vertical;min-height:88px;transition:border-color .2s,box-shadow .2s;direction:rtl;}
+.anr-ta:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,165,160,.15);}
+.anr-ta-btns{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:10px;flex-wrap:wrap;}
+.anr-save-btn{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--teal),var(--teal2));border:none;border-radius:9px;padding:8px 18px;color:#fff;font-family:'Cairo',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;transition:filter .2s,transform .15s;}
+.anr-save-btn:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.anr-save-st{font-size:12px;font-weight:600;color:var(--text3);}
+.anr-save-st.ok{color:var(--green);}
+.anr-save-st.err{color:var(--red);}
+.anr-saved-comment{font-size:12px;color:var(--text2);font-style:italic;padding:8px 12px;background:rgba(255,255,255,.04);border-radius:8px;border:1px solid rgba(255,255,255,.08);display:none;white-space:pre-wrap;line-height:1.6;margin-top:8px;}
+.btn-print{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.28);color:var(--gold);border-radius:9px;padding:7px 13px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:var(--t);}
+.btn-print:hover{background:rgba(201,168,76,.22);}
+
+/* ── WhatsApp coaching note button on each colleague card ── */
+.anr-msg-btn{position:relative;width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;flex-shrink:0;
+  background:linear-gradient(140deg,#25d366,#128c4a);display:grid;place-items:center;
+  box-shadow:0 4px 12px rgba(37,211,102,.38),inset 0 1px 0 rgba(255,255,255,.35);
+  transition:transform var(--t),box-shadow var(--t),filter var(--t);}
+.anr-msg-btn:hover{transform:translateY(-2px) scale(1.08);filter:brightness(1.06);box-shadow:0 8px 20px rgba(37,211,102,.5);}
+.anr-msg-btn:active{transform:scale(.9);}
+.anr-msg-btn svg{width:18px;height:18px;fill:#fff;}
+.anr-msg-btn .anr-msg-dot{position:absolute;top:-3px;inset-inline-end:-3px;min-width:16px;height:16px;padding:0 3px;border-radius:999px;
+  background:linear-gradient(135deg,var(--gold),#a9842f);color:#1b1505;font-size:10px;font-weight:900;
+  display:none;align-items:center;justify-content:center;border:2px solid var(--bg);}
+.anr-msg-btn.has-notes .anr-msg-dot{display:inline-flex;}
+
+/* ── Coach note SEND modal (reviewer → agent) ── */
+#coachModal{display:none;position:fixed;inset:0;z-index:10000;align-items:center;justify-content:center;padding:16px;}
+#coachModal.open{display:flex;}
+.coach-bk{position:absolute;inset:0;background:rgba(3,8,22,.7);backdrop-filter:blur(5px);}
+.coach-box{position:relative;z-index:1;width:100%;max-width:480px;border-radius:22px;overflow:hidden;
+  background:linear-gradient(180deg,rgba(13,25,52,.99),rgba(9,18,40,.99));
+  border:1px solid rgba(37,211,102,.32);box-shadow:0 30px 80px rgba(0,0,0,.6);
+  animation:inboxPop .22s cubic-bezier(.16,1,.3,1);}
+.coach-hero{position:relative;padding:20px 22px 18px;overflow:hidden;
+  background:linear-gradient(135deg,rgba(37,211,102,.16),rgba(14,165,160,.06));border-bottom:1px solid var(--glassB);}
+.coach-hero::after{content:"";position:absolute;top:-40px;inset-inline-end:-30px;width:150px;height:150px;border-radius:50%;
+  background:radial-gradient(circle,rgba(37,211,102,.22),transparent 70%);pointer-events:none;}
+.coach-hero-top{display:flex;align-items:center;gap:11px;position:relative;z-index:1;}
+.coach-wa{width:40px;height:40px;border-radius:12px;background:linear-gradient(140deg,#25d366,#128c4a);display:grid;place-items:center;
+  box-shadow:0 5px 16px rgba(37,211,102,.4);flex-shrink:0;}
+.coach-wa svg{width:22px;height:22px;fill:#fff;}
+.coach-htxt{flex:1;min-width:0;}
+.coach-htxt h3{font-family:'Noto Kufi Arabic',sans-serif;font-size:16px;font-weight:900;color:var(--text);margin:0;}
+.coach-htxt p{font-size:11.5px;color:var(--text3);margin:2px 0 0;}
+.coach-x{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:var(--text2);border-radius:9px;
+  width:32px;height:32px;display:grid;place-items:center;cursor:pointer;font-size:16px;transition:var(--t);flex-shrink:0;}
+.coach-x:hover{background:rgba(248,113,113,.18);border-color:rgba(248,113,113,.3);color:var(--red);}
+.coach-id{display:flex;align-items:center;gap:12px;margin-top:15px;position:relative;z-index:1;
+  background:rgba(255,255,255,.04);border:1px solid var(--glassB);border-radius:14px;padding:11px 13px;}
+.coach-id-num{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;font-family:'Noto Kufi Arabic',sans-serif;
+  font-weight:900;font-size:17px;min-width:56px;text-align:center;border-radius:11px;padding:9px 10px;box-shadow:0 4px 12px var(--tglw);}
+.coach-id-meta{flex:1;min-width:0;}
+.coach-id-meta .lbl{font-size:10px;color:var(--text3);font-weight:700;}
+.coach-id-meta .nm{font-size:14.5px;font-weight:800;color:var(--text);margin-top:1px;line-height:1.3;word-break:break-word;}
+.coach-body{padding:16px 22px 20px;}
+.coach-body>label{display:block;font-size:12px;font-weight:800;color:var(--teal2);margin-bottom:7px;}
+#coachNoteText{width:100%;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.11);border-radius:12px;
+  padding:12px 14px;color:var(--text);font-family:'Cairo',sans-serif;font-size:13.5px;line-height:1.7;resize:vertical;
+  min-height:110px;direction:rtl;transition:border-color .2s,box-shadow .2s;}
+#coachNoteText:focus{outline:none;border-color:#25d366;box-shadow:0 0 0 3px rgba(37,211,102,.16);}
+#coachNoteText::placeholder{color:var(--text3);}
+.coach-hint{font-size:11px;color:var(--text3);margin-top:8px;line-height:1.6;}
+.coach-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;flex-wrap:wrap;}
+.coach-send{display:inline-flex;align-items:center;gap:8px;border:none;border-radius:12px;padding:12px 24px;cursor:pointer;
+  background:linear-gradient(135deg,#25d366,#128c4a);color:#fff;font-family:'Cairo',sans-serif;font-size:14px;font-weight:800;
+  box-shadow:0 6px 18px rgba(37,211,102,.4);transition:transform .15s,filter .18s;}
+.coach-send:hover{filter:brightness(1.07);transform:translateY(-1px);}
+.coach-send:active{transform:scale(.96);}
+.coach-send:disabled{opacity:.55;cursor:default;transform:none;filter:none;}
+.coach-send svg{width:16px;height:16px;fill:#fff;}
+.coach-st{font-size:12.5px;font-weight:700;color:var(--text3);}
+.coach-st.ok{color:var(--green);} .coach-st.err{color:var(--red);}
+
+/* ── Header "sent coaching notes" manager (reuses .inbox-panel visuals) ── */
+.sent-btn{position:relative;width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;
+  background:linear-gradient(140deg,#25d366,#128c4a);display:inline-flex;align-items:center;justify-content:center;
+  box-shadow:0 5px 16px rgba(37,211,102,.4),inset 0 1px 0 rgba(255,255,255,.3);transition:transform var(--t),box-shadow var(--t),filter var(--t);}
+.sent-btn:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 9px 24px rgba(37,211,102,.55);filter:brightness(1.06);}
+.sent-btn:active{transform:scale(.92);}
+.sent-btn svg{width:21px;height:21px;fill:#fff;}
+.sent-badge{position:absolute;top:-6px;inset-inline-end:-6px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;
+  background:linear-gradient(135deg,var(--teal2),var(--teal));color:#fff;font-size:11px;font-weight:900;
+  display:inline-flex;align-items:center;justify-content:center;border:2px solid var(--bg);box-shadow:0 3px 9px var(--tglw);}
+.sent-badge.hidden{display:none;}
+.sent-item{display:flex;align-items:flex-start;gap:9px;padding:11px 12px;border-radius:12px;transition:background var(--t);}
+.sent-item:hover{background:rgba(255,255,255,.04);}
+.sent-item+.sent-item{border-top:1px solid rgba(255,255,255,.05);}
+.sent-av{flex-shrink:0;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;
+  font-family:'Noto Kufi Arabic',sans-serif;font-weight:900;font-size:14px;background:linear-gradient(135deg,var(--teal),var(--teal2));
+  box-shadow:0 3px 10px var(--tglw);}
+.sent-main{flex:1;min-width:0;}
+.sent-r1{display:flex;align-items:center;gap:7px;justify-content:space-between;}
+.sent-name{font-size:12.5px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sent-time{font-size:10px;color:var(--text3);font-weight:600;flex-shrink:0;}
+.sent-note{font-size:11.5px;color:var(--text2);line-height:1.55;margin-top:3px;white-space:pre-wrap;word-break:break-word;}
+.sent-seen{display:inline-block;margin-top:5px;font-size:10px;font-weight:800;border-radius:999px;padding:2px 9px;}
+.sent-seen.yes{background:rgba(34,197,94,.14);color:var(--green);}
+.sent-seen.no{background:rgba(201,168,76,.14);color:var(--gold);}
+.sent-del{flex-shrink:0;width:30px;height:30px;border-radius:9px;border:1px solid rgba(248,113,113,.28);cursor:pointer;
+  background:rgba(248,113,113,.1);color:var(--red);display:grid;place-items:center;transition:var(--t);}
+.sent-del:hover{background:rgba(248,113,113,.22);border-color:rgba(248,113,113,.5);transform:scale(1.06);}
+.sent-del svg{width:15px;height:15px;stroke:currentColor;fill:none;}
+
+/* ── Consults Modal ── */
+#consultsModal{display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;padding:16px;}
+#consultsModal.open{display:flex;}
+.cm-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);}
+.cm-box{position:relative;z-index:1;background:var(--card);border:1px solid rgba(14,165,160,.35);border-radius:20px;width:100%;max-width:720px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 0 1px rgba(14,165,160,.12);}
+.cm-hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;}
+.cm-title{font-family:'Noto Kufi Arabic',sans-serif;font-size:16px;font-weight:900;color:var(--text);display:flex;align-items:center;gap:10px;}
+.cm-badge{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;font-size:15px;font-weight:900;border-radius:9px;padding:4px 12px;box-shadow:0 3px 10px var(--tglw);}
+.cm-count{font-size:12px;font-weight:600;color:var(--text3);}
+.cm-close{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--text2);border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:var(--t);}
+.cm-close:hover{background:rgba(255,80,80,.15);border-color:rgba(255,80,80,.3);color:#f87171;}
+.cm-body{overflow-y:auto;padding:16px 22px;flex:1;}
+.cm-body::-webkit-scrollbar{width:6px;}
+.cm-body::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--teal),var(--teal2));border-radius:999px;}
+.cm-item{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:14px 16px;margin-bottom:10px;transition:border-color var(--t);}
+.cm-item:hover{border-color:rgba(14,165,160,.25);}
+.cm-item-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+.cm-item-date{font-size:11px;color:var(--text3);white-space:nowrap;}
+.cm-item-status{font-size:11px;font-weight:700;border-radius:6px;padding:2px 8px;white-space:nowrap;}
+.cm-item-status.ok{background:rgba(52,211,153,.12);color:#34d399;border:1px solid rgba(52,211,153,.2);}
+.cm-item-status.pending{background:rgba(251,191,36,.10);color:#fbbf24;border:1px solid rgba(251,191,36,.2);}
+.cm-item-status.bad{background:rgba(248,113,113,.10);color:#f87171;border:1px solid rgba(248,113,113,.2);}
+.cm-item-stars{display:inline-flex;align-items:center;gap:2px;font-size:12px;color:#f59e0b;}
+.cm-item-stars .e{color:rgba(255,255,255,.15);}
+.cm-reply{font-size:12.5px;color:var(--text2);line-height:1.75;white-space:pre-wrap;background:rgba(14,165,160,.05);border:1px solid rgba(14,165,160,.12);border-right:3px solid var(--teal);border-radius:9px;padding:10px 13px;}
+.cm-reply.empty{color:var(--text3);font-style:italic;background:rgba(255,255,255,.02);border-color:rgba(255,255,255,.06);border-right-color:rgba(255,255,255,.15);}
+.cm-empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px;}
+
+/* ── Print ── */
+@media print{
+  .orbs,.hdr,.range-bar,.hero,.tiles,.panel,.star-panel,
+  .assign-3,.assign-bar-lbl,.assign-bar-track,
+  .anr-save-btn,.anr-ta,.anr-note-lbl,.anr-ta-btns,
+  .anr-chevron,.credit,.notif,.btn-print,
+  .assign-panel::before,.assign-panel::after{display:none!important;}
+  body{background:#fff!important;color:#111!important;}
+  .page{max-width:100%!important;padding:12px!important;}
+  .assign-panel{background:#fff!important;border:1.5px solid #0ea5a0!important;border-radius:12px!important;padding:20px 24px!important;box-shadow:none!important;}
+  .assign-title{color:#0a7c78!important;}
+  .assign-sub{color:#444!important;}
+  .assign-nums{max-height:none!important;overflow:visible!important;}
+  .anr-card{border:1px solid #ddd!important;background:#fafafa!important;border-radius:8px!important;page-break-inside:avoid;margin-bottom:8px!important;}
+  .anr-head{padding:10px 14px!important;cursor:default!important;}
+  .anr-num{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .anr-stars-il{color:#c68b00!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .anr-pct{background:#f0f0f0!important;color:#333!important;}
+  .anr-body{display:block!important;background:#f7f7f7!important;padding:12px 14px!important;}
+  .anr-auto{background:#f0f0f0!important;border-color:#ccc!important;border-right:3px solid #0ea5a0!important;color:#444!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .anr-saved-comment{display:block!important;background:#fff!important;border-color:#e0e0e0!important;color:#333!important;}
+}
+</style>
+</head>
+<body>
+<div class="orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
+
+<!-- LOGIN -->
+<div id="loginView">
+  <div class="login-box">
+    <div class="login-logo"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></div>
+    <div class="login-title" id="loginTitle">إحصائياتي · مراجعة الكول سنتر</div>
+    <div class="login-sub">سجّل الدخول لعرض أداء مراجعتك الشخصي</div>
+    <div class="login-field"><label>كود الدخول / الإيميل</label><input id="loginEmail" type="text" autocomplete="username" placeholder="مثال: 2011"></div>
+    <div class="login-field"><label>كلمة المرور</label><input id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••"></div>
+    <button class="btn-login" onclick="window.doLogin()">دخول</button>
+    <div id="loginMsg"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="hdr" id="mainHdr" style="display:none">
+  <div class="hdr-brand">
+    <div class="hdr-logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg></div>
+    <div><div class="hdr-title">إحصائياتي</div><div class="hdr-sub" id="hdrSub">مراجعة الكول سنتر</div></div>
+  </div>
+  <div class="hdr-right">
+    <a class="hdr-btn" href="/index.html">← الرئيسية</a>
+    <div class="inbox-wrap" id="inboxWrap" style="display:none">
+      <button class="inbox-btn" id="inboxBtn" onclick="window.toggleInbox(event)" title="ردود الزملاء" aria-label="ردود الزملاء" aria-haspopup="true" aria-expanded="false">
+        <span class="ib-ico" aria-hidden="true"><i class="ib-dots"></i></span>
+        <span class="inbox-badge hidden" id="inboxBadge">0</span>
+      </button>
+      <div class="inbox-panel hidden" id="inboxPanel" role="menu" onclick="event.stopPropagation()">
+        <div class="inbox-head"><span class="inbox-title">📥 ردود الزملاء على ملاحظاتك</span></div>
+        <div class="inbox-list" id="inboxList"></div>
+        <div class="inbox-empty hidden" id="inboxEmpty">مفيش ردود لسه 🎉</div>
+      </div>
+    </div>
+    <div class="inbox-wrap" id="sentWrap" style="display:none">
+      <button class="sent-btn" id="sentBtn" onclick="window.toggleSent(event)" title="الملاحظات التوجيهية اللي بعتّها" aria-label="الملاحظات المرسلة" aria-haspopup="true" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.002-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413"/></svg>
+        <span class="sent-badge hidden" id="sentBadge">0</span>
+      </button>
+      <div class="inbox-panel hidden" id="sentPanel" role="menu" onclick="event.stopPropagation()">
+        <div class="inbox-head"><span class="inbox-title">💬 الملاحظات التوجيهية اللي بعتّها للزملاء</span></div>
+        <div class="inbox-list" id="sentList"></div>
+        <div class="inbox-empty hidden" id="sentEmpty">لسه مبعتّش أي ملاحظة توجيهية ✍️</div>
+      </div>
+    </div>
+    <div class="hdr-avatar" id="hdrAvatar">U</div>
+    <span class="hdr-name" id="hdrName">—</span>
+    <button class="hdr-btn" onclick="window.doLogout()">خروج</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="page" id="appView" style="display:none">
+  <div class="range-bar">
+    <span class="range-lbl">من</span>
+    <input type="date" id="dateFrom" class="date-input" onchange="window.onRangeChange()">
+    <span class="range-sep">—</span>
+    <span class="range-lbl">إلى</span>
+    <input type="date" id="dateTo" class="date-input" onchange="window.onRangeChange()">
+    <button class="chip-cycle" onclick="window.resetCycle()">دورة 21 → 20</button>
+  </div>
+
+  <div class="hero">
+    <div class="hero-left">
+      <span class="hero-eyebrow" id="heroEyebrow">📞 مراجعة الكول سنتر</span>
+      <div class="hero-id">
+        <div class="tp-av-ring"><div class="tp-av" id="tpAv"><span id="tpAvIni">؟</span></div></div>
+        <div>
+          <div class="hero-greet" id="heroGreet">—</div>
+          <div class="hero-period" id="heroPeriod">—</div>
+        </div>
+      </div>
+      <div class="hero-big">
+        <span class="hero-big-num" id="bigNum">0</span>
+        <span class="hero-big-lbl" id="heroBigLbl">استشارة كول سنتر<br>اتعاملت عليها</span>
+      </div>
+    </div>
+    <div class="ring-wrap">
+      <svg width="150" height="150">
+        <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22c55e"/><stop offset="1" stop-color="#0cc8c2"/></linearGradient></defs>
+        <circle class="ring-bg" cx="75" cy="75" r="62"/>
+        <circle class="ring-fg" id="ringFg" cx="75" cy="75" r="62" stroke-dasharray="389.6" stroke-dashoffset="389.6"/>
+      </svg>
+      <div class="ring-center"><div class="ring-pct" id="ringPct">0%</div><div class="ring-cap">نسبة الاعتماد</div></div>
+    </div>
+  </div>
+
+  <div class="tiles">
+    <div class="tile approved"><div class="tile-num" id="tApproved" data-t="0">0</div><div class="tile-lbl">✅ معتمدة</div></div>
+    <div class="tile needs"><div class="tile-num" id="tNeeds" data-t="0">0</div><div class="tile-lbl">❓ تحتاج معلومات</div></div>
+    <div class="tile incomp"><div class="tile-num" id="tIncomp" data-t="0">0</div><div class="tile-lbl">⚠ غير مكتملة</div></div>
+    <div class="tile warn"><div class="tile-num" id="tWarn" data-t="0">0</div><div class="tile-lbl">🔔 تحذيرات</div></div>
+    <div class="tile fup"><div class="tile-num" id="tFup" data-t="0">0</div><div class="tile-lbl">🔄 فولو أب معلّق</div></div>
+    <div class="tile fud"><div class="tile-num" id="tFud" data-t="0">0</div><div class="tile-lbl">✔ فولو أب مكتمل</div></div>
+  </div>
+
+  <!-- ASSIGNMENT PANEL — callcenter only, shows when reviewer has assigned agents -->
+  <div class="assign-panel" id="assignPanel" style="display:none">
+    <div class="assign-panel-hdr">
+      <div class="assign-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        نطاق استشاراتي المطلوبة
+      </div>
+      <span id="assignAgentCount" style="font-size:11.5px;color:var(--text3);font-weight:700;"></span>
+      <button class="btn-print" onclick="window.print()" title="طباعة تقرير الزملاء">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        طباعة التقرير
+      </button>
+    </div>
+    <div class="assign-sub" id="assignSub">—</div>
+    <div class="assign-breakdown" id="assignNums"></div>
+    <div class="assign-3">
+      <div class="assign-stat req"><div class="assign-stat-num" id="aReq">0</div><div class="assign-stat-lbl">📊 إجمالي المطلوب</div></div>
+      <div class="assign-stat app"><div class="assign-stat-num" id="aApp">0</div><div class="assign-stat-lbl">✅ تم الاعتماد</div></div>
+      <div class="assign-stat rem"><div class="assign-stat-num" id="aRem">0</div><div class="assign-stat-lbl">⏳ لم يُعتمد بعد</div></div>
+    </div>
+    <div>
+      <div class="assign-bar-lbl">
+        <span>نسبة الاعتماد من نطاقي</span>
+        <span id="aBarPct" style="color:var(--teal2);font-weight:900;">0%</span>
+      </div>
+      <div class="assign-bar-track"><div class="assign-bar-fill" id="aBarFill"></div></div>
+    </div>
+  </div>
+
+  <!-- STAR PODIUM — best-rated CC colleagues in my scope (callcenter only) -->
+  <div class="star-panel" id="starPanel" style="display:none">
+    <div class="star-hdr">
+      <div class="star-title">⭐ نجوم الكول سنتر في نطاقك</div>
+      <span class="star-sub" id="starSub">أعلى تقييمًا في الاستشارات اللي بتراجعها</span>
+    </div>
+    <div id="starBody"></div>
+    <div class="star-note">الترتيب بمتوسط مرجّح (Bayesian) يوازن بين متوسط النجوم وعدد الاستشارات المقيّمة — مش بس المتوسط.</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-hdr">
+      <div class="panel-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--teal2)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> نشاطك اليومي</div>
+      <div class="panel-sub" id="chartSub">عدد الاستشارات اللي راجعتها كل يوم</div>
+    </div>
+    <div class="chart" id="chart"></div>
+  </div>
+
+  <div id="denyBox"></div>
+</div>
+
+<div class="credit">Designed by Dr.M.Shawky | All copyrights reserved</div>
+<div id="notif" class="notif" aria-live="polite"></div>
+
+<!-- Inbox chat modal: a colleague's reply to your review note -->
+<div class="inbox-overlay" id="inboxModal" onclick="if(event.target===this)window.closeInboxModal()">
+  <div class="cm" role="dialog" aria-modal="true" aria-labelledby="imWho">
+    <div class="cm-head">
+      <button class="cm-x" onclick="window.closeInboxModal()" aria-label="إغلاق">✕</button>
+      <div class="cm-av" id="imAvatar">Z</div>
+      <div class="cm-id">
+        <div class="cm-name" id="imWho">—</div>
+        <div class="cm-status" id="imMeta"></div>
+      </div>
+      <button class="cm-del" id="imDelete" onclick="window.deleteInboxThread()" aria-label="مسح الرد" title="مسح الرد (أدمن)" style="display:none">🗑</button>
+    </div>
+    <div class="cm-body" id="imBody">
+      <div class="cm-pinned" id="imSummary">—</div>
+      <div class="cm-divider">💬 الحوار</div>
+      <div id="imThread"></div>
+    </div>
+    <div class="cm-composer" id="imReplyBox">
+      <textarea class="cm-input" id="imReplyText" rows="1" maxlength="1500" placeholder="اكتب ردّك النهائي... (سيُغلق الموضوع)" oninput="window.imGrow(this)"></textarea>
+      <button class="cm-send" id="imSend" onclick="window.submitInboxReply()" aria-label="إرسال وإغلاق" title="إرسال وإغلاق الموضوع">➤</button>
+    </div>
+    <div class="cm-closed hidden" id="imClosedNote">✅ تم إغلاق هذا الموضوع</div>
+  </div>
+</div>
+
+<!-- ░░ معاينة صورة البروفايل المكبّرة (هوفر — الهيرو والبوديوم) ░░ -->
+<div class="tp-prev" id="tpPrev">
+  <div class="tp-prev-halo"></div>
+  <div class="tp-prev-ring"><div class="tp-prev-inner"><img id="tpPrevImg" alt=""></div></div>
+</div>
+
+<script type="module">
+import { initializeApp }    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import { getFirestore, collection, query, where, orderBy, limit, onSnapshot, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyBvmHh6-KVlKNATzbfMk3hIswbMCrBZwf4",
+  authDomain:        "pharma-triage-5d165.firebaseapp.com",
+  projectId:         "pharma-triage-5d165",
+  storageBucket:     "pharma-triage-5d165.firebasestorage.app",
+  messagingSenderId: "1080517928737",
+  appId:             "1:1080517928737:web:9110f120203d0e6b7b0060"
+};
+const ADMIN_EMAIL = "drshawky530@gmail.com";
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const el=id=>document.getElementById(id);
+const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const starsHtml=avg=>{const f=Math.round(avg);let s='';for(let i=1;i<=5;i++)s+=`<span class="${i<=f?'':'e'}">★</span>`;return s;};
+
+/* ── TEAM MODE (?team=callcenter|whatsapp) — one page, two skins. ── */
+const TEAM = new URLSearchParams(location.search).get('team')==='whatsapp' ? 'whatsapp' : 'callcenter';
+const TEAM_CFG = {
+  callcenter:{ label:'مراجعة الكول سنتر', big:'استشارة كول سنتر<br>اتعاملت عليها', eyebrow:'📞 مراجعة الكول سنتر',
+               teal:'#0ea5a0', teal2:'#0cc8c2', glow:'rgba(14,165,160,.30)' },
+  whatsapp:{   label:'مراجعة الواتس اب',  big:'استشارة واتس اب<br>اتعاملت عليها', eyebrow:'💬 مراجعة الواتس اب',
+               teal:'#1ebe57', teal2:'#25d366', glow:'rgba(37,211,102,.30)' }
+};
+(function applyTeamSkin(){
+  const c=TEAM_CFG[TEAM];
+  document.title=`إحصائياتي · ${c.label} · Pharma Triage`;
+  document.documentElement.style.setProperty('--teal', c.teal);
+  document.documentElement.style.setProperty('--teal2', c.teal2);
+  document.documentElement.style.setProperty('--tglw', c.glow);
+  const set=(id,html)=>{const n=el(id); if(n) n.innerHTML=html;};
+  set('loginTitle','إحصائياتي · '+c.label);
+  set('hdrSub', c.label);
+  set('heroEyebrow', c.eyebrow);
+  set('heroBigLbl', c.big);
+})();
+
+let allRows=[], usersByEmail={}, unsub=null;
+let myEmail='', myEmailRaw='', myName='', iAmAdmin=false;
+let currentFrom='', currentTo='';
+let myAssignment=[];   /* agent numbers (strings) assigned to this reviewer */
+
+/* ── NOTIF ── */
+function notif(msg,type='ok'){const n=el('notif');n.className='notif'+(type==='err'?' err':'');n.textContent=msg;n.classList.add('show');clearTimeout(n._t);n._t=setTimeout(()=>n.classList.remove('show'),type==='err'?4500:3000);}
+
+/* ── LOGIN ── */
+window.doLogin=function(){
+  let raw=(el('loginEmail').value||'').trim();
+  const pass=el('loginPass').value;
+  el('loginMsg').textContent='';
+  const email=/^\d+$/.test(raw)?`agent${raw}@pharma.local`:raw;
+  signInWithEmailAndPassword(auth,email,pass).catch(()=>{ el('loginMsg').textContent='فشل تسجيل الدخول — تحقق من البيانات'; });
+};
+window.doLogout=function(){ if(unsub){unsub();unsub=null;} if(inboxUnsub){inboxUnsub();inboxUnsub=null;} if(sentUnsub){sentUnsub();sentUnsub=null;} signOut(auth).then(()=>location.href='/index.html').catch(()=>{}); };
+['loginEmail','loginPass'].forEach(id=>el(id)?.addEventListener('keydown',e=>{ if(e.key==='Enter') window.doLogin(); }));
+
+/* ── TEAM / STATUS HELPERS (mirror reviewer-stats.html) ── */
+function normTeam(s){ return String(s||'').toLowerCase().replace(/\s+/g,'').replace(/[.\-_]/g,''); }
+function teamGroup(team){
+  const t=normTeam(team);
+  if(t.includes('admin')||t.includes('ادمن')) return 'admin';
+  if(t.includes('consult')||t.includes('review')||t.includes('استشارات')||t.includes('مراجع')) return 'consultations';
+  if(t.includes('whatsapp')||t.includes('ww')||t.includes('واتساب')||t.includes('watsap')) return 'whatsapp';
+  if(t.includes('callcenter')||t.includes('cc')||t.includes('كول')) return 'callcenter';
+  return t||'';
+}
+function consultTeam(d){
+  const email=String(d?.agentEmail||'').toLowerCase().trim();
+  const u=email?usersByEmail[email]:null;
+  const direct=teamGroup(u?.team||d?.agentTeam||d?.team||d?.createdByTeam||'');
+  if(direct) return direct;
+  const l=normTeam(String(d?.agentLabel||d?.agentName||d?.agentEmail||''));
+  if(l.includes('ww')||l.includes('whatsapp')) return 'whatsapp';
+  if(l.includes('cc')||l.includes('callcenter')) return 'callcenter';
+  return 'other';
+}
+function isApproved(d){const st=d?.review?.status||d?.status||'';return st==='approved'||st==='تم الاعتماد';}
+function isNeedsInfo(d){const st=d?.review?.status||d?.status||'';return st==='needs_more_info';}
+function isIncomplete(d){if(!d)return false;if(d?.review?.incomplete===true)return true;const st=d?.review?.status||d?.status||'';return st==='needs_followup'||st==='incomplete'||st==='needs_completion';}
+function hasWarning(d){return !!(d.warning?.active===true||d.warning?.note);}
+function followStatus(d){const f=d.followUp||{};if(f.status==='done'||f.result)return 'done';if(f.status==='pending'||f.note)return 'pending';return '';}
+function reviewerEmailOf(r){return String(r?.review?.reviewerEmail||r?.reviewerEmail||'').toLowerCase().trim();}
+/* Star rating a reviewer gave the consultation (1–5; 0 = unrated). */
+function ratingOf(r){ const v=r?.review?.rating ?? r?.rating ?? r?.reviewRating ?? 0; return Number(v)||0; }
+/* Confidence weight for the Bayesian (weighted) average — pulls colleagues with
+   few rated consultations toward the team mean so a 2-rating colleague can't beat
+   a 40-rating one. ~⅓ of the 23/month productivity target. */
+const RATING_CONFIDENCE = 8;
+let savedNotes = new Map(); /* agentNum → saved note data for current period+reviewer */
+let myToken    = '';        /* stable reviewer token — set after auth */
+/* Best display name for the submitting CC colleague on a consultation. */
+function agentNameForRow(r){
+  const lbl=String(r.agentLabel||''); const i=lbl.indexOf(' - ');
+  if(i>=0){ const nm=lbl.slice(i+3).trim(); if(nm) return nm; }
+  const nm=String(r.agentName||'').trim(); if(nm && !/^\d/.test(nm)) return nm;
+  const u=usersByEmail[String(r.agentEmail||'').toLowerCase()];
+  if(u?.displayName && !String(u.displayName).includes('@')) return u.displayName;
+  return '';
+}
+function reviewDateISO(r){
+  const src=r?.review?.reviewedAt||r?.createdAt; if(!src) return '';
+  try{const d=src.toDate?src.toDate():new Date(src);const off=d.getTimezoneOffset()*60000;return new Date(d.getTime()-off).toISOString().slice(0,10);}catch{return '';}
+}
+const isoLocal=d=>{const off=d.getTimezoneOffset()*60000;return new Date(d.getTime()-off).toISOString().slice(0,10);};
+function defaultCycle(){
+  const t=new Date(),y=t.getFullYear(),m=t.getMonth(),day=t.getDate();
+  let from,to;
+  if(day>=21){from=new Date(y,m,21);to=new Date(y,m+1,20);} else {from=new Date(y,m-1,21);to=new Date(y,m,20);}
+  return {from:isoLocal(from),to:isoLocal(to)};
+}
+function shiftMonthISOCC(iso,months){
+  const [y,m,d]=String(iso||'').split('-').map(Number);
+  if(!y||!m||!d) return '';
+  return isoLocal(new Date(y,m-1+months,d));
+}
+function isPreviousCycleSelectedCC(){
+  const c=defaultCycle();
+  return currentFrom===shiftMonthISOCC(c.from,-1) && currentTo===shiftMonthISOCC(c.to,-1);
+}
+function inRange(iso){ if(!iso) return false; if(currentFrom&&iso<currentFrom) return false; if(currentTo&&iso>currentTo) return false; return true; }
+function fmtDMY(v){ if(!v) return '...'; const[y,mo,d]=v.split('-'); return `${d}/${mo}/${y}`; }
+
+/* ── ASSIGNMENT HELPERS ── */
+function getConsultAgentNum(r){
+  /* 1. Direct field stored on the consultation */
+  if(r.agentNumber) return String(r.agentNumber).trim();
+  /* 2. Leading digits in agentLabel e.g. "166C.CC.C - Sameh Samir" → "166" */
+  const labelNum=String(r.agentLabel||'').match(/^(\d+)/);
+  if(labelNum) return labelNum[1];
+  /* 3. Users collection lookup by agent email */
+  const em=String(r.agentEmail||'').toLowerCase();
+  const uNum=String(usersByEmail[em]?.agentNumber||'').trim();
+  if(uNum) return uNum;
+  /* 4. Any run of 2-3 digits inside agentLabel (catches "CC 166 - Name") */
+  const anyNum=String(r.agentLabel||r.agentName||'').match(/\b(\d{2,3})\b/);
+  if(anyNum) return anyNum[1];
+  return '';
+}
+function createdDateISO(r){
+  const src=r?.createdAt; if(!src) return '';
+  try{ const d=src.toDate?src.toDate():new Date(src);
+    const off=d.getTimezoneOffset()*60000;
+    return new Date(d.getTime()-off).toISOString().slice(0,10); }catch{ return ''; }
+}
+/* Every number representation a consultation may carry for its submitting CC
+   colleague — the login number (agent{N}@…) is often different from the number
+   printed on the consultation, and the distribution may use either form, so we
+   match on the union (mirrors reviewer-stats.html). */
+function consultNumCandidates(r){
+  const out=new Set();
+  const push=v=>{ const s=String(v||'').trim(); if(s) out.add(s); };
+  push(r.agentNumber);
+  const em=String(r.agentEmail||'').toLowerCase();
+  const login=em.match(/agent(\d+)@/); if(login) push(login[1]);
+  const u=usersByEmail[em]; if(u){ push(u.agentNumber); const lm=String(u.email||u.loginEmail||'').match(/agent(\d+)@/); if(lm) push(lm[1]); }
+  const lbl=String(r.agentLabel||r.agentName||'');
+  (lbl.match(/\d{2,6}/g)||[]).forEach(push);
+  return out;
+}
+/* CC number distribution — keyed by a STABLE token (mirrors reviewer-stats.html),
+   because the Consultations team is fixed while their login emails change monthly.
+   Admin edits the monthly numbers on reviewer-stats; saved to appConfig/ccAssignments. */
+const CC_DISTRIBUTION = {
+  shawky:   {name:'Dr. Mahmoud Shawky',  numbers:['165','166','172','174','101','103','104','106']},
+  ayman:    {name:'Dr. Ayman Elalfi',    numbers:['176','177','178','183','184','187','188','192']},
+  christine:{name:'Dr. Christine George',numbers:['193','194','196','198','199','201','137']},
+  mariam:   {name:'Dr. Mariam Maged',    numbers:['139','143','145','146','148','149','151']},
+  saad:     {name:'Dr. Mohamed Saad',    numbers:['152','153','154','158','160','161','162','163']},
+  bassem:   {name:'Dr. Bassem Nabil',    numbers:['109','110','111','112','113']},
+  hossam:   {name:'Dr. Hossam Waleed',   numbers:['114','115','116','117','118','119']},
+  omar:     {name:'Dr. Omar Alazhary',   numbers:['120','121','122','123','124','125','126','127']},
+  elgazar:  {name:'Dr. Mohamed Elgazar', numbers:['128','129','130','131','132','133','135','136']},
+};
+function reviewerToken(s){
+  const t=String(s||'').toLowerCase();
+  if(t.includes('shawky')) return 'shawky';
+  if(t.includes('ayman')||t.includes('elalf')||t.includes('alalf')||t.includes('alalfy')||t.includes('elalfy')) return 'ayman';
+  if(t.includes('christ')||t.includes('crest')||t.includes('krist')||t.includes('krest')||t.includes('george')||t.includes('georg')) return 'christine';
+  if(t.includes('mariam')||t.includes('maryam')||t.includes('maged')) return 'mariam';
+  if(t.includes('saad')) return 'saad';
+  if(t.includes('bassem')||t.includes('basem')||t.includes('nabil')) return 'bassem';
+  if(t.includes('hossam')||t.includes('hosam')) return 'hossam';
+  if(t.includes('alazhary')||t.includes('azhar')||t.includes('elazhary')) return 'omar';
+  if(t.includes('gaz')) return 'elgazar';
+  if(t.includes('amany')||t.includes('amani')) return 'amany';
+  if(t.includes('menna')||t.includes('mennah')) return 'menna';
+  if(t.includes('reem')||t.includes('younis')||t.includes('yunis')) return 'reem';
+  return '';
+}
+function splitNumsCC(arr){
+  return (arr||[]).flatMap(n=>String(n).split(/[,،\-–—\s]+/)).map(s=>s.trim()).filter(Boolean);
+}
+function assignmentPeriodKeyCC(from=currentFrom,to=currentTo){
+  return `${from||'all'}_${to||'all'}`.replace(/[^a-zA-Z0-9_\-]/g,'_');
+}
+async function loadMyAssignment(email){
+  /* Build token → numbers from defaults, overlaid by the saved distribution
+     (new name/token-keyed or legacy email-keyed — the name is detectable in the
+     legacy email too). Then pick the numbers for MY token. */
+  const dist={};
+  Object.keys(CC_DISTRIBUTION).forEach(tok=>{ dist[tok]=[]; });
+  try{
+    const snap=await getDoc(doc(db,'appConfig','ccAssignments'));
+    if(snap.exists()){
+      const data=snap.data()||{};
+      const key=assignmentPeriodKeyCC();
+      const rows=(data.periods && data.periods[key] && Array.isArray(data.periods[key].assignments))
+        ? data.periods[key].assignments
+        : ((Array.isArray(data.assignments) && isPreviousCycleSelectedCC())?data.assignments:[]);
+      rows.forEach(a=>{
+        const tok=a.reviewerToken||reviewerToken(a.reviewerName)||reviewerToken(a.reviewerEmail);
+        if(!tok) return;
+        if(!dist[tok]) dist[tok]=[]; // handle extra reviewers added outside CC_DISTRIBUTION
+        dist[tok]=splitNumsCC(a.agentNumbers);
+      });
+    }
+  }catch(e){ console.error('loadMyAssignment',e); }
+  const myTok=reviewerToken(myName)||reviewerToken(email);
+  myAssignment = (myTok && dist[myTok]) ? dist[myTok] : [];
+}
+
+/* ══════════════════════════════════════════════
+   CC REPORT NOTES — save / load per-number notes
+══════════════════════════════════════════════ */
+function periodKey(){ return `${currentFrom}_${currentTo}`; }
+function noteDocId(n){
+  return `${periodKey()}_${myToken}_${String(n).trim()}`.replace(/[^a-zA-Z0-9_\-]/g,'_');
+}
+async function loadSavedNotes(){
+  if(!myToken || !currentFrom) return;
+  savedNotes.clear();
+  try{
+    const snap = await getDocs(collection(db,'ccReports'));
+    snap.forEach(d=>{
+      const data = d.data();
+      if(data.reviewerToken===myToken && data.period===periodKey())
+        savedNotes.set(String(data.agentNum), data);
+    });
+  }catch(e){ console.warn('loadSavedNotes',e); }
+}
+window.saveAnrNote = async function(n){
+  const ta  = document.getElementById(`anr_ta_${n}`);
+  const stEl= document.getElementById(`anr_st_${n}`);
+  const svEl= document.getElementById(`anr_sv_${n}`);
+  if(!ta||!stEl) return;
+  const comment = ta.value.trim();
+  stEl.textContent='⏳ جاري الحفظ...'; stEl.className='anr-save-st';
+  try{
+    await setDoc(doc(db,'ccReports',noteDocId(n)), {
+      reviewerToken: myToken,
+      reviewerName:  myName,
+      reviewerEmail: myEmail,
+      agentNum:      String(n),
+      period:        periodKey(),
+      periodLabel:   `${fmtDMY(currentFrom)} — ${fmtDMY(currentTo)}`,
+      comment,
+      savedAt:       serverTimestamp()
+    }, {merge:true});
+    const prev = savedNotes.get(String(n)) || {};
+    savedNotes.set(String(n), {...prev, comment});
+    if(svEl){ svEl.textContent=comment; svEl.style.display=comment?'block':'none'; }
+    stEl.textContent='✅ تم الحفظ بنجاح'; stEl.className='anr-save-st ok';
+  }catch(e){
+    console.error('saveAnrNote',e);
+    stEl.textContent='❌ خطأ في الحفظ'; stEl.className='anr-save-st err';
+  }
+  setTimeout(()=>{ stEl.textContent=''; stEl.className='anr-save-st'; }, 3500);
+};
+window.toggleAnrCard = function(n){
+  const card = document.getElementById(`anr_card_${n}`);
+  if(card) card.classList.toggle('open');
+};
+
+function animNum(node,target){
+  if(!node) return; const DUR=750,t0=performance.now();
+  const tick=now=>{const p=Math.min((now-t0)/DUR,1),e=1-Math.pow(1-p,3);node.textContent=Math.round(e*target);if(p<1)requestAnimationFrame(tick);else node.textContent=target;};
+  requestAnimationFrame(tick);
+}
+
+/* ── AUTH ── */
+/* صورة البروفايل من teamProfiles (بتترفع من followup.html) — عرض فقط في الهيرو.
+   المطابقة بإيميل الدخول أو باسم الدكتور (الإيميلات بتتغير شهرياً والأسماء ثابتة).
+   نفس منطق tpFetchPhoto في followup.html و loadTeamPhotoIntoHeader في review.html. */
+function tpIni(name){
+  const w=String(name||'').replace(/^Dr\.?\s*/i,'').trim().split(/\s+/).filter(Boolean);
+  return w.length>=2 ? (w[0][0]+w[1][0]).toUpperCase()
+       : w.length===1 ? w[0].slice(0,2).toUpperCase() : '؟';
+}
+let _tpMap = {};   // name-lowercase → photo (لصور البوديوم + أي مطابقة بالاسم)
+const TP_EXTS=['jpg','jpeg','png','webp'];
+function tpSlug(name){ return String(name||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); }
+/* فولباك سلسلة صور البوديوم (onerror inline محتاجها على window) */
+window.tpImgFB=function(img){
+  const c=(img.dataset.cands||'').split('|'); const i=(+img.dataset.idx||0)+1;
+  if(i<c.length){ img.dataset.idx=i; img.src=c[i]; } else img.remove();
+};
+async function loadMyTeamPhoto(email, name){
+  const av=el('tpAv'); if(!av) return;
+  const ini=el('tpAvIni'); if(ini) ini.textContent=tpIni(name);
+  try{
+    const s = await getDocs(collection(db,'teamProfiles'));
+    const em = String(email||'').toLowerCase().trim(), nm = String(name||'').trim().toLowerCase();
+    let byEmail=null, byName=null;
+    _tpMap={};
+    s.forEach(d=>{
+      const v=d.data()||{}; if(!v.photo) return;
+      if(v.name) _tpMap[String(v.name).trim().toLowerCase()]=v.photo;
+      if(d.id.toLowerCase()===em) byEmail=v.photo;
+      else if(nm && String(v.name||'').trim().toLowerCase()===nm) byName=v.photo;
+    });
+    try{ renderMyStars(); }catch(_){}   // البوديوم اترسم قبل ما الصور توصل؟ ارسمه تاني بيها
+    const photo = byEmail||byName; if(!photo) return;
+    const old = av.querySelector('img'); if(old) old.remove();
+    const im = document.createElement('img'); im.src=photo; im.alt='';
+    av.appendChild(im);
+    const ring=av.closest('.tp-av-ring'); if(ring) ring.classList.add('has-photo');
+  }catch(e){ console.warn('teamProfiles', e); }
+}
+/* هوفر: معاينة عائمة مكبّرة — على أفاتار الهيرو وأفاتارات البوديوم (delegation) */
+function tpPrevShow(anchor, src){
+  const prev=el('tpPrev'), pimg=el('tpPrevImg'); if(!prev||!pimg||!src) return;
+  pimg.src=src;
+  const r=anchor.getBoundingClientRect(), w=208;
+  const left=Math.min(window.innerWidth-16-w,Math.max(16,r.left+r.width/2-w/2));
+  prev.style.top=(r.bottom+14)+'px';
+  prev.style.left=left+'px';
+  prev.classList.add('show');
+}
+function tpPrevHide(){ const p=el('tpPrev'); if(p) p.classList.remove('show'); }
+document.addEventListener('mouseover',e=>{
+  if(!e.target.closest) return;
+  const av=e.target.closest('.tp-av-ring, .sp-av'); if(!av) return;
+  const img=av.querySelector('img'); if(!img) return;
+  tpPrevShow(av, img.src);
+});
+document.addEventListener('mouseout',e=>{
+  if(!e.target.closest) return;
+  const av=e.target.closest('.tp-av-ring, .sp-av');
+  if(av && !(e.relatedTarget && av.contains(e.relatedTarget))) tpPrevHide();
+});
+document.addEventListener('click',()=>tpPrevHide());
+
+onAuthStateChanged(auth, async user=>{
+  if(!user){ el('loginView').style.display='flex'; el('mainHdr').style.display='none'; el('appView').style.display='none'; if(inboxUnsub){inboxUnsub();inboxUnsub=null;} const _iw=el('inboxWrap'); if(_iw) _iw.style.display='none'; return; }
+
+  myEmail=String(user.email||'').toLowerCase().trim();
+  myEmailRaw=String(user.email||'');
+
+  /* Load users directory for team classification + my profile. */
+  try{
+    const snap=await getDocs(collection(db,'users'));
+    snap.forEach(d=>{const u={id:d.id,...d.data()};const em=String(u.email||u.loginEmail||'').toLowerCase().trim();if(em)usersByEmail[em]=u;});
+  }catch(e){ console.error('users',e); }
+
+  const me = usersByEmail[myEmail] || {};
+  myName = me.displayName || (myEmail===ADMIN_EMAIL?'Dr. Mahmoud Shawky':myEmail);
+  try{ if(window.PTLite) window.PTLite.sync({db,doc,setDoc,uid:user.uid,profile:me}); }catch(e){}
+
+  /* Access mirrors the Firestore read rule for /consultations: admin, or a
+     reviewer (role/flag). These are exactly the people who have review data. */
+  const isAdmin = myEmail===ADMIN_EMAIL || me.role==='admin';
+  iAmAdmin = isAdmin;
+  const allowed = isAdmin || me.canReviewConsultations===true || me.role==='reviewer';
+
+  /* Show the header + a centred message, hide the dashboard widgets. */
+  function showBlocked(icon, msg){
+    el('loginView').style.display='none';
+    el('mainHdr').style.display='flex';
+    el('appView').style.display='block';
+    el('hdrAvatar').textContent=String(myName).trim().charAt(0).toUpperCase()||'U';
+    el('hdrName').textContent=myName;
+    el('denyBox').innerHTML=`<div class="deny">${icon}<p>${msg}</p></div>`;
+    document.querySelector('.range-bar').style.display='none';
+    document.querySelector('.hero').style.display='none';
+    document.querySelector('.tiles').style.display='none';
+    document.querySelectorAll('.panel').forEach(p=>p.style.display='none');
+  }
+  const _lockSvg=`<svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
+  const _noSvg=`<svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="10"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/></svg>`;
+
+  if(!allowed){ showBlocked(_noSvg, 'هذه الصفحة خاصة بفريق الاستشارات (المراجعين) فقط.'); return; }
+
+  /* WhatsApp dashboard is gated behind the admin switch (appConfig/dashboards). */
+  if(TEAM==='whatsapp' && !isAdmin){
+    let waEnabled=false;
+    try{ const s=await getDoc(doc(db,'appConfig','dashboards')); waEnabled = s.exists() && s.data().whatsappEnabled===true; }catch(e){ console.warn('waCfg',e); }
+    if(!waEnabled){ showBlocked(_lockSvg, 'داش بورد مراجعة الواتس اب لسه مش مفعّل. هيتفعّل لما نبدأ نراجع الواتس اب.'); return; }
+  }
+
+  el('loginView').style.display='none';
+  el('mainHdr').style.display='flex';
+  el('appView').style.display='block';
+  el('hdrAvatar').textContent=String(myName).trim().charAt(0).toUpperCase()||'U';
+  el('hdrName').textContent=myName;
+  loadMyTeamPhoto(myEmailRaw||myEmail, myName);
+
+  const cyc=defaultCycle(); currentFrom=cyc.from; currentTo=cyc.to;
+  el('dateFrom').value=currentFrom; el('dateTo').value=currentTo;
+
+  /* Load CC assignment for this reviewer */
+  if(TEAM==='callcenter'){
+    myToken = reviewerToken(myName) || reviewerToken(myEmail);
+    await loadMyAssignment(myEmail);
+    await loadSavedNotes();
+  }
+
+  if(unsub) unsub();
+  const q=query(collection(db,'consultations'),orderBy('createdAt','desc'),limit(2000));
+  unsub=onSnapshot(q,snap=>{ allRows=snap.docs.map(d=>({id:d.id,...d.data()})); render(); },
+    err=>{ console.error(err); notif('خطأ في تحميل البيانات','err'); });
+
+  listenInbox();
+  if(TEAM==='callcenter') listenSentNotes();
+});
+
+window.onRangeChange=function(){
+  currentFrom=el('dateFrom')?.value||'';
+  currentTo=el('dateTo')?.value||'';
+  (TEAM==='callcenter'&&myToken?Promise.all([loadMyAssignment(myEmail),loadSavedNotes()]):Promise.resolve()).then(()=>render());
+};
+window.resetCycle=function(){
+  const c=defaultCycle(); currentFrom=c.from; currentTo=c.to; el('dateFrom').value=c.from; el('dateTo').value=c.to;
+  (TEAM==='callcenter'&&myToken?Promise.all([loadMyAssignment(myEmail),loadSavedNotes()]):Promise.resolve()).then(()=>render());
+};
+
+/* ════════ INBOX — colleague replies to my review notes ════════ */
+let inboxThreads=[], inboxUnsub=null, currentInboxThread=null, inboxSending=false;
+let inboxSeenIds=null;   /* null = not initialised yet → don't ring on first load */
+const threadMillis=t=>t?.createdAt?.toMillis?.()||0;
+const isOpenThread=t=>!((t.reviewerReplyBack||'').trim()) && t.status!=='closed';
+/* ring (shake) the icon only when a genuinely NEW reply arrives */
+function maybeRingInbox(){
+  const openIds=inboxThreads.filter(isOpenThread).map(t=>t.id);
+  if(inboxSeenIds===null){ inboxSeenIds=new Set(openIds); return; }
+  const hasNew=openIds.some(id=>!inboxSeenIds.has(id));
+  inboxSeenIds=new Set(openIds);
+  if(hasNew){
+    const btn=el('inboxBtn');
+    if(btn){ btn.classList.remove('ring'); void btn.offsetWidth; btn.classList.add('ring'); setTimeout(()=>btn.classList.remove('ring'),1000); }
+  }
+}
+
+function listenInbox(){
+  const wrap=el('inboxWrap'); if(wrap) wrap.style.display='inline-flex';
+  if(inboxUnsub) inboxUnsub();
+  if(!myEmailRaw) return;
+  const q=query(collection(db,'noteReplies'), where('reviewerEmail','==', myEmailRaw));
+  inboxUnsub=onSnapshot(q, snap=>{
+    inboxThreads=snap.docs.map(d=>({id:d.id,...d.data()}));
+    inboxThreads.sort((a,b)=>{
+      const ao=isOpenThread(a)?0:1, bo=isOpenThread(b)?0:1;       /* open first */
+      if(ao!==bo) return ao-bo;
+      return threadMillis(b)-threadMillis(a);                      /* newest first */
+    });
+    maybeRingInbox();
+    renderInbox();
+    if(currentInboxThread){                                        /* keep open modal fresh */
+      const fresh=inboxThreads.find(t=>t.id===currentInboxThread.id);
+      if(fresh){ currentInboxThread=fresh; fillInboxModal(fresh); }
+    }
+  }, err=>{ console.warn('inbox', err); });
+}
+
+/* premium avatar gradient derived from the name (colorful, Messenger-like) */
+function avatarGradient(name){
+  const pals=[['#0ea5a0','#0a7c78'],['#6366f1','#4338ca'],['#ec4899','#be185d'],['#f59e0b','#b45309'],['#10b981','#047857'],['#8b5cf6','#6d28d9'],['#06b6d4','#0e7490'],['#ef4444','#b91c1c']];
+  let h=0; const s=String(name||'?'); for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0;
+  const p=pals[h%pals.length];
+  return `linear-gradient(135deg,${p[0]},${p[1]})`;
+}
+function shortTime(ts){
+  const d=ts?.toDate?.()||null; if(!d) return '';
+  const sameDay=d.toDateString()===new Date().toDateString();
+  return sameDay ? d.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})
+                 : d.toLocaleDateString('ar-EG',{day:'2-digit',month:'2-digit'});
+}
+window.imGrow=function(t){ t.style.height='auto'; t.style.height=Math.min(t.scrollHeight,120)+'px'; };
+
+function renderInbox(){
+  const openN=inboxThreads.filter(isOpenThread).length;
+  const btn=el('inboxBtn'), badge=el('inboxBadge');
+  if(btn) btn.classList.toggle('has-unread', openN>0);
+  if(badge){
+    if(openN>0){ badge.textContent=openN>99?'99+':String(openN); badge.classList.remove('hidden'); }
+    else badge.classList.add('hidden');
+  }
+  const list=el('inboxList'), empty=el('inboxEmpty');
+  if(!list) return;
+  if(!inboxThreads.length){ list.innerHTML=''; if(empty) empty.classList.remove('hidden'); return; }
+  if(empty) empty.classList.add('hidden');
+  list.innerHTML=inboxThreads.map(t=>{
+    const open=isOpenThread(t);
+    const who=t.agentLabel||t.agentName||t.agentNumber||'زميل';
+    const initial=String(who).trim().charAt(0).toUpperCase()||'Z';
+    const prev=open ? ('💬 '+(t.agentReply||'')) : ('✓ '+((t.reviewerReplyBack||'').trim()||'تم إغلاق الموضوع'));
+    return `<button class="conv ${open?'open':'closed'}" onclick="window.openInboxModal('${t.id}')">
+      <span class="conv-av" style="background:${avatarGradient(who)}">${esc(initial)}</span>
+      <span class="conv-main">
+        <span class="conv-r1"><span class="conv-name">${esc(who)}</span><span class="conv-time">${esc(shortTime(t.createdAt))}</span></span>
+        <span class="conv-r2"><span class="conv-prev">${esc(prev)}</span><span class="conv-tag ${open?'open':'closed'}">${open?'جديد':'مُغلق'}</span></span>
+      </span>
+    </button>`;
+  }).join('');
+}
+
+window.toggleInbox=function(ev){
+  if(ev) ev.stopPropagation();
+  const panel=el('inboxPanel'), btn=el('inboxBtn');
+  if(!panel) return;
+  const open=!panel.classList.contains('hidden');
+  if(open){ panel.classList.add('hidden'); if(btn) btn.setAttribute('aria-expanded','false'); }
+  else{ renderInbox(); panel.classList.remove('hidden'); if(btn) btn.setAttribute('aria-expanded','true'); }
+};
+function closeInboxPanel(){ const p=el('inboxPanel'); if(p) p.classList.add('hidden'); const b=el('inboxBtn'); if(b) b.setAttribute('aria-expanded','false'); }
+document.addEventListener('click', e=>{
+  const p=el('inboxPanel'); if(!p || p.classList.contains('hidden')) return;
+  if(!e.target.closest || !e.target.closest('.inbox-wrap')) closeInboxPanel();
+});
+
+/* ════════ COACHING NOTES — reviewer → agent (keyed by signature number) ════════ */
+let sentNotes=[], sentUnsub=null;
+let sentNotesByNum=new Map();       /* number → count I've sent */
+let coachTargetNum='';
+
+/* Resolve a colleague's display name from their signature number, using the
+   users directory first (agentNumber field) then any matching consultation. */
+function agentNameForNum(n){
+  const s=String(n||'').trim();
+  for(const em in usersByEmail){
+    const u=usersByEmail[em]||{};
+    if(String(u.agentNumber||'').trim()===s && u.displayName && !String(u.displayName).includes('@'))
+      return u.displayName;
+  }
+  for(const r of allRows){
+    try{ if(consultNumCandidates(r).has(s)){
+      const raw=String(r.agentName||r.agentLabel||'').trim();
+      const nm=raw.replace(/^\s*\d+\s*[A-Za-z.]*\s*[-–—]\s*/,'').trim();  /* strip "166C.C - " */
+      if(nm && !/^\d+$/.test(nm)) return nm;
+    } }catch(_){}
+  }
+  return '';
+}
+
+window.openCoachModal=function(n){
+  coachTargetNum=String(n||'').trim();
+  const nm=agentNameForNum(coachTargetNum);
+  el('coachIdNum').textContent=coachTargetNum||'—';
+  el('coachIdName').textContent=nm||`زميل رقم ${coachTargetNum}`;
+  const ta=el('coachNoteText'); ta.value='';
+  el('coachSt').textContent=''; el('coachSt').className='coach-st';
+  el('coachSendBtn').disabled=false;
+  el('coachModal').classList.add('open');
+  setTimeout(()=>ta.focus(),60);
+};
+window.closeCoachModal=function(){ el('coachModal').classList.remove('open'); coachTargetNum=''; };
+
+window.sendCoachNote=async function(){
+  const note=(el('coachNoteText').value||'').trim();
+  const st=el('coachSt');
+  if(!coachTargetNum){ return; }
+  if(!note){ st.textContent='اكتب نص الملاحظة الأول'; st.className='coach-st err'; return; }
+  if(!myEmailRaw){ st.textContent='لازم تسجّل دخول'; st.className='coach-st err'; return; }
+  el('coachSendBtn').disabled=true;
+  st.textContent='⏳ جاري الإرسال...'; st.className='coach-st';
+  try{
+    await setDoc(doc(collection(db,'ccCoachNotes')), {
+      agentNumber:   coachTargetNum,
+      agentName:     agentNameForNum(coachTargetNum)||'',
+      reviewerToken: myToken||'',
+      reviewerName:  myName||'',
+      reviewerEmail: myEmailRaw,
+      note,
+      read:          false,
+      readAt:        null,
+      createdAt:     serverTimestamp()
+    });
+    st.textContent='✅ اتبعتت للزميل'; st.className='coach-st ok';
+    notif('تم إرسال الملاحظة للزميل','ok');
+    setTimeout(()=>window.closeCoachModal(),900);
+  }catch(e){
+    console.error('sendCoachNote',e);
+    st.textContent='❌ خطأ في الإرسال'; st.className='coach-st err';
+    el('coachSendBtn').disabled=false;
+  }
+};
+
+function listenSentNotes(){
+  const wrap=el('sentWrap'); if(wrap) wrap.style.display='inline-flex';
+  if(sentUnsub) sentUnsub();
+  if(!myEmailRaw) return;
+  const q=query(collection(db,'ccCoachNotes'), where('reviewerEmail','==', myEmailRaw));
+  sentUnsub=onSnapshot(q, snap=>{
+    sentNotes=snap.docs.map(d=>({id:d.id,...d.data()}));
+    sentNotes.sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
+    sentNotesByNum=new Map();
+    sentNotes.forEach(n=>{ const k=String(n.agentNumber||'').trim(); if(k) sentNotesByNum.set(k,(sentNotesByNum.get(k)||0)+1); });
+    renderSentNotes();
+    refreshCardDots();
+  }, err=>{ console.warn('sentNotes', err); });
+}
+
+/* update the little gold dot on each colleague card's WhatsApp icon */
+function refreshCardDots(){
+  document.querySelectorAll('.anr-msg-btn[data-n]').forEach(btn=>{
+    const c=sentNotesByNum.get(String(btn.getAttribute('data-n')).trim())||0;
+    btn.classList.toggle('has-notes', c>0);
+    const dot=btn.querySelector('.anr-msg-dot'); if(dot) dot.textContent=c>9?'9+':String(c);
+  });
+}
+
+function renderSentNotes(){
+  const n=sentNotes.length;
+  const badge=el('sentBadge');
+  if(badge){ if(n>0){ badge.textContent=n>99?'99+':String(n); badge.classList.remove('hidden'); } else badge.classList.add('hidden'); }
+  const list=el('sentList'), empty=el('sentEmpty');
+  if(!list) return;
+  if(!n){ list.innerHTML=''; if(empty) empty.classList.remove('hidden'); return; }
+  if(empty) empty.classList.add('hidden');
+  list.innerHTML=sentNotes.map(t=>{
+    const num=String(t.agentNumber||'').trim();
+    const nm=t.agentName||agentNameForNum(num)||`زميل ${num}`;
+    const seen=t.read===true;
+    return `<div class="sent-item">
+      <span class="sent-av">${esc(num||'?')}</span>
+      <div class="sent-main">
+        <div class="sent-r1"><span class="sent-name">${esc(nm)}</span><span class="sent-time">${esc(shortTime(t.createdAt))}</span></div>
+        <div class="sent-note">${esc(t.note||'')}</div>
+        <span class="sent-seen ${seen?'yes':'no'}">${seen?'👁 شافها الزميل':'⏳ لسه ماشافهاش'}</span>
+      </div>
+      <button class="sent-del" onclick="window.deleteCoachNote('${t.id}')" title="مسح الملاحظة" aria-label="مسح">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      </button>
+    </div>`;
+  }).join('');
+}
+
+window.toggleSent=function(ev){
+  if(ev) ev.stopPropagation();
+  const panel=el('sentPanel'), btn=el('sentBtn');
+  if(!panel) return;
+  const open=!panel.classList.contains('hidden');
+  if(open){ panel.classList.add('hidden'); if(btn) btn.setAttribute('aria-expanded','false'); }
+  else{ closeInboxPanel(); renderSentNotes(); panel.classList.remove('hidden'); if(btn) btn.setAttribute('aria-expanded','true'); }
+};
+function closeSentPanel(){ const p=el('sentPanel'); if(p) p.classList.add('hidden'); const b=el('sentBtn'); if(b) b.setAttribute('aria-expanded','false'); }
+document.addEventListener('click', e=>{
+  const p=el('sentPanel'); if(!p || p.classList.contains('hidden')) return;
+  if(!e.target.closest || !e.target.closest('#sentWrap')) closeSentPanel();
+});
+
+window.deleteCoachNote=async function(id){
+  if(!id) return;
+  try{
+    await deleteDoc(doc(db,'ccCoachNotes', id));
+    notif('تم مسح الملاحظة','ok');
+  }catch(e){ console.error('deleteCoachNote',e); notif('خطأ في المسح','err'); }
+};
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ const ov=el('coachModal'); if(ov&&ov.classList.contains('open')) window.closeCoachModal(); } });
+
+/* build the consultation-summary block from the consultation doc */
+function imSummaryHtml(d){
+  const head='<div class="cm-pinned-h">📋 ملخص الاستشارة</div>';
+  if(!d) return head+'<div class="im-summary-text" style="color:var(--text3)">تعذّر تحميل تفاصيل الاستشارة (ربما خارج آخر 2000 استشارة).</div>';
+  const syms=(d.symptoms||[]).map(x=>x.name).filter(Boolean).join('، ')||'—';
+  const f=(lbl,val,wide)=>`<div class="im-f${wide?' wide':''}"><label>${lbl}</label><span>${esc(val||'—')}</span></div>`;
+  let badges='';
+  if(isApproved(d))    badges+='<span class="im-badge approved">✓ معتمدة</span>';
+  if(isNeedsInfo(d))   badges+='<span class="im-badge needs">يحتاج معلومات</span>';
+  if(isIncomplete(d))  badges+='<span class="im-badge incomp">غير مكتملة</span>';
+  if(hasWarning(d))    badges+='<span class="im-badge warn">⚠ تحذير</span>';
+  const rt=ratingOf(d); if(rt>=1) badges+=`<span class="im-badge rating">★ ${rt}/5</span>`;
+  const summaryText=String(d.summary||'').trim();
+  return `${head}<div class="im-grid">
+      ${f('العميل / المريض', d.patientName)}
+      ${f('كود العميل', d.customerCode)}
+      ${f('العمر', d.age)}
+      ${f('النوع', d.gender)}
+      ${f('الأعراض', syms, true)}
+    </div>
+    ${summaryText?`<div style="margin-top:11px"><label style="display:block;font-size:9.5px;color:var(--text3);font-weight:700;margin-bottom:4px">ملخص الاستشارة</label><div class="im-summary-text">${esc(summaryText)}</div></div>`:''}
+    ${badges?`<div class="im-status-row">${badges}</div>`:''}`;
+}
+
+function fillInboxModal(t){
+  const open=isOpenThread(t);
+  const who=t.agentLabel||t.agentName||t.agentNumber||'زميل';
+  const av=el('imAvatar'); av.textContent=String(who).trim().charAt(0).toUpperCase()||'Z'; av.style.background=avatarGradient(who);
+  el('imWho').textContent=who;
+  el('imMeta').textContent=`📋 ${t.symptomName||'استشارة'}${t.consultCreatedAtText?' · '+t.consultCreatedAtText:''}`;
+
+  /* consultation summary (pinned card) — fallback handled in opener */
+  const cd=allRows.find(r=>r.id===t.consultationId);
+  el('imSummary').innerHTML=imSummaryHtml(cd);
+
+  /* chat bubbles: my note (right) → colleague reply (left) → my final reply (right/gold) */
+  let th='';
+  if((t.reviewerNote||'').trim()) th+=`<div class="msg me"><div class="bub"><div class="bub-cap">📝 ملاحظتك</div>${esc(t.reviewerNote)}</div></div>`;
+  th+=`<div class="msg them"><div class="bub"><div class="bub-cap">${esc(who)}</div>${esc(t.agentReply||'')}</div></div>`;
+  if((t.reviewerReplyBack||'').trim()) th+=`<div class="msg me gold"><div class="bub"><div class="bub-cap">✅ ردّك النهائي</div>${esc(t.reviewerReplyBack)}</div></div>`;
+  el('imThread').innerHTML=th;
+
+  const del=el('imDelete'); if(del) del.style.display = iAmAdmin ? '' : 'none';
+
+  /* composer vs closed banner */
+  const box=el('imReplyBox'), closed=el('imClosedNote');
+  if(open){ box.classList.remove('hidden'); closed.classList.add('hidden'); }
+  else{ box.classList.add('hidden'); closed.classList.remove('hidden'); }
+
+  const body=el('imBody'); if(body) setTimeout(()=>{ body.scrollTop=body.scrollHeight; }, 40);
+}
+
+window.openInboxModal=async function(id){
+  const t=inboxThreads.find(x=>x.id===id);
+  if(!t) return;
+  currentInboxThread=t;
+  closeInboxPanel();
+  const txt=el('imReplyText'); if(txt){ txt.value=''; txt.style.height='auto'; }
+  /* fetch the consultation if it's not in the live window */
+  if(!allRows.find(r=>r.id===t.consultationId)){
+    try{ const s=await getDoc(doc(db,'consultations',t.consultationId)); if(s.exists()) allRows.push({id:s.id,...s.data()}); }
+    catch(e){ console.warn('consult fetch', e); }
+  }
+  fillInboxModal(t);
+  const ov=el('inboxModal'); if(ov) ov.classList.add('open');
+  if(isOpenThread(t)) setTimeout(()=>{ el('imReplyText')?.focus(); }, 80);
+};
+window.closeInboxModal=function(){ const ov=el('inboxModal'); if(ov) ov.classList.remove('open'); currentInboxThread=null; };
+window.deleteInboxThread=async function(){
+  if(!iAmAdmin || !currentInboxThread) return;
+  if(!confirm('مسح هذا الرد نهائيًا؟ لا يمكن التراجع.')) return;
+  try{ await deleteDoc(doc(db,'noteReplies', currentInboxThread.id)); notif('تم مسح الرد','ok'); window.closeInboxModal(); }
+  catch(e){ console.error('deleteInboxThread', e); notif('تعذّر المسح. راجع الصلاحيات.','err'); }
+};
+
+window.submitInboxReply=async function(){
+  if(inboxSending || !currentInboxThread) return;
+  const text=(el('imReplyText')?.value||'').trim();
+  if(text.length<2){ notif('اكتب ردًّا أولًا','err'); el('imReplyText')?.focus(); return; }
+  inboxSending=true;
+  const btn=el('imSend'); if(btn){ btn.disabled=true; btn.textContent='…'; }
+  try{
+    await updateDoc(doc(db,'noteReplies', currentInboxThread.id), {
+      reviewerReplyBack: text,
+      reviewerReplyName: myName,
+      status: 'closed',
+      closedAt: serverTimestamp()
+    });
+    notif('تم إرسال الرد وإغلاق الموضوع ✓','ok');
+    window.closeInboxModal();
+  }catch(e){
+    console.error('submitInboxReply', e);
+    notif('تعذّر إرسال الرد. راجع الصلاحيات أو الاتصال.','err');
+  }finally{
+    inboxSending=false;
+    if(btn){ btn.disabled=false; btn.textContent='➤'; }
+  }
+};
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ const ov=el('inboxModal'); if(ov&&ov.classList.contains('open')) window.closeInboxModal(); } });
+
+/* ── RENDER ── */
+function render(){
+  /* My reviews (for the selected team) within the period. */
+  const mine = allRows.filter(r=>
+    reviewerEmailOf(r)===myEmail &&
+    consultTeam(r)===TEAM &&
+    inRange(reviewDateISO(r))
+  );
+
+  const total    = mine.length;
+  const approved = mine.filter(isApproved).length;
+  const needs    = mine.filter(isNeedsInfo).length;
+  const incomp   = mine.filter(isIncomplete).length;
+  const warn     = mine.filter(hasWarning).length;
+  const fup      = mine.filter(r=>followStatus(r)==='pending').length;
+  const fud      = mine.filter(r=>followStatus(r)==='done').length;
+
+  el('heroGreet').textContent=`أداء مراجعتك، ${myName.replace(/^Dr\.\s*/,'د. ')} 👋`;
+  el('heroPeriod').textContent=`${fmtDMY(currentFrom)} — ${fmtDMY(currentTo)}`;
+  animNum(el('bigNum'), total);
+
+  /* ── Ring: if reviewer has an assignment → show approved/total_from_assigned
+            otherwise fall back to personal approved/reviewed ratio. ── */
+  const C=2*Math.PI*62;
+  const fg=el('ringFg');
+  fg.setAttribute('stroke-dasharray', C.toFixed(1));
+
+  if(TEAM==='callcenter' && myAssignment.length>0){
+    /* Per-number stats: for EACH assigned agent number, how many consultations
+       it produced and how many were approved — within the period.
+       — Agent number alone identifies the consultation (no consultTeam check).
+       — Accepts EITHER creation date OR review date in range (avoids missing
+         consultations created in a previous cycle but reviewed now). */
+    const numStats=new Map();
+    myAssignment.forEach(n=>numStats.set(String(n).trim(),{total:0,approved:0,starSum:0,starN:0}));
+    allRows.forEach(r=>{
+      if(!(inRange(createdDateISO(r)) || inRange(reviewDateISO(r)))) return;
+      const cands=consultNumCandidates(r);
+      const rt=ratingOf(r);
+      /* A consultation belongs to one colleague; credit each assigned number
+         whose representation it carries (counted at most once per consultation). */
+      let counted=false;
+      numStats.forEach((s,n)=>{ if(!counted && cands.has(n)){ s.total++; if(isApproved(r)) s.approved++; if(rt>=1){s.starSum+=rt;s.starN++;} counted=true; } });
+    });
+
+    let aTotal=0, aApproved=0;
+    numStats.forEach(s=>{ aTotal+=s.total; aApproved+=s.approved; });
+    const aRem      = aTotal - aApproved;
+    const aPct      = aTotal>0 ? Math.round(aApproved/aTotal*100) : 0;
+
+    /* Update ring with assignment-based rate */
+    requestAnimationFrame(()=>{ fg.setAttribute('stroke-dashoffset', (C*(1-aPct/100)).toFixed(1)); });
+    el('ringPct').textContent=aPct+'%';
+
+    /* Render assignment panel — always show when assignment exists */
+    const panel=el('assignPanel');
+    panel.style.display='';
+    el('assignAgentCount').textContent=`${myAssignment.length} زميل في نطاقك`;
+    el('assignSub').textContent=`استشارات زملاء الكول سنتر المطلوب منك مراجعتها · ${fmtDMY(currentFrom)} — ${fmtDMY(currentTo)}`;
+
+    /* Breakdown rows — busiest numbers first, empty numbers dimmed at the end. */
+    const rows=[...numStats.entries()].sort((a,b)=>b[1].total-a[1].total || (a[0]>b[0]?1:-1));
+    el('assignNums').innerHTML=rows.map(([n,s])=>{
+      const p=s.total>0?Math.round(s.approved/s.total*100):0;
+      const pcol=s.total===0?'var(--text3)':p>=80?'var(--green)':p>=50?'var(--amber)':'var(--red)';
+      const avg=s.starN>0?s.starSum/s.starN:0;
+      const sf=Math.round(avg);
+      let sh=''; for(let i=1;i<=5;i++) sh+=`<span class="${i<=sf?'':'e'}">★</span>`;
+      const starsEl=s.starN>0
+        ?`<span class="anr-stars-il">${sh}<small style="font-size:10px;color:var(--text3)">&nbsp;${avg.toFixed(1)}</small></span>`
+        :`<small style="font-size:10.5px;color:var(--text3)">غير مقيّم</small>`;
+      const saved=savedNotes.get(String(n))||{};
+      const savedComment=saved.comment||'';
+      const autoTxt=s.total===0
+        ?'لا توجد استشارات مسجّلة في هذه الفترة.'
+        :`إجمالي الاستشارات: ${s.total}\nمعتمدة: ${s.approved} (${p}%)${(s.total-s.approved)>0?' · غير معتمدة: '+(s.total-s.approved):''}\n`
+        +(s.starN>0?`متوسط التقييم: ${avg.toFixed(2)} ★ (من ${s.starN} مقيّمة)\n`:'لم يتم التقييم بالنجوم بعد.\n')
+        +(p>=90?'\n🟢 أداء ممتاز — نسبة اعتماد عالية جداً.':p>=75?'\n🟡 أداء جيد — هناك مجال للتطوير.':p>=50?'\n🟠 أداء متوسط — يحتاج متابعة.':s.total>0?'\n🔴 أداء ضعيف — يحتاج مراجعة عاجلة.':'');
+      return `<div class="anr-card${s.total===0?' empty':''}" id="anr_card_${n}">
+        <div class="anr-head" onclick="window.toggleAnrCard('${n}')">
+          <span class="anr-num">${n}</span>
+          <span class="anr-total"><b>${s.total}</b> استشارة · <span style="color:var(--green);font-size:12px">${s.approved} ✅</span></span>
+          <span class="anr-pct" style="color:${pcol}">${p}%</span>
+          <button class="anr-msg-btn" data-n="${n}" onclick="event.stopPropagation();window.openCoachModal('${n}')" title="ابعت ملاحظة توجيهية للزميل" aria-label="ملاحظة توجيهية">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.002-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413"/></svg>
+            <span class="anr-msg-dot"></span>
+          </button>
+          <span class="anr-chevron">▼</span>
+        </div>
+        <div class="anr-body">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06);">
+            ${starsEl}
+            ${s.starN>0?`<small style="color:var(--text3);font-size:11px;">${avg.toFixed(1)} ★ من ${s.starN} استشارة مقيّمة</small>`:'<small style="color:var(--text3);font-size:11px;">لا يوجد تقييم بالنجوم بعد</small>'}
+          </div>
+          <div class="anr-auto-lbl">📊 ملخص تلقائي</div>
+          <div class="anr-auto" onclick="window.openConsultsModal('${n}')">${esc(autoTxt)}</div>
+          <div class="anr-note-lbl">✍️ ملاحظاتك النهائية على هذا الزميل</div>
+          <textarea class="anr-ta" id="anr_ta_${n}" placeholder="اكتب تقييمك وملاحظاتك هنا — سيظهر هذا التقرير للإدارة...">${esc(savedComment)}</textarea>
+          <div class="anr-saved-comment" id="anr_sv_${n}"${savedComment?' style="display:block"':''}>${esc(savedComment)}</div>
+          <div class="anr-ta-btns">
+            <button class="anr-save-btn" onclick="window.saveAnrNote('${n}')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+              حفظ الملاحظة
+            </button>
+            <span class="anr-save-st" id="anr_st_${n}"></span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+    refreshCardDots();
+
+    animNum(el('aReq'), aTotal);
+    animNum(el('aApp'), aApproved);
+    animNum(el('aRem'), aRem);
+    el('aBarPct').textContent=aPct+'%';
+    requestAnimationFrame(()=>{ el('aBarFill').style.width=aPct+'%'; });
+  } else {
+    /* Original behaviour (no assignment or non-CC team) */
+    const apprPct=total>0?Math.round(approved/total*100):0;
+    requestAnimationFrame(()=>{ fg.setAttribute('stroke-dashoffset', (C*(1-apprPct/100)).toFixed(1)); });
+    el('ringPct').textContent=apprPct+'%';
+    const panel=el('assignPanel');
+    if(panel) panel.style.display='none';
+  }
+
+  animNum(el('tApproved'),approved);
+  animNum(el('tNeeds'),needs);
+  animNum(el('tIncomp'),incomp);
+  animNum(el('tWarn'),warn);
+  animNum(el('tFup'),fup);
+  animNum(el('tFud'),fud);
+
+  renderChart(mine);
+  renderMyStars();
+}
+
+/* ── STAR PODIUM: best-rated CC colleagues within MY assigned scope ── */
+function renderMyStars(){
+  const panel=el('starPanel'); if(!panel) return;
+  if(TEAM!=='callcenter' || !myAssignment.length){ panel.style.display='none'; return; }
+  panel.style.display='';
+  const mySet=new Set(myAssignment.map(n=>String(n).trim()));
+  /* Aggregate RATED consultations (1–5★) per submitting colleague, restricted to
+     my scope (the consultation carries one of my assigned numbers). Group by the
+     reliable agentEmail to avoid double-counting number representations. */
+  const agg=new Map();
+  allRows.forEach(r=>{
+    if(!(inRange(createdDateISO(r)) || inRange(reviewDateISO(r)))) return;
+    const rt=ratingOf(r); if(rt<1) return;
+    const cands=consultNumCandidates(r);
+    let hit=''; for(const n of mySet){ if(cands.has(n)){ hit=n; break; } }
+    if(!hit) return;
+    const key=String(r.agentEmail||('n:'+hit)).toLowerCase();
+    if(!agg.has(key)) agg.set(key,{sum:0,n:0,name:agentNameForRow(r),num:hit});
+    const a=agg.get(key); a.sum+=rt; a.n++; if(!a.name) a.name=agentNameForRow(r);
+  });
+  el('starSub').textContent=`أعلى تقييمًا · ${fmtDMY(currentFrom)} — ${fmtDMY(currentTo)}`;
+  if(!agg.size){
+    el('starBody').innerHTML=`<div class="star-empty">لسه مفيش استشارات مقيّمة بالنجوم في نطاقك خلال هذه الفترة.</div>`;
+    return;
+  }
+  /* Bayesian (weighted) average vs the pooled scope mean. */
+  let gs=0,gn=0; agg.forEach(a=>{gs+=a.sum;gn+=a.n;});
+  const m=gn>0?gs/gn:4, C=RATING_CONFIDENCE;
+  const ranked=[...agg.values()].map(a=>{
+    const avg=a.sum/a.n;
+    return {name:a.name||('زميل '+a.num), num:a.num, avg, n:a.n, score:(C*m+a.sum)/(C+a.n)};
+  }).sort((x,y)=>y.score-x.score||y.avg-x.avg||y.n-x.n);
+  const top=ranked.slice(0,2);
+  const step=(a,rank)=>{
+    const ini=String(a.name||a.num).trim().charAt(0).toUpperCase()||'★';
+    /* صورة الزميل: teamProfiles (بالاسم) ← ملفات /team/<slug> ← الحرف زي الأول */
+    const ph=_tpMap[String(a.name||'').trim().toLowerCase()]||null;
+    const slug=tpSlug(a.name);
+    const cands=(ph?[ph]:[]).concat(slug?TP_EXTS.map(e=>`/team/${slug}.${e}`):[]);
+    const avIn=esc(ini)+(cands.length
+      ?`<img src="${esc(cands[0])}" data-cands="${cands.map(esc).join('|')}" data-idx="0" alt="" loading="lazy" onerror="tpImgFB(this)">`
+      :'');
+    return `<div class="sp-step sp-${rank}">
+      <div class="sp-av-wrap"><div class="sp-av" title="${esc(a.name||'')}">${avIn}</div><div class="sp-rank">${rank}</div></div>
+      <div class="sp-info">
+        <div class="sp-name">${esc(a.name)}</div>
+        <div class="sp-num">رقم ${esc(a.num)} · ${a.n} مقيّمة</div>
+        <div class="sp-stars">${starsHtml(a.avg)}</div>
+        <div class="sp-meta">متوسط ${a.avg.toFixed(2)} ★</div>
+      </div>
+      <div class="sp-block"><span class="sp-block-num">${a.avg.toFixed(1)}</span><span class="sp-block-lbl">نجوم</span></div>
+    </div>`;
+  };
+  el('starBody').innerHTML=`<div class="star-podium">${top.length>=2?step(top[1],2)+step(top[0],1):step(top[0],1)}</div>`;
+}
+
+function renderChart(mine){
+  const chart=el('chart');
+  if(!currentFrom||!currentTo){ chart.innerHTML=`<div class="chart-empty">اختر مدة لعرض النشاط</div>`; return; }
+  /* Build day buckets across the range (cap to keep it readable). */
+  const start=new Date(currentFrom+'T00:00:00'), end=new Date(currentTo+'T00:00:00');
+  const days=Math.round((end-start)/86400000)+1;
+  if(days<1 || days>120){ chart.innerHTML=`<div class="chart-empty">المدة كبيرة لعرض الرسم اليومي — قلّلها لرؤية النشاط</div>`; return; }
+  const counts=new Map();
+  mine.forEach(r=>{ const k=reviewDateISO(r); counts.set(k,(counts.get(k)||0)+1); });
+  let maxV=1; for(let i=0;i<days;i++){ const d=new Date(start.getTime()+i*86400000); maxV=Math.max(maxV,counts.get(isoLocal(d))||0); }
+
+  let html='';
+  for(let i=0;i<days;i++){
+    const d=new Date(start.getTime()+i*86400000);
+    const iso=isoLocal(d);
+    const v=counts.get(iso)||0;
+    const h=Math.round((v/maxV)*100);
+    const dd=String(d.getDate());
+    const showLbl = days<=40 || d.getDate()%5===0 || d.getDate()===1;
+    html+=`<div class="bar-col"><div class="bar ${v>0?'has':''}" data-h="${v>0?Math.max(h,6):0}"><span class="bar-tip">${dd}: ${v} استشارة</span></div><span class="bar-day">${showLbl?dd:''}</span></div>`;
+  }
+  chart.innerHTML=html;
+  requestAnimationFrame(()=>{ chart.querySelectorAll('.bar').forEach(b=>{ b.style.height=(b.dataset.h||'0')+'%'; }); });
+}
+
+/* ── Consults Modal JS ── */
+(function(){
+  function fmtDate(r){
+    const src=r?.review?.reviewedAt||r?.createdAt;
+    if(!src) return '';
+    const d=src.toDate?src.toDate():new Date(src);
+    return d.toLocaleDateString('ar-EG',{day:'2-digit',month:'short',year:'numeric'});
+  }
+  function statusInfo(r){
+    const st=String(r?.review?.status||r?.status||'').toLowerCase();
+    if(st==='approved'||st==='تم الاعتماد') return {lbl:'✅ معتمدة',cls:'ok'};
+    if(st==='needs_more_info'||st==='يحتاج معلومات') return {lbl:'⚠️ يحتاج معلومات',cls:'pending'};
+    if(st==='needs_followup') return {lbl:'🔁 متابعة',cls:'pending'};
+    if(st==='incomplete'||r?.review?.incomplete) return {lbl:'⚡ ناقص',cls:'bad'};
+    return {lbl:'⏳ قيد المراجعة',cls:'pending'};
+  }
+  window.openConsultsModal = function(n){
+    const consultsList = allRows.filter(r=>{
+      if(!(inRange(createdDateISO(r))||inRange(reviewDateISO(r)))) return false;
+      return consultNumCandidates(r).has(String(n));
+    }).sort((a,b)=>{
+      const da=(a?.review?.reviewedAt||a?.createdAt)?.toDate?.()?.getTime()||0;
+      const db2=(b?.review?.reviewedAt||b?.createdAt)?.toDate?.()?.getTime()||0;
+      return db2-da;
+    });
+    const modal=document.getElementById('consultsModal');
+    document.getElementById('cmBadge').textContent=n;
+    document.getElementById('cmCount').textContent=`${consultsList.length} استشارة`;
+    const body=document.getElementById('cmBody');
+    if(!consultsList.length){
+      body.innerHTML=`<div class="cm-empty">لا توجد استشارات مسجّلة لهذا الرقم في الفترة الحالية.</div>`;
+    } else {
+      body.innerHTML=consultsList.map((r,i)=>{
+        const rt=ratingOf(r);
+        let stars=''; for(let j=1;j<=5;j++) stars+=`<span class="${j<=rt?'':'e'}">★</span>`;
+        const si=statusInfo(r);
+        const reply=String(r?.review?.reviewerNotes||r?.review?.reviewerReply||r?.reviewerNotes||r?.reviewerReply||'').trim();
+        return `<div class="cm-item">
+          <div class="cm-item-hdr">
+            <span style="font-family:'Noto Kufi Arabic',sans-serif;font-size:12px;font-weight:700;color:var(--text3)">#${i+1}</span>
+            <span class="cm-item-date">${fmtDate(r)}</span>
+            <span class="cm-item-status ${si.cls}">${si.lbl}</span>
+            ${rt>=1?`<span class="cm-item-stars">${stars}<small style="font-size:10px;color:var(--text3)">&nbsp;${rt}</small></span>`:''}
+          </div>
+          <div class="cm-reply${reply?'':' empty'}">${reply||'لم يُكتب رد من المراجع على هذه الاستشارة.'}</div>
+        </div>`;
+      }).join('');
+    }
+    modal.classList.add('open');
+    document.body.style.overflow='hidden';
+  };
+  window.closeConsultsModal = function(){
+    document.getElementById('consultsModal').classList.remove('open');
+    document.body.style.overflow='';
+  };
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') window.closeConsultsModal(); });
+})();
+</script>
+
+<!-- Consults Modal -->
+<!-- ✉️ Coach note SEND modal (reviewer → agent) -->
+<div id="coachModal" onclick="if(event.target.classList.contains('coach-bk'))window.closeCoachModal()">
+  <div class="coach-bk"></div>
+  <div class="coach-box">
+    <div class="coach-hero">
+      <div class="coach-hero-top">
+        <span class="coach-wa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.71.306 1.263.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.002-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413"/></svg></span>
+        <div class="coach-htxt">
+          <h3>ملاحظة توجيهية للزميل</h3>
+          <p>هتوصل مباشرةً لصفحة الزميل في لوحة الملاحظات</p>
+        </div>
+        <button class="coach-x" onclick="window.closeCoachModal()" aria-label="إغلاق">✕</button>
+      </div>
+      <div class="coach-id">
+        <span class="coach-id-num" id="coachIdNum">—</span>
+        <div class="coach-id-meta">
+          <div class="lbl">اسم الزميل</div>
+          <div class="nm" id="coachIdName">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="coach-body">
+      <label for="coachNoteText">نص الملاحظة</label>
+      <textarea id="coachNoteText" placeholder="مثال: خد بالك جرعة الدوا الفلاني بتكون كذا كذا · ركّز على السؤال عن الحساسية قبل ما تنصح بالدوا..."></textarea>
+      <div class="coach-hint">✍️ اكتب توجيه واضح ومختصر — بيظهر للزميل باسمك ورقمه، وتقدر تمسحه بعد كده من أيقونة «الملاحظات المرسلة» فوق.</div>
+      <div class="coach-foot">
+        <button class="coach-send" id="coachSendBtn" onclick="window.sendCoachNote()">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          إرسال للزميل
+        </button>
+        <span class="coach-st" id="coachSt"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="consultsModal">
+  <div class="cm-backdrop" onclick="window.closeConsultsModal()"></div>
+  <div class="cm-box">
+    <div class="cm-hdr">
+      <div class="cm-title">
+        <span>ردود المراجع — رقم</span>
+        <span class="cm-badge" id="cmBadge"></span>
+        <span class="cm-count" id="cmCount"></span>
+      </div>
+      <button class="cm-close" onclick="window.closeConsultsModal()">✕</button>
+    </div>
+    <div class="cm-body" id="cmBody"></div>
+  </div>
+</div>
+</body>
+</html>

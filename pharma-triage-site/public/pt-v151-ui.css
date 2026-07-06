@@ -1,0 +1,534 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   pt-v151  —  Best Achiever Celebration  —  Super Premium
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Overlay ──────────────────────────────────────────────────────────────── */
+.ba-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(10px, 2vw, 24px);
+  color: #fff;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%,   rgba(255, 229, 130, .13), transparent),
+    radial-gradient(ellipse 50% 60% at 10% 90%,  rgba(12, 200, 194, .18),  transparent),
+    radial-gradient(ellipse 55% 55% at 92% 80%,  rgba(115, 167, 255, .14), transparent),
+    linear-gradient(160deg, #010c1a 0%, #041428 45%, #000d1c 100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .5s ease;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.ba-overlay.ba-show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Background layers ────────────────────────────────────────────────────── */
+.ba-canvas,
+.ba-shimmer,
+.ba-aurora,
+.ba-light-beam {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.ba-canvas { z-index: 0; }
+
+.ba-aurora {
+  z-index: -2;
+  background:
+    conic-gradient(from 120deg at 50% 44%,
+      transparent,
+      rgba(12, 200, 194, .18),
+      transparent 30%,
+      rgba(201, 168, 76, .20),
+      transparent 68%);
+  filter: blur(24px) saturate(1.3);
+  animation: baAurora 11s ease-in-out infinite alternate;
+}
+
+.ba-shimmer {
+  z-index: 1;
+  background-image:
+    linear-gradient(118deg, transparent 0 32%, rgba(255,255,255,.10) 44%, transparent 56% 100%),
+    radial-gradient(circle, rgba(255,255,255,.10) 1px, transparent 1.6px);
+  background-size: 240% 100%, 36px 36px;
+  opacity: .48;
+  mix-blend-mode: screen;
+  animation: baSweep 6.5s linear infinite;
+}
+
+.ba-light-beam {
+  z-index: 1;
+  opacity: .30;
+  mix-blend-mode: screen;
+  filter: blur(10px);
+}
+.ba-light-1 {
+  background: linear-gradient(100deg, transparent 15%, rgba(12,200,194,.22) 46%, transparent 66%);
+  animation: baBeam 12s ease-in-out infinite;
+}
+.ba-light-2 {
+  background: linear-gradient(78deg, transparent 22%, rgba(255,228,130,.16) 50%, transparent 72%);
+  animation: baBeam 15s ease-in-out infinite reverse;
+}
+
+/* ── Card shell ───────────────────────────────────────────────────────────── */
+.ba-card {
+  position: relative;
+  z-index: 3;
+  width: min(1080px, 96vw);
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: clamp(14px, 2.4vh, 36px) clamp(14px, 4vw, 60px);
+  text-align: center;
+  background: transparent;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px) scale(.982);
+}
+
+.ba-show .ba-card {
+  animation: baStageIn 1.1s cubic-bezier(.16,1,.3,1) .12s forwards;
+}
+
+/* ── Close button ─────────────────────────────────────────────────────────── */
+.ba-close {
+  position: fixed;
+  inset-block-start: 18px;
+  inset-inline-end: 18px;
+  z-index: 6;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,.07);
+  color: rgba(255,255,255,.72);
+  cursor: pointer;
+  font-size: 20px;
+  backdrop-filter: blur(14px);
+  transition: background .2s, color .2s;
+}
+.ba-close:hover {
+  background: rgba(239,68,68,.30);
+  color: #fff;
+}
+
+/* ── Hero divider line ────────────────────────────────────────────────────── */
+.ba-hero-line {
+  width: min(520px, 68vw);
+  height: 1px;
+  margin: 0 auto clamp(12px,2vh,22px);
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(12,200,194,.9),
+    rgba(255,228,130,.9),
+    transparent);
+  box-shadow: 0 0 28px rgba(12,200,194,.50);
+  transform: scaleX(0);
+}
+.ba-show .ba-hero-line { animation: baLine 2.4s ease .9s forwards; }
+
+/* ── Crown ────────────────────────────────────────────────────────────────── */
+.ba-crown {
+  width: clamp(72px, 10vw, 116px);
+  height: clamp(72px, 10vw, 116px);
+  margin: 0 auto clamp(10px,1.6vh,18px);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 38% 28%, rgba(255,248,200,.22), transparent 55%),
+    radial-gradient(circle at 62% 72%, rgba(160,100,10,.18), transparent 60%);
+  box-shadow:
+    0 0 0 1px rgba(201,168,76,.22),
+    0 0 40px rgba(201,168,76,.28),
+    0 20px 56px rgba(0,0,0,.55);
+  opacity: 0;
+  transform: translateY(18px) scale(.72);
+}
+.ba-show .ba-crown {
+  animation:
+    baTrophyIn 1.1s cubic-bezier(.16,1,.3,1) 1.8s forwards,
+    baFloat      3.8s ease-in-out 3.2s infinite;
+}
+.ba-crown svg {
+  width: 64%;
+  height: 64%;
+  filter: drop-shadow(0 2px 8px rgba(120,60,0,.60));
+}
+
+/* ── Badge ────────────────────────────────────────────────────────────────── */
+.ba-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+  padding: 6px 18px;
+  margin-bottom: clamp(10px,1.5vh,16px);
+  border-radius: 999px;
+  border: 1px solid rgba(201,168,76,.44);
+  color: #ffe7a3;
+  background: rgba(201,168,76,.10);
+  font: 900 11px/1.2 "Cairo", Tahoma, sans-serif;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(10px);
+}
+.ba-show .ba-badge { animation: baSoftIn .7s ease 3.2s forwards; }
+
+/* ── Main title — CONGRATULATIONS ────────────────────────────────────────── */
+.ba-title {
+  margin: 0 0 clamp(4px,0.8vh,10px);
+  font-family: "Noto Kufi Arabic", "Cairo", "Georgia", serif;
+  font-size: clamp(32px, 6.5vw, 92px);
+  line-height: 1.0;
+  font-weight: 900;
+  letter-spacing: .04em;
+  opacity: 0;
+  transform: translateY(18px) scale(.95);
+}
+.ba-show .ba-title { animation: baTitleIn 1s cubic-bezier(.16,1,.3,1) 4.2s forwards; }
+
+.ba-title span {
+  display: inline-block;
+  background: linear-gradient(100deg, #fff 0%, #fff2bd 28%, #7ef8f3 55%, #ffe7a3 78%, #fff 100%);
+  background-size: 280% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: baTextShine 4s ease-in-out infinite;
+}
+
+/* ── Name — Dr. Sara Reda ─────────────────────────────────────────────────── */
+.ba-name {
+  margin: 0 0 clamp(6px,1vh,12px);
+  font-family: "Cairo", "Noto Kufi Arabic", Tahoma, sans-serif;
+  font-size: clamp(22px, 4vw, 58px);
+  font-weight: 900;
+  letter-spacing: .02em;
+  background: linear-gradient(100deg, #ffd97a, #fff5c2 38%, #a8fffa 62%, #ffd97a 100%);
+  background-size: 260% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: baTextShine 4.5s ease-in-out 1s infinite;
+  opacity: 0;
+  transform: translateY(14px);
+}
+.ba-show .ba-name { animation: baSoftIn .85s ease 5.0s forwards, baTextShine 4.5s ease-in-out 5.8s infinite; }
+
+/* ── Kicker / subtitle ────────────────────────────────────────────────────── */
+.ba-kicker {
+  margin: 0 auto clamp(10px,1.6vh,20px);
+  max-width: 700px;
+  color: rgba(210,238,255,.82);
+  font-size: clamp(12px, 1.9vw, 20px);
+  font-weight: 700;
+  letter-spacing: .025em;
+  opacity: 0;
+  transform: translateY(10px);
+}
+.ba-show .ba-kicker { animation: baSoftIn .75s ease 5.8s forwards; }
+
+/* ── Message (word-by-word) ───────────────────────────────────────────────── */
+.ba-message {
+  max-width: 720px;
+  margin: 0 auto clamp(10px,1.6vh,20px);
+  color: rgba(255,255,255,.88);
+  font-size: clamp(12px, 1.7vw, 18px);
+  line-height: 1.80;
+  font-weight: 600;
+  font-style: italic;
+}
+.ba-message .ba-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(14px) scale(.95);
+  animation: baWordIn .55s cubic-bezier(.16,1,.3,1) forwards;
+}
+
+/* ── Stats grid ───────────────────────────────────────────────────────────── */
+.ba-stats {
+  width: min(860px, 100%);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(8px, 1.4vw, 16px);
+  margin: 0 auto clamp(10px,1.6vh,18px);
+}
+
+/* last-row centering: 4th + 5th cards span the middle columns */
+.ba-stat:nth-child(4) { grid-column: 1 / 2; margin-left: auto;  width: 100%; }
+.ba-stat:nth-child(5) { grid-column: 2 / 3; margin-right: auto; width: 100%; }
+
+.ba-stat {
+  position: relative;
+  border-radius: 18px;
+  border: 1px solid rgba(var(--ba-accent-rgb), .28);
+  background: rgba(var(--ba-accent-rgb), .07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    0 0 44px rgba(var(--ba-accent-rgb), .12),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  padding: clamp(12px,1.8vh,20px) clamp(10px,1.4vw,18px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(26px) scale(.94);
+  overflow: hidden;
+}
+
+.ba-stat::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+    rgba(var(--ba-accent-rgb), .10) 0%,
+    transparent 60%);
+  pointer-events: none;
+}
+
+.ba-show .ba-stat {
+  animation: baStatIn .85s cubic-bezier(.16,1,.3,1) var(--ba-stat-delay) forwards;
+}
+
+.ba-stat-value {
+  display: block;
+  font-size: clamp(38px, 6vw, 80px);
+  line-height: 1;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.02em;
+  color: #fff;
+  text-shadow:
+    0 0 24px var(--ba-stat-accent),
+    0 0 56px color-mix(in srgb, var(--ba-stat-accent) 50%, transparent),
+    0 2px 12px rgba(0,0,0,.55);
+  /* subtle gradient tint on the number itself */
+  background: linear-gradient(160deg, #fff 30%, color-mix(in srgb, var(--ba-stat-accent) 70%, #fff) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.ba-stat-label {
+  display: block;
+  color: rgba(220,240,255,.68);
+  font-size: clamp(10px, 1.1vw, 12px);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .10em;
+  margin-top: 4px;
+}
+
+.ba-stat-extra {
+  display: block;
+  color: rgba(180,220,255,.44);
+  font-size: clamp(9px, .95vw, 11px);
+  font-weight: 700;
+  margin-top: 3px;
+  font-style: italic;
+}
+
+/* ── Secondary message ────────────────────────────────────────────────────── */
+.ba-secondary-msg {
+  max-width: 680px;
+  margin: 0 auto clamp(8px,1.2vh,14px);
+  color: rgba(210,238,255,.70);
+  font-size: clamp(11px, 1.4vw, 15px);
+  font-weight: 700;
+  line-height: 1.75;
+  opacity: 0;
+  transform: translateY(10px);
+}
+.ba-show .ba-secondary-msg { animation: baSoftIn .75s ease 40s forwards; }
+
+/* ── Period label ─────────────────────────────────────────────────────────── */
+.ba-period {
+  color: rgba(200,230,255,.55);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: clamp(6px,1vh,12px);
+  opacity: 0;
+}
+.ba-show .ba-period { animation: baSoftIn .7s ease 38s forwards; }
+
+/* ── Signature ────────────────────────────────────────────────────────────── */
+.ba-signature {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: linear-gradient(135deg,
+    rgba(201,168,76,.22),
+    rgba(12,200,194,.18));
+  backdrop-filter: blur(12px);
+  color: rgba(255,248,220,.92);
+  font-size: clamp(11px, 1.3vw, 14px);
+  font-weight: 800;
+  letter-spacing: .03em;
+  opacity: 0;
+  transform: translateY(10px);
+}
+.ba-show .ba-signature { animation: baSoftIn .75s ease 41.5s forwards; }
+
+/* ── Action button ────────────────────────────────────────────────────────── */
+.ba-action {
+  margin-top: clamp(10px,1.6vh,20px);
+  border: 0;
+  border-radius: 999px;
+  min-height: 46px;
+  padding: 0 32px;
+  background: linear-gradient(135deg, #0ea5a0 0%, #0cc8c2 50%, #3de0da 100%);
+  color: #001a1a;
+  font-family: "Cairo", Tahoma, sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  cursor: pointer;
+  box-shadow:
+    0 12px 32px rgba(12,200,194,.38),
+    0 0 0 1px rgba(12,200,194,.30);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: filter .2s, transform .15s;
+}
+.ba-show .ba-action { animation: baSoftIn .75s ease 43.5s forwards; }
+.ba-action:hover  { filter: brightness(1.10); transform: translateY(-2px) scale(1.02); }
+.ba-action:active { transform: scale(.97); }
+
+/* ── Timer bar ────────────────────────────────────────────────────────────── */
+.ba-timer {
+  position: fixed;
+  inset-inline: clamp(14px,3vw,44px);
+  inset-block-end: clamp(10px,2vw,26px);
+  height: 3px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255,255,255,.08);
+}
+.ba-timer span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  background: linear-gradient(90deg, #0cc8c2, #ffe7a3, #ff6b8f);
+}
+.ba-show .ba-timer span {
+  animation: baTimer var(--ba-duration, 600s) linear forwards;
+}
+
+/* ── Finale burst ─────────────────────────────────────────────────────────── */
+.ba-finale .ba-title {
+  text-shadow: 0 0 24px rgba(255,228,130,.55), 0 0 64px rgba(12,200,194,.44);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  Keyframes                                                                 */
+/* ══════════════════════════════════════════════════════════════════════════ */
+@keyframes baStageIn   { to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes baTrophyIn  { to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes baTitleIn   { to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes baSoftIn    { to { opacity: 1; transform: translateY(0) scale(1); } }
+
+@keyframes baStatIn {
+  70%  { opacity: 1; transform: translateY(-5px) scale(1.03); }
+  100% { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+@keyframes baLine  { to { transform: scaleX(1); } }
+@keyframes baTimer { to { transform: scaleX(0); } }
+
+@keyframes baWordIn {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes baAurora {
+  from { transform: scale(1) rotate(0deg); }
+  to   { transform: scale(1.10) rotate(9deg); }
+}
+
+@keyframes baSweep {
+  to { background-position: 240% 0, 36px 36px; }
+}
+
+@keyframes baBeam {
+  0%,100% { opacity: .14; transform: translateX(-30%) rotate(-7deg); }
+  50%     { opacity: .38; transform: translateX(26%)  rotate(-2deg); }
+}
+
+@keyframes baFloat {
+  0%,100% { transform: translateY(0)    rotate(-1.2deg); }
+  50%     { transform: translateY(-10px) rotate(1.2deg); }
+}
+
+@keyframes baTextShine {
+  0%,100% { background-position: 0%   50%; }
+  50%     { background-position: 100% 50%; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════ */
+/*  Responsive                                                                */
+/* ══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 680px) {
+  .ba-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .ba-stat:nth-child(4),
+  .ba-stat:nth-child(5) {
+    grid-column: auto;
+    margin: 0;
+    width: auto;
+  }
+  /* 5th card full-width on tiny screens */
+  .ba-stat:nth-child(5) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 420px) {
+  .ba-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .ba-badge {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ba-overlay *,
+  .ba-overlay *::before,
+  .ba-overlay *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

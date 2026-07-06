@@ -1,0 +1,1174 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#060d1a">
+<script src="/lite-mode.js"></script>
+<title>إحصائيات الزملاء · Pharma Triage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap"></noscript>
+<style>
+/* ══════════════════════════════════════════════════════
+   AGENT STATS DASHBOARD — Ultra Premium Dark
+   Pharma Triage · Navy · Teal · Gold
+══════════════════════════════════════════════════════ */
+:root{
+  --bg:      #060d1a;
+  --bg2:     #0a1525;
+  --bg3:     #0f1e38;
+  --glass:   rgba(255,255,255,.05);
+  --glassB:  rgba(255,255,255,.09);
+  --hov:     rgba(255,255,255,.08);
+  --teal:    #0ea5a0;
+  --teal2:   #0cc8c2;
+  --tglow:   rgba(14,165,160,.28);
+  --gold:    #c9a84c;
+  --text:    #e4eeff;
+  --text2:   rgba(228,238,255,.68);
+  --text3:   rgba(228,238,255,.38);
+  --border:  rgba(255,255,255,.08);
+  --green:   #22c55e;
+  --blue:    #60a5fa;
+  --amber:   #f59e0b;
+  --orange:  #f97316;
+  --red:     #f87171;
+  --t:       .22s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Cairo',Tahoma,sans-serif;font-size:14px;color:var(--text);background:var(--bg);min-height:100vh;line-height:1.6;overflow-x:hidden;}
+
+/* ── ORBS ── */
+.orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.15;}
+.orb1{width:700px;height:700px;background:var(--teal);top:-200px;right:-150px;--d:28s;}
+.orb2{width:500px;height:500px;background:#1e3a8a;bottom:-100px;left:-100px;--d:22s;--dl:-8s;}
+.orb3{width:350px;height:350px;background:var(--gold);top:40%;left:45%;--d:18s;--dl:-5s;opacity:.08;}
+@keyframes orbF{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(40px,-30px) scale(1.06);}66%{transform:translate(-25px,20px) scale(.96);}}
+
+/* ── PAGE ── */
+.page{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:0 20px 60px;}
+
+/* ── HEADER ── */
+.hdr{
+  position:sticky;top:0;z-index:100;
+  background:rgba(6,13,26,.85);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+  padding:0 28px;
+  height:62px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.hdr-brand{display:flex;align-items:center;gap:12px;}
+.hdr-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--teal),var(--teal2));display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.hdr-title{font-size:16px;font-weight:800;color:var(--text);}
+.hdr-sub{font-size:11px;color:var(--text3);margin-top:-2px;}
+.hdr-right{display:flex;align-items:center;gap:12px;}
+.hdr-user{display:flex;align-items:center;gap:8px;}
+.hdr-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--teal),#0a7c78);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;}
+.hdr-name{font-size:13px;font-weight:700;color:var(--text2);}
+.btn-logout{background:var(--glass);border:1px solid var(--border);color:var(--text3);border-radius:8px;padding:6px 12px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer;transition:var(--t);}
+.btn-logout:hover{background:var(--hov);color:var(--text);}
+
+
+/* ── LOGIN VIEW ── */
+#loginView{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(6,13,26,.97);
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(10px);
+}
+.login-box{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:40px 36px;
+  width:min(420px,94vw);
+  backdrop-filter:blur(20px);
+  text-align:center;
+}
+.login-logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--teal),var(--teal2));display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
+.login-title{font-size:20px;font-weight:800;margin-bottom:4px;}
+.login-sub{font-size:13px;color:var(--text3);margin-bottom:28px;}
+.login-field{margin-bottom:14px;text-align:right;}
+.login-field label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px;font-weight:600;}
+.login-field input{width:100%;background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Cairo',sans-serif;font-size:14px;transition:var(--t);}
+.login-field input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--tglow);}
+.btn-login{width:100%;background:linear-gradient(135deg,var(--teal),var(--teal2));border:none;border-radius:12px;padding:13px;color:#fff;font-family:'Cairo',sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px;transition:var(--t);}
+.btn-login:hover{filter:brightness(1.1);box-shadow:0 6px 20px var(--tglow);}
+#loginMsg{min-height:18px;font-size:13px;color:var(--red);margin-top:10px;}
+
+/* ── HERO STATS ── */
+.hero{
+  margin-top:32px;
+  background:linear-gradient(135deg,rgba(14,165,160,.12) 0%,rgba(10,117,114,.08) 50%,rgba(201,168,76,.06) 100%);
+  border:1px solid rgba(14,165,160,.18);
+  border-radius:20px;
+  padding:28px 32px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(14,165,160,.05),transparent);pointer-events:none;}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px;}
+.hero-title{font-size:22px;font-weight:900;color:var(--text);}
+.hero-sub{font-size:13px;color:var(--text3);margin-top:2px;}
+.hero-stats{display:flex;gap:16px;flex-wrap:wrap;}
+.hstat{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:16px 22px;text-align:center;min-width:110px;transition:var(--t);}
+.hstat:hover{background:var(--glassB);transform:translateY(-2px);}
+.hstat-num{font-size:30px;font-weight:900;line-height:1.1;margin-bottom:4px;}
+.hstat-lbl{font-size:11.5px;color:var(--text3);font-weight:600;}
+.hstat.total .hstat-num{color:var(--teal);}
+.hstat.approved .hstat-num{color:var(--green);}
+.hstat.pending .hstat-num{color:var(--blue);}
+.hstat.incomplete .hstat-num{color:var(--orange);}
+.hstat.agents .hstat-num{color:var(--gold);}
+.hstat.warnings .hstat-num{color:var(--red);}
+.hstat.inactive .hstat-num{color:var(--text3);}
+.b5-cnt{display:inline-block;font-size:10.5px;font-weight:800;color:var(--teal2);background:var(--glass);
+  border:1px solid var(--border);border-radius:999px;padding:1px 8px;margin-right:6px;vertical-align:middle;}
+.b5-warn{color:var(--red);font-weight:800;}
+.scope-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.25);color:var(--gold);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700;margin-right:8px;}
+
+/* ── TOOLBAR ── */
+.toolbar{
+  display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+  margin-top:24px;margin-bottom:20px;
+}
+.search-wrap{
+  flex:1;min-width:200px;
+  display:flex;align-items:center;gap:8px;
+  background:var(--glass);border:1.5px solid var(--border);border-radius:12px;
+  padding:9px 14px;transition:border-color .2s,box-shadow .2s;
+}
+.search-wrap:focus-within{border-color:var(--teal);box-shadow:0 0 0 3px var(--tglow);}
+.search-wrap svg{color:var(--text3);flex-shrink:0;}
+.search-wrap input{background:none;border:none;outline:none;color:var(--text);font-family:'Cairo',sans-serif;font-size:13.5px;width:100%;}
+.search-wrap input::placeholder{color:var(--text3);}
+.filter-select{
+  background:var(--glass);border:1.5px solid var(--border);border-radius:12px;
+  padding:9px 14px;color:var(--text);font-family:'Cairo',sans-serif;font-size:13px;
+  cursor:pointer;min-width:160px;transition:border-color .2s;
+}
+.filter-select:focus{outline:none;border-color:var(--teal);}
+.filter-select option{background:var(--bg2);color:var(--text);}
+.month-input{
+  background:var(--glass);border:1.5px solid var(--border);border-radius:12px;
+  padding:9px 14px;color:var(--text);font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer;
+  transition:border-color .2s;
+}
+.month-input:focus{outline:none;border-color:var(--teal);}
+.range-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.range-lbl{font-size:12px;color:var(--text);opacity:.65;font-weight:700;}
+.sort-btn{
+  background:var(--glass);border:1.5px solid var(--border);border-radius:12px;
+  padding:9px 14px;color:var(--text2);font-family:'Cairo',sans-serif;font-size:12.5px;font-weight:700;
+  cursor:pointer;white-space:nowrap;transition:var(--t);
+}
+.sort-btn:hover,.sort-btn.active{background:rgba(14,165,160,.15);border-color:var(--teal);color:var(--teal);}
+.results-badge{
+  background:rgba(14,165,160,.1);border:1px solid rgba(14,165,160,.2);
+  color:var(--teal);border-radius:999px;padding:6px 14px;font-size:12.5px;font-weight:700;white-space:nowrap;
+}
+
+/* ── TOP-5 PODIUM ──────────────────────────
+   Pyramid leaderboard: [4][2][1][3][5] — #1 in the centre, tallest.
+   Mirrors the design language used in reviewer-stats but extended from
+   3 → 5 tiers (gold, silver, bronze, teal, indigo). */
+.as-podium-section{
+  display:flex;align-items:flex-end;justify-content:center;gap:16px;
+  margin:28px 0 8px;padding:60px 24px 0;
+  background:
+    radial-gradient(ellipse at top, rgba(251,191,36,.10), transparent 60%),
+    linear-gradient(180deg, rgba(201,168,76,.04) 0%, rgba(14,165,160,.04) 100%);
+  border:1px solid rgba(201,168,76,.20);
+  border-radius:20px;position:relative;overflow:hidden;
+}
+.as-podium-title{
+  position:absolute;top:18px;left:0;right:0;text-align:center;
+  font-size:13px;color:#fbbf24;font-weight:900;letter-spacing:3px;
+  text-transform:uppercase;
+}
+.as-podium-title::before,.as-podium-title::after{content:'✦';color:var(--gold);margin:0 10px;opacity:.6;}
+.as-podium-step{
+  flex:1;max-width:200px;
+  display:flex;flex-direction:column;align-items:center;gap:11px;
+  animation:asPodRise .7s cubic-bezier(.34,1.56,.64,1) both;
+}
+.as-podium-1{animation-delay:.35s;}
+.as-podium-2{animation-delay:.20s;}
+.as-podium-3{animation-delay:.25s;}
+.as-podium-4{animation-delay:.10s;}
+.as-podium-5{animation-delay:.15s;}
+@keyframes asPodRise{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+.as-podium-av-wrap{position:relative;}
+.as-podium-av{
+  width:66px;height:66px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:20px;color:#fff;
+  border:3px solid;background:linear-gradient(135deg,var(--teal),var(--teal2));
+}
+.as-podium-rank{
+  position:absolute;top:-8px;right:-8px;
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:13px;color:#0c0c0c;
+  border:2px solid var(--bg);
+}
+.as-podium-info{text-align:center;max-width:100%;}
+.as-podium-name{font-size:13px;font-weight:800;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;}
+.as-podium-pct{font-size:11px;color:var(--text3);}
+.as-podium-pct strong{color:var(--green);font-weight:800;font-size:12px;}
+.as-podium-block{
+  width:100%;border-radius:14px 14px 0 0;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;color:rgba(0,0,0,.78);font-size:26px;
+  position:relative;overflow:hidden;
+  box-shadow:inset 0 4px 0 rgba(255,255,255,.20), 0 -8px 20px rgba(0,0,0,.18);
+}
+.as-podium-block::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,.20));}
+.as-podium-block-num{position:relative;z-index:1;}
+/* Gold (1) */
+.as-podium-1 .as-podium-av{border-color:#fbbf24;box-shadow:0 0 0 4px rgba(251,191,36,.18),0 0 40px rgba(251,191,36,.45);}
+.as-podium-1 .as-podium-rank{background:linear-gradient(135deg,#fde047,#fbbf24);box-shadow:0 4px 12px rgba(251,191,36,.5);}
+.as-podium-1 .as-podium-block{background:linear-gradient(180deg,#fde047 0%,#fbbf24 50%,#d97706 100%);height:140px;}
+/* Silver (2) */
+.as-podium-2 .as-podium-av{border-color:#cbd5e1;box-shadow:0 0 0 4px rgba(203,213,225,.15),0 0 28px rgba(203,213,225,.35);}
+.as-podium-2 .as-podium-rank{background:linear-gradient(135deg,#e2e8f0,#cbd5e1);box-shadow:0 4px 10px rgba(203,213,225,.4);}
+.as-podium-2 .as-podium-block{background:linear-gradient(180deg,#e2e8f0 0%,#cbd5e1 50%,#64748b 100%);height:105px;}
+/* Bronze (3) */
+.as-podium-3 .as-podium-av{border-color:#d97706;box-shadow:0 0 0 4px rgba(217,119,6,.15),0 0 22px rgba(217,119,6,.30);}
+.as-podium-3 .as-podium-rank{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;box-shadow:0 4px 10px rgba(217,119,6,.4);}
+.as-podium-3 .as-podium-block{background:linear-gradient(180deg,#f59e0b 0%,#d97706 50%,#78350f 100%);height:90px;}
+/* Teal (4) */
+.as-podium-4 .as-podium-av{border-color:#0ea5a0;box-shadow:0 0 0 4px rgba(14,165,160,.15),0 0 20px rgba(14,165,160,.28);}
+.as-podium-4 .as-podium-rank{background:linear-gradient(135deg,#0cc8c2,#0ea5a0);color:#fff;box-shadow:0 4px 10px rgba(14,165,160,.4);}
+.as-podium-4 .as-podium-block{background:linear-gradient(180deg,#0cc8c2 0%,#0ea5a0 50%,#0a5e5b 100%);height:70px;color:#fff;}
+/* Indigo (5) */
+.as-podium-5 .as-podium-av{border-color:#818cf8;box-shadow:0 0 0 4px rgba(129,140,248,.15),0 0 20px rgba(129,140,248,.28);}
+.as-podium-5 .as-podium-rank{background:linear-gradient(135deg,#a5b4fc,#818cf8);color:#fff;box-shadow:0 4px 10px rgba(129,140,248,.4);}
+.as-podium-5 .as-podium-block{background:linear-gradient(180deg,#a5b4fc 0%,#818cf8 50%,#4338ca 100%);height:55px;color:#fff;}
+
+@media(max-width:780px){
+  .as-podium-section{padding:50px 8px 0;gap:8px;}
+  .as-podium-av{width:50px;height:50px;font-size:16px;}
+  .as-podium-1 .as-podium-block{height:110px;font-size:20px;}
+  .as-podium-2 .as-podium-block{height:82px;font-size:18px;}
+  .as-podium-3 .as-podium-block{height:70px;font-size:17px;}
+  .as-podium-4 .as-podium-block{height:54px;font-size:15px;}
+  .as-podium-5 .as-podium-block{height:42px;font-size:14px;}
+  .as-podium-name{font-size:11px;max-width:90px;}
+  .as-podium-pct{font-size:10px;}
+}
+
+/* ── WATER WAVE fill on podium blocks (2026-06-29) ──
+   Large rotating ellipse inside overflow:hidden = oscillating water surface.
+   Animation combo: asWave (continuous rotation) + asWaterRise (one-shot fill-up). */
+@keyframes asWave      { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+@keyframes asWaterRise { from{bottom:-180%} to{bottom:-62%} }
+.as-podium-block { isolation:isolate; }
+.as-podium-block::after {
+  content:'';position:absolute;
+  width:220%;height:220%;left:-60%;bottom:-180%;
+  border-radius:42% 58% 50% 50%;
+  background:rgba(255,255,255,.16);
+  pointer-events:none;
+  animation:asWave 5s linear infinite, asWaterRise 1.8s cubic-bezier(.22,.9,.32,1) both;
+}
+/* Different rotation speed per rank → each block feels alive independently */
+.as-podium-1 .as-podium-block::after{animation:asWave 4.5s linear infinite,asWaterRise 1.8s cubic-bezier(.22,.9,.32,1) .35s both}
+.as-podium-2 .as-podium-block::after{animation:asWave  6s  linear infinite,asWaterRise 1.8s cubic-bezier(.22,.9,.32,1) .20s both}
+.as-podium-3 .as-podium-block::after{animation:asWave  7s  linear infinite,asWaterRise 1.8s cubic-bezier(.22,.9,.32,1) .25s both}
+.as-podium-4 .as-podium-block::after{animation:asWave  8s  linear infinite,asWaterRise 1.8s cubic-bezier(.22,.9,.32,1) .10s both}
+.as-podium-5 .as-podium-block::after{animation:asWave  9s  linear infinite,asWaterRise 1.8s cubic-bezier(.22,.9,.32,1) .15s both}
+@media(prefers-reduced-motion:reduce){.as-podium-block::after{animation:none;bottom:-62%;}}
+
+/* Medal corners on top-5 agent cards */
+.agent-card{position:relative;}
+.medal-corner{
+  position:absolute;top:10px;left:10px;z-index:2;
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:12px;color:#000;
+  box-shadow:0 4px 12px rgba(0,0,0,.3);
+}
+.medal-corner.r1{background:linear-gradient(135deg,#fde047,#fbbf24);}
+.medal-corner.r2{background:linear-gradient(135deg,#e2e8f0,#cbd5e1);}
+.medal-corner.r3{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;}
+.medal-corner.r4{background:linear-gradient(135deg,#0cc8c2,#0ea5a0);color:#fff;}
+.medal-corner.r5{background:linear-gradient(135deg,#a5b4fc,#818cf8);color:#fff;}
+
+/* ── AGENT GRID ── */
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;}
+
+/* ── AGENT CARD ── */
+.agent-card{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+  transition:transform .22s,box-shadow .22s,border-color .22s;
+  animation:cardIn .3s ease both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.agent-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.4),0 0 0 1px rgba(14,165,160,.15);border-color:rgba(14,165,160,.2);}
+.card-top{
+  padding:18px 18px 14px;
+  display:flex;align-items:flex-start;gap:14px;
+  border-bottom:1px solid var(--border);
+}
+.card-av{
+  width:50px;height:50px;border-radius:14px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:16px;color:#fff;
+  background:linear-gradient(135deg,var(--teal),var(--teal2));
+  box-shadow:0 4px 16px var(--tglow);
+}
+.card-info{flex:1;min-width:0;}
+.card-name{font-size:15px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.card-num{font-size:12px;color:var(--text3);margin-top:2px;font-family:monospace;letter-spacing:.3px;}
+.card-total-badge{
+  background:rgba(14,165,160,.12);border:1px solid rgba(14,165,160,.22);
+  color:var(--teal);border-radius:999px;padding:4px 11px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;
+}
+.card-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.cstat{background:var(--bg);padding:10px 11px;display:flex;align-items:center;justify-content:space-between;}
+.cstat-lbl{font-size:10px;color:var(--text3);font-weight:600;}
+.cstat-num{font-size:15px;font-weight:900;}
+.cstat.approved .cstat-num{color:var(--green);}
+.cstat.pending  .cstat-num{color:var(--blue);}
+.cstat.incomp   .cstat-num{color:var(--orange);}
+.cstat.needsinf .cstat-num{color:var(--amber);}
+.cstat.warn     .cstat-num{color:var(--red);}
+.cstat.followp  .cstat-num{color:#e879f9;}
+.cstat.followd  .cstat-num{color:var(--teal2);}
+.cstat.zero .cstat-num{opacity:.35;}
+.card-bar{padding:12px 18px 16px;background:var(--bg);}
+.bar-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.bar-lbl{font-size:11.5px;color:var(--text3);}
+.bar-pct{font-size:12.5px;font-weight:800;color:var(--green);}
+.bar-track{height:7px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden;}
+.bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--green));transition:width .8s cubic-bezier(.4,0,.2,1);}
+.bar-fill.low{background:linear-gradient(90deg,var(--orange),var(--amber));}
+
+/* ── EMPTY STATE ── */
+.empty-state{
+  grid-column:1/-1;text-align:center;padding:60px 20px;
+  color:var(--text3);
+}
+.empty-state svg{opacity:.3;margin-bottom:16px;}
+.empty-state p{font-size:15px;}
+
+/* ── NOTIF ── */
+.notif{
+  position:fixed;bottom:24px;right:24px;z-index:9999;
+  background:rgba(14,165,160,.18);backdrop-filter:blur(12px);
+  border:1px solid rgba(14,165,160,.35);border-radius:12px;
+  color:var(--text);padding:11px 20px;font-size:14px;font-weight:700;
+  opacity:0;transform:translateY(10px);transition:opacity .25s,transform .25s;
+  pointer-events:none;max-width:340px;
+}
+.notif.err{background:rgba(248,113,113,.18);border-color:rgba(248,113,113,.35);}
+.notif.show{opacity:1;transform:translateY(0);}
+
+/* ── CREDIT ── */
+.credit{text-align:center;padding:32px 20px 10px;font-size:11.5px;color:var(--text3);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  .hdr{padding:0 16px;}
+  .hero{padding:20px 16px;}
+  .hero-stats{gap:10px;}
+  .hstat{min-width:80px;padding:12px 14px;}
+  .hstat-num{font-size:24px;}
+  .toolbar{gap:8px;}
+  .agent-grid{grid-template-columns:1fr;}
+  .card-stats{grid-template-columns:repeat(2,1fr);}
+}
+
+/* ── SKELETON LOADER ── */
+.skeleton{
+  background:linear-gradient(90deg,var(--glass) 25%,rgba(255,255,255,.09) 50%,var(--glass) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.4s infinite;
+  border-radius:10px;
+}
+@keyframes shimmer{from{background-position:200% 0;}to{background-position:-200% 0;}}
+
+/* ── BEST-RATED AGENTS (top 5) ── */
+.best5{margin:24px 0 4px;border-radius:22px;overflow:hidden;position:relative;background:radial-gradient(700px 300px at 92% -25%,rgba(251,191,36,.16),transparent 60%),linear-gradient(135deg,rgba(201,168,76,.10),rgba(14,165,160,.05));border:1px solid rgba(201,168,76,.28);}
+.best5-hdr{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:18px 24px;border-bottom:1px solid rgba(201,168,76,.15);}
+.best5-title{font-size:15.5px;font-weight:900;display:flex;align-items:center;gap:8px;color:#fbbf24;}
+.best5-sub{font-size:11.5px;color:var(--text3);font-weight:700;}
+.best5-body{padding:14px 20px 20px;display:flex;flex-direction:column;gap:9px;}
+.b5-row{display:grid;grid-template-columns:auto auto 1fr auto auto;align-items:center;gap:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:11px 16px;transition:var(--t);}
+.b5-row:hover{background:rgba(251,191,36,.07);border-color:rgba(251,191,36,.25);transform:translateX(-2px);}
+.b5-rank{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:14px;color:#0c0c0c;background:rgba(255,255,255,.10);flex-shrink:0;}
+.b5-row.r1 .b5-rank{background:linear-gradient(135deg,#fde047,#fbbf24);}
+.b5-row.r2 .b5-rank{background:linear-gradient(135deg,#e2e8f0,#cbd5e1);}
+.b5-row.r3 .b5-rank{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;}
+.b5-av{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-weight:900;font-size:15px;color:#fff;flex-shrink:0;}
+.b5-main{min-width:0;}
+.b5-name{font-size:14px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.b5-num{font-size:11px;color:var(--text3);font-weight:800;margin-top:1px;}
+.b5-stars{font-size:15px;color:#f59e0b;letter-spacing:1.5px;white-space:nowrap;}
+.b5-stars .e{color:rgba(255,255,255,.16);}
+.b5-score{text-align:center;min-width:74px;}
+.b5-score-num{font-size:20px;font-weight:900;color:#fbbf24;line-height:1;}
+.b5-score-lbl{font-size:9.5px;color:var(--text3);font-weight:700;margin-top:2px;}
+.best5-empty{padding:30px 20px;text-align:center;color:var(--text3);font-size:13px;}
+.best5-note{padding:0 24px 16px;font-size:10.5px;color:var(--text3);font-weight:600;}
+@media(max-width:640px){.b5-row{grid-template-columns:auto auto 1fr auto;gap:9px;}.b5-stars{display:none;}}
+</style>
+</head>
+<body>
+
+<div class="orbs" aria-hidden="true">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginView">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    </div>
+    <div class="login-title">إحصائيات الزملاء</div>
+    <div class="login-sub">تسجيل الدخول للوصول إلى لوحة الأداء</div>
+    <div class="login-field"><label>البريد الإلكتروني / رقم الدخول</label><input id="loginEmail" type="text" autocomplete="username" placeholder="email@domain.com أو رقم الدخول"></div>
+    <div class="login-field"><label>كلمة المرور</label><input id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••"></div>
+    <button class="btn-login" onclick="window.doLogin()">دخول ←</button>
+    <div id="loginMsg"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="hdr" id="mainHdr" style="display:none">
+  <div class="hdr-brand">
+    <div class="hdr-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    </div>
+    <div>
+      <div class="hdr-title">Pharma Triage</div>
+      <div class="hdr-sub" id="hdrSub">أداء الكول سنتر والواتس أب</div>
+    </div>
+  </div>
+
+  <div class="hdr-right">
+    <a class="btn-logout" href="/index.html" style="text-decoration:none">← الرئيسية</a>
+    <div class="hdr-user" id="hdrUser" style="display:none">
+      <div class="hdr-avatar" id="hdrAvatar">U</div>
+      <div class="hdr-name" id="hdrName">—</div>
+    </div>
+    <button class="btn-logout" onclick="window.doLogout()">خروج</button>
+  </div>
+</header>
+
+<!-- APP -->
+<div class="page" id="appView" style="display:none">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="hero-title">لوحة أداء الزملاء 📊</div>
+        <div class="hero-sub" id="heroSub">إحصائيات الاستشارات المسجلة لكل زميل</div>
+      </div>
+      <div class="range-bar">
+        <span class="range-lbl">من</span>
+        <input type="date" id="dateFrom" class="month-input" onchange="window.onRangeChange()">
+        <span class="range-lbl">إلى</span>
+        <input type="date" id="dateTo" class="month-input" onchange="window.onRangeChange()">
+        <button class="sort-btn" onclick="window.resetCycle()">دورة 21 → 20</button>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat agents"><div class="hstat-num" id="stAgents">0</div><div class="hstat-lbl">زميل نشط</div></div>
+      <div class="hstat inactive"><div class="hstat-num" id="stInactive">0</div><div class="hstat-lbl">😴 زميل غير نشط</div></div>
+      <div class="hstat total"><div class="hstat-num" id="stTotal">0</div><div class="hstat-lbl">إجمالي الاستشارات</div></div>
+      <div class="hstat approved"><div class="hstat-num" id="stApproved">0</div><div class="hstat-lbl">✅ معتمدة</div></div>
+      <div class="hstat pending"><div class="hstat-num" id="stPending">0</div><div class="hstat-lbl">⏳ قيد المراجعة</div></div>
+      <div class="hstat incomplete"><div class="hstat-num" id="stIncomplete">0</div><div class="hstat-lbl">⚠ غير مكتملة</div></div>
+      <div class="hstat warnings"><div class="hstat-num" id="stWarnings">0</div><div class="hstat-lbl">🔔 تحذيرات</div></div>
+    </div>
+  </div>
+
+  <!-- TOP-5 PODIUM (only when ≥5 agents with consultations this period) -->
+  <div class="as-podium-section" id="asPodium" style="display:none">
+    <div class="as-podium-title">أبطال الشهر</div>
+
+    <!-- Pyramid order: 4, 2, 1, 3, 5 — #1 in centre, tallest -->
+    <div class="as-podium-step as-podium-4">
+      <div class="as-podium-av-wrap">
+        <div class="as-podium-av" id="asP4Av">—</div>
+        <div class="as-podium-rank">4</div>
+      </div>
+      <div class="as-podium-info">
+        <div class="as-podium-name" id="asP4Name">—</div>
+        <div class="as-podium-pct" id="asP4Pct">—</div>
+      </div>
+      <div class="as-podium-block"><span class="as-podium-block-num" id="asP4Total">0</span></div>
+    </div>
+
+    <div class="as-podium-step as-podium-2">
+      <div class="as-podium-av-wrap">
+        <div class="as-podium-av" id="asP2Av">—</div>
+        <div class="as-podium-rank">2</div>
+      </div>
+      <div class="as-podium-info">
+        <div class="as-podium-name" id="asP2Name">—</div>
+        <div class="as-podium-pct" id="asP2Pct">—</div>
+      </div>
+      <div class="as-podium-block"><span class="as-podium-block-num" id="asP2Total">0</span></div>
+    </div>
+
+    <div class="as-podium-step as-podium-1">
+      <div class="as-podium-av-wrap">
+        <div class="as-podium-av" id="asP1Av">—</div>
+        <div class="as-podium-rank">1</div>
+      </div>
+      <div class="as-podium-info">
+        <div class="as-podium-name" id="asP1Name">—</div>
+        <div class="as-podium-pct" id="asP1Pct">—</div>
+      </div>
+      <div class="as-podium-block"><span class="as-podium-block-num" id="asP1Total">0</span></div>
+    </div>
+
+    <div class="as-podium-step as-podium-3">
+      <div class="as-podium-av-wrap">
+        <div class="as-podium-av" id="asP3Av">—</div>
+        <div class="as-podium-rank">3</div>
+      </div>
+      <div class="as-podium-info">
+        <div class="as-podium-name" id="asP3Name">—</div>
+        <div class="as-podium-pct" id="asP3Pct">—</div>
+      </div>
+      <div class="as-podium-block"><span class="as-podium-block-num" id="asP3Total">0</span></div>
+    </div>
+
+    <div class="as-podium-step as-podium-5">
+      <div class="as-podium-av-wrap">
+        <div class="as-podium-av" id="asP5Av">—</div>
+        <div class="as-podium-rank">5</div>
+      </div>
+      <div class="as-podium-info">
+        <div class="as-podium-name" id="asP5Name">—</div>
+        <div class="as-podium-pct" id="asP5Pct">—</div>
+      </div>
+      <div class="as-podium-block"><span class="as-podium-block-num" id="asP5Total">0</span></div>
+    </div>
+  </div>
+
+  <!-- BEST-RATED AGENTS (top 5) -->
+  <div class="best5" id="best5AS" style="display:none">
+    <div class="best5-hdr">
+      <div class="best5-title">🏅 أفضل الزملاء (Top 5)</div>
+      <span class="best5-sub" id="best5ASSub">—</span>
+    </div>
+    <div class="best5-body" id="best5ASBody"></div>
+    <div class="best5-note">النقاط = جودة (متوسط النجوم المرجّح · 60%) + عدد الاستشارات <b>المراجَعة</b> نسبةً لهدف الشهر (40%) − خصم نسبة التحذيرات − <b>خصم نسبة الاستشارات اللي اترفعت لتيم الاستشارات</b> (الاعتماد على التيم بيقلّل التقييم؛ اللي بيعتمد على نفسه بيتقدّم على اللي بيراجع نفس العدد مع التيم). العدد بيتحسب على المراجَع بس (مش الإجمالي) عشان ما حدّش يتصدّر بشغل لسه متقيّمش. والإنتاجية الكاملة بالعدد موجودة في ميداليات البوديوم فوق.</div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="searchInput" type="text" placeholder="ابحث باسم الزميل أو رقمه..." oninput="window.applyFilter()" autocomplete="off">
+    </div>
+    <select id="agentSelect" class="filter-select" onchange="window.applyFilterSelect()">
+      <option value="">— كل الزملاء —</option>
+    </select>
+    <button class="sort-btn active" id="sortByTotal" onclick="window.setSort('total')">ترتيب: الأكثر</button>
+    <button class="sort-btn" id="sortByName" onclick="window.setSort('name')">ترتيب: الاسم</button>
+    <div class="results-badge" id="resultsBadge">0 زميل</div>
+  </div>
+
+  <!-- AGENT GRID -->
+  <div class="agent-grid" id="agentGrid">
+    <div style="grid-column:1/-1;display:flex;gap:16px;flex-wrap:wrap">
+      ${[1,2,3,4,5,6].map(()=>`<div class="skeleton" style="height:200px;border-radius:18px;flex:1;min-width:280px;"></div>`).join('')}
+    </div>
+  </div>
+
+</div>
+
+<div class="credit">Designed by Dr.M.Shawky | All copyrights reserved</div>
+<div id="notif" class="notif" aria-live="polite"></div>
+
+<script type="module">
+import { initializeApp }    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import { getFirestore, collection, query, orderBy, limit, onSnapshot, getDocs, doc, getDoc, setDoc }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyBvmHh6-KVlKNATzbfMk3hIswbMCrBZwf4",
+  authDomain:        "pharma-triage-5d165.firebaseapp.com",
+  projectId:         "pharma-triage-5d165",
+  storageBucket:     "pharma-triage-5d165.firebasestorage.app",
+  messagingSenderId: "1080517928737",
+  appId:             "1:1080517928737:web:9110f120203d0e6b7b0060"
+};
+
+const ADMIN_EMAIL = "drshawky530@gmail.com";
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+const el  = id => document.getElementById(id);
+const esc = s  => String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+/* Star rating a reviewer gave the consultation (1–5; 0 = unrated). */
+const ratingOf = r => { const v = r?.review?.rating ?? r?.rating ?? r?.reviewRating ?? 0; return Number(v)||0; };
+/* Bayesian confidence weight — balances avg rating vs number of rated consultations. */
+const RATING_CONFIDENCE = 8;
+/* ── BEST-AGENT COMPOSITE SCORE ──
+   The Top-5 rewards QUALITY *and* QUANTITY together (not one alone):
+     points = ( W_QUALITY·Qn + W_VOLUME·Vn − WARN_STRENGTH·warningRate
+                                            − TEAM_REVIEW_STRENGTH·teamReviewRate ) × 100
+   • Qn = Bayesian star average, normalised 0–1.
+   • Vn = REVIEWED consultations ÷ monthly target, capped at 1. Counting only
+     reviewed work stops "19 done / 1 rated 5★" from topping the board on volume
+     we can't actually judge.
+   • warningRate = warnings ÷ total consultations — a RATE, so a high-volume
+     colleague isn't punished more than a low-volume one for the same quality.
+   • teamReviewRate = consultations flagged "تم مراجعة تيم الاستشارات" (d.teamReviewed)
+     ÷ total — also a RATE. Leaning on the consultations team for an answer is the
+     opposite of self-reliance, so a colleague who handled everything alone should
+     rank above one who got the team to vet the same volume. Linear, so a few
+     team-reviewed consultations cost little; relying on the team for most of the
+     work costs a lot. */
+const VOLUME_TARGET  = 23;    // ~reviewed consultations/month target
+const W_QUALITY      = 0.6;   // weight of quality (stars)
+const W_VOLUME       = 0.4;   // weight of quantity (volume)
+const WARN_STRENGTH  = 0.6;   // warningRate × this is subtracted (0–1 scale)
+const TEAM_REVIEW_STRENGTH = 0.5;  // teamReviewRate × this is subtracted (0–1 scale)
+const starsHtmlAS = avg => { const f=Math.round(avg); let s=''; for(let i=1;i<=5;i++) s+=`<span class="${i<=f?'':'e'}">★</span>`; return s; };
+const cleanAgentNm = nm => { const s=String(nm||''); const i=s.indexOf(' - '); return (i>=0?s.slice(i+3):s).trim()||s.trim(); };
+
+let allRows      = [];
+let currentFrom  = '';
+let currentTo    = '';
+let sortMode     = 'total';
+let unsub        = null;
+let viewScope    = 'all';       /* 'all' | 'callcenter' | 'whatsapp' */
+let usersByEmail = {};
+let usersByNum   = {};
+
+/* ── NOTIF ── */
+function notif(msg, type='ok'){
+  const n=el('notif');
+  n.className='notif'+(type==='err'?' err':'');
+  n.textContent=msg;
+  n.classList.add('show');
+  clearTimeout(n._t);
+  n._t=setTimeout(()=>n.classList.remove('show'),type==='err'?4500:3000);
+}
+
+/* ── LOGIN / LOGOUT ── */
+window.doLogin = function(){
+  let raw=(el('loginEmail').value||'').trim();
+  const pass=el('loginPass').value;
+  el('loginMsg').textContent='';
+  const email=/^\d+$/.test(raw)?`agent${raw}@pharma-triage.app`:raw;
+  signInWithEmailAndPassword(auth,email,pass)
+    .catch(()=>{ el('loginMsg').textContent='فشل تسجيل الدخول — تحقق من البيانات'; });
+};
+window.doLogout = function(){
+  if(unsub){ unsub(); unsub=null; }
+  signOut(auth).then(()=>{ location.href='/index.html'; }).catch(()=>{});
+};
+['loginEmail','loginPass'].forEach(id=>{
+  el(id)?.addEventListener('keydown',e=>{ if(e.key==='Enter') window.doLogin(); });
+});
+
+/* ── TEAM HELPERS ── */
+function normTeam(s){ return String(s||'').toLowerCase().replace(/\s+/g,'').replace(/[.\-_]/g,''); }
+function teamGroup(team){
+  const t=normTeam(team);
+  if(t.includes('admin')||t.includes('ادمن')) return 'admin';
+  if(t.includes('consult')||t.includes('review')||t.includes('استشارات')||t.includes('مراجع')) return 'consultations';
+  if(t.includes('whatsapp')||t.includes('ww')||t.includes('واتساب')||t.includes('watsap')) return 'whatsapp';
+  if(t.includes('callcenter')||t.includes('cc')||t.includes('كول')||t.includes('كولسنتر')) return 'callcenter';
+  return t||'';
+}
+function profileScope(p){
+  if(!p) return 'all';
+  const role=String(p.role||'').toLowerCase();
+  const g=teamGroup(p.team||'');
+  if(role==='admin'||g==='admin'||g==='consultations') return 'all';
+  if(g==='whatsapp') return 'whatsapp';
+  if(g==='callcenter') return 'callcenter';
+  return 'all';
+}
+function consultTeam(d){
+  const email=String(d?.agentEmail||'').toLowerCase().trim();
+  const u=email?usersByEmail[email]:null;
+  const direct=teamGroup(u?.team||d?.agentTeam||d?.team||d?.createdByTeam||'');
+  if(direct==='whatsapp'||direct==='callcenter') return direct;
+  const label=String(d?.agentLabel||d?.agentName||d?.agentEmail||'');
+  const l=normTeam(label);
+  if(l.includes('ww')||l.includes('whatsapp')) return 'whatsapp';
+  if(l.includes('cc')||l.includes('callcenter')) return 'callcenter';
+  return 'callcenter';
+}
+
+/* ── STATUS HELPERS (mirrors review.html logic) ── */
+function isApproved(d){
+  const st=d?.review?.status||d?.status||'';
+  return st==='approved'||st==='تم الاعتماد';
+}
+function isPending(d){
+  const st=d?.review?.status||d?.status||'';
+  return !st||st==='pending_review'||st==='pending';
+}
+function isIncomplete(d){
+  if(!d) return false;
+  if(d?.review?.incomplete===true) return true;
+  const st=d?.review?.status||d?.status||'';
+  return st==='needs_followup'||st==='incomplete'||st==='needs_completion';
+}
+function isNeedsInfo(d){
+  const st=d?.review?.status||d?.status||'';
+  return st==='needs_more_info';
+}
+function hasWarning(d){ return !!(d.warning?.active===true||d.warning?.note); }
+function followStatus(d){
+  const f=d.followUp||{};
+  if(f.status==='done'||f.result) return 'done';
+  if(f.status==='pending'||f.note) return 'pending';
+  return '';
+}
+
+function createdAtMonth(r){
+  if(!r.createdAt) return '';
+  try{
+    const d=r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAt);
+    return d.toISOString().slice(0,7);
+  }catch{ return ''; }
+}
+
+/* ── DATE-RANGE / 21→20 CYCLE (mirrors my-cc-stats & reviewer-stats so all three
+   dashboards count the SAME window — a calendar-month filter undercounted the
+   cycle and made colleagues/cards disappear early in the month). ── */
+const isoLocal=d=>{ const off=d.getTimezoneOffset()*60000; return new Date(d.getTime()-off).toISOString().slice(0,10); };
+function defaultCycle(){
+  const t=new Date(),y=t.getFullYear(),m=t.getMonth(),day=t.getDate();
+  let from,to;
+  if(day>=21){ from=new Date(y,m,21); to=new Date(y,m+1,20); }
+  else       { from=new Date(y,m-1,21); to=new Date(y,m,20); }
+  return {from:isoLocal(from),to:isoLocal(to)};
+}
+function createdDateISO(r){
+  const s=r?.createdAt; if(!s) return '';
+  try{ const d=s.toDate?s.toDate():new Date(s); return isoLocal(d); }catch{ return ''; }
+}
+function inRange(iso){ if(!iso) return false; if(currentFrom&&iso<currentFrom) return false; if(currentTo&&iso>currentTo) return false; return true; }
+function fmtDMY(v){ if(!v) return '...'; const[y,mo,d]=v.split('-'); return `${d}/${mo}`; }
+
+function animNum(elRef,target){
+  if(!elRef) return;
+  const DUR=700,t0=performance.now();
+  const tick=now=>{
+    const p=Math.min((now-t0)/DUR,1),e=1-Math.pow(1-p,3);
+    elRef.textContent=Math.round(e*target);
+    if(p<1) requestAnimationFrame(tick); else elRef.textContent=target;
+  };
+  requestAnimationFrame(tick);
+}
+
+/* ── AVATAR COLOR PALETTE ── */
+const AV_COLORS=[
+  'linear-gradient(135deg,#0ea5a0,#0cc8c2)',
+  'linear-gradient(135deg,#1d4ed8,#3b82f6)',
+  'linear-gradient(135deg,#7c3aed,#a78bfa)',
+  'linear-gradient(135deg,#b45309,#f59e0b)',
+  'linear-gradient(135deg,#065f46,#10b981)',
+  'linear-gradient(135deg,#9d174d,#f472b6)',
+  'linear-gradient(135deg,#1e3a5f,#38bdf8)',
+  'linear-gradient(135deg,#78350f,#fb923c)',
+];
+function avColor(email){
+  let h=0; for(const c of (email||'')) h=(h*31+c.charCodeAt(0))&0xffff;
+  return AV_COLORS[h%AV_COLORS.length];
+}
+
+/* ── AUTH STATE ── */
+onAuthStateChanged(auth, async user=>{
+  if(!user){
+    el('loginView').style.display='flex';
+    el('mainHdr').style.display='none';
+    el('appView').style.display='none';
+    return;
+  }
+
+  let allowed = user.email===ADMIN_EMAIL;
+  let displayName = user.email;
+  let profile = user.email===ADMIN_EMAIL ? {role:'admin',team:'admin'} : null;
+
+  /* Load users for team lookup — cached in localStorage (3h) to avoid
+     re-reading the whole `users` collection on every page open (cost guard). */
+  try{
+    const KEY='ptUsersDirV1', TTL=3*60*60*1000; let list=null;
+    try{ const raw=localStorage.getItem(KEY); if(raw){ const o=JSON.parse(raw); if(o&&o.t&&Array.isArray(o.d)&&(Date.now()-o.t)<TTL) list=o.d; } }catch(_){}
+    if(!list){
+      const snap=await getDocs(collection(db,'users'));
+      list=snap.docs.map(x=>Object.assign({__id:x.id}, x.data()||{}));
+      try{ localStorage.setItem(KEY, JSON.stringify({t:Date.now(), d:list})); }catch(_){}
+    }
+    list.forEach(u0=>{
+      const u=Object.assign({id:u0.__id}, u0);
+      const em=String(u.email||u.loginEmail||'').toLowerCase().trim();
+      if(em) usersByEmail[em]=u;
+      const num=String(u.agentNumber||u.number||'').trim();
+      if(num) usersByNum[num]=u;
+    });
+  }catch(e){ console.error('users load',e); }
+
+  /* Get current user profile */
+  if(user.email!==ADMIN_EMAIL){
+    try{
+      const snap=await getDoc(doc(db,'users',user.uid));
+      if(snap.exists()){
+        const p=snap.data();
+        if(p.active!==false){
+          if(p.canViewAgentStats===true||p.canDeleteConsultations===true||p.role==='admin') allowed=true;
+          if(p.displayName) displayName=p.displayName;
+          profile=p;
+        }
+      }
+    }catch(e){ console.error(e); }
+  } else {
+    displayName='Dr. Mahmoud Shawky';
+  }
+  try{ if(window.PTLite) window.PTLite.sync({db,doc,setDoc,uid:user.uid,profile}); }catch(e){}
+
+  if(!allowed){
+    el('loginMsg').textContent='ليس لديك صلاحية لعرض هذه الصفحة';
+    signOut(auth);
+    return;
+  }
+
+  viewScope=profileScope(profile);
+
+  /* Show UI */
+  el('loginView').style.display='none';
+  el('mainHdr').style.display='flex';
+  el('appView').style.display='block';
+  el('hdrAvatar').textContent=String(displayName).trim().charAt(0).toUpperCase();
+  el('hdrName').textContent=displayName;
+  el('hdrUser').style.display='flex';
+
+
+  /* Show scope badge */
+  const scopeMap={'callcenter':'كول سنتر فقط','whatsapp':'واتساب فقط','all':''};
+  const scopeLbl=scopeMap[viewScope]||'';
+  const subEl=el('hdrSub');
+  if(subEl) subEl.innerHTML=scopeLbl
+    ?`أداء الكول سنتر والواتس أب &nbsp;<span class="scope-badge">🔒 ${esc(scopeLbl)}</span>`
+    :'أداء الكول سنتر والواتس أب';
+
+  const cyc=defaultCycle(); currentFrom=cyc.from; currentTo=cyc.to;
+  el('dateFrom').value=currentFrom; el('dateTo').value=currentTo;
+
+  if(unsub) unsub();
+  // Cost guard: cap reads (free-tier). 2000 newest covers months of history.
+  const q=query(collection(db,'consultations'),orderBy('createdAt','desc'),limit(2000));
+  unsub=onSnapshot(q,snap=>{
+    allRows=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderDash();
+  },err=>{ console.error(err); notif('خطأ في تحميل البيانات','err'); });
+});
+
+/* ── RANGE CHANGE ── */
+window.onRangeChange=function(){
+  currentFrom=el('dateFrom')?.value||'';
+  currentTo=el('dateTo')?.value||'';
+  renderDash();
+};
+window.resetCycle=function(){
+  const c=defaultCycle(); currentFrom=c.from; currentTo=c.to;
+  el('dateFrom').value=c.from; el('dateTo').value=c.to;
+  renderDash();
+};
+
+/* ── SORT ── */
+window.setSort=function(mode){
+  sortMode=mode;
+  el('sortByTotal').classList.toggle('active',mode==='total');
+  el('sortByName').classList.toggle('active',mode==='name');
+  renderDash();
+};
+
+/* ── FILTER ── */
+window.applyFilter=function(){ el('agentSelect').value=''; _applyVis(); };
+window.applyFilterSelect=function(){ el('searchInput').value=''; _applyVis(); };
+
+function _applyVis(){
+  const q=(el('searchInput')?.value||'').trim().toLowerCase();
+  const sel=el('agentSelect')?.value||'';
+  const cards=el('agentGrid')?.querySelectorAll('.agent-card');
+  if(!cards) return;
+  let vis=0;
+  cards.forEach(c=>{
+    const name=(c.dataset.name||'').toLowerCase();
+    const num=(c.dataset.num||'').toLowerCase();
+    const match=(!q&&!sel)||(sel?c.dataset.email===sel:(name.includes(q)||num.includes(q)));
+    c.style.display=match?'':'none';
+    if(match) vis++;
+  });
+  el('resultsBadge').textContent=vis+' زميل';
+  let emp=el('agentGrid')?.querySelector('.as-empty');
+  if(vis===0&&(q||sel)){
+    if(!emp){ emp=document.createElement('div'); emp.className='as-empty empty-state'; emp.style.gridColumn='1/-1'; emp.innerHTML=`<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><p>لا توجد نتائج مطابقة</p>`; el('agentGrid').appendChild(emp); }
+  } else { emp?.remove(); }
+}
+
+function agentKey(r){ return String(r.agentEmail||r.agentId||'unknown').toLowerCase().trim(); }
+function agentDisplayName(r){ return r.agentLabel||r.agentName||r.agentEmail||'—'; }
+
+/* ── MAIN RENDER ── */
+function renderDash(){
+  /* Date-range filter (21→20 cycle by default) */
+  const byMonth=allRows.filter(r=>inRange(createdDateISO(r)));
+
+  /* Team scope filter */
+  const filtered=viewScope==='all'?byMonth:byMonth.filter(r=>consultTeam(r)===viewScope);
+
+  /* Group by agent */
+  const map=new Map();
+  filtered.forEach(r=>{
+    const k=agentKey(r);
+    if(!map.has(k)){
+      map.set(k,{
+        email:k, name:agentDisplayName(r),
+        num:r.agentNumber||r.agentId||'',
+        total:0, approved:0, pending:0, incomplete:0, needsInfo:0, warning:0, teamReviewed:0, followP:0, followD:0
+      });
+    }
+    const a=map.get(k);
+    a.total++;
+    /* Primary status — mutually exclusive */
+    if(isApproved(r))      a.approved++;
+    else if(isNeedsInfo(r)) a.needsInfo++;
+    else if(isPending(r))   a.pending++;
+    /* Independent flags — can coexist with any primary status */
+    if(isIncomplete(r))    a.incomplete++;
+    if(hasWarning(r))      a.warning++;
+    if(r.teamReviewed===true) a.teamReviewed++;   /* leaned on the consultations team */
+    const fs=followStatus(r);
+    if(fs==='pending')     a.followP++;
+    if(fs==='done')        a.followD++;
+  });
+
+  /* Seed every roster colleague for the current scope so people who did ZERO
+     consultations this cycle still show up (sorted to the bottom). */
+  Object.values(usersByEmail).forEach(u=>{
+    if(u.active===false) return;
+    const g=teamGroup(u.team||'');
+    if(g!=='callcenter' && g!=='whatsapp') return;        /* agents only — not reviewers/admin */
+    if(viewScope!=='all' && g!==viewScope) return;        /* honour the team scope */
+    const em=String(u.email||u.loginEmail||'').toLowerCase().trim();
+    if(!em || map.has(em)) return;
+    map.set(em,{
+      email:em, name:cleanAgentNm(u.displayName||em),
+      num:String(u.agentNumber||u.number||'').trim(),
+      total:0, approved:0, pending:0, incomplete:0, needsInfo:0, warning:0, teamReviewed:0, followP:0, followD:0
+    });
+  });
+
+  let agents=[...map.values()].filter(a=>a.email!=='unknown'||a.total>0);
+  if(sortMode==='total') agents.sort((a,b)=>b.total-a.total);
+  else agents.sort((a,b)=>a.name.localeCompare(b.name,'ar'));
+
+  /* Ranking — top 5 by total, independent of the UI sort mode so medals
+     and podium positions stay stable when the user switches sorts. */
+  const ranked=[...agents].sort((a,b)=>b.total-a.total||a.name.localeCompare(b.name,'ar'));
+  const rankByEmail=new Map(ranked.map((a,i)=>[a.email,i+1]));
+  renderAsPodium(ranked);
+  renderBest5AS(map);
+
+  /* Hero stats */
+  const totAll=filtered.length;
+  const activeCount=agents.filter(a=>a.total>0).length;   /* genuinely active this cycle */
+  const inactiveCount=agents.filter(a=>a.total===0).length;
+  animNum(el('stAgents'),  activeCount);
+  animNum(el('stInactive'),inactiveCount);
+  animNum(el('stTotal'),   totAll);
+  animNum(el('stApproved'),filtered.filter(r=>isApproved(r)).length);
+  animNum(el('stPending'), filtered.filter(r=>isPending(r)).length);
+  animNum(el('stIncomplete'),filtered.filter(r=>isIncomplete(r)).length);
+  animNum(el('stWarnings'),filtered.filter(r=>hasWarning(r)).length);
+
+  const mLabel=`دورة ${fmtDMY(currentFrom)} — ${fmtDMY(currentTo)}`;
+  const scopeNote=viewScope==='callcenter'?' · كول سنتر':viewScope==='whatsapp'?' · واتساب':'';
+  el('heroSub').textContent=`${mLabel}${scopeNote} · ${agents.length} زميل`;
+
+  /* Populate select (once per render session) */
+  const sel=el('agentSelect');
+  if(sel&&sel.options.length<=1){
+    agents.forEach(a=>{
+      const o=document.createElement('option');
+      o.value=a.email; o.textContent=a.name+(a.num?` (${a.num})`:'');
+      sel.appendChild(o);
+    });
+  }
+
+  el('resultsBadge').textContent=agents.length+' زميل';
+
+  if(!agents.length){
+    el('agentGrid').innerHTML=`<div class="empty-state" style="grid-column:1/-1">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      <p>لا توجد بيانات في هذه الفترة</p></div>`;
+    return;
+  }
+
+  const cstat=(cls,lbl,num)=>
+    `<div class="cstat ${cls}${num===0?' zero':''}"><span class="cstat-lbl">${lbl}</span><span class="cstat-num">${num}</span></div>`;
+
+  el('agentGrid').innerHTML=agents.map((a,i)=>{
+    const t=a.total;
+    const pct=t>0?Math.round(a.approved/t*100):0;
+    const _nm=a.name.replace(/^Dr\.\s*/i,'');
+    const _words=_nm.split(/\s+/).filter(w=>/^[a-zA-Z؀-ۿ]/.test(w));
+    const initials=_words.length>=2?(_words[0][0]+_words[1][0]).toUpperCase():_words.length===1?_words[0].slice(0,2).toUpperCase():(a.email.replace(/[^a-zA-Z]/g,'').slice(0,2).toUpperCase()||'—');
+    const delay=Math.min(i*0.04,0.6).toFixed(2);
+    const rank=rankByEmail.get(a.email)||0;
+    const medal=(rank>=1&&rank<=5&&t>0)?`<div class="medal-corner r${rank}">${rank}</div>`:'';
+    return `<div class="agent-card" data-name="${esc(a.name)}" data-num="${esc(a.num)}" data-email="${esc(a.email)}" style="animation-delay:${delay}s">
+      ${medal}
+      <div class="card-top">
+        <div class="card-av" style="background:${avColor(a.email)}">${esc(initials)}</div>
+        <div class="card-info">
+          <div class="card-name">${esc(a.name)}</div>
+          <div class="card-num"><span style="font-weight:800;letter-spacing:.5px;color:var(--teal2)">${esc(initials)}</span><span style="opacity:.3;margin:0 5px">·</span><span style="opacity:.55">${esc(a.email)}</span></div>
+        </div>
+        <div class="card-total-badge">${t} استشارة</div>
+      </div>
+      <div class="card-stats">
+        ${cstat('approved','✅ معتمدة',a.approved)}
+        ${cstat('pending','⏳ قيد المراجعة',a.pending)}
+        ${cstat('incomp','⚠ غير مكتملة',a.incomplete)}
+        ${cstat('needsinf','❓ تحتاج معلومات',a.needsInfo)}
+        ${cstat('warn','🔔 تحذير',a.warning)}
+        ${cstat('followp','🔄 فولو أب',a.followP)}
+      </div>
+      <div class="card-bar">
+        <div class="bar-row">
+          <span class="bar-lbl">نسبة الاعتماد</span>
+          <span class="bar-pct">${pct}%</span>
+          ${a.followD?`<span style="font-size:11px;color:var(--teal2);margin-right:auto;padding-right:8px">✔ فولو أب مكتمل: ${a.followD}</span>`:''}
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill${pct<40?' low':''}" data-w="${pct}" style="width:0%"></div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  requestAnimationFrame(()=>{
+    el('agentGrid').querySelectorAll('.bar-fill').forEach(b=>{ b.style.width=(b.dataset.w||'0')+'%'; });
+  });
+}
+
+/* ── BEST-RATED AGENTS (top 5) ──
+   Ranks agents by the Bayesian (weighted) average of the star ratings their
+   consultations received in the current view. Only RATED consultations count;
+   RATING_CONFIDENCE keeps a small high-average sample from beating a large one. */
+function renderBest5AS(agentMap){
+  const box=el('best5AS'); if(!box) return;
+  box.style.display='';
+  /* Award window = the same selected range as the cards (21→20 cycle by default),
+     so the stars and the per-agent counts always agree. */
+  const agg=new Map();
+  allRows.forEach(r=>{
+    if(viewScope!=='all' && consultTeam(r)!==viewScope) return;
+    if(!inRange(createdDateISO(r))) return;
+    const rt=ratingOf(r); if(rt<1) return;
+    const k=agentKey(r); if(k==='unknown') return;
+    if(!agg.has(k)) agg.set(k,{sum:0,n:0,name:cleanAgentNm(agentDisplayName(r)),num:r.agentNumber||r.agentId||'',key:k});
+    const a=agg.get(k); a.sum+=rt; a.n++;
+    if(!a.name) a.name=cleanAgentNm(agentDisplayName(r));
+    if(!a.num)  a.num=r.agentNumber||r.agentId||'';
+  });
+  el('best5ASSub').textContent=`دورة ${fmtDMY(currentFrom)} — ${fmtDMY(currentTo)} · ${[...agg.values()].reduce((s,a)=>s+a.n,0)} استشارة مقيّمة`;
+  if(!agg.size){
+    el('best5ASBody').innerHTML=`<div class="best5-empty">لا توجد استشارات مقيّمة بالنجوم في هذه الدورة بعد.</div>`;
+    return;
+  }
+  let gs=0,gn=0; agg.forEach(a=>{gs+=a.sum;gn+=a.n;});
+  const m=gn>0?gs/gn:4, C=RATING_CONFIDENCE;
+  const ranked=[...agg.values()].map(a=>{
+    const avg=a.sum/a.n;
+    const info=agentMap?agentMap.get(a.key):null;
+    const total=info?info.total:a.n;             /* total consultations (not only rated) */
+    const warn =info?info.warning:0;
+    const teamRev=info?info.teamReviewed:0;       /* leaned on the consultations team */
+    const Q  =(C*m+a.sum)/(C+a.n);               /* Bayesian quality, 1–5 */
+    const Qn =Math.max(0,Math.min((Q-1)/4,1));   /* quality → 0–1 */
+    /* Volume credit counts only REVIEWED consultations — we can't reward work
+       whose quality nobody has rated yet (1 rated of 19 ≠ a full month's worth). */
+    const Vn =Math.min(a.n/VOLUME_TARGET,1);     /* volume → 0–1 (rated count) */
+    const warnRate=total>0?warn/total:0;
+    const teamRate=total>0?teamRev/total:0;       /* share that leaned on the team */
+    const composite=W_QUALITY*Qn + W_VOLUME*Vn;  /* quality + quantity, 0–1 */
+    const final=Math.max(composite - WARN_STRENGTH*warnRate - TEAM_REVIEW_STRENGTH*teamRate, 0);
+    return {name:a.name, num:a.num, avg, n:a.n, total, warn, teamRev,
+            points:Math.round(final*100), penalty:Math.round(WARN_STRENGTH*warnRate*100),
+            teamPenalty:Math.round(TEAM_REVIEW_STRENGTH*teamRate*100), Q};
+  }).sort((x,y)=>y.points-x.points||y.Q-x.Q||y.total-x.total).slice(0,5);
+  el('best5ASBody').innerHTML=ranked.map((a,i)=>{
+    const rank=i+1;
+    const ini=String(a.name||a.num).trim().charAt(0).toUpperCase()||'★';
+    const warnTxt=a.warn?` · <span class="b5-warn">🔔 ${a.warn} تحذير (−${a.penalty})</span>`:'';
+    const teamTxt=a.teamRev?` · <span class="b5-warn">👥 ${a.teamRev} مراجعة تيم (−${a.teamPenalty})</span>`:'';
+    return `<div class="b5-row r${rank}">
+      <div class="b5-rank">${rank}</div>
+      <div class="b5-av" style="background:${avColor(String(a.num||a.name))}">${esc(ini)}</div>
+      <div class="b5-main">
+        <div class="b5-name">${esc(a.name)}<span class="b5-cnt">${a.n} مراجَعة</span></div>
+        <div class="b5-num">${a.num?('رقم '+esc(String(a.num))+' · '):''}من ${a.total} استشارة · متوسط ${a.avg.toFixed(2)}★${warnTxt}${teamTxt}</div>
+      </div>
+      <div class="b5-stars">${starsHtmlAS(a.avg)}</div>
+      <div class="b5-score"><div class="b5-score-num">${a.points}</div><div class="b5-score-lbl">نقطة · جودة+عدد</div></div>
+    </div>`;
+  }).join('');
+}
+
+/* ── TOP-5 PODIUM ──────────────────────────────
+   Renders the gold/silver/bronze/teal/indigo leaderboard above the grid.
+   Hidden if fewer than 5 agents exist or the leader has zero consultations. */
+function renderAsPodium(ranked){
+  const section=el('asPodium');
+  if(!section) return;
+  if(ranked.length<5||(ranked[0]?.total||0)===0){ section.style.display='none'; return; }
+  section.style.display='flex';
+  const fill=(slot,a)=>{
+    const t=a.total;
+    const pct=t>0?Math.round(a.approved/t*100):0;
+    const _nm=a.name.replace(/^Dr\.\s*/i,'');
+    const _words=_nm.split(/\s+/).filter(w=>/^[a-zA-Z؀-ۿ]/.test(w));
+    const initials=_words.length>=2?(_words[0][0]+_words[1][0]).toUpperCase()
+                  :_words.length===1?_words[0].slice(0,2).toUpperCase()
+                  :(a.email.replace(/[^a-zA-Z]/g,'').slice(0,2).toUpperCase()||'—');
+    const av=el(`asP${slot}Av`);
+    av.textContent=initials;
+    av.style.background=avColor(a.email);
+    el(`asP${slot}Name`).textContent=a.name;
+    el(`asP${slot}Pct`).innerHTML=`نسبة الاعتماد <strong>${pct}%</strong>`;
+    animNum(el(`asP${slot}Total`), t);
+  };
+  fill(1, ranked[0]);
+  fill(2, ranked[1]);
+  fill(3, ranked[2]);
+  fill(4, ranked[3]);
+  fill(5, ranked[4]);
+}
+</script>
+</body>
+</html>

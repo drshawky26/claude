@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>قيّمنا — صيدلية آل عبد اللطيف الطرشوبي</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Kufi+Arabic:wght@700;900&display=swap">
+<style>
+:root{
+  --bg1:#0a1028; --bg2:#0c1531; --bg3:#070c1e;
+  --gold:#e0c477; --gold2:#c9a84c; --fb:#1877f2; --teal:#0ea5a0;
+  --ink:#f2f6ff; --muted:rgba(206,220,255,.72); --card:rgba(255,255,255,.055); --border:rgba(122,152,255,.24);
+  --green:#28c07e; --red:#f56b58;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:"Cairo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  min-height:100vh;color:var(--ink);
+  background:
+    radial-gradient(900px 500px at 50% -10%,rgba(24,119,242,.35),transparent 60%),
+    radial-gradient(600px 400px at 90% 100%,rgba(224,196,119,.18),transparent 60%),
+    linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 55%,var(--bg3) 100%);
+  display:flex;align-items:center;justify-content:center;padding:22px;
+}
+.wrap{width:100%;max-width:460px}
+.card{
+  position:relative;overflow:hidden;border-radius:24px;padding:30px 26px 28px;
+  background:linear-gradient(150deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+  border:1px solid var(--border);box-shadow:0 30px 70px -20px rgba(3,8,30,.75),inset 0 1px 0 rgba(255,255,255,.08);
+  animation:cardIn .6s cubic-bezier(.22,.9,.32,1) both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+.card::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    radial-gradient(2px 2px at 15% 18%,rgba(255,255,255,.7),transparent 60%),
+    radial-gradient(1.6px 1.6px at 80% 10%,rgba(255,255,255,.5),transparent 60%),
+    radial-gradient(1.4px 1.4px at 40% 6%,rgba(255,255,255,.4),transparent 60%),
+    radial-gradient(1.6px 1.6px at 65% 22%,rgba(255,255,255,.45),transparent 60%);
+  animation:twinkle 3.4s ease-in-out infinite;
+}
+@keyframes twinkle{0%,100%{opacity:.2}50%{opacity:.75}}
+.logo{
+  width:56px;height:56px;border-radius:16px;margin:0 auto 14px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--fb),#0a52c4);font-size:26px;font-weight:900;color:#fff;
+  box-shadow:0 10px 26px -8px rgba(24,119,242,.6);position:relative;z-index:2;
+}
+h1{
+  position:relative;z-index:2;text-align:center;font-family:"Noto Kufi Arabic","Cairo",sans-serif;
+  font-size:19px;font-weight:900;margin:0 0 6px;line-height:1.5;
+}
+.sub{position:relative;z-index:2;text-align:center;font-size:13px;color:var(--muted);font-weight:700;margin:0 0 22px;line-height:1.7}
+.sub b{color:var(--gold)}
+
+.stars{position:relative;z-index:2;display:flex;justify-content:center;gap:8px;margin:8px 0 6px;direction:ltr}
+.star{
+  font-size:38px;line-height:1;cursor:pointer;user-select:none;
+  filter:grayscale(1) opacity(.35);transition:transform .18s cubic-bezier(.34,1.56,.64,1),filter .18s;
+}
+.star.on{filter:none;text-shadow:0 4px 14px rgba(251,191,36,.5)}
+.star:active{transform:scale(.85)}
+.star.pop{animation:starPop .38s cubic-bezier(.34,1.56,.64,1)}
+@keyframes starPop{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
+.star-lbl{position:relative;z-index:2;text-align:center;min-height:20px;font-size:12.5px;font-weight:800;color:var(--gold);margin-bottom:18px}
+
+textarea{
+  position:relative;z-index:2;width:100%;min-height:90px;resize:vertical;
+  font-family:inherit;font-size:14px;font-weight:600;color:var(--ink);
+  background:rgba(8,14,36,.7);border:1px solid var(--border);border-radius:14px;padding:12px 14px;
+  transition:.18s;line-height:1.6;
+}
+textarea::placeholder{color:rgba(200,214,250,.45)}
+textarea:focus{outline:none;border-color:#5b8cff;box-shadow:0 0 0 3px rgba(91,140,255,.22)}
+label.f-lbl{position:relative;z-index:2;display:block;font-size:12px;font-weight:800;color:var(--muted);margin:14px 0 7px}
+input.name-inp{
+  position:relative;z-index:2;width:100%;font-family:inherit;font-size:14px;font-weight:700;color:var(--ink);
+  background:rgba(8,14,36,.7);border:1px solid var(--border);border-radius:12px;padding:10px 13px;
+}
+input.name-inp:focus{outline:none;border-color:#5b8cff;box-shadow:0 0 0 3px rgba(91,140,255,.22)}
+
+.submit-btn{
+  position:relative;z-index:2;width:100%;margin-top:20px;font-family:inherit;font-weight:900;font-size:15px;
+  color:#081020;cursor:pointer;border:none;border-radius:14px;padding:14px;
+  background:linear-gradient(135deg,#fde047,#fbbf24);box-shadow:0 10px 26px -8px rgba(251,191,36,.55);
+  transition:.18s;
+}
+.submit-btn:hover{transform:translateY(-1px);box-shadow:0 14px 34px -8px rgba(251,191,36,.7)}
+.submit-btn:disabled{opacity:.6;cursor:default;transform:none}
+.err-msg{position:relative;z-index:2;text-align:center;color:var(--red);font-size:12.5px;font-weight:800;margin-top:10px;min-height:16px}
+
+/* ── نتيجة الإرسال ── */
+#result{display:none;position:relative;z-index:2;text-align:center}
+#result.show{display:block;animation:cardIn .5s cubic-bezier(.22,.9,.32,1) both}
+.res-ico{font-size:52px;margin-bottom:10px;filter:drop-shadow(0 6px 18px rgba(0,0,0,.4))}
+.res-title{font-family:"Noto Kufi Arabic","Cairo",sans-serif;font-size:19px;font-weight:900;margin-bottom:8px}
+.res-sub{font-size:13.5px;color:var(--muted);font-weight:700;line-height:1.8;margin-bottom:20px}
+.fb-cta{
+  display:flex;align-items:center;justify-content:center;gap:10px;width:100%;
+  font-family:inherit;font-weight:900;font-size:15.5px;color:#fff;text-decoration:none;
+  background:linear-gradient(135deg,#1877f2,#0a52c4);border-radius:14px;padding:15px;
+  box-shadow:0 12px 30px -8px rgba(24,119,242,.6);transition:.18s;position:relative;overflow:hidden;
+}
+.fb-cta:hover{transform:translateY(-1px);box-shadow:0 16px 38px -8px rgba(24,119,242,.75)}
+.fb-cta::after{content:'';position:absolute;top:-20%;bottom:-20%;left:0;width:35%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.35),transparent);
+  animation:sheen 3.6s ease-in-out infinite;}
+@keyframes sheen{0%,55%{transform:translateX(-180%) skewX(-18deg)}100%{transform:translateX(320%) skewX(-18deg)}}
+.fb-cta-ico{font-size:20px}
+.hint{margin-top:14px;font-size:11.5px;color:var(--muted);font-weight:700;opacity:.8}
+
+@media(prefers-reduced-motion:reduce){
+  .card,.card::before,#result.show,.fb-cta::after,.star{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="card">
+    <div id="formView">
+      <div class="logo">🏥</div>
+      <h1 id="greetTitle">عزيزي العميل، رأيك يهمّنا ✨</h1>
+      <p class="sub" id="greetSub">نشكرك على طلبك من <b>صيدلية آل عبد اللطيف الطرشوبي</b> 💊<br>قيّم تجربتك معانا في ثانيتين 👇</p>
+
+      <div class="stars" id="stars">
+        <span class="star" data-v="1">★</span>
+        <span class="star" data-v="2">★</span>
+        <span class="star" data-v="3">★</span>
+        <span class="star" data-v="4">★</span>
+        <span class="star" data-v="5">★</span>
+      </div>
+      <div class="star-lbl" id="starLbl">اختار عدد النجوم</div>
+
+      <label class="f-lbl" for="custName">اسمك (اختياري)</label>
+      <input class="name-inp" id="custName" placeholder="اكتب اسمك…" autocomplete="off">
+
+      <label class="f-lbl" for="comment">تعليقك (اختياري)</label>
+      <textarea id="comment" placeholder="اكتبلنا رأيك في الخدمة… إيه اللي عجبك أو إيه اللي ممكن نحسّنه"></textarea>
+
+      <button class="submit-btn" id="submitBtn">✅ إرسال التقييم</button>
+      <div class="err-msg" id="errMsg"></div>
+    </div>
+
+    <div id="result">
+      <div class="res-ico" id="resIco">🎉</div>
+      <div class="res-title" id="resTitle">شكراً جزيلاً! 🙏</div>
+      <div class="res-sub" id="resSub">تقييمك وصلنا واتسجّل.</div>
+      <a class="fb-cta" id="fbCta" href="https://www.facebook.com/altarshouby/reviews" target="_blank" rel="noopener">
+        <span class="fb-cta-ico">⭐</span><span>قيّمنا كمان على فيسبوك</span>
+      </a>
+      <div class="hint" id="hintTxt">هيفتحلك فيسبوك — كل اللي عليك تضغط على «تقييم» وتكتب رأيك 💙</div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyBvmHh6-KVlKNATzbfMk3hIswbMCrBZwf4",
+  authDomain:        "pharma-triage-5d165.firebaseapp.com",
+  projectId:         "pharma-triage-5d165",
+  storageBucket:     "pharma-triage-5d165.firebasestorage.app",
+  messagingSenderId: "1080517928737",
+  appId:             "1:1080517928737:web:9110f120203d0e6b7b0060"
+};
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+const el  = id => document.getElementById(id);
+
+/* اللينك بييجي من كارت «فولو أب الأوردرات» — بيحمل رقم الأوردر + اسم العميل + الزميل
+   عشان الأدمن يعرف يربط التقييم بالأوردر، من غير ما نحتاج نقرا فايربيز من صفحة عامة. */
+const params = new URLSearchParams(location.search);
+const orderId = params.get("o") || "";
+const custFromLink = params.get("c") || "";
+const agentFromLink = params.get("a") || "";
+
+if(custFromLink){
+  el("custName").value = custFromLink;
+  el("greetTitle").textContent = `أهلاً ${custFromLink}، رأيك يهمّنا ✨`;
+}
+
+let rating = 0;
+const STAR_LABELS = {1:"مش راضي خالص 😞",2:"مش قد التوقعات 🙁",3:"عادي 😐",4:"كويس جداً 🙂",5:"ممتاز! 🤩"};
+const starsWrap = el("stars");
+function paintStars(hoverVal){
+  const v = hoverVal || rating;
+  starsWrap.querySelectorAll(".star").forEach(s=>{
+    s.classList.toggle("on", +s.dataset.v <= v);
+  });
+  el("starLbl").textContent = v ? STAR_LABELS[v] : "اختار عدد النجوم";
+}
+starsWrap.querySelectorAll(".star").forEach(s=>{
+  s.addEventListener("mouseenter", ()=>paintStars(+s.dataset.v));
+  s.addEventListener("click", ()=>{
+    rating = +s.dataset.v;
+    s.classList.add("pop");
+    setTimeout(()=>s.classList.remove("pop"),380);
+    paintStars();
+  });
+});
+starsWrap.addEventListener("mouseleave", ()=>paintStars());
+
+let busy=false;
+el("submitBtn").onclick = async ()=>{
+  if(busy) return;
+  if(!rating){ el("errMsg").textContent="من فضلك اختار تقييم بالنجوم الأول ⭐"; return; }
+  el("errMsg").textContent="";
+  busy=true;
+  const btn=el("submitBtn"); btn.disabled=true; btn.textContent="⏳ جارٍ الإرسال…";
+  try{
+    await addDoc(collection(db,"customerReviews"),{
+      rating,
+      comment: (el("comment").value||"").trim(),
+      customer: (el("custName").value||"").trim(),
+      orderId, agent: agentFromLink,
+      source: "rate-us",
+      at: serverTimestamp()
+    });
+    showResult(rating);
+  }catch(e){
+    el("errMsg").textContent = "حصل خطأ — حاول تاني كمان شوية 🙏";
+    btn.disabled=false; btn.textContent="✅ إرسال التقييم";
+    busy=false;
+  }
+};
+
+function showResult(r){
+  el("formView").style.display="none";
+  const res=el("result"); res.classList.add("show");
+  const cta=el("fbCta"), hint=el("hintTxt");
+  if(r>=4){
+    el("resIco").textContent="🎉";
+    el("resTitle").textContent="شكراً جزيلاً! 🙏";
+    el("resSub").textContent="سعداء إنك مبسوط من الخدمة! لو تحب تشاركنا رأيك برضو على فيسبوك هيبقى فرحنا مكمّل 💙";
+    cta.style.display="flex"; hint.style.display="block";
+  } else {
+    el("resIco").textContent="🙏";
+    el("resTitle").textContent="شكراً لصراحتك معانا";
+    el("resSub").textContent="رأيك وصل لفريقنا وهنراجعه بجدّية عشان نحسّن الخدمة. لو محتاج حل لمشكلة معيّنة، تواصل معانا وهنكون في خدمتك 🙏";
+    cta.style.display="none"; hint.style.display="none";
+  }
+}
+</script>
+</body>
+</html>

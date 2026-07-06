@@ -1,0 +1,1900 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#060d1a">
+<script src="/lite-mode.js"></script>
+<title>إحصائيات المراجعين · Pharma Triage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap"></noscript>
+<style>
+/* ══════════════════════════════════════════════════════
+   REVIEWER STATS DASHBOARD — Ultra Premium Dark + Podium
+   Pharma Triage · Navy · Teal · Gold
+══════════════════════════════════════════════════════ */
+:root{
+  --bg:      #060d1a;
+  --bg2:     #0a1525;
+  --bg3:     #0f1e38;
+  --glass:   rgba(255,255,255,.05);
+  --glassB:  rgba(255,255,255,.09);
+  --hov:     rgba(255,255,255,.08);
+  --teal:    #0ea5a0;
+  --teal2:   #0cc8c2;
+  --tglow:   rgba(14,165,160,.28);
+  --gold:    #c9a84c;
+  --gold2:   #fbbf24;
+  --silver:  #cbd5e1;
+  --bronze:  #d97706;
+  --text:    #e4eeff;
+  --text2:   rgba(228,238,255,.68);
+  --text3:   rgba(228,238,255,.38);
+  --border:  rgba(255,255,255,.08);
+  --green:   #22c55e;
+  --blue:    #60a5fa;
+  --amber:   #f59e0b;
+  --orange:  #f97316;
+  --red:     #f87171;
+  --purple:  #a78bfa;
+  --t:       .22s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Cairo',Tahoma,sans-serif;font-size:14px;color:var(--text);background:var(--bg);min-height:100vh;line-height:1.6;overflow-x:hidden;}
+
+/* ── ORBS ── */
+.orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.15;}
+.orb1{width:700px;height:700px;background:var(--teal);top:-200px;right:-150px;--d:28s;}
+.orb2{width:500px;height:500px;background:#1e3a8a;bottom:-100px;left:-100px;--d:22s;--dl:-8s;}
+.orb3{width:380px;height:380px;background:var(--gold);top:30%;left:42%;--d:18s;--dl:-5s;opacity:.10;}
+@keyframes orbF{0%,100%{transform:translate(0,0) scale(1);}33%{transform:translate(40px,-30px) scale(1.06);}66%{transform:translate(-25px,20px) scale(.96);}}
+
+/* ── PAGE ── */
+.page{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:0 20px 60px;}
+
+/* ── HEADER ── */
+.hdr{
+  position:sticky;top:0;z-index:100;
+  background:rgba(6,13,26,.85);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+  padding:0 28px;height:62px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.hdr-brand{display:flex;align-items:center;gap:12px;}
+.hdr-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--teal),var(--teal2));display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.hdr-title{font-size:16px;font-weight:800;color:var(--text);}
+.hdr-sub{font-size:11px;color:var(--text3);margin-top:-2px;}
+.hdr-right{display:flex;align-items:center;gap:12px;}
+.hdr-user{display:flex;align-items:center;gap:8px;}
+.hdr-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--teal),#0a7c78);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;}
+.hdr-name{font-size:13px;font-weight:700;color:var(--text2);}
+.btn-logout{background:var(--glass);border:1px solid var(--border);color:var(--text3);border-radius:8px;padding:6px 12px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer;transition:var(--t);}
+.btn-logout:hover{background:var(--hov);color:var(--text);}
+
+/* ── LOGIN VIEW ── */
+#loginView{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(6,13,26,.97);
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(10px);
+}
+.login-box{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:20px;padding:40px 36px;width:min(420px,94vw);
+  backdrop-filter:blur(20px);text-align:center;
+}
+.login-logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 8px 28px rgba(201,168,76,.25);}
+.login-title{font-size:20px;font-weight:800;margin-bottom:4px;}
+.login-sub{font-size:13px;color:var(--text3);margin-bottom:28px;}
+.login-field{margin-bottom:14px;text-align:right;}
+.login-field label{display:block;font-size:12px;color:var(--text2);margin-bottom:5px;font-weight:600;}
+.login-field input{width:100%;background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-family:'Cairo',sans-serif;font-size:14px;transition:var(--t);}
+.login-field input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--tglow);}
+.btn-login{width:100%;background:linear-gradient(135deg,var(--teal),var(--teal2));border:none;border-radius:12px;padding:13px;color:#fff;font-family:'Cairo',sans-serif;font-size:15px;font-weight:800;cursor:pointer;margin-top:6px;transition:var(--t);}
+.btn-login:hover{filter:brightness(1.1);box-shadow:0 6px 20px var(--tglow);}
+#loginMsg{min-height:18px;font-size:13px;color:var(--red);margin-top:10px;}
+
+/* ── HERO STATS ── */
+.hero{
+  margin-top:32px;
+  background:linear-gradient(135deg,rgba(14,165,160,.12) 0%,rgba(10,117,114,.08) 50%,rgba(201,168,76,.08) 100%);
+  border:1px solid rgba(14,165,160,.18);
+  border-radius:20px;padding:28px 32px;position:relative;overflow:hidden;
+}
+.hero::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(14,165,160,.05),transparent);pointer-events:none;}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px;}
+.hero-title{font-size:22px;font-weight:900;color:var(--text);}
+.hero-sub{font-size:13px;color:var(--text3);margin-top:2px;}
+.hero-stats{display:flex;gap:16px;flex-wrap:wrap;}
+.hstat{background:var(--glass);border:1px solid var(--border);border-radius:14px;padding:16px 22px;text-align:center;min-width:110px;transition:var(--t);}
+.hstat:hover{background:var(--glassB);transform:translateY(-2px);}
+.hstat-num{font-size:30px;font-weight:900;line-height:1.1;margin-bottom:4px;}
+.hstat-lbl{font-size:11.5px;color:var(--text3);font-weight:600;}
+.hstat.cctotal .hstat-num{color:var(--gold2);font-size:34px;}
+.hstat.cctotal{background:linear-gradient(135deg,rgba(251,191,36,.10),rgba(217,119,6,.06));border-color:rgba(251,191,36,.22);}
+.hstat.reviewers .hstat-num{color:var(--gold);}
+.hstat.total .hstat-num{color:var(--teal);}
+.hstat.approved .hstat-num{color:var(--green);}
+.hstat.needsinf .hstat-num{color:var(--amber);}
+.hstat.incomplete .hstat-num{color:var(--orange);}
+.hstat.warnings .hstat-num{color:var(--red);}
+
+/* ── APPROVAL GAUGE CARD ─────────────────────────── */
+.approval-arc-card{
+  background:linear-gradient(135deg,rgba(34,197,94,.13) 0%,rgba(14,165,160,.08) 55%,rgba(34,197,94,.05) 100%);
+  border:1px solid rgba(34,197,94,.25);
+  border-radius:18px;
+  padding:14px 18px 12px;
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  position:relative;overflow:hidden;
+  transition:transform .22s,box-shadow .22s;
+  cursor:default;
+  min-width:134px;
+}
+.approval-arc-card::before{
+  content:'';position:absolute;top:0;left:6%;right:6%;height:1.5px;
+  background:linear-gradient(90deg,transparent,rgba(34,197,94,.8),rgba(14,165,160,.55),transparent);
+}
+.approval-arc-card::after{
+  content:'';position:absolute;top:-22px;right:-14px;width:70px;height:70px;
+  background:radial-gradient(circle,rgba(34,197,94,.13) 0%,transparent 70%);
+  pointer-events:none;
+}
+.approval-arc-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 14px 38px rgba(34,197,94,.20),0 4px 14px rgba(0,0,0,.32);
+}
+.arc-gauge-wrap{position:relative;width:108px;height:108px;flex-shrink:0;}
+.arc-gauge-svg{width:108px;height:108px;overflow:visible;display:block;}
+.arc-gauge-track{fill:none;stroke:rgba(255,255,255,.08);stroke-width:9;stroke-linecap:round;}
+.arc-gauge-fill{
+  fill:none;stroke:url(#approvalGrd);stroke-width:9;stroke-linecap:round;
+  stroke-dasharray:0 251.33;
+  transition:stroke-dasharray 1.3s cubic-bezier(.4,0,.2,1) .3s;
+  filter:drop-shadow(0 0 7px rgba(34,197,94,.75));
+}
+.arc-gauge-center{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;
+  transform:translateY(-3px);
+}
+.arc-gauge-pct{
+  font-family:'Noto Kufi Arabic',sans-serif;
+  font-size:27px;font-weight:900;color:#fff;line-height:1;
+  text-shadow:0 0 20px rgba(34,197,94,.75),0 0 40px rgba(34,197,94,.28);
+}
+.arc-gauge-sub{
+  font-size:10px;font-weight:700;
+  color:var(--green);font-family:'Cairo',sans-serif;opacity:.9;
+  letter-spacing:.5px;
+}
+.arc-card-hdg{
+  font-size:10.5px;font-weight:700;color:var(--text3);
+  font-family:'Cairo',sans-serif;
+}
+.arc-card-foot{
+  font-size:11px;color:var(--text3);font-family:'Cairo',sans-serif;font-weight:600;
+  text-align:center;
+}
+.arc-card-foot b{color:var(--green);}
+@keyframes arcPulse{
+  0%,100%{filter:drop-shadow(0 0 6px rgba(34,197,94,.65));}
+  50%{filter:drop-shadow(0 0 14px rgba(34,197,94,.95));}
+}
+.arc-gauge-fill.pulsing{animation:arcPulse 2.4s ease-in-out infinite;}
+
+.scope-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.25);color:var(--gold);border-radius:999px;padding:3px 10px;font-size:11px;font-weight:700;margin-right:8px;}
+
+/* ── PODIUM ── */
+.podium-section{
+  display:flex;align-items:flex-end;justify-content:center;gap:24px;
+  margin:28px 0 8px;padding:60px 24px 0;
+  background:
+    radial-gradient(ellipse at top, rgba(251,191,36,.10), transparent 60%),
+    linear-gradient(180deg, rgba(201,168,76,.04) 0%, rgba(14,165,160,.04) 100%);
+  border:1px solid rgba(201,168,76,.20);
+  border-radius:20px;position:relative;overflow:hidden;
+}
+.podium-title{
+  position:absolute;top:18px;left:0;right:0;text-align:center;
+  font-size:13px;color:var(--gold2);font-weight:900;letter-spacing:3px;
+  text-transform:uppercase;
+}
+.podium-title::before,.podium-title::after{content:'✦';color:var(--gold);margin:0 10px;opacity:.6;}
+.podium-step{
+  flex:1;max-width:220px;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  animation:podiumRise .7s cubic-bezier(.34,1.56,.64,1) both;
+}
+.podium-step.podium-1{animation-delay:.30s;}
+.podium-step.podium-2{animation-delay:.10s;}
+.podium-step.podium-3{animation-delay:.20s;}
+@keyframes podiumRise{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+.podium-av-wrap{position:relative;}
+.podium-av{
+  width:74px;height:74px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:22px;color:#fff;
+  border:3px solid;background:linear-gradient(135deg,#0ea5a0,#0cc8c2);
+}
+.podium-rank{
+  position:absolute;top:-8px;right:-8px;
+  width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:14px;color:#0c0c0c;
+  border:2px solid var(--bg);
+}
+.podium-info{text-align:center;max-width:100%;}
+.podium-name{font-size:14px;font-weight:800;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;}
+.podium-pct{font-size:11px;color:var(--text3);}
+.podium-pct strong{color:var(--green);font-weight:800;font-size:12px;}
+.podium-block{
+  width:100%;border-radius:16px 16px 0 0;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;color:rgba(0,0,0,.78);font-size:30px;
+  position:relative;overflow:hidden;
+  box-shadow:inset 0 4px 0 rgba(255,255,255,.20), 0 -8px 20px rgba(0,0,0,.18);
+}
+.podium-block::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,.20));}
+.podium-block-num{position:relative;z-index:1;}
+/* Gold / Silver / Bronze */
+.podium-1 .podium-av{border-color:var(--gold2);box-shadow:0 0 0 4px rgba(251,191,36,.18), 0 0 40px rgba(251,191,36,.45);}
+.podium-1 .podium-rank{background:linear-gradient(135deg,#fde047,var(--gold2));box-shadow:0 4px 12px rgba(251,191,36,.5);}
+.podium-1 .podium-block{background:linear-gradient(180deg,#fde047 0%,var(--gold2) 50%,#d97706 100%);height:130px;}
+.podium-2 .podium-av{border-color:var(--silver);box-shadow:0 0 0 4px rgba(203,213,225,.15), 0 0 28px rgba(203,213,225,.35);}
+.podium-2 .podium-rank{background:linear-gradient(135deg,#e2e8f0,var(--silver));box-shadow:0 4px 10px rgba(203,213,225,.4);}
+.podium-2 .podium-block{background:linear-gradient(180deg,#e2e8f0 0%,var(--silver) 50%,#64748b 100%);height:95px;}
+.podium-3 .podium-av{border-color:var(--bronze);box-shadow:0 0 0 4px rgba(217,119,6,.15), 0 0 22px rgba(217,119,6,.30);}
+.podium-3 .podium-rank{background:linear-gradient(135deg,#f59e0b,var(--bronze));color:#fff;box-shadow:0 4px 10px rgba(217,119,6,.4);}
+.podium-3 .podium-block{background:linear-gradient(180deg,#f59e0b 0%,var(--bronze) 50%,#78350f 100%);height:72px;}
+
+/* ── TOOLBAR ── */
+.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:24px;margin-bottom:20px;}
+.search-wrap{
+  flex:1;min-width:200px;display:flex;align-items:center;gap:8px;
+  background:var(--glass);border:1.5px solid var(--border);border-radius:12px;
+  padding:9px 14px;transition:border-color .2s,box-shadow .2s;
+}
+.search-wrap:focus-within{border-color:var(--teal);box-shadow:0 0 0 3px var(--tglow);}
+.search-wrap svg{color:var(--text3);flex-shrink:0;}
+.search-wrap input{background:none;border:none;outline:none;color:var(--text);font-family:'Cairo',sans-serif;font-size:13.5px;width:100%;}
+.search-wrap input::placeholder{color:var(--text3);}
+.filter-select{
+  background:var(--glass);border:1.5px solid var(--border);border-radius:12px;
+  padding:9px 14px;color:var(--text);font-family:'Cairo',sans-serif;font-size:13px;
+  cursor:pointer;min-width:160px;transition:border-color .2s;
+}
+.filter-select:focus{outline:none;border-color:var(--teal);}
+.filter-select option{background:var(--bg2);color:var(--text);}
+.month-input{
+  background:var(--glass);border:1.5px solid var(--border);border-radius:12px;
+  padding:9px 14px;color:var(--text);font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer;
+  transition:border-color .2s;
+}
+.month-input:focus{outline:none;border-color:var(--teal);}
+.month-input{min-height:38px;}
+.date-range{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.date-range-sep{color:var(--text3);font-weight:700;}
+.date-range-lbl{font-size:12px;color:var(--text3);font-weight:700;}
+.sort-btn{
+  background:var(--glass);border:1.5px solid var(--border);border-radius:12px;
+  padding:9px 14px;color:var(--text2);font-family:'Cairo',sans-serif;font-size:12.5px;font-weight:700;
+  cursor:pointer;white-space:nowrap;transition:var(--t);
+}
+.sort-btn:hover,.sort-btn.active{background:rgba(14,165,160,.15);border-color:var(--teal);color:var(--teal);}
+.results-badge{
+  background:rgba(14,165,160,.1);border:1px solid rgba(14,165,160,.2);
+  color:var(--teal);border-radius:999px;padding:6px 14px;font-size:12.5px;font-weight:700;white-space:nowrap;
+}
+
+/* ── REVIEWER GRID ── */
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;}
+
+/* ── REVIEWER CARD ── */
+.agent-card{
+  background:var(--glass);border:1px solid var(--border);border-radius:18px;
+  overflow:hidden;transition:transform .22s,box-shadow .22s,border-color .22s;
+  animation:cardIn .3s ease both;position:relative;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.agent-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.4),0 0 0 1px rgba(14,165,160,.15);border-color:rgba(14,165,160,.2);}
+.agent-card.idle{opacity:.55;}
+.agent-card.idle:hover{opacity:1;}
+.agent-card.idle .card-total-badge{background:rgba(255,255,255,.05);border-color:var(--border);color:var(--text3);}
+.medal-corner{
+  position:absolute;top:10px;left:10px;z-index:2;
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:13px;color:#000;
+  box-shadow:0 4px 12px rgba(0,0,0,.3);
+}
+.medal-corner.r1{background:linear-gradient(135deg,#fde047,var(--gold2));}
+.medal-corner.r2{background:linear-gradient(135deg,#e2e8f0,var(--silver));}
+.medal-corner.r3{background:linear-gradient(135deg,#f59e0b,var(--bronze));color:#fff;}
+.card-top{padding:18px 18px 14px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid var(--border);}
+.card-av{
+  width:50px;height:50px;border-radius:14px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:16px;color:#fff;
+  background:linear-gradient(135deg,var(--teal),var(--teal2));
+  box-shadow:0 4px 16px var(--tglow);
+}
+.card-info{flex:1;min-width:0;}
+.card-name{font-size:15px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.card-num{font-size:12px;color:var(--text3);margin-top:2px;font-family:monospace;letter-spacing:.3px;}
+.card-total-badge{
+  background:rgba(14,165,160,.12);border:1px solid rgba(14,165,160,.22);
+  color:var(--teal);border-radius:999px;padding:4px 11px;font-size:12px;font-weight:800;white-space:nowrap;flex-shrink:0;
+}
+.card-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.cstat{background:var(--bg);padding:10px 11px;display:flex;align-items:center;justify-content:space-between;}
+.cstat-lbl{font-size:10px;color:var(--text3);font-weight:600;}
+.cstat-num{font-size:15px;font-weight:900;}
+.cstat.approved .cstat-num{color:var(--green);}
+.cstat.needsinf .cstat-num{color:var(--amber);}
+.cstat.incomp .cstat-num{color:var(--orange);}
+.cstat.warn .cstat-num{color:var(--red);}
+.cstat.followp .cstat-num{color:#e879f9;}
+.cstat.followd .cstat-num{color:var(--teal2);}
+.cstat.zero .cstat-num{opacity:.35;}
+.card-bar{padding:12px 18px 16px;background:var(--bg);}
+.bar-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.bar-lbl{font-size:11.5px;color:var(--text3);}
+.bar-pct{font-size:12.5px;font-weight:800;color:var(--green);}
+.bar-track{height:7px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden;}
+.bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--green));transition:width .8s cubic-bezier(.4,0,.2,1);}
+.bar-fill.low{background:linear-gradient(90deg,var(--orange),var(--amber));}
+
+/* ── EMPTY STATE ── */
+.empty-state{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text3);}
+.empty-state svg{opacity:.3;margin-bottom:16px;}
+.empty-state p{font-size:15px;}
+
+/* ── NOTIF ── */
+.notif{
+  position:fixed;bottom:24px;right:24px;z-index:9999;
+  background:rgba(14,165,160,.18);backdrop-filter:blur(12px);
+  border:1px solid rgba(14,165,160,.35);border-radius:12px;
+  color:var(--text);padding:11px 20px;font-size:14px;font-weight:700;
+  opacity:0;transform:translateY(10px);transition:opacity .25s,transform .25s;
+  pointer-events:none;max-width:340px;
+}
+.notif.err{background:rgba(248,113,113,.18);border-color:rgba(248,113,113,.35);}
+.notif.show{opacity:1;transform:translateY(0);}
+
+/* ── CREDIT ── */
+.credit{text-align:center;padding:32px 20px 10px;font-size:11.5px;color:var(--text3);}
+
+/* ── CC ASSIGNMENT on reviewer cards ── */
+.card-assign{
+  margin-top:12px;padding:12px 14px;
+  background:rgba(14,165,160,.06);border:1px solid rgba(14,165,160,.18);
+  border-radius:12px;
+}
+.card-assign-hdr{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.card-assign-lbl{font-size:11px;font-weight:800;color:var(--teal2);display:flex;align-items:center;gap:5px;letter-spacing:.3px;}
+.card-assign-nums{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px;}
+.card-assign-chip{background:rgba(14,165,160,.12);border:1px solid rgba(14,165,160,.22);border-radius:6px;padding:2px 8px;font-size:10.5px;font-weight:800;color:var(--teal2);white-space:nowrap;}
+.card-assign-chip b{color:#fff;font-family:'Noto Kufi Arabic',sans-serif;font-size:11px;margin-right:1px;}
+.card-assign-chip.empty{opacity:.4;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08);color:var(--text3);}
+.card-assign-chip.empty b{color:var(--text3);}
+.card-assign-bar-row{display:flex;justify-content:space-between;font-size:10.5px;color:var(--text3);margin-bottom:5px;font-weight:700;}
+.card-assign-bar-track{height:5px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden;}
+.card-assign-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--teal2));transition:width 1.1s cubic-bezier(.16,1,.3,1);width:0;}
+.card-assign-meta{display:flex;gap:12px;margin-top:8px;}
+.card-assign-num{font-size:11px;font-weight:700;color:var(--text3);}
+.card-assign-num span{font-weight:900;font-size:13px;}
+.card-assign-num span.g{color:var(--green);}
+.card-assign-num span.b{color:var(--blue);}
+.card-assign-num span.a{color:var(--amber);}
+
+/* ── ADMIN ASSIGNMENT MANAGEMENT PANEL ── */
+.assign-mgmt{
+  margin-top:32px;
+  background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(14,165,160,.05));
+  border:1px solid rgba(201,168,76,.22);border-radius:22px;
+  overflow:hidden;
+}
+.assign-mgmt-hdr{
+  padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:rgba(201,168,76,.06);border-bottom:1px solid rgba(201,168,76,.15);flex-wrap:wrap;
+  cursor:pointer;user-select:none;
+}
+.assign-mgmt-title{font-family:'Noto Kufi Arabic',sans-serif;font-size:15px;font-weight:900;display:flex;align-items:center;gap:8px;color:var(--gold);}
+.assign-mgmt-toggle{font-size:12px;color:var(--text3);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);border-radius:8px;padding:5px 12px;cursor:pointer;transition:var(--t);}
+.assign-mgmt-toggle:hover{background:rgba(255,255,255,.10);}
+.assign-mgmt-body{padding:24px;display:none;}
+.assign-mgmt-body.open{display:block;}
+.assign-period-bar{display:flex;align-items:end;gap:12px;flex-wrap:wrap;margin-bottom:18px;padding:14px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;}
+.assign-period-field{display:flex;flex-direction:column;gap:5px;min-width:150px;}
+.assign-period-field label{font-size:10.5px;color:var(--text3);font-weight:800;}
+.assign-period-field input{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:8px 10px;color:var(--text);font-family:'Cairo',sans-serif;font-weight:800;}
+.assign-period-field input:focus{outline:none;border-color:var(--gold);}
+.assign-period-note{font-size:11px;color:var(--text3);font-weight:700;line-height:1.7;flex:1;min-width:220px;}
+.btn-load-assign{background:rgba(14,165,160,.12);color:var(--teal2);border:1px solid rgba(14,165,160,.28);border-radius:9px;padding:8px 14px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:900;cursor:pointer;}
+.btn-load-assign:hover{background:rgba(14,165,160,.18);}
+.assign-mgmt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:20px;}
+.assign-row{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:14px 16px;}
+.assign-row-name{font-size:13px;font-weight:800;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.assign-row-name span{font-size:10px;color:var(--text3);font-weight:600;}
+.assign-row-input{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:8px 11px;color:var(--text);font-family:'Cairo',monospace;font-size:13px;font-weight:700;resize:none;min-height:56px;transition:border-color .2s;}
+.assign-row-input:focus{outline:none;border-color:var(--gold);}
+.assign-row-hint{font-size:10.5px;color:var(--text3);margin-top:5px;}
+.btn-save-assign{background:linear-gradient(135deg,var(--gold),#d4a843);color:#000;border:none;border-radius:11px;padding:11px 26px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:filter .2s,box-shadow .2s;}
+.btn-save-assign:hover{filter:brightness(1.1);box-shadow:0 6px 20px rgba(201,168,76,.35);}
+.btn-save-assign:disabled{opacity:.5;cursor:not-allowed;filter:none;}
+.assign-detected{margin:4px 0 20px;}
+.assign-detected-hdr{font-size:12px;font-weight:800;color:var(--text2);margin-bottom:9px;display:flex;align-items:center;gap:6px;}
+.assign-detected-hdr b{color:var(--teal2);}
+.assign-detected-hint{font-size:10.5px;color:var(--text3);font-weight:600;margin-bottom:9px;}
+.assign-detected-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.det-chip{background:rgba(96,165,250,.10);border:1px solid rgba(96,165,250,.25);border-radius:7px;padding:3px 9px;font-size:11px;font-weight:800;color:#93c5fd;white-space:nowrap;}
+.det-chip b{color:#fff;font-family:'Noto Kufi Arabic',sans-serif;margin-right:2px;}
+.det-chip.assigned{background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.30);color:#86efac;}
+.det-chip.unassigned{background:rgba(248,113,113,.10);border-color:rgba(248,113,113,.30);color:#fca5a5;}
+.det-empty{font-size:11.5px;color:var(--text3);}
+
+/* ── BEST-RATED CC COLLEAGUES (top 5) ── */
+.best5{
+  margin-top:32px;border-radius:22px;overflow:hidden;position:relative;
+  background:
+    radial-gradient(700px 300px at 92% -25%,rgba(251,191,36,.16),transparent 60%),
+    linear-gradient(135deg,rgba(201,168,76,.10),rgba(14,165,160,.05));
+  border:1px solid rgba(201,168,76,.28);
+}
+.best5-hdr{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:18px 24px;border-bottom:1px solid rgba(201,168,76,.15);}
+.best5-title{font-family:'Noto Kufi Arabic',sans-serif;font-size:15.5px;font-weight:900;display:flex;align-items:center;gap:8px;color:#fbbf24;}
+.best5-sub{font-size:11.5px;color:var(--text3);font-weight:700;}
+.best5-body{padding:14px 20px 20px;display:flex;flex-direction:column;gap:9px;}
+.b5-row{display:grid;grid-template-columns:auto auto 1fr auto auto;align-items:center;gap:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:11px 16px;transition:var(--t);}
+.b5-row:hover{background:rgba(251,191,36,.07);border-color:rgba(251,191,36,.25);transform:translateX(-2px);}
+.b5-rank{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:14px;color:#0c0c0c;background:rgba(255,255,255,.10);flex-shrink:0;}
+.b5-row.r1 .b5-rank{background:linear-gradient(135deg,#fde047,#fbbf24);}
+.b5-row.r2 .b5-rank{background:linear-gradient(135deg,#e2e8f0,#cbd5e1);}
+.b5-row.r3 .b5-rank{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;}
+.b5-av{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-weight:900;font-size:15px;color:#fff;flex-shrink:0;}
+.b5-main{min-width:0;}
+.b5-name{font-size:14px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.b5-num{font-size:11px;color:var(--text3);font-family:'Noto Kufi Arabic',sans-serif;font-weight:800;margin-top:1px;}
+.b5-stars{font-size:15px;color:#f59e0b;letter-spacing:1.5px;white-space:nowrap;}
+.b5-stars .e{color:rgba(255,255,255,.16);}
+.b5-score{text-align:center;min-width:74px;}
+.b5-score-num{font-family:'Noto Kufi Arabic',sans-serif;font-size:20px;font-weight:900;color:#fbbf24;line-height:1;}
+.b5-score-lbl{font-size:9.5px;color:var(--text3);font-weight:700;margin-top:2px;}
+.b5-meta{font-size:10.5px;color:var(--text3);font-weight:700;white-space:nowrap;}
+.best5-empty{padding:30px 20px;text-align:center;color:var(--text3);font-size:13px;}
+.best5-note{padding:0 24px 16px;font-size:10.5px;color:var(--text3);font-weight:600;}
+@media(max-width:640px){.b5-row{grid-template-columns:auto auto 1fr auto;gap:9px;}.b5-stars{display:none;}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .hdr{padding:0 16px;}
+  .hero{padding:20px 16px;}
+  .hero-stats{gap:10px;}
+  .hstat{min-width:80px;padding:12px 14px;}
+  .hstat-num{font-size:24px;}
+  .toolbar{gap:8px;}
+  .agent-grid{grid-template-columns:1fr;}
+  .card-stats{grid-template-columns:repeat(2,1fr);}
+  .podium-section{padding:50px 12px 0;gap:10px;}
+  .podium-av{width:58px;height:58px;font-size:18px;}
+  .podium-1 .podium-block{height:100px;font-size:22px;}
+  .podium-2 .podium-block{height:74px;font-size:20px;}
+  .podium-3 .podium-block{height:56px;font-size:18px;}
+  .podium-name{font-size:12px;max-width:120px;}
+}
+
+/* ── SKELETON ── */
+.skeleton{
+  background:linear-gradient(90deg,var(--glass) 25%,rgba(255,255,255,.09) 50%,var(--glass) 75%);
+  background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:10px;
+}
+@keyframes shimmer{from{background-position:200% 0;}to{background-position:-200% 0;}}
+
+/* ══════════════════════════════════════════════
+   CC REPORTS SECTION (admin only — print-ready)
+══════════════════════════════════════════════ */
+.cc-rep-section{margin-top:30px;animation:rise .5s cubic-bezier(.16,1,.3,1) both;}
+.cc-rep-hdr{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:22px;}
+.cc-rep-title{font-family:'Noto Kufi Arabic',sans-serif;font-size:17px;font-weight:900;display:flex;align-items:center;gap:10px;color:var(--gold);}
+.cc-rep-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.cc-rep-period{font-size:12px;color:var(--text3);font-weight:700;}
+.btn-print-rep{display:inline-flex;align-items:center;gap:7px;background:rgba(201,168,76,.12);border:1.5px solid rgba(201,168,76,.30);color:var(--gold);border-radius:10px;padding:9px 20px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:800;cursor:pointer;transition:var(--t);}
+.btn-print-rep:hover{background:rgba(201,168,76,.22);box-shadow:0 4px 14px rgba(201,168,76,.18);}
+
+.cc-rev-card{background:var(--glass);border:1px solid var(--glassB);border-radius:20px;overflow:hidden;margin-bottom:22px;page-break-inside:avoid;}
+.cc-rev-hdr{background:linear-gradient(135deg,rgba(14,165,160,.14),rgba(201,168,76,.07));border-bottom:1px solid var(--glassB);padding:16px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.cc-rev-av{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:19px;color:#fff;flex-shrink:0;}
+.cc-rev-info{flex:1;min-width:0;}
+.cc-rev-name{font-family:'Noto Kufi Arabic',sans-serif;font-size:15.5px;font-weight:900;}
+.cc-rev-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+.cc-rev-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);color:var(--green);border-radius:999px;padding:4px 12px;font-size:11.5px;font-weight:800;white-space:nowrap;}
+
+.cc-rep-table{width:100%;border-collapse:collapse;}
+.cc-rep-table th{padding:10px 16px;font-size:11.5px;font-weight:800;color:var(--text3);text-align:right;border-bottom:1px solid var(--glassB);background:rgba(0,0,0,.18);}
+.cc-rep-table td{padding:13px 16px;font-size:13px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top;}
+.cc-rep-table tr:last-child td{border-bottom:none;}
+.cc-rep-table tr:hover td{background:rgba(255,255,255,.02);}
+.cc-num-badge{display:inline-block;color:#fff;font-family:'Noto Kufi Arabic',sans-serif;font-weight:900;font-size:12px;border-radius:7px;padding:4px 10px;min-width:40px;text-align:center;}
+.cc-stars{color:#f59e0b;font-size:13px;display:flex;align-items:center;gap:3px;}
+.cc-stars .e{color:rgba(255,255,255,.15);}
+.cc-comment{font-size:12px;color:var(--text2);font-style:italic;line-height:1.65;white-space:pre-wrap;background:rgba(14,165,160,.05);border:1px solid rgba(14,165,160,.13);border-right:3px solid var(--teal);border-radius:8px;padding:8px 11px;}
+.cc-no-comment{font-size:11.5px;color:var(--text3);font-style:italic;}
+.cc-pct-cell{font-weight:800;font-size:13px;}
+.cc-rep-empty{text-align:center;padding:48px;color:var(--text3);font-size:13px;}
+
+/* Print */
+@media print{
+  .orbs,.hdr,.hero,.hero-stats,.toolbar,.agent-grid,
+  .podium-section,.best5,.assign-mgmt,.credit,.notif,
+  .btn-print-rep,.date-range,.cc-rep-actions{display:none!important;}
+  body{background:#fff!important;color:#111!important;}
+  .page{max-width:100%!important;padding:12px!important;}
+  .cc-rep-section{margin-top:0!important;}
+  .cc-rep-hdr{margin-bottom:16px!important;}
+  .cc-rep-title{color:#7c5c00!important;}
+  .cc-rev-card{border:1.5px solid #ccc!important;background:#fff!important;border-radius:10px!important;margin-bottom:16px!important;}
+  .cc-rev-hdr{background:#f5f9ff!important;border-bottom:1px solid #ddd!important;}
+  .cc-rev-name{color:#111!important;}
+  .cc-rev-sub{color:#555!important;}
+  .cc-rev-badge{background:#e8f5e9!important;border-color:#a5d6a7!important;color:#2e7d32!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .cc-rep-table th{background:#f5f5f5!important;color:#555!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .cc-rep-table td{color:#111!important;}
+  .cc-rep-table tr:last-child td{border-bottom:none!important;}
+  .cc-num-badge{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .cc-stars{color:#c68b00!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .cc-comment{background:#fafafa!important;border-color:#ccc!important;border-right:3px solid #0ea5a0!important;color:#333!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+</style>
+</head>
+<body>
+
+<div class="orbs" aria-hidden="true">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginView">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/><circle cx="12" cy="12" r="10"/></svg>
+    </div>
+    <div class="login-title">إحصائيات المراجعين</div>
+    <div class="login-sub">تسجيل الدخول للوصول إلى لوحة أداء التيم</div>
+    <div class="login-field"><label>البريد الإلكتروني / رقم الدخول</label><input id="loginEmail" type="text" autocomplete="username" placeholder="email@domain.com أو رقم الدخول"></div>
+    <div class="login-field"><label>كلمة المرور</label><input id="loginPass" type="password" autocomplete="current-password" placeholder="••••••••"></div>
+    <button class="btn-login" onclick="window.doLogin()">دخول ←</button>
+    <div id="loginMsg"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="hdr" id="mainHdr" style="display:none">
+  <div class="hdr-brand">
+    <div class="hdr-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.93 0 3.72.61 5.19 1.64"/></svg>
+    </div>
+    <div>
+      <div class="hdr-title">Pharma Triage</div>
+      <div class="hdr-sub" id="hdrSub">أداء فريق المراجعة</div>
+    </div>
+  </div>
+
+  <div class="hdr-right">
+    <a class="btn-logout" href="/index.html" style="text-decoration:none">← الرئيسية</a>
+    <div class="hdr-user" id="hdrUser" style="display:none">
+      <div class="hdr-avatar" id="hdrAvatar">U</div>
+      <div class="hdr-name" id="hdrName">—</div>
+    </div>
+    <button class="btn-logout" onclick="window.doLogout()">خروج</button>
+  </div>
+</header>
+
+<!-- APP -->
+<div class="page" id="appView" style="display:none">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="hero-title">لوحة أداء المراجعين 🏆</div>
+        <div class="hero-sub" id="heroSub">إحصائيات الاستشارات اللي اشتغل عليها كل مراجع</div>
+      </div>
+      <div class="date-range">
+        <span class="date-range-lbl">من</span>
+        <input type="date" id="dateFrom" class="month-input" onchange="window.onRangeChange()">
+        <span class="date-range-sep">—</span>
+        <span class="date-range-lbl">إلى</span>
+        <input type="date" id="dateTo" class="month-input" onchange="window.onRangeChange()">
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat cctotal"><div class="hstat-num" id="stCCTotal">0</div><div class="hstat-lbl">📞 إجمالي الكول سنتر</div></div>
+      <div class="hstat reviewers"><div class="hstat-num" id="stReviewers">0</div><div class="hstat-lbl">مراجع نشط</div></div>
+      <div class="hstat total"><div class="hstat-num" id="stTotal">0</div><div class="hstat-lbl">تمت مراجعتها</div></div>
+      <div class="hstat approved"><div class="hstat-num" id="stApproved">0</div><div class="hstat-lbl">✅ معتمدة</div></div>
+      <div class="hstat needsinf"><div class="hstat-num" id="stNeedsInfo">0</div><div class="hstat-lbl">❓ تحتاج معلومات</div></div>
+      <div class="hstat incomplete"><div class="hstat-num" id="stIncomplete">0</div><div class="hstat-lbl">⚠ غير مكتملة</div></div>
+      <div class="hstat warnings"><div class="hstat-num" id="stWarnings">0</div><div class="hstat-lbl">🔔 تحذيرات</div></div>
+
+      <!-- APPROVAL GAUGE ARC -->
+      <div class="approval-arc-card">
+        <div class="arc-card-hdg">نسبة الاعتماد</div>
+        <div class="arc-gauge-wrap">
+          <svg class="arc-gauge-svg" viewBox="0 0 108 108" aria-hidden="true">
+            <defs>
+              <linearGradient id="approvalGrd" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%"  stop-color="#22c55e"/>
+                <stop offset="55%" stop-color="#16a34a"/>
+                <stop offset="100%" stop-color="#0ea5a0"/>
+              </linearGradient>
+            </defs>
+            <!-- track: 270° arc, gap at bottom -->
+            <circle class="arc-gauge-track" cx="54" cy="54" r="40"
+              stroke-dasharray="188.5 62.83"
+              transform="rotate(135 54 54)"/>
+            <!-- fill: animated -->
+            <circle class="arc-gauge-fill" id="approvalArcFill" cx="54" cy="54" r="40"
+              transform="rotate(135 54 54)"/>
+          </svg>
+          <div class="arc-gauge-center">
+            <div class="arc-gauge-pct" id="approvalPctTxt">0%</div>
+            <div class="arc-gauge-sub">معتمدة</div>
+          </div>
+        </div>
+        <div class="arc-card-foot">
+          <b id="approvalArcApproved">0</b> من <b id="approvalArcTotal">0</b>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PODIUM (top 3 reviewers) -->
+  <div class="podium-section" id="podiumSection" style="display:none">
+    <div class="podium-title">أبطال الفترة</div>
+
+    <!-- 2nd place (left) -->
+    <div class="podium-step podium-2">
+      <div class="podium-av-wrap">
+        <div class="podium-av" id="p2Av">—</div>
+        <div class="podium-rank">2</div>
+      </div>
+      <div class="podium-info">
+        <div class="podium-name" id="p2Name">—</div>
+        <div class="podium-pct" id="p2Pct">—</div>
+      </div>
+      <div class="podium-block"><span class="podium-block-num" id="p2Total">0</span></div>
+    </div>
+
+    <!-- 1st place (center) -->
+    <div class="podium-step podium-1">
+      <div class="podium-av-wrap">
+        <div class="podium-av" id="p1Av">—</div>
+        <div class="podium-rank">1</div>
+      </div>
+      <div class="podium-info">
+        <div class="podium-name" id="p1Name">—</div>
+        <div class="podium-pct" id="p1Pct">—</div>
+      </div>
+      <div class="podium-block"><span class="podium-block-num" id="p1Total">0</span></div>
+    </div>
+
+    <!-- 3rd place (right) -->
+    <div class="podium-step podium-3">
+      <div class="podium-av-wrap">
+        <div class="podium-av" id="p3Av">—</div>
+        <div class="podium-rank">3</div>
+      </div>
+      <div class="podium-info">
+        <div class="podium-name" id="p3Name">—</div>
+        <div class="podium-pct" id="p3Pct">—</div>
+      </div>
+      <div class="podium-block"><span class="podium-block-num" id="p3Total">0</span></div>
+    </div>
+  </div>
+
+  <!-- BEST-RATED CC COLLEAGUES (top 5) -->
+  <div class="best5" id="best5" style="display:none">
+    <div class="best5-hdr">
+      <div class="best5-title">🏅 أفضل زملاء الكول سنتر تقييمًا (Top 5)</div>
+      <span class="best5-sub" id="best5Sub">—</span>
+    </div>
+    <div class="best5-body" id="best5Body"></div>
+    <div class="best5-note">الترتيب بمتوسط مرجّح (Bayesian) يوازن متوسط النجوم مع عدد الاستشارات المقيّمة — الزميل ذو الاستشارات القليلة لا يتصدّر بمجرد متوسط عالٍ.</div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="searchInput" type="text" placeholder="ابحث باسم المراجع..." oninput="window.applyFilter()" autocomplete="off">
+    </div>
+    <select id="reviewerSelect" class="filter-select" onchange="window.applyFilterSelect()">
+      <option value="">— كل المراجعين —</option>
+    </select>
+    <button class="sort-btn active" id="sortByTotal" onclick="window.setSort('total')">ترتيب: الأكثر</button>
+    <button class="sort-btn" id="sortByName" onclick="window.setSort('name')">ترتيب: الاسم</button>
+    <div class="results-badge" id="resultsBadge">0 مراجع</div>
+  </div>
+
+  <!-- REVIEWER GRID -->
+  <div class="agent-grid" id="reviewerGrid">
+    <div style="grid-column:1/-1;display:flex;gap:16px;flex-wrap:wrap">
+      <div class="skeleton" style="height:200px;border-radius:18px;flex:1;min-width:280px;"></div>
+      <div class="skeleton" style="height:200px;border-radius:18px;flex:1;min-width:280px;"></div>
+      <div class="skeleton" style="height:200px;border-radius:18px;flex:1;min-width:280px;"></div>
+    </div>
+  </div>
+
+  <!-- ADMIN: CC COLLEAGUE REPORTS (admin only) -->
+  <div class="cc-rep-section" id="ccReportsSection" style="display:none">
+    <div class="cc-rep-hdr">
+      <div class="cc-rep-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        📋 تقارير الزملاء النهائية
+      </div>
+      <div class="cc-rep-actions">
+        <span class="cc-rep-period" id="ccRepPeriod">—</span>
+        <button class="btn-print-rep" onclick="window.printCCReport()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          طباعة التقرير الكامل
+        </button>
+      </div>
+    </div>
+    <div id="ccReportsBody">
+      <div class="cc-rep-empty">⏳ جاري تحميل التقارير...</div>
+    </div>
+  </div>
+
+  <!-- ADMIN: CC ASSIGNMENT MANAGEMENT (admin only, hidden by default) -->
+  <div class="assign-mgmt" id="assignMgmt" style="display:none">
+    <div class="assign-mgmt-hdr" onclick="window.toggleAssignMgmt()">
+      <div class="assign-mgmt-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        إدارة توزيع أرقام الكول سنتر على المراجعين
+      </div>
+      <button class="assign-mgmt-toggle" id="assignMgmtToggleBtn">▼ فتح</button>
+    </div>
+    <div class="assign-mgmt-body" id="assignMgmtBody">
+      <div class="assign-period-bar">
+        <div class="assign-period-field">
+          <label for="assignPeriodFrom">من تاريخ</label>
+          <input type="date" id="assignPeriodFrom">
+        </div>
+        <div class="assign-period-field">
+          <label for="assignPeriodTo">إلى تاريخ</label>
+          <input type="date" id="assignPeriodTo">
+        </div>
+        <button type="button" class="btn-load-assign" onclick="window.loadAssignmentsForMgmtPeriod(event)">تحميل الفترة</button>
+        <div class="assign-period-note" id="assignPeriodNote">كل فترة محفوظة لوحدها؛ تغيير الشهر هنا لا يمس أرقام الشهور السابقة.</div>
+      </div>
+      <div class="assign-mgmt-grid" id="assignMgmtGrid"></div>
+      <div class="assign-detected" id="assignDetected"></div>
+      <button class="btn-save-assign" id="btnSaveAssign" onclick="window.saveAssignments()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+        حفظ التوزيع في Firestore
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<div class="credit">Designed by Dr.M.Shawky | All copyrights reserved</div>
+<div id="notif" class="notif" aria-live="polite"></div>
+
+<script type="module">
+import { initializeApp }    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import { getFirestore, collection, query, orderBy, limit, onSnapshot, getDocs, doc, getDoc, setDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyBvmHh6-KVlKNATzbfMk3hIswbMCrBZwf4",
+  authDomain:        "pharma-triage-5d165.firebaseapp.com",
+  projectId:         "pharma-triage-5d165",
+  storageBucket:     "pharma-triage-5d165.firebasestorage.app",
+  messagingSenderId: "1080517928737",
+  appId:             "1:1080517928737:web:9110f120203d0e6b7b0060"
+};
+
+const ADMIN_EMAIL = "drshawky530@gmail.com";
+
+/* Fallback display-name resolver — keeps emails out of the UI when no
+   user-profile is loaded yet. Mirrors review.html's REVIEWERS roster. */
+const REVIEWER_DISPLAY = {
+  "drshawky530@gmail.com":              "Dr. Mahmoud Shawky",
+  "reviewer-amany.mohamed@pharma.local":"Dr. Amany Mohamed",
+  "reviewer-mariam.maged@pharma.local": "Dr. Mariam Maged",
+  "reviewer-mohamed.saad@pharma.local": "Dr. Mohamed Saad",
+  "reviewer-christine.george@pharma.local":"Dr. Christine George",
+  "reviewer-menna.ahmed@pharma.local":  "Dr. Menna Hassan",
+  "agent2012@pharma.local":             "Dr. Mohamed Elgazar",
+  "reviewer-ayman.elalfi@pharma.local": "Dr. Ayman Elalfi",
+  "reviewer-hossam.waleed@pharma.local":"Dr. Hossam Waleed",
+  "reviewer-bassem.nabil@pharma.local": "Dr. Bassem Nabil",
+  "agent2016@pharma.local":             "Dr. Omar Alazhary"
+};
+
+/* ── CC NUMBER DISTRIBUTION (Consultations team) ──
+   Keyed by a STABLE token (not email), because the consultations team is fixed
+   while their login emails change month to month. The monthly number-distribution
+   is edited by the admin and saved to Firestore (appConfig/ccAssignments); these
+   are the fallback defaults. Each token maps to a reviewer + the call-center agent
+   numbers they must review. */
+const CC_DISTRIBUTION = {
+  shawky:   {name:'Dr. Mahmoud Shawky',  numbers:['165','166','172','174','101','103','104','106']},
+  ayman:    {name:'Dr. Ayman Elalfi',    numbers:['176','177','178','183','184','187','188','192']},
+  christine:{name:'Dr. Christine George',numbers:['193','194','196','198','199','201','137']},
+  mariam:   {name:'Dr. Mariam Maged',    numbers:['139','143','145','146','148','149','151']},
+  saad:     {name:'Dr. Mohamed Saad',    numbers:['152','153','154','158','160','161','162','163']},
+  bassem:   {name:'Dr. Bassem Nabil',    numbers:['109','110','111','112','113']},
+  hossam:   {name:'Dr. Hossam Waleed',   numbers:['114','115','116','117','118','119']},
+  omar:     {name:'Dr. Omar Alazhary',   numbers:['120','121','122','123','124','125','126','127']},
+  elgazar:  {name:'Dr. Mohamed Elgazar', numbers:['128','129','130','131','132','133','135','136']},
+};
+/* Extra reviewers — not in CC_DISTRIBUTION by default; admin adds them per month */
+const EXTRA_REVIEWERS = {
+  amany: {name:'Dr. Amany Mohamed'},
+  menna: {name:'Dr. Menna Hassan'},
+  reem:  {name:'Dr. Reem Younis'},
+};
+let _activeExtras = new Set(); // tokens admin chose to activate this session
+
+/* Resolve any reviewer name / email to a stable token. Handles spelling variants
+   seen in the data (Christine/Crestin, Waleed/Walid, Elgazar/Elgazzar, …). */
+function reviewerToken(s){
+  const t=String(s||'').toLowerCase();
+  if(t.includes('shawky')) return 'shawky';
+  if(t.includes('ayman')||t.includes('elalf')||t.includes('alalf')||t.includes('alalfy')||t.includes('elalfy')) return 'ayman';
+  if(t.includes('christ')||t.includes('crest')||t.includes('krist')||t.includes('krest')||t.includes('george')||t.includes('georg')) return 'christine';
+  if(t.includes('mariam')||t.includes('maryam')||t.includes('maged')) return 'mariam';
+  if(t.includes('saad')) return 'saad';
+  if(t.includes('bassem')||t.includes('basem')||t.includes('nabil')) return 'bassem';
+  if(t.includes('hossam')||t.includes('hosam')) return 'hossam';
+  if(t.includes('alazhary')||t.includes('azhar')||t.includes('elazhary')) return 'omar';
+  if(t.includes('gaz')) return 'elgazar';
+  /* team members without assigned numbers — tokenized only to dedupe their cards */
+  if(t.includes('amany')||t.includes('amani')) return 'amany';
+  if(t.includes('menna')||t.includes('mennah')) return 'menna';
+  if(t.includes('reem')||t.includes('younis')||t.includes('yunis')) return 'reem';
+  return '';
+}
+/* token → [numbers], built at load from Firestore (name/token-keyed or legacy
+   email-keyed) merged over the defaults above. */
+let ccDistribution = {};
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+const el  = id => document.getElementById(id);
+const esc = s  => String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+
+let allRows      = [];
+let isAdminUser  = false;
+let currentFrom  = '';
+let currentTo    = '';
+let sortMode     = 'total';
+let unsub        = null;
+let usersByEmail = {};
+let ccAssignmentSource = 'defaults';
+
+/* ── CC ASSIGNMENT HELPERS ── */
+/* Split each stored entry on any separator (comma / Arabic comma / dash / space)
+   so a value saved as "165-166-172-..." becomes separate numbers. */
+function splitNumsRS(arr){
+  return (arr||[]).flatMap(n=>String(n).split(/[,،\-–—\s]+/)).map(s=>s.trim()).filter(Boolean);
+}
+function assignmentPeriodKeyRS(from=currentFrom,to=currentTo){
+  return `${from||'all'}_${to||'all'}`.replace(/[^a-zA-Z0-9_\-]/g,'_');
+}
+function buildAssignmentsRS(){
+  return Object.entries(ccDistribution).map(([tok,nums])=>({
+    reviewerToken:tok,
+    reviewerName:CC_DISTRIBUTION[tok]?.name||tok,
+    agentNumbers:splitNumsRS(nums)
+  }));
+}
+function applyAssignmentRowsRS(raw,{useDefaults=false}={}){
+  ccDistribution={};
+  _activeExtras=new Set();
+  Object.entries(CC_DISTRIBUTION).forEach(([tok,info])=>{ ccDistribution[tok]=useDefaults?info.numbers.slice():[]; });
+  (raw||[]).forEach(a=>{
+    const tok=a.reviewerToken||reviewerToken(a.reviewerName)||reviewerToken(a.reviewerEmail);
+    if(!tok) return;
+    ccDistribution[tok]=splitNumsRS(a.agentNumbers);
+    if(!CC_DISTRIBUTION[tok] && EXTRA_REVIEWERS[tok]) _activeExtras.add(tok);
+  });
+}
+/* Build ccDistribution (token → numbers): defaults overlaid by any saved doc.
+   Accepts BOTH the new name/token-keyed format and the legacy email-keyed one
+   (the reviewer's name is detectable inside the legacy email too). */
+async function loadCCAssignments(){
+  let raw=null, source='empty';
+  try{
+    const snap=await getDoc(doc(db,'appConfig','ccAssignments'));
+    if(snap.exists()){
+      const data=snap.data()||{};
+      const key=assignmentPeriodKeyRS();
+      if(data.periods && data.periods[key] && Array.isArray(data.periods[key].assignments)){
+        raw=data.periods[key].assignments;
+        source='period';
+      }else if(Array.isArray(data.assignments) && isPreviousCycleSelectedRS()){
+        raw=data.assignments;
+        source='legacy';
+      }
+    }
+  }catch(e){ console.error('loadCCAssignments',e); }
+  ccAssignmentSource=source;
+  applyAssignmentRowsRS(raw);
+}
+function assignmentByToken(tok){
+  const nums=tok?ccDistribution[tok]:null;
+  return (nums&&nums.length)?{agentNumbers:nums}:null;
+}
+function getConsultAgentNumRS(r){
+  if(r.agentNumber) return String(r.agentNumber).trim();
+  const labelNum=String(r.agentLabel||'').match(/^(\d+)/);
+  if(labelNum) return labelNum[1];
+  const em=String(r.agentEmail||'').toLowerCase();
+  const uNum=String(usersByEmail[em]?.agentNumber||'').trim();
+  if(uNum) return uNum;
+  const anyNum=String(r.agentLabel||r.agentName||'').match(/\b(\d{2,3})\b/);
+  if(anyNum) return anyNum[1];
+  return '';
+}
+/* ALL number representations a consultation might carry for its submitting CC
+   colleague. The login number (encoded in agent{N}@…) is OFTEN different from the
+   number printed on the consultation (e.g. "166C.C"), and the saved distribution
+   may use either one — so we collect every form and match on the union. */
+function consultNumCandidatesRS(r){
+  const out=new Set();
+  const push=v=>{ const s=String(v||'').trim(); if(s) out.add(s); };
+  push(r.agentNumber);
+  const em=String(r.agentEmail||'').toLowerCase();
+  const login=em.match(/agent(\d+)@/); if(login) push(login[1]);
+  const u=usersByEmail[em]; if(u){ push(u.agentNumber); const lm=String(u.email||u.loginEmail||'').match(/agent(\d+)@/); if(lm) push(lm[1]); }
+  const lbl=String(r.agentLabel||r.agentName||'');
+  (lbl.match(/\d{2,6}/g)||[]).forEach(push);
+  return [...out];
+}
+/* Star rating a reviewer gave the consultation (1–5; 0 = unrated). */
+function ratingOf(r){ const v=r?.review?.rating ?? r?.rating ?? r?.reviewRating ?? 0; return Number(v)||0; }
+/* Confidence weight for the Bayesian (weighted) average — keeps a colleague with
+   few rated consultations from beating a high-volume one. ~⅓ of 23/month target. */
+const RATING_CONFIDENCE = 8;
+/* Best display name for the submitting CC colleague on a consultation. */
+function agentNameForRowRS(r){
+  const lbl=String(r.agentLabel||''); const i=lbl.indexOf(' - ');
+  if(i>=0){ const nm=lbl.slice(i+3).trim(); if(nm) return nm; }
+  const nm=String(r.agentName||'').trim(); if(nm && !/^\d/.test(nm)) return nm;
+  const u=usersByEmail[String(r.agentEmail||'').toLowerCase()];
+  if(u?.displayName && !String(u.displayName).includes('@')) return u.displayName;
+  return '';
+}
+const starsHtmlRS=avg=>{const f=Math.round(avg);let s='';for(let i=1;i<=5;i++)s+=`<span class="${i<=f?'':'e'}">★</span>`;return s;};
+function createdDateISORS(r){
+  const src=r?.createdAt; if(!src) return '';
+  try{ const d=src.toDate?src.toDate():new Date(src);
+    const off=d.getTimezoneOffset()*60000;
+    return new Date(d.getTime()-off).toISOString().slice(0,10); }catch{ return ''; }
+}
+
+/* ── ADMIN: assignment management UI ── */
+window.toggleAssignMgmt=function(){
+  const body=el('assignMgmtBody');
+  const btn=el('assignMgmtToggleBtn');
+  const open=body.classList.toggle('open');
+  if(btn) btn.textContent=open?'▲ إغلاق':'▼ فتح';
+  if(open) renderAssignMgmtGrid();
+};
+function syncAssignPeriodInputs(){
+  const f=el('assignPeriodFrom'), t=el('assignPeriodTo');
+  if(f) f.value=currentFrom||'';
+  if(t) t.value=currentTo||'';
+}
+function updateAssignPeriodNote(){
+  const note=el('assignPeriodNote');
+  if(!note) return;
+  const src=ccAssignmentSource==='period'?'توزيع محفوظ لهذه الفترة'
+    :ccAssignmentSource==='legacy'?'معروض من التوزيع القديم كمرجع؛ عند الحفظ سيتم إنشاء نسخة مستقلة لهذه الفترة'
+    :'لا يوجد توزيع محفوظ لهذه الفترة؛ ابدأي بإدخال أرقام الشهر الحالي ثم احفظيها';
+  note.textContent=`${src} · ${rangeLabel()}`;
+}
+function _assignRowHTML(tok, name, nums, isExtra=false){
+  return `<div class="assign-row">
+    <div class="assign-row-name">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="${isExtra?'var(--teal2)':'var(--gold)'}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      ${esc(name)}${isExtra?` <span style="font-size:10px;color:var(--teal2);font-weight:600">✦ إضافي</span>
+      <button onclick="window.removeExtraReviewer('${esc(tok)}')" style="margin-right:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:0 2px" title="إزالة">✕</button>`:''}
+    </div>
+    <textarea class="assign-row-input" data-token="${esc(tok)}" data-name="${esc(name)}" placeholder="176, 177, 178, ..." rows="2">${esc(nums)}</textarea>
+    <div class="assign-row-hint">أرقام الكول سنتر مفصولة بـ فاصلة أو مسافة أو شرطة</div>
+  </div>`;
+}
+function renderAssignMgmtGrid(){
+  const grid=el('assignMgmtGrid');
+  if(!grid) return;
+  syncAssignPeriodInputs();
+  updateAssignPeriodNote();
+  let html = Object.entries(CC_DISTRIBUTION).map(([tok,info])=>{
+    const nums=(ccDistribution[tok]||info.numbers).join(', ');
+    return _assignRowHTML(tok, info.name, nums, false);
+  }).join('');
+  _activeExtras.forEach(tok=>{
+    const info=EXTRA_REVIEWERS[tok]||{name:tok};
+    const nums=(ccDistribution[tok]||[]).join(', ');
+    html += _assignRowHTML(tok, info.name, nums, true);
+  });
+  const available=Object.entries(EXTRA_REVIEWERS).filter(([t])=>!_activeExtras.has(t));
+  if(available.length){
+    html += `<div class="assign-row" style="border-style:dashed;display:flex;flex-direction:column;justify-content:center;gap:8px">
+      <div class="assign-row-name" style="color:var(--text3)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        إضافة مراجع
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select id="extraRevSel" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:7px 10px;color:var(--text);font-family:'Cairo',sans-serif;font-size:12px;font-weight:700">
+          <option value="">اختر اسم المراجع...</option>
+          ${available.map(([t,i])=>`<option value="${esc(t)}">${esc(i.name)}</option>`).join('')}
+        </select>
+        <button onclick="window.addExtraReviewer()" style="background:rgba(14,165,160,.12);color:var(--teal2);border:1px solid rgba(14,165,160,.28);border-radius:9px;padding:7px 14px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:900;cursor:pointer;white-space:nowrap">إضافة ✓</button>
+      </div>
+    </div>`;
+  }
+  grid.innerHTML=html;
+}
+window.addExtraReviewer=function(){
+  const sel=el('extraRevSel');
+  if(!sel||!sel.value) return;
+  _activeExtras.add(sel.value);
+  if(!ccDistribution[sel.value]) ccDistribution[sel.value]=[];
+  renderAssignMgmtGrid();
+};
+window.removeExtraReviewer=function(tok){
+  _activeExtras.delete(tok);
+  renderAssignMgmtGrid();
+};
+window.loadAssignmentsForMgmtPeriod=async function(ev){
+  if(ev) ev.stopPropagation();
+  const from=el('assignPeriodFrom')?.value||'';
+  const to=el('assignPeriodTo')?.value||'';
+  if(from && to && from>to){ notif('تاريخ البداية أكبر من تاريخ النهاية','err'); return; }
+  currentFrom=from; currentTo=to;
+  if(el('dateFrom')) el('dateFrom').value=from;
+  if(el('dateTo')) el('dateTo').value=to;
+  await loadCCAssignments();
+  renderAssignMgmtGrid();
+  renderDash();
+};
+window.saveAssignments=async function(){
+  const btn=el('btnSaveAssign');
+  if(btn){ btn.disabled=true; btn.textContent='جاري الحفظ...'; }
+  const from=el('assignPeriodFrom')?.value||currentFrom||'';
+  const to=el('assignPeriodTo')?.value||currentTo||'';
+  if(from && to && from>to){
+    notif('تاريخ البداية أكبر من تاريخ النهاية','err');
+    if(btn){ btn.disabled=false; btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg> حفظ التوزيع في Firestore'; }
+    return;
+  }
+  currentFrom=from; currentTo=to;
+  if(el('dateFrom')) el('dateFrom').value=from;
+  if(el('dateTo')) el('dateTo').value=to;
+  const inputs=document.querySelectorAll('.assign-row-input');
+  const assignments=[];
+  inputs.forEach(inp=>{
+    const tok=inp.dataset.token||'';
+    const name=inp.dataset.name||'';
+    const nums=inp.value.split(/[,،\-–—\s]+/).map(s=>s.trim()).filter(Boolean);
+    if(tok){
+      assignments.push({reviewerToken:tok, reviewerName:name, agentNumbers:nums});
+      ccDistribution[tok]=nums;   /* live update so cards refresh immediately */
+    }
+  });
+  try{
+    const key=assignmentPeriodKeyRS(from,to);
+    await setDoc(doc(db,'appConfig','ccAssignments'),{
+      periods:{
+        [key]:{
+          from,
+          to,
+          label:rangeLabel(),
+          assignments,
+          updatedAt:serverTimestamp(),
+          updatedBy:auth.currentUser?.email||''
+        }
+      },
+      updatedAt:serverTimestamp(),
+      updatedBy:auth.currentUser?.email||''
+    }, {merge:true});
+    ccAssignmentSource='period';
+    notif('✔ تم حفظ التوزيع بنجاح','ok');
+    updateAssignPeriodNote();
+    renderDash();
+  }catch(e){
+    console.error('saveAssignments',e);
+    notif('فشل الحفظ — '+(e.message||e.code||'خطأ'),'err');
+  }finally{
+    if(btn){ btn.disabled=false; btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg> حفظ التوزيع في Firestore'; }
+  }
+};
+
+/* ── NOTIF ── */
+function notif(msg, type='ok'){
+  const n=el('notif');
+  n.className='notif'+(type==='err'?' err':'');
+  n.textContent=msg;
+  n.classList.add('show');
+  clearTimeout(n._t);
+  n._t=setTimeout(()=>n.classList.remove('show'),type==='err'?4500:3000);
+}
+
+/* ── LOGIN / LOGOUT ── */
+window.doLogin = function(){
+  let raw=(el('loginEmail').value||'').trim();
+  const pass=el('loginPass').value;
+  el('loginMsg').textContent='';
+  /* Numeric IDs are normalized to the agentN@pharma.local scheme — same as index.html. */
+  const email=/^\d+$/.test(raw)?`agent${raw}@pharma.local`:raw;
+  signInWithEmailAndPassword(auth,email,pass)
+    .catch(()=>{ el('loginMsg').textContent='فشل تسجيل الدخول — تحقق من البيانات'; });
+};
+window.doLogout = function(){
+  if(unsub){ unsub(); unsub=null; }
+  signOut(auth).then(()=>{ location.href='/index.html'; }).catch(()=>{});
+};
+['loginEmail','loginPass'].forEach(id=>{
+  el(id)?.addEventListener('keydown',e=>{ if(e.key==='Enter') window.doLogin(); });
+});
+
+/* ── TEAM HELPERS (mirrors agent-stats.html) ─────────────────
+   A consultation is Call Center unless its team label or agent metadata
+   clearly identifies it as WhatsApp. */
+function normTeam(s){ return String(s||'').toLowerCase().replace(/\s+/g,'').replace(/[.\-_]/g,''); }
+function teamGroup(team){
+  const t=normTeam(team);
+  if(t.includes('admin')||t.includes('ادمن')) return 'admin';
+  if(t.includes('consult')||t.includes('review')||t.includes('استشارات')||t.includes('مراجع')) return 'consultations';
+  if(t.includes('whatsapp')||t.includes('ww')||t.includes('واتساب')||t.includes('watsap')) return 'whatsapp';
+  if(t.includes('callcenter')||t.includes('cc')||t.includes('كول')||t.includes('كولسنتر')) return 'callcenter';
+  return t||'';
+}
+function consultTeam(d){
+  /* Classify by the SUBMITTING agent's registered team (most reliable),
+     then any explicit team field on the doc, then label hints. We do NOT
+     assume Call Center for unknowns — that was inflating the CC total. */
+  const email=String(d?.agentEmail||'').toLowerCase().trim();
+  const u=email?usersByEmail[email]:null;
+  const direct=teamGroup(u?.team||d?.agentTeam||d?.team||d?.createdByTeam||'');
+  if(direct) return direct;
+  const l=normTeam(String(d?.agentLabel||d?.agentName||d?.agentEmail||''));
+  if(l.includes('ww')||l.includes('whatsapp')) return 'whatsapp';
+  if(l.includes('cc')||l.includes('callcenter')) return 'callcenter';
+  return 'other';
+}
+
+/* ── STATUS HELPERS (mirrors review.html / agent-stats.html) ── */
+function isApproved(d){
+  const st=d?.review?.status||d?.status||'';
+  return st==='approved'||st==='تم الاعتماد';
+}
+function isNeedsInfo(d){
+  const st=d?.review?.status||d?.status||'';
+  return st==='needs_more_info';
+}
+function isIncomplete(d){
+  if(!d) return false;
+  if(d?.review?.incomplete===true) return true;
+  const st=d?.review?.status||d?.status||'';
+  return st==='needs_followup'||st==='incomplete'||st==='needs_completion';
+}
+function hasWarning(d){ return !!(d.warning?.active===true||d.warning?.note); }
+function followStatus(d){
+  const f=d.followUp||{};
+  if(f.status==='done'||f.result) return 'done';
+  if(f.status==='pending'||f.note) return 'pending';
+  return '';
+}
+
+/* A consultation counts toward a reviewer iff that reviewer has acted on it
+   (i.e. review.reviewerEmail is set). Pure pending consultations don't appear. */
+function reviewerEmailOf(r){
+  return String(r?.review?.reviewerEmail || r?.reviewerEmail || '').toLowerCase().trim();
+}
+function reviewerNameOf(r){
+  const em = reviewerEmailOf(r);
+  const raw = String(r?.review?.reviewerName || r?.reviewerName || '').trim();
+  if(em && usersByEmail[em]?.displayName && !usersByEmail[em].displayName.includes('@')) return usersByEmail[em].displayName;
+  if(em && REVIEWER_DISPLAY[em]) return REVIEWER_DISPLAY[em];
+  if(raw && !raw.includes('@')) return raw;
+  return em || raw || '—';
+}
+
+function reviewDateISO(r){
+  /* Date the work was done (review), falling back to consultation creation.
+     Returns local YYYY-MM-DD so it matches the date-range inputs. */
+  const src = r?.review?.reviewedAt || r?.createdAt;
+  if(!src) return '';
+  try{
+    const d=src.toDate?src.toDate():new Date(src);
+    const off=d.getTimezoneOffset()*60000;
+    return new Date(d.getTime()-off).toISOString().slice(0,10);
+  }catch{ return ''; }
+}
+function inRange(iso){
+  if(!iso) return false;
+  if(currentFrom && iso < currentFrom) return false;
+  if(currentTo   && iso > currentTo)   return false;
+  return true;
+}
+/* Default billing cycle: 21st → 20th. Returns the cycle that contains `today`. */
+function defaultCycle(){
+  const t=new Date(); const y=t.getFullYear(), m=t.getMonth(), day=t.getDate();
+  const iso=d=>{const off=d.getTimezoneOffset()*60000;return new Date(d.getTime()-off).toISOString().slice(0,10);};
+  let from, to;
+  if(day>=21){ from=new Date(y,m,21); to=new Date(y,m+1,20); }
+  else       { from=new Date(y,m-1,21); to=new Date(y,m,20); }
+  return {from:iso(from), to:iso(to)};
+}
+function shiftMonthISO(iso,months){
+  const [y,m,d]=String(iso||'').split('-').map(Number);
+  if(!y||!m||!d) return '';
+  const dt=new Date(y,m-1+months,d);
+  const off=dt.getTimezoneOffset()*60000;
+  return new Date(dt.getTime()-off).toISOString().slice(0,10);
+}
+function isPreviousCycleSelectedRS(){
+  const c=defaultCycle();
+  return currentFrom===shiftMonthISO(c.from,-1) && currentTo===shiftMonthISO(c.to,-1);
+}
+function rangeLabel(){
+  if(!currentFrom && !currentTo) return 'كل الفترات';
+  const f=v=>{ if(!v) return '...'; const[y,mo,d]=v.split('-'); return `${d}/${mo}/${y}`; };
+  return `${f(currentFrom)} — ${f(currentTo)}`;
+}
+
+function animNum(elRef,target){
+  if(!elRef) return;
+  const DUR=700,t0=performance.now();
+  const tick=now=>{
+    const p=Math.min((now-t0)/DUR,1),e=1-Math.pow(1-p,3);
+    elRef.textContent=Math.round(e*target);
+    if(p<1) requestAnimationFrame(tick); else elRef.textContent=target;
+  };
+  requestAnimationFrame(tick);
+}
+
+/* ── AVATAR COLOR PALETTE ── */
+const AV_COLORS=[
+  'linear-gradient(135deg,#0ea5a0,#0cc8c2)',
+  'linear-gradient(135deg,#1d4ed8,#3b82f6)',
+  'linear-gradient(135deg,#7c3aed,#a78bfa)',
+  'linear-gradient(135deg,#b45309,#f59e0b)',
+  'linear-gradient(135deg,#065f46,#10b981)',
+  'linear-gradient(135deg,#9d174d,#f472b6)',
+  'linear-gradient(135deg,#1e3a5f,#38bdf8)',
+  'linear-gradient(135deg,#78350f,#fb923c)',
+];
+function avColor(key){
+  let h=0; for(const c of (key||'')) h=(h*31+c.charCodeAt(0))&0xffff;
+  return AV_COLORS[h%AV_COLORS.length];
+}
+function initialsOf(name, email){
+  const _nm=String(name||'').replace(/^Dr\.\s*/i,'').trim();
+  const _words=_nm.split(/\s+/).filter(w=>/^[a-zA-Z؀-ۿ]/.test(w));
+  if(_words.length>=2) return (_words[0][0]+_words[1][0]).toUpperCase();
+  if(_words.length===1) return _words[0].slice(0,2).toUpperCase();
+  return (String(email||'').replace(/[^a-zA-Z]/g,'').slice(0,2).toUpperCase()||'—');
+}
+
+/* ── AUTH STATE ── */
+onAuthStateChanged(auth, async user=>{
+  if(!user){
+    el('loginView').style.display='flex';
+    el('mainHdr').style.display='none';
+    el('appView').style.display='none';
+    return;
+  }
+
+  let allowed = user.email===ADMIN_EMAIL;
+  let displayName = user.email;
+  let profileRole = user.email===ADMIN_EMAIL ? 'admin' : '';
+
+  /* Load users for name resolution — cached in localStorage (3h) to avoid
+     re-reading the whole `users` collection on every page open (cost guard). */
+  try{
+    const KEY='ptUsersDirV1', TTL=3*60*60*1000; let list=null;
+    try{ const raw=localStorage.getItem(KEY); if(raw){ const o=JSON.parse(raw); if(o&&o.t&&Array.isArray(o.d)&&(Date.now()-o.t)<TTL) list=o.d; } }catch(_){}
+    if(!list){
+      const snap=await getDocs(collection(db,'users'));
+      list=snap.docs.map(x=>Object.assign({__id:x.id}, x.data()||{}));
+      try{ localStorage.setItem(KEY, JSON.stringify({t:Date.now(), d:list})); }catch(_){}
+    }
+    list.forEach(u=>{
+      const em=String(u.email||u.loginEmail||'').toLowerCase().trim();
+      if(em) usersByEmail[em]=Object.assign({id:u.__id}, u);
+    });
+  }catch(e){ console.error('users load',e); }
+
+  /* Check current user's profile for canViewReviewerStats */
+  let profileForLite=null;
+  if(user.email!==ADMIN_EMAIL){
+    try{
+      const snap=await getDoc(doc(db,'users',user.uid));
+      if(snap.exists()){
+        const p=snap.data();
+        profileForLite=p;
+        if(p.active!==false){
+          if(p.canViewReviewerStats===true||p.role==='admin'||p.canDeleteConsultations===true) allowed=true;
+          if(p.displayName) displayName=p.displayName;
+          if(p.role==='admin') profileRole='admin';
+        }
+      }
+    }catch(e){ console.error(e); }
+  } else {
+    displayName='Dr. Mahmoud Shawky';
+  }
+  try{ if(window.PTLite) window.PTLite.sync({db,doc,setDoc,uid:user.uid,profile:profileForLite}); }catch(e){}
+
+  if(!allowed){
+    el('loginMsg').textContent='ليس لديك صلاحية لعرض هذه الصفحة';
+    signOut(auth);
+    return;
+  }
+
+  el('loginView').style.display='none';
+  el('mainHdr').style.display='flex';
+  el('appView').style.display='block';
+  el('hdrAvatar').textContent=String(displayName).trim().charAt(0).toUpperCase();
+  el('hdrName').textContent=displayName;
+  el('hdrUser').style.display='flex';
+
+  isAdminUser = user.email===ADMIN_EMAIL || profileRole==='admin';
+
+  const _cyc=defaultCycle();
+  currentFrom=_cyc.from; currentTo=_cyc.to;
+  el('dateFrom').value=currentFrom;
+  el('dateTo').value=currentTo;
+
+  /* Load CC assignments (used by all users to see assignment coverage) */
+  await loadCCAssignments();
+
+  /* Show admin assignment management panel + load CC reports */
+  if(isAdminUser){
+    const mgmt=el('assignMgmt'); if(mgmt) mgmt.style.display='';
+    await loadCCReports();
+  }
+
+  if(unsub) unsub();
+  // Cost guard: cap reads (free-tier). 2000 newest covers months of history.
+  const q=query(collection(db,'consultations'),orderBy('createdAt','desc'),limit(2000));
+  unsub=onSnapshot(q,snap=>{
+    allRows=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderDash();
+  },err=>{ console.error(err); notif('خطأ في تحميل البيانات','err'); });
+});
+
+/* ── DATE RANGE CHANGE ── */
+window.onRangeChange=async function(){
+  currentFrom=el('dateFrom')?.value||'';
+  currentTo  =el('dateTo')?.value||'';
+  await loadCCAssignments();
+  if(el('assignMgmtBody')?.classList.contains('open')) renderAssignMgmtGrid();
+  /* Reset reviewer dropdown so it repopulates against the new range. */
+  const sel=el('reviewerSelect');
+  if(sel) sel.length=1;
+  renderDash();
+};
+
+/* ── SORT ── */
+window.setSort=function(mode){
+  sortMode=mode;
+  el('sortByTotal').classList.toggle('active',mode==='total');
+  el('sortByName').classList.toggle('active',mode==='name');
+  renderDash();
+};
+
+/* ── FILTER ── */
+window.applyFilter=function(){ el('reviewerSelect').value=''; _applyVis(); };
+window.applyFilterSelect=function(){ el('searchInput').value=''; _applyVis(); };
+
+function _applyVis(){
+  const q=(el('searchInput')?.value||'').trim().toLowerCase();
+  const sel=el('reviewerSelect')?.value||'';
+  const cards=el('reviewerGrid')?.querySelectorAll('.agent-card');
+  if(!cards) return;
+  let vis=0;
+  cards.forEach(c=>{
+    const name=(c.dataset.name||'').toLowerCase();
+    const em=(c.dataset.email||'').toLowerCase();
+    const match=(!q&&!sel)||(sel?c.dataset.email===sel:(name.includes(q)||em.includes(q)));
+    c.style.display=match?'':'none';
+    if(match) vis++;
+  });
+  el('resultsBadge').textContent=vis+' مراجع';
+  let emp=el('reviewerGrid')?.querySelector('.as-empty');
+  if(vis===0&&(q||sel)){
+    if(!emp){
+      emp=document.createElement('div');
+      emp.className='as-empty empty-state';emp.style.gridColumn='1/-1';
+      emp.innerHTML=`<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><p>لا توجد نتائج مطابقة</p>`;
+      el('reviewerGrid').appendChild(emp);
+    }
+  } else { emp?.remove(); }
+}
+
+/* ── MAIN RENDER ── */
+function renderDash(){
+  /* Date-range filter — by AGENT CREATION date (when the consultation was submitted).
+     A consultation belongs to the period it was registered in, regardless of when
+     it was reviewed/approved. Reviewing it later does NOT move it to a future period. */
+  const byRange = allRows.filter(r=>inRange(createdDateISORS(r)));
+
+  /* Headline «إجمالي الكول سنتر» = consultations in range whose SUBMITTING
+     agent belongs to the Call Center team (accurate, no default-to-CC). */
+  const ccRows     = byRange.filter(r=>consultTeam(r)==='callcenter');
+  const totalCC    = ccRows.length;
+  const ccReviewed = ccRows.filter(r=>reviewerEmailOf(r)).length;
+
+  /* Roster keyed by STABLE token (falls back to email for un-tokenised team
+     members) — so the same colleague never shows as two cards even when their
+     login email changes month to month. */
+  const map=new Map();
+  const seed=(email,name)=>{
+    const em=String(email||'').toLowerCase().trim();
+    const tok=reviewerToken(name)||reviewerToken(em);
+    const key=tok||(em?('e:'+em):'');
+    if(!key) return null;
+    if(map.has(key)){
+      const cur=map.get(key);
+      if(!cur.email && em) cur.email=em;
+      if(tok && CC_DISTRIBUTION[tok]) cur.name=CC_DISTRIBUTION[tok].name;
+      return cur;
+    }
+    const entry={key,token:tok||'',email:em,
+      name:(tok&&CC_DISTRIBUTION[tok])?CC_DISTRIBUTION[tok].name:(name||em),
+      total:0,approved:0,needsInfo:0,incomplete:0,warning:0,followP:0,followD:0};
+    map.set(key,entry);
+    return entry;
+  };
+  /* Roster: active Consultations-team members + admin. */
+  Object.values(usersByEmail).forEach(u=>{
+    const em=String(u.email||u.loginEmail||'').toLowerCase().trim();
+    if(!em||u.active===false) return;
+    if(!(teamGroup(u.team)==='consultations' || u.role==='admin')) return;
+    seed(em, u.displayName||REVIEWER_DISPLAY[em]||em);
+  });
+  if(!map.has('shawky')) seed(ADMIN_EMAIL, 'Dr. Mahmoud Shawky');
+  /* Always show the fixed Consultations team (the 9 with assigned numbers),
+     even with zero reviews this period. */
+  Object.values(CC_DISTRIBUTION).forEach(info=>seed('', info.name));
+
+  /* Per-CC-number stats for the period (by agent creation date only). */
+  const numStats=new Map();
+  const bumpNum=(num,r)=>{ if(!numStats.has(num)) numStats.set(num,{total:0,approved:0}); const s=numStats.get(num); s.total++; if(isApproved(r)) s.approved++; };
+  allRows.forEach(r=>{
+    if(!inRange(createdDateISORS(r))) return;
+    /* Credit each candidate representation once per consultation so a chip
+       written in EITHER namespace (login no. or printed no.) still matches. */
+    consultNumCandidatesRS(r).forEach(num=>bumpNum(num,r));
+  });
+
+  /* ADMIN diagnostic: list the actual CC numbers that produced consultations this
+     period, flag whether each is covered by the saved distribution — so the admin
+     can see at a glance which real numbers to put in the editor. */
+  if(isAdminUser){
+    const det=el('assignDetected');
+    if(det){
+      const assignedSet=new Set();
+      Object.values(ccDistribution).forEach(arr=>(arr||[]).forEach(n=>assignedSet.add(String(n).trim())));
+      const entries=[...numStats.entries()]
+        .filter(([n,s])=>s.total>0 && /^\d{2,4}$/.test(n))   /* primary-looking numbers only */
+        .sort((a,b)=>b[1].total-a[1].total);
+      if(!entries.length){
+        det.innerHTML=`<div class="det-empty">لا توجد استشارات في هذه الفترة بعد.</div>`;
+      }else{
+        const chips=entries.map(([n,s])=>{
+          const cls=assignedSet.has(n)?'assigned':'unassigned';
+          return `<span class="det-chip ${cls}" title="${assignedSet.has(n)?'مغطّى في التوزيع':'غير موزّع على أي مراجع'}">${esc(n)} · <b>${s.total}</b></span>`;
+        }).join('');
+        det.innerHTML=`<div class="assign-detected-hdr">🔎 الأرقام النشطة في الفترة <b>(${entries.length})</b></div>
+          <div class="assign-detected-hint">🟢 أخضر = موزّع على مراجع · 🔴 أحمر = نشِط لكنه غير موزّع (انسخه لمراجع بالأعلى). الرقم · عدد الاستشارات.</div>
+          <div class="assign-detected-chips">${chips}</div>`;
+      }
+    }
+  }
+
+  /* Credit each consultation in range to whoever reviewed it — Consultations
+     team only (known token OR a consultations-team user). */
+  byRange.forEach(r=>{
+    const em=reviewerEmailOf(r);
+    if(!em) return;
+    const nm=reviewerNameOf(r);
+    const tok=reviewerToken(nm)||reviewerToken(em);
+    if(!tok){
+      const u=usersByEmail[em];
+      if(!(u && teamGroup(u.team)==='consultations')) return; /* skip non-consultations reviewers */
+    }
+    const a=seed(em, nm);
+    if(!a) return;
+    a.total++;
+    if(isApproved(r))       a.approved++;
+    else if(isNeedsInfo(r)) a.needsInfo++;
+    if(isIncomplete(r))     a.incomplete++;
+    if(hasWarning(r))       a.warning++;
+    const fs=followStatus(r);
+    if(fs==='pending')      a.followP++;
+    if(fs==='done')         a.followD++;
+  });
+
+  let reviewers=[...map.values()];
+
+  /* Attach assigned-scope stats (approved ÷ total of the reviewer's CC numbers)
+     so the podium and the cards share ONE consistent approval %. */
+  reviewers.forEach(a=>{
+    const nums=(a.token?ccDistribution[a.token]:null)||[];
+    let st=0, sa=0;
+    nums.forEach(n=>{ const s=numStats.get(String(n).trim()); if(s){ st+=s.total; sa+=s.approved; } });
+    a.hasScope=nums.length>0; a.scopeTotal=st; a.scopeApproved=sa;
+    a.scopePct=st>0?Math.round(sa/st*100):0;
+  });
+
+  if(sortMode==='total') reviewers.sort((a,b)=>b.total-a.total||a.name.localeCompare(b.name,'ar'));
+  else reviewers.sort((a,b)=>a.name.localeCompare(b.name,'ar'));
+
+  /* Hero stats */
+  const totReviewed=reviewers.reduce((s,a)=>s+a.total,0);
+  const activeReviewers=reviewers.filter(a=>a.total>0).length;
+  animNum(el('stCCTotal'),    totalCC);
+  animNum(el('stReviewers'),  activeReviewers);
+  animNum(el('stTotal'),      totReviewed);
+  animNum(el('stApproved'),   reviewers.reduce((s,a)=>s+a.approved,0));
+  animNum(el('stNeedsInfo'),  reviewers.reduce((s,a)=>s+a.needsInfo,0));
+  animNum(el('stIncomplete'), reviewers.reduce((s,a)=>s+a.incomplete,0));
+  animNum(el('stWarnings'),   reviewers.reduce((s,a)=>s+a.warning,0));
+
+  /* ── Approval gauge arc ── */
+  (function(){
+    const totApproved = reviewers.reduce((s,a)=>s+a.approved, 0);
+    const approvalPct = totReviewed > 0 ? Math.round(totApproved / totReviewed * 100) : 0;
+    const ARC_MAX = 188.5;          // 270° of circumference (r=40, C≈251.33)
+    const ARC_TOTAL = 251.33;
+    const fillLen = +(approvalPct / 100 * ARC_MAX).toFixed(2);
+    const arcEl  = el('approvalArcFill');
+    const pctEl  = el('approvalPctTxt');
+    const apprEl = el('approvalArcApproved');
+    const totEl  = el('approvalArcTotal');
+    /* reset & animate arc */
+    if(arcEl){
+      arcEl.style.strokeDasharray = '0 ' + ARC_TOTAL;
+      arcEl.classList.remove('pulsing');
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        arcEl.style.strokeDasharray = fillLen + ' ' + ARC_TOTAL;
+        setTimeout(()=>arcEl.classList.add('pulsing'), 1400);
+      }));
+    }
+    /* count-up % text */
+    if(pctEl){
+      const _dur = 1300, _st = Date.now();
+      (function _tick(){
+        const p = Math.min(1, (Date.now()-_st)/_dur);
+        const e = 1 - Math.pow(1-p, 3);
+        pctEl.textContent = Math.round(approvalPct * e) + '%';
+        if(p < 1) requestAnimationFrame(_tick);
+        else pctEl.textContent = approvalPct + '%';
+      })();
+    }
+    if(apprEl) animNum(apprEl, totApproved);
+    if(totEl)  animNum(totEl,  totReviewed);
+  })();
+
+  const ccCoverage=totalCC>0?Math.round(ccReviewed/totalCC*100):0;
+  el('heroSub').textContent=`${rangeLabel()} · كول سنتر ${totalCC} استشارة (مُراجَع ${ccCoverage}%) · تمت مراجعة ${totReviewed} · ${activeReviewers} مراجع نشط`;
+
+  /* Podium — always ranked by TOTAL regardless of current sortMode */
+  const ranked=[...reviewers].sort((a,b)=>b.total-a.total||a.name.localeCompare(b.name,'ar'));
+  renderPodium(ranked);
+  renderBest5();
+  renderCCReports();
+
+  /* Populate reviewer select */
+  const sel=el('reviewerSelect');
+  if(sel&&sel.length<=1){
+    reviewers.slice().sort((a,b)=>a.name.localeCompare(b.name,'ar')).forEach(a=>{
+      const o=document.createElement('option');
+      o.value=a.email; o.textContent=a.name;
+      sel.appendChild(o);
+    });
+  }
+
+  el('resultsBadge').textContent=reviewers.length+' مراجع';
+
+  if(!reviewers.length){
+    el('reviewerGrid').innerHTML=`<div class="empty-state" style="grid-column:1/-1">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      <p>لا توجد بيانات مراجعة في هذه الفترة</p></div>`;
+    return;
+  }
+
+  /* Rank lookup for medal corners (keyed by the stable roster key) */
+  const rankByEmail=new Map(ranked.map((a,i)=>[a.key,i+1]));
+
+  const cstat=(cls,lbl,num)=>
+    `<div class="cstat ${cls}${num===0?' zero':''}"><span class="cstat-lbl">${lbl}</span><span class="cstat-num">${num}</span></div>`;
+
+  el('reviewerGrid').innerHTML=reviewers.map((a,i)=>{
+    const t=a.total;
+    const personalPct = t>0 ? Math.round(a.approved/t*100) : 0;
+    const sharePct   = totReviewed>0 ? Math.round(t/totReviewed*100) : 0;
+    const initials=initialsOf(a.name,a.email);
+    const delay=Math.min(i*0.04,0.6).toFixed(2);
+    const rank=rankByEmail.get(a.key)||0;
+    const medal=rank>=1&&rank<=3?`<div class="medal-corner r${rank}">${rank}</div>`:'';
+    const idleCls = t===0 ? ' idle' : '';
+
+    /* CC Assignment coverage for this reviewer (matched by stable token) */
+    const asn=assignmentByToken(a.token);
+    let assignHtml='';
+    let hasScope=false, aTotal=0, aApproved=0, aRem=0, aPct=0;
+    if(asn && asn.agentNumbers?.length>0){
+      hasScope=true;
+      const nums=asn.agentNumbers.map(n=>String(n).trim()).filter(Boolean);
+      /* Per-number counts pulled from the precomputed map (auto-calculated,
+         same source as agent-stats). Each chip shows "رقم · عدد الاستشارات". */
+      const ordered=[...nums].sort((x,y)=>((numStats.get(y)?.total||0)-(numStats.get(x)?.total||0)));
+      const chipsHtml=ordered.map(n=>{
+        const s=numStats.get(n)||{total:0,approved:0};
+        aTotal+=s.total; aApproved+=s.approved;
+        return `<span class="card-assign-chip${s.total===0?' empty':''}" title="${s.approved} معتمدة من ${s.total} استشارة">${esc(n)} · <b>${s.total}</b></span>`;
+      }).join('');
+      aRem = aTotal - aApproved;
+      aPct = aTotal>0 ? Math.round(aApproved/aTotal*100) : 0;
+      assignHtml=`<div class="card-assign">
+        <div class="card-assign-hdr">
+          <span class="card-assign-lbl">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            نطاق الكول سنتر (${nums.length} زميل · ${aTotal} استشارة)
+          </span>
+          <span style="font-size:11px;font-weight:900;color:${aPct>=80?'var(--green)':aPct>=50?'var(--amber)':'var(--red)'}">${aPct}%</span>
+        </div>
+        <div class="card-assign-nums">${chipsHtml}</div>
+        <div class="card-assign-bar-row">
+          <span>اعتماد ${aApproved} من ${aTotal}</span>
+          <span style="color:var(--amber)">⏳ ${aRem} لم يُعتمد</span>
+        </div>
+        <div class="card-assign-bar-track">
+          <div class="card-assign-bar-fill" data-aw="${aPct}" style="width:0%"></div>
+        </div>
+      </div>`;
+    }
+
+    /* Headline % reflects the assigned SCOPE (approved ÷ total in scope) when the
+       reviewer has a CC scope — per the spec the card % is based on that. Falls
+       back to personal approved/reviewed for reviewers without a scope. */
+    const headPct = hasScope ? aPct : personalPct;
+    const headCol = headPct>=80?'var(--green)':headPct>=50?'var(--amber)':'var(--red)';
+
+    return `<div class="agent-card${idleCls}" data-name="${esc(a.name)}" data-email="${esc(a.email)}" style="animation-delay:${delay}s">
+      ${medal}
+      <div class="card-top">
+        <div class="card-av" style="background:${avColor(a.email||a.key)}">${esc(initials)}</div>
+        <div class="card-info">
+          <div class="card-name">${esc(a.name)}</div>
+          <div class="card-num"><span style="font-weight:800;letter-spacing:.5px;color:var(--teal2)">${esc(initials)}</span><span style="opacity:.3;margin:0 5px">·</span><span style="opacity:.55">${esc(a.email)}</span></div>
+        </div>
+        <div class="card-total-badge">${t} استشارة</div>
+      </div>
+      <div class="card-stats">
+        ${cstat('approved','✅ معتمدة',a.approved)}
+        ${cstat('needsinf','❓ تحتاج معلومات',a.needsInfo)}
+        ${cstat('incomp','⚠ غير مكتملة',a.incomplete)}
+        ${cstat('warn','🔔 تحذير',a.warning)}
+        ${cstat('followp','🔄 فولو أب معلّق',a.followP)}
+        ${cstat('followd','✔ فولو أب مكتمل',a.followD)}
+      </div>
+      <div class="card-bar">
+        <div class="bar-row">
+          <span class="bar-lbl">${hasScope?'نسبة اعتماد النطاق':'نسبة الاعتماد'}</span>
+          <span class="bar-pct" style="color:${headCol}">${headPct}%</span>
+          <span style="font-size:11px;color:var(--text3);margin-right:auto;padding-right:8px">${hasScope?`${aApproved} معتمدة من ${aTotal} في نطاقك`:(t>0?`${sharePct}% من إجمالي المراجعات`:'لم يراجع في هذه الفترة')}</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill${headPct<50?' low':''}" data-w="${headPct}" style="width:0%"></div>
+        </div>
+      </div>
+      ${assignHtml}
+    </div>`;
+  }).join('');
+
+  requestAnimationFrame(()=>{
+    el('reviewerGrid').querySelectorAll('.bar-fill').forEach(b=>{ b.style.width=(b.dataset.w||'0')+'%'; });
+    el('reviewerGrid').querySelectorAll('.card-assign-bar-fill').forEach(b=>{ b.style.width=(b.dataset.aw||'0')+'%'; });
+  });
+}
+
+/* ── BEST-RATED CC COLLEAGUES (top 5) ──
+   Ranks call-center colleagues by the Bayesian (weighted) average of the star
+   ratings their consultations received this period. Only RATED consultations
+   count; volume is balanced via RATING_CONFIDENCE so a tiny sample can't win. */
+function renderBest5(){
+  const box=el('best5'); if(!box) return;
+  box.style.display='';
+  const agg=new Map();   /* agentEmail → {sum,n,name,num} */
+  allRows.forEach(r=>{
+    if(consultTeam(r)!=='callcenter') return;
+    if(!inRange(createdDateISORS(r))) return;
+    const rt=ratingOf(r); if(rt<1) return;
+    const key=String(r.agentEmail||r.agentLabel||r.agentName||'').toLowerCase().trim();
+    if(!key) return;
+    if(!agg.has(key)) agg.set(key,{sum:0,n:0,name:agentNameForRowRS(r),num:getConsultAgentNumRS(r)});
+    const a=agg.get(key); a.sum+=rt; a.n++;
+    if(!a.name) a.name=agentNameForRowRS(r);
+    if(!a.num)  a.num=getConsultAgentNumRS(r);
+  });
+  el('best5Sub').textContent=`${rangeLabel()} · ${[...agg.values()].reduce((s,a)=>s+a.n,0)} استشارة مقيّمة`;
+  if(!agg.size){
+    el('best5Body').innerHTML=`<div class="best5-empty">لا توجد استشارات مقيّمة بالنجوم في هذه الفترة بعد.</div>`;
+    return;
+  }
+  let gs=0,gn=0; agg.forEach(a=>{gs+=a.sum;gn+=a.n;});
+  const m=gn>0?gs/gn:4, C=RATING_CONFIDENCE;
+  const ranked=[...agg.values()].map(a=>{
+    const avg=a.sum/a.n;
+    return {name:a.name||('زميل '+(a.num||'')), num:a.num, avg, n:a.n, score:(C*m+a.sum)/(C+a.n)};
+  }).sort((x,y)=>y.score-x.score||y.avg-x.avg||y.n-x.n).slice(0,5);
+  el('best5Body').innerHTML=ranked.map((a,i)=>{
+    const rank=i+1;
+    const ini=String(a.name||a.num).trim().charAt(0).toUpperCase()||'★';
+    return `<div class="b5-row r${rank}">
+      <div class="b5-rank">${rank}</div>
+      <div class="b5-av" style="background:${avColor(a.num||a.name)}">${esc(ini)}</div>
+      <div class="b5-main">
+        <div class="b5-name">${esc(a.name)}</div>
+        <div class="b5-num">${a.num?('رقم '+esc(a.num)+' · '):''}${a.n} استشارة مقيّمة · متوسط ${a.avg.toFixed(2)}★</div>
+      </div>
+      <div class="b5-stars">${starsHtmlRS(a.avg)}</div>
+      <div class="b5-score"><div class="b5-score-num">${a.score.toFixed(2)}</div><div class="b5-score-lbl">النقاط المرجّحة</div></div>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════
+   CC COLLEAGUE REPORTS — admin view + print
+══════════════════════════════════════════════ */
+let ccReportsData = [];
+
+async function loadCCReports(){
+  try{
+    const snap = await getDocs(collection(db,'ccReports'));
+    ccReportsData = snap.docs.map(d=>({id:d.id,...d.data()}));
+  }catch(e){ console.warn('loadCCReports',e); ccReportsData=[]; }
+}
+
+const CC_REP_COLORS=['#0ea5a0','#6366f1','#ec4899','#f59e0b','#10b981','#3b82f6','#8b5cf6','#ef4444','#14b8a6'];
+
+function fmtDMY(v){ if(!v) return '—'; const[y,m,d]=v.split('-'); return `${d}/${m}/${y}`; }
+
+function renderCCReports(){
+  const section=el('ccReportsSection');
+  if(!section||!isAdminUser){ if(section) section.style.display='none'; return; }
+  section.style.display='';
+  const periodK=`${currentFrom}_${currentTo}`;
+  if(el('ccRepPeriod')) el('ccRepPeriod').textContent=`${fmtDMY(currentFrom)} — ${fmtDMY(currentTo)}`;
+
+  /* Per-reviewer-token → per-number stats from allRows */
+  const tokens=Object.keys(ccDistribution).filter(t=>(ccDistribution[t]||[]).length);
+  const tokenStats={};
+  tokens.forEach(tok=>{
+    const m=new Map();
+    (ccDistribution[tok]||[]).forEach(n=>m.set(String(n).trim(),{total:0,approved:0,starSum:0,starN:0}));
+    tokenStats[tok]=m;
+  });
+  allRows.forEach(r=>{
+    if(!inRange(createdDateISORS(r))) return;
+    const cands=consultNumCandidatesRS(r);
+    const rt=ratingOf(r);
+    tokens.forEach(tok=>{
+      const m=tokenStats[tok]; if(!m) return;
+      let hit=false;
+      m.forEach((s,n)=>{
+        if(!hit && cands.includes(n)){
+          s.total++; if(isApproved(r)) s.approved++;
+          if(rt>=1){s.starSum+=rt;s.starN++;} hit=true;
+        }
+      });
+    });
+  });
+
+  /* Notes lookup from ccReportsData for this period */
+  const notesByKey={};
+  ccReportsData.forEach(d=>{
+    if(d.period!==periodK) return;
+    notesByKey[`${d.reviewerToken}_${String(d.agentNum)}`]=d;
+  });
+
+  let colorIdx=0;
+  const html=tokens.map(tok=>{
+    const info=CC_DISTRIBUTION[tok]||{name:tok};
+    const revName=info.name;
+    const nums=(ccDistribution[tok]||[]).map(n=>String(n).trim());
+    const m=tokenStats[tok]||new Map();
+    const ini=revName.replace(/^Dr\.\s*/,'').trim().charAt(0).toUpperCase();
+    const col=CC_REP_COLORS[colorIdx++%CC_REP_COLORS.length];
+    const totRev=[...m.values()].reduce((a,s)=>a+s.total,0);
+    const appRev=[...m.values()].reduce((a,s)=>a+s.approved,0);
+    const pctRev=totRev>0?Math.round(appRev/totRev*100):0;
+    const noted=nums.filter(n=>notesByKey[`${tok}_${n}`]?.comment).length;
+    const tableRows=nums.map(n=>{
+      const s=m.get(n)||{total:0,approved:0,starSum:0,starN:0};
+      const p=s.total>0?Math.round(s.approved/s.total*100):0;
+      const pcol=s.total===0?'var(--text3)':p>=80?'var(--green)':p>=50?'var(--amber)':'var(--red)';
+      const avg=s.starN>0?s.starSum/s.starN:0;
+      const sf=Math.round(avg);
+      let sh=''; for(let i=1;i<=5;i++) sh+=`<span class="${i<=sf?'':'e'}">★</span>`;
+      const note=notesByKey[`${tok}_${n}`];
+      const comment=note?.comment||'';
+      return `<tr>
+        <td><span class="cc-num-badge" style="background:linear-gradient(135deg,${col},${col}bb)">${n}</span></td>
+        <td><b style="font-family:'Noto Kufi Arabic',sans-serif;font-size:14px">${s.total.toLocaleString('ar-EG')}</b></td>
+        <td><b style="font-family:'Noto Kufi Arabic',sans-serif;font-size:14px">${s.approved.toLocaleString('ar-EG')}</b></td>
+        <td class="cc-pct-cell" style="color:${pcol}">${p>0?p+'%':'—'}</td>
+        <td>${s.starN>0?`<span class="cc-stars">${sh}<small style="font-size:10px;color:var(--text3)">&nbsp;${avg.toFixed(1)}</small></span>`:'<span style="color:var(--text3);font-size:12px">—</span>'}</td>
+        <td style="max-width:340px">${comment?`<div class="cc-comment">${esc(comment)}</div>`:`<span class="cc-no-comment">لا توجد ملاحظات</span>`}</td>
+      </tr>`;
+    }).join('');
+    return `<div class="cc-rev-card">
+      <div class="cc-rev-hdr">
+        <div class="cc-rev-av" style="background:linear-gradient(135deg,${col},${col}99)">${ini}</div>
+        <div class="cc-rev-info">
+          <div class="cc-rev-name">${esc(revName)}</div>
+          <div class="cc-rev-sub">${nums.length} زميل في النطاق · ${totRev.toLocaleString('ar-EG')} استشارة · اعتماد ${pctRev}%</div>
+        </div>
+        <div class="cc-rev-badge">${noted} / ${nums.length} مقيّمون ✅</div>
+      </div>
+      <table class="cc-rep-table">
+        <thead><tr>
+          <th>الرقم</th><th>الاستشارات</th><th>المعتمدة</th><th>الاعتماد%</th><th>التقييم ★</th><th>ملاحظات المراجع</th>
+        </tr></thead>
+        <tbody>${tableRows}</tbody>
+      </table>
+    </div>`;
+  }).join('');
+
+  el('ccReportsBody').innerHTML=html||`<div class="cc-rep-empty">لا يوجد توزيع أرقام محفوظ للفترة الحالية.</div>`;
+}
+
+window.printCCReport=function(){ window.print(); };
+
+function renderPodium(ranked){
+  const section=el('podiumSection');
+  /* Hide the podium entirely if the leader has zero reviews — nothing to celebrate. */
+  if(ranked.length<3 || (ranked[0]?.total||0)===0){ section.style.display='none'; return; }
+  section.style.display='flex';
+  const fill=(slot,a)=>{
+    /* Same scope-based % the cards show (personal rate when no scope). */
+    const approvePct = a.hasScope ? a.scopePct : (a.total>0 ? Math.round(a.approved/a.total*100) : 0);
+    const ini=initialsOf(a.name,a.email);
+    const av=el(`p${slot}Av`);
+    av.textContent=ini;
+    av.style.background=avColor(a.email);
+    el(`p${slot}Name`).textContent=a.name;
+    el(`p${slot}Pct`).innerHTML=`اعتماد <strong>${approvePct}%</strong>`;
+    animNum(el(`p${slot}Total`), a.total);
+  };
+  fill(1, ranked[0]);
+  fill(2, ranked[1]);
+  fill(3, ranked[2]);
+}
+</script>
+</body>
+</html>

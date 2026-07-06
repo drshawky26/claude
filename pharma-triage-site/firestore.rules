@@ -1,0 +1,523 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function hasUserDoc() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && (
+          request.auth.token.email == "drshawky530@gmail.com"
+          || (
+            hasUserDoc()
+            && userDoc().data.role == "admin"
+            && userDoc().data.active != false
+          )
+        );
+    }
+
+    function canSubmitConsultations() {
+      return hasUserDoc()
+        && userDoc().data.active != false
+        && (
+          userDoc().data.role == "agent"
+          || userDoc().data.role == "admin"
+          || userDoc().data.canSubmitConsultations == true
+        );
+    }
+
+    function canReviewConsultations() {
+      return hasUserDoc()
+        && userDoc().data.active != false
+        && (
+          userDoc().data.role == "reviewer"
+          || userDoc().data.role == "admin"
+          || userDoc().data.canReviewConsultations == true
+        );
+    }
+
+    function canDeleteConsultations() {
+      return isAdmin()
+        || (
+          canReviewConsultations()
+          && userDoc().data.canDeleteConsultations == true
+        );
+    }
+
+    function canManageConsultationAvailability() {
+      return isAdmin()
+        || (
+          hasUserDoc()
+          && userDoc().data.active != false
+          && userDoc().data.canManageConsultationAvailability == true
+        );
+    }
+
+    function canViewAgentStats() {
+      return isAdmin()
+        || (
+          hasUserDoc()
+          && userDoc().data.active != false
+          && (
+            userDoc().data.canViewAgentStats == true
+            || userDoc().data.canDeleteConsultations == true
+          )
+        );
+    }
+
+    function canViewConsultAnalytics() {
+      return isAdmin()
+        || (
+          hasUserDoc()
+          && userDoc().data.active != false
+          && userDoc().data.canViewConsultAnalytics == true
+        );
+    }
+
+    function canViewFacebook() {
+      return isAdmin()
+        || (
+          hasUserDoc()
+          && userDoc().data.active != false
+          && (
+            userDoc().data.canViewFacebook == true
+            || userDoc().data.canViewFbLive == true
+            || userDoc().data.canViewFbTeam == true
+            || userDoc().data.team == "facebook"
+          )
+        );
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+      // Let a user report their own device capability signals (RAM/cores/GPU) so
+      // the admin can see them in the user-management card — everything else on
+      // the profile (roles, permissions, liteMode) stays admin-only.
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deviceInfo']);
+    }
+
+    match /triageData/main {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /consultations/{consultationId} {
+      allow create: if (isAdmin() || canSubmitConsultations())
+        && request.resource.data.agentEmail == request.auth.token.email;
+
+      allow read: if isAdmin()
+        || canReviewConsultations()
+        || canViewAgentStats()
+        || canViewConsultAnalytics()
+        || (canSubmitConsultations() && resource.data.agentEmail == request.auth.token.email);
+
+      allow update: if isAdmin()
+        || canReviewConsultations()
+        || (canSubmitConsultations() && resource.data.agentEmail == request.auth.token.email);
+      allow delete: if canDeleteConsultations();
+    }
+
+    // Note replies — a one-round thread on a reviewer's note.
+    // The owning agent (the one who made the consultation) writes a single reply
+    // to the reviewer's note; it lands in that reviewer's inbox on my-cc-stats,
+    // where the reviewer can reply back once and close the thread.
+    match /noteReplies/{docId} {
+      // Agent opens a thread on THEIR OWN consultation only. We verify ownership
+      // by reading the referenced consultation (prevents spoofing another's id).
+      allow create: if canSubmitConsultations()
+        && request.resource.data.agentEmail == request.auth.token.email
+        && request.resource.data.status == 'open'
+        && get(/databases/$(database)/documents/consultations/$(request.resource.data.consultationId))
+             .data.agentEmail == request.auth.token.email;
+
+      // Agent reads own threads (to see the reviewer's reply-back / closed state).
+      // Reviewer reads threads addressed to them. Admin reads all.
+      allow read: if isAdmin()
+        || (canSubmitConsultations() && resource.data.agentEmail == request.auth.token.email)
+        || (canReviewConsultations() && resource.data.reviewerEmail == request.auth.token.email);
+
+      // Only the targeted reviewer (or admin) replies back / closes the thread.
+      // Agents cannot edit after creating — keeps the reply one-time.
+      allow update: if isAdmin()
+        || (canReviewConsultations()
+            && resource.data.reviewerEmail == request.auth.token.email
+            && request.resource.data.agentEmail == resource.data.agentEmail
+            && request.resource.data.reviewerEmail == resource.data.reviewerEmail
+            && request.resource.data.consultationId == resource.data.consultationId
+            && request.resource.data.agentReply == resource.data.agentReply);
+
+      allow delete: if isAdmin();
+    }
+
+    // Broadcasts — admin → team floating announcements with read receipts.
+    match /broadcasts/{docId} {
+      allow read: if signedIn();
+      allow create, delete: if isAdmin();
+      // Admin edits anything. Any signed-in user may ONLY append THEIR OWN email
+      // to readBy (mark-as-read) — nothing else changes.
+      allow update: if isAdmin()
+        || (
+          signedIn()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['readBy'])
+          && request.resource.data.readBy.hasAll(resource.data.readBy)
+          && request.resource.data.readBy.removeAll(resource.data.readBy)
+               .hasOnly([request.auth.token.email])
+        );
+    }
+
+    match /liveWhatsappConsults/{docId} {
+      allow create: if signedIn() && hasUserDoc() && userDoc().data.active != false
+        && (userDoc().data.canLiveConsult == true
+            || userDoc().data.canWhatsappLiveConsult == true
+            || userDoc().data.canUsePhoneWhatsappConsultation == true
+            || isAdmin())
+        && request.resource.data.agentEmail == request.auth.token.email;
+
+      allow read: if isAdmin()
+        || canReviewConsultations()
+        || (signedIn() && hasUserDoc() && userDoc().data.active != false
+            && resource.data.agentEmail == request.auth.token.email);
+
+      // Reviewers/admins can always update. Owning agents may update only while
+      // the consultation is in the clarification loop (before final reply):
+      //   - current status is 'needs_more_info' (reviewer asked a question), OR
+      //   - current status is 'pending' AND hadNeedsMoreInfo == true (agent sending
+      //     a follow-up reply during the same loop).
+      // In both cases the new status must stay 'pending' (re-queue for review),
+      // and reviewer-owned identity fields must remain unchanged.
+      allow update: if isAdmin() || canReviewConsultations()
+        || (
+          signedIn() && hasUserDoc() && userDoc().data.active != false
+          && resource.data.agentEmail == request.auth.token.email
+          && request.resource.data.agentEmail == resource.data.agentEmail
+          && request.resource.data.status == 'pending'
+          && (
+            resource.data.status == 'needs_more_info'
+            || (
+              resource.data.status == 'pending'
+              && 'hadNeedsMoreInfo' in resource.data
+              && resource.data.hadNeedsMoreInfo == true
+            )
+          )
+          && request.resource.data.reviewerEmail == resource.data.reviewerEmail
+          && request.resource.data.reviewerName == resource.data.reviewerName
+          && request.resource.data.reviewerReply == resource.data.reviewerReply
+          && request.resource.data.reviewerNotes == resource.data.reviewerNotes
+        );
+
+      allow delete: if isAdmin();
+    }
+
+    match /liveReviewerStatus/{docId} {
+      // Anyone signed in (agents + reviewers) can read availability status.
+      allow read: if signedIn();
+      // V142 — each reviewer writes only their own per-uid document.
+      // Admins can manage any status doc.
+      allow create, update: if isAdmin()
+        || (canManageConsultationAvailability() && docId == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+
+    match /agentSuggestions/{suggestionId} {
+      allow create: if signedIn() && hasUserDoc() && userDoc().data.active != false
+        && request.resource.data.agentEmail == request.auth.token.email;
+
+      allow read: if isAdmin()
+        || (signedIn() && hasUserDoc() && userDoc().data.active != false
+            && resource.data.agentEmail == request.auth.token.email);
+
+      // Admins reply to / curate suggestions. Agents cannot edit after submitting.
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /followUpSheet/{docId} {
+      // Reviewers/admins see all records; users with canViewOwnFollowUps can read the collection
+      // (client-side filters their own records by agentName / createdBy).
+      allow read: if canReviewConsultations() || isAdmin()
+        || (hasUserDoc() && userDoc().data.active != false
+            && userDoc().data.canViewOwnFollowUps == true);
+
+      // Reviewers/admins can only create records attributed to their own email.
+      allow create: if (canReviewConsultations() || isAdmin())
+        && request.resource.data.createdBy == request.auth.token.email;
+
+      // Any reviewer can update result + transfer fields.
+      // Admins can update any field.
+      allow update: if isAdmin()
+        || (canReviewConsultations()
+            && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['feedback','followUpDate','followUpBy','followUpNotes',
+                         'customerSupport',
+                         'transferredToEmail','transferredToName','transferredToUid',
+                         'transferredFromEmail','transferredFromName','transferredFromUid']));
+
+      // Admins and users with canDeleteConsultations permission can delete.
+      allow delete: if canDeleteConsultations();
+    }
+
+    // CC colleague reports — reviewers write their own, admin reads/writes all.
+    match /ccReports/{docId} {
+      allow read: if isAdmin() || canReviewConsultations();
+      allow write: if (isAdmin() || canReviewConsultations())
+        && request.resource.data.reviewerEmail == request.auth.token.email;
+      allow delete: if isAdmin();
+    }
+
+    // CC coaching notes — a reviewer sends a short guidance note (e.g. "watch the
+    // dose of X") to a CC colleague, keyed by that colleague's signature number.
+    // The reviewer manages (creates/deletes) their own notes from my-cc-stats.
+    // The targeted agent reads it on agent.html: since the note is keyed by number
+    // (not the agent's auth email) the read has to be broad — any submitting agent
+    // may read, and the client query filters to their own number(s). The agent may
+    // only flip read/readAt (mark-as-seen); everything else stays reviewer/admin.
+    match /ccCoachNotes/{docId} {
+      allow read: if isAdmin() || canReviewConsultations() || canSubmitConsultations();
+      allow create: if (isAdmin() || canReviewConsultations())
+        && request.resource.data.reviewerEmail == request.auth.token.email;
+      allow update: if isAdmin()
+        || (canReviewConsultations() && resource.data.reviewerEmail == request.auth.token.email)
+        || (canSubmitConsultations()
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read','readAt']));
+      allow delete: if isAdmin()
+        || (canReviewConsultations() && resource.data.reviewerEmail == request.auth.token.email);
+    }
+
+    // App-level toggles and rosters.
+    // fbLiveConfig: readable by anyone with canViewFacebook (team + admin) — write stays admin-only.
+    // Everything else is readable by all signed-in users.
+    match /appConfig/{docId} {
+      allow read:  if docId == "fbLiveConfig" ? canViewFacebook() : signedIn();
+      allow write: if isAdmin();
+    }
+
+    // Facebook ops — daily slot/entry log (replaces the manual marketing sheets).
+    // Editors with canViewFacebook create entries attributed to themselves;
+    // they may edit/delete their own; admins manage everything.
+    match /fbLog/{docId} {
+      allow read:   if canViewFacebook();
+      allow create: if canViewFacebook()
+        && request.resource.data.by == request.auth.token.email;
+      // Owner (creator) or admin may edit/delete freely.
+      // Any Facebook-team member may also fill the "actual" fields onto a slot
+      // assigned by someone else (e.g. an admin-scheduled slot) — limited to the
+      // actual/messages/orders fields so they can't reassign or reschedule it.
+      allow update: if isAdmin()
+        || (canViewFacebook() && resource.data.by == request.auth.token.email)
+        || (canViewFacebook()
+            && request.resource.data.diff(resource.data).affectedKeys()
+                 .hasOnly(['actualFrom','actualTo','messages','orders','note','channel','actualBy','actualAt']));
+      allow delete: if isAdmin()
+        || (canViewFacebook() && resource.data.by == request.auth.token.email);
+    }
+
+    // Facebook Graph API results — written ONLY by Cloud Functions (admin SDK
+    // bypasses these rules); clients may read if they can view the Facebook card.
+    match /fbInsights/{docId} {
+      allow read:  if canViewFacebook();
+      allow write: if false;
+    }
+
+    // Facebook AI classification layer — written ONLY by the local batch script
+    // (fb-classify/, runs with the admin SDK which bypasses these rules).
+    // Clients may read if they can view the Facebook card; the analytics section
+    // in fb-live.html is additionally UI-gated to admins.
+    match /fb_classified/{docId} {        // inbox customer messages (intent + reply quality)
+      allow read:  if canViewFacebook();
+      allow write: if false;
+    }
+    match /fb_comments_classified/{docId} {   // post comments, classified
+      allow read:  if canViewFacebook();
+      allow write: if false;
+    }
+    match /fb_posts_analytics/{docId} {       // per-post performance aggregates
+      allow read:  if canViewFacebook();
+      allow write: if false;
+    }
+
+    // Facebook daily shift schedule — manager/admin writes, team reads.
+    match /fbShifts/{docId} {
+      allow read:   if canViewFacebook();
+      allow create: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // NAZRA live call monitoring — written by local Node.js poller via REST API key.
+    // Read: admin or users with canViewNazra permission.
+    match /nazra_live/{docId} {
+      allow read: if isAdmin()
+        || (hasUserDoc()
+            && userDoc().data.active != false
+            && userDoc().data.canViewNazra == true);
+      // Writes come from the poller using the public API key (no auth).
+      // We allow unauthenticated writes here because the poller runs on the
+      // internal network and Firebase API key alone is the gate.
+      allow write: if true;
+    }
+
+    // CC-Ops: calls data written by Python build script — public read, admin write.
+    match /ccOpsData/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // CC-Ops: per-month aggregates written by Python — public read, admin write.
+    match /ccOpsMonths/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Edara live dashboard — daemon pushes shift data; any CC-ops user can read.
+    match /edaraLive/{docId} {
+      allow read:  if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // Edara web control — any signed-in user can trigger/read; daemon writes status as admin.
+    match /edaraControl/{docId} {
+      allow read:  if signedIn();
+      allow write: if signedIn();
+    }
+
+    // Edara credentials — stored by admin from web UI, read by daemon; never exposed to regular users.
+    // Windows Agent fleet status and auto-update channel.
+    match /agentFleet/{docId} {
+      allow read: if isAdmin();
+      allow write: if signedIn();
+    }
+
+    match /agentLogs/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /agentReleases/{docId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /edaraSecrets/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    // CC-Ops: manually entered shift & leave data — admin only.
+    match /ccOpsManual/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    // CC Sheet drawer — roster, leaves, schedule, allowances.
+    // Read: any signed-in user (drawer is UI-gated by ccSheetGrants).
+    // Write: admin only.
+    match /ccRoster/{docId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+    match /ccLeaves/{docId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+    match /ccSchedule/{docId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+    match /ccAllowances/{docId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // Consultation team roster + free-time shifts (powers staffing analytics in dept tabs)
+    match /consultTeam/{docId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // Facebook follow-up log — any FB team member can read & create; owner or admin can edit/delete.
+    match /fbFollowUps/{docId} {
+      allow read:   if canViewFacebook();
+      allow create: if canViewFacebook()
+        && request.resource.data.byEmail == request.auth.token.email;
+      allow update: if isAdmin()
+        || (canViewFacebook() && resource.data.byEmail == request.auth.token.email);
+      allow delete: if isAdmin()
+        || (canViewFacebook() && resource.data.byEmail == request.auth.token.email);
+    }
+
+    // Facebook order registrations — each team member creates/deletes their own orders.
+    // Admins can manage all orders.
+    // Owners may edit their own order's core fields (can't reassign name/by to spoof
+    // another agent's stats). ANY Facebook-team member may update the follow-up fields
+    // on ANY order — the 3-day delivery/review follow-up is done by whoever's free
+    // (often the WhatsApp team), not necessarily the agent who registered the order.
+    match /fbOrders/{docId} {
+      allow read:   if canViewFacebook();
+      allow create: if canViewFacebook()
+        && request.resource.data.by == request.auth.token.email;
+      allow update: if isAdmin()
+        || (canViewFacebook() && resource.data.by == request.auth.token.email
+            && request.resource.data.name == resource.data.name
+            && request.resource.data.by == resource.data.by)
+        || (canViewFacebook()
+            && request.resource.data.diff(resource.data).affectedKeys()
+                 .hasOnly(['followUpResult','followUpNote','followUpAt','followUpBy']));
+      allow delete: if isAdmin()
+        || (canViewFacebook() && resource.data.by == request.auth.token.email);
+    }
+
+    // Facebook team self-service profile photos — one doc per member, keyed by
+    // their auth email. The member crops the photo client-side into a small JPEG
+    // data URL stored right in the doc, so no Storage bucket (Spark plan) and no
+    // hosting redeploy per photo. Size cap keeps docs well under Firestore's 1MB.
+    match /fbProfiles/{docId} {
+      allow read: if canViewFacebook();
+      allow create, update: if (isAdmin()
+          || (canViewFacebook() && docId == request.auth.token.email))
+        && request.resource.data.photo is string
+        && request.resource.data.photo.size() < 400000
+        && request.resource.data.name is string
+        && request.resource.data.name.size() < 80;
+      allow delete: if isAdmin()
+        || (canViewFacebook() && docId == request.auth.token.email);
+    }
+
+    // Consultation-team profile photos — same idea as fbProfiles but for the
+    // reviewers/follow-up team. Uploaded (cropped client-side) from followup.html
+    // only; displayed there plus review.html and my-cc-stats.html. Doc id = the
+    // owner's auth email; the stored `name` field lets pages match the photo by
+    // display name too, so it survives the monthly reviewer-email rotation.
+    match /teamProfiles/{docId} {
+      allow read: if signedIn();
+      allow create, update: if (isAdmin() || docId == request.auth.token.email)
+        && request.resource.data.photo is string
+        && request.resource.data.photo.size() < 400000
+        && request.resource.data.name is string
+        && request.resource.data.name.size() < 80;
+      allow delete: if isAdmin()
+        || (signedIn() && docId == request.auth.token.email);
+    }
+
+    // Customer review submissions — public, unauthenticated (customers don't log in).
+    // Reached via a per-order link the team sends on WhatsApp after delivery.
+    // Minimal validation only (real gate is obscurity of the link + low sensitivity
+    // of the data); write-only for the public, read/manage stays internal.
+    match /customerReviews/{docId} {
+      allow create: if request.resource.data.rating is int
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5;
+      allow read: if canViewFacebook();
+      allow update, delete: if isAdmin();
+    }
+  }
+}

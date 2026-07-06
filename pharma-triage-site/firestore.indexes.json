@@ -1,0 +1,13 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "fbLog",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "agent", "order": "ASCENDING" },
+        { "fieldPath": "date", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

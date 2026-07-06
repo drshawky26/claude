@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>مركز الأجهزة · Fleet & Device Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<script src="/lite-mode.js"></script>
+<style>
+:root{
+  --bg:#080d1a; --bg2:#0b1120; --surface:#111a33; --raised:#16203f; --raised2:#1b2748;
+  --line:rgba(120,140,190,.16); --line2:rgba(120,140,190,.28);
+  --ink:#eaf0ff; --ink2:#c3cff0; --muted:#8394bd; --faint:#5f6f9c;
+  --gold:#c9a84c; --gold2:#e6c86a;
+  --cyan:#38c7ff; --cyan2:#22d3ee;
+  --blue:#3987e5; --green:#199e70; --amber:#e0a83b; --red:#e5484d; --violet:#8b7fe8;
+  --mono:'Tajawal',ui-monospace,monospace;
+  --sh:0 14px 40px -18px rgba(0,0,0,.7);
+  --r:18px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Tajawal',system-ui,-apple-system,sans-serif;
+  background:
+    radial-gradient(1100px 620px at 88% -8%,rgba(56,199,255,.10),transparent 60%),
+    radial-gradient(900px 560px at 4% 4%,rgba(139,127,232,.08),transparent 58%),
+    var(--bg);
+  color:var(--ink); min-height:100vh; -webkit-font-smoothing:antialiased;
+  padding-bottom:60px;
+}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+a{color:inherit}
+button{font-family:inherit}
+
+/* ---- gate ---- */
+#gate{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;
+  background:var(--bg);text-align:center;padding:28px}
+#gate .g-card{max-width:420px}
+#gate .g-emoji{font-size:56px;margin-bottom:12px}
+#gate h1{font-size:22px;margin:0 0 8px}
+#gate p{color:var(--muted);font-size:15px;line-height:1.7;margin:0 0 18px}
+#gate .spin{width:44px;height:44px;border-radius:50%;border:3px solid rgba(120,140,190,.25);
+  border-top-color:var(--cyan);animation:sp 1s linear infinite;margin:0 auto 16px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.gbtn{display:inline-block;text-decoration:none;font-weight:700;font-size:15px;cursor:pointer;
+  border-radius:12px;padding:11px 26px;border:1px solid var(--line2);color:var(--ink);background:var(--raised)}
+
+/* ---- shell ---- */
+.wrap{max-width:1280px;margin:0 auto;padding:0 20px}
+.hdr{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  background:linear-gradient(180deg,rgba(8,13,26,.94),rgba(8,13,26,.72));
+  border-bottom:1px solid var(--line);padding:14px 0 13px;margin-bottom:22px}
+.hdr-in{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.hdr-badge{width:50px;height:50px;border-radius:15px;display:grid;place-items:center;font-size:26px;
+  background:linear-gradient(140deg,#22d3ee,#3b82f6);color:#04121e;flex:none;
+  box-shadow:0 10px 26px -8px rgba(56,199,255,.6)}
+.hdr-t{display:flex;flex-direction:column;gap:2px;margin-inline-end:auto}
+.hdr-t h1{font-size:20px;font-weight:900;margin:0;letter-spacing:.2px}
+.hdr-t span{font-size:12.5px;color:var(--muted);font-weight:600}
+.hdr-live{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);
+  border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+.hdr-live .dot{width:8px;height:8px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 0 0 rgba(25,158,112,.6);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(25,158,112,.5)}70%{box-shadow:0 0 0 7px rgba(25,158,112,0)}100%{box-shadow:0 0 0 0 rgba(25,158,112,0)}}
+.hbtn{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:13.5px;cursor:pointer;
+  border-radius:11px;padding:9px 14px;border:1px solid var(--line2);color:var(--ink);background:var(--raised);
+  text-decoration:none;transition:border-color .15s,transform .1s}
+.hbtn:hover{border-color:var(--cyan)}
+.hbtn:active{transform:translateY(1px)}
+
+/* ---- KPIs ---- */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px}
+.kpi{background:linear-gradient(160deg,var(--surface),var(--bg2));border:1px solid var(--line);
+  border-radius:var(--r);padding:15px 16px;position:relative;overflow:hidden}
+.kpi::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--accent,var(--cyan))}
+.kpi .k-ico{font-size:17px;margin-bottom:7px;opacity:.95}
+.kpi .k-v{font-size:27px;font-weight:900;line-height:1;color:var(--ink)}
+.kpi .k-l{font-size:12px;color:var(--muted);font-weight:600;margin-top:6px}
+.kpi.k-cyan{--accent:var(--cyan)} .kpi.k-green{--accent:var(--green)}
+.kpi.k-amber{--accent:var(--amber)} .kpi.k-violet{--accent:var(--violet)} .kpi.k-faint{--accent:var(--faint)}
+
+/* ---- toolbar ---- */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:18px;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 15px}
+.fld{display:flex;flex-direction:column;gap:5px}
+.fld label{font-size:11.5px;color:var(--muted);font-weight:700;padding-inline-start:2px}
+.fld input,.fld select{font-family:inherit;font-size:14px;font-weight:600;color:var(--ink);
+  background:var(--raised);border:1px solid var(--line2);border-radius:11px;padding:9px 12px;min-width:150px;outline:none}
+.fld input:focus,.fld select:focus{border-color:var(--cyan)}
+.fld.grow{flex:1;min-width:200px}
+.fld.grow input{width:100%}
+.tb-count{margin-inline-start:auto;font-size:12.5px;color:var(--muted);font-weight:700;align-self:center}
+
+/* ---- device cards ---- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.dev{background:linear-gradient(165deg,var(--surface),var(--bg2));border:1px solid var(--line);
+  border-radius:var(--r);padding:0;overflow:hidden;position:relative;box-shadow:var(--sh);
+  transition:border-color .16s,transform .12s}
+.dev:hover{border-color:var(--line2)}
+.dev.weak{border-color:rgba(224,168,59,.4)}
+.dev.lite{border-color:rgba(56,199,255,.45)}
+.dev-top{display:flex;align-items:center;gap:11px;padding:14px 15px 12px;cursor:pointer}
+.dev-av{width:44px;height:44px;border-radius:13px;flex:none;display:grid;place-items:center;
+  font-size:17px;font-weight:900;color:#04121e;background:linear-gradient(135deg,var(--av1,#38c7ff),var(--av2,#3b82f6))}
+.dev-id{min-width:0;flex:1;display:flex;flex-direction:column;gap:2px}
+.dev-name{font-size:15px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dev-mail{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--mono)}
+.dev-chips{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.chip{font-size:10.5px;font-weight:800;border-radius:999px;padding:3px 8px;white-space:nowrap;
+  border:1px solid transparent;letter-spacing:.2px}
+.chip-login{background:rgba(201,168,76,.16);color:#f0d795;border-color:rgba(201,168,76,.4);font-family:var(--mono)}
+.chip-team{background:rgba(57,135,229,.14);color:#9cc4ff;border-color:rgba(57,135,229,.3)}
+.chip-role{background:rgba(139,127,232,.14);color:#c3bcff;border-color:rgba(139,127,232,.3)}
+.chip-weak{background:rgba(224,168,59,.16);color:#f4cd7e;border-color:rgba(224,168,59,.35)}
+.chip-lite{background:rgba(56,199,255,.15);color:#8fe3ff;border-color:rgba(56,199,255,.35)}
+.chip-on{background:rgba(25,158,112,.16);color:#7ee0bd;border-color:rgba(25,158,112,.35)}
+
+.dev-body{padding:2px 15px 14px}
+.specs{display:grid;grid-template-columns:1fr 1fr;gap:9px 12px;margin:6px 0 12px}
+.spec{display:flex;flex-direction:column;gap:2px;min-width:0}
+.spec .s-l{font-size:10.5px;color:var(--faint);font-weight:700;display:flex;align-items:center;gap:4px}
+.spec .s-v{font-size:13px;font-weight:700;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spec.full{grid-column:1/-1}
+.meter{height:6px;border-radius:6px;background:var(--raised2);overflow:hidden;margin-top:3px}
+.meter i{display:block;height:100%;border-radius:6px;background:var(--mc,var(--green))}
+.nodata{grid-column:1/-1;text-align:center;color:var(--faint);font-size:12.5px;font-weight:600;
+  padding:14px 8px;border:1px dashed var(--line2);border-radius:12px}
+
+.dev-foot{border-top:1px solid var(--line);padding:11px 15px;display:flex;flex-direction:column;gap:10px;
+  background:rgba(0,0,0,.14)}
+.lite-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.lite-lbl{font-size:12.5px;font-weight:700;color:var(--ink2);display:flex;align-items:center;gap:6px}
+.sw{position:relative;width:44px;height:25px;flex:none;cursor:pointer}
+.sw input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.sw i{position:absolute;inset:0;border-radius:999px;background:var(--raised2);transition:background .18s;border:1px solid var(--line2)}
+.sw i::after{content:"";position:absolute;top:2px;right:2px;width:19px;height:19px;border-radius:50%;
+  background:#cdd7f2;transition:transform .18s,background .18s}
+.sw input:checked + i{background:linear-gradient(135deg,#22d3ee,#3b82f6);border-color:transparent}
+.sw input:checked + i::after{transform:translateX(-19px);background:#fff}
+.cmd-row{display:flex;gap:7px;flex-wrap:wrap}
+.cbtn{flex:1;min-width:78px;display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  font-size:12px;font-weight:800;cursor:pointer;border-radius:10px;padding:8px 6px;
+  border:1px solid var(--line2);color:var(--ink2);background:var(--raised);transition:border-color .14s,color .14s}
+.cbtn:hover{border-color:var(--cyan);color:var(--ink)}
+.cbtn.danger:hover{border-color:var(--red);color:#ffb3b6}
+.cbtn:active{transform:translateY(1px)}
+.cmd-status{font-size:11px;color:var(--faint);font-weight:600;display:flex;align-items:center;gap:5px}
+.cmd-status.done{color:#7ee0bd} .cmd-status.pending{color:#f4cd7e}
+
+.empty{text-align:center;color:var(--muted);padding:60px 20px;font-size:15px;font-weight:600}
+
+/* ---- modal ---- */
+.ov{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;
+  background:rgba(6,10,22,.74);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);padding:22px}
+.ov.on{display:flex}
+.modal{max-width:560px;width:100%;max-height:88vh;overflow:auto;background:linear-gradient(165deg,#141f3c,#0e1730);
+  border:1px solid var(--line2);border-radius:22px;box-shadow:0 40px 100px -24px rgba(0,0,0,.8)}
+.m-head{display:flex;align-items:center;gap:11px;padding:18px 20px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;
+  background:linear-gradient(180deg,#141f3c,rgba(20,31,60,.9));backdrop-filter:blur(8px)}
+.m-head .dev-av{width:40px;height:40px;font-size:15px}
+.m-head h2{font-size:16px;margin:0;font-weight:900}
+.m-head .m-sub{font-size:11.5px;color:var(--muted);font-family:var(--mono)}
+.m-x{margin-inline-start:auto;cursor:pointer;font-size:15px;font-weight:800;color:var(--muted);
+  border:1px solid var(--line2);border-radius:9px;width:30px;height:30px;background:transparent;flex:none}
+.m-body{padding:16px 20px 20px}
+.m-sec{font-size:12px;font-weight:800;color:var(--cyan);margin:14px 0 8px;letter-spacing:.4px}
+.m-sec:first-child{margin-top:0}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:6px 10px;font-size:13px}
+.kv dt{color:var(--muted);font-weight:700}
+.kv dd{margin:0;color:var(--ink2);font-weight:700;word-break:break-word;font-family:var(--mono)}
+.m-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+.m-ta{width:100%;font-family:inherit;font-size:14.5px;font-weight:600;color:var(--ink);background:var(--raised);
+  border:1px solid var(--line2);border-radius:12px;padding:11px 13px;min-height:88px;resize:vertical;outline:none}
+.m-ta:focus{border-color:var(--cyan)}
+.m-send{font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;border:none;border-radius:12px;
+  padding:11px 24px;background:linear-gradient(135deg,#c9a84c,#e6c86a);color:#1a1405}
+.m-cancel{font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;border:1px solid var(--line2);
+  border-radius:12px;padding:11px 20px;background:transparent;color:var(--ink2)}
+
+/* ---- toast ---- */
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);z-index:120;
+  background:#16203f;border:1px solid var(--line2);border-radius:13px;padding:12px 20px;font-weight:700;
+  font-size:14px;box-shadow:var(--sh);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;max-width:90vw}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.ok{border-color:rgba(25,158,112,.5)} #toast.err{border-color:rgba(229,72,77,.5)}
+
+@media(max-width:1080px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr)}.hdr-t{margin-inline-end:0;width:100%;order:-1}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="g-card" id="gateCard">
+    <div class="spin"></div>
+    <p>بنتأكد من الصلاحية…</p>
+  </div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="hdr">
+    <div class="wrap hdr-in">
+      <div class="hdr-badge">🖥</div>
+      <div class="hdr-t">
+        <h1>مركز الأجهزة</h1>
+        <span>Fleet &amp; Device Control · مواصفات وأداء وتحكّم عن بُعد</span>
+      </div>
+      <span class="hdr-live"><span class="dot"></span> مباشر</span>
+      <button class="hbtn" onclick="reloadUsers()">↻ تحديث</button>
+      <a class="hbtn" href="/index.html">← الرئيسية</a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="kpis" id="kpis"></div>
+    <div class="toolbar" id="toolbar"></div>
+    <div id="grid" class="grid"></div>
+  </div>
+</div>
+
+<div class="ov" id="ov"><div class="modal" id="modalInner"></div></div>
+<div id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBvmHh6-KVlKNATzbfMk3hIswbMCrBZwf4",
+  authDomain: "pharma-triage-5d165.firebaseapp.com",
+  projectId: "pharma-triage-5d165",
+  storageBucket: "pharma-triage-5d165.firebasestorage.app",
+  messagingSenderId: "1080517928737",
+  appId: "1:1080517928737:web:9110f120203d0e6b7b0060"
+};
+const ADMIN_EMAIL = "drshawky530@gmail.com";
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s==null?'':s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const arNum = n => Number(n||0).toLocaleString('ar-EG');
+
+let ME = null;
+let USERS = [];
+let USERS_UNSUB = null;
+
+/* ---------- auth gate ---------- */
+onAuthStateChanged(auth, async user=>{
+  if(!user){ denied('محتاج تسجيل دخول','افتح النظام وسجّل دخول بحساب الأدمن الأول.'); return; }
+  let profile;
+  if(user.email === ADMIN_EMAIL){
+    profile = {uid:user.uid,email:user.email,role:'admin',displayName:'Mahmoud Shawky',team:'admin',active:true};
+  }else{
+    try{
+      const snap = await getDoc(doc(db,'users',user.uid));
+      profile = snap.exists() ? {uid:user.uid,email:user.email,...snap.data()} : null;
+    }catch(e){ profile = null; }
+  }
+  const isAdmin = profile && (profile.role==='admin' || profile.canAdmin===true);
+  if(!isAdmin){ denied('الصفحة دي للأدمن بس','مركز الأجهزة متاح لإدارة النظام فقط. راجع د. شوقي لو محتاج صلاحية.'); return; }
+  ME = profile;
+  try{ if(window.PTLite) window.PTLite.sync({db,doc,setDoc,uid:user.uid,profile}); }catch(e){}
+  $('gate').style.display='none';
+  $('app').style.display='';
+  buildToolbar();
+  listenUsers();
+});
+function denied(title,msg){
+  $('gateCard').innerHTML = `<div class="g-emoji">🔒</div><h1>${esc(title)}</h1><p>${esc(msg)}</p><a class="gbtn" href="/index.html">← الرئيسية</a>`;
+}
+
+/* ---------- data ---------- */
+function listenUsers(){
+  if(USERS_UNSUB) USERS_UNSUB();
+  USERS_UNSUB = onSnapshot(collection(db,'users'), snap=>{
+    USERS = snap.docs.map(d=>({id:d.id,...d.data()}));
+    render();
+  }, err=>{ console.error(err); toast('فشل تحميل المستخدمين','err'); });
+}
+function reloadUsers(){ listenUsers(); toast('تم التحديث','ok'); }
+
+/* ---------- helpers ---------- */
+const TEAM_LABEL = {callcenter:'Call Center',whatsapp:'WhatsApp',facebook:'Facebook',consultations:'Consultations',admin:'Admin'};
+function normTeam(t){
+  const s=String(t||'').toLowerCase().replace(/\s+/g,'');
+  if(s.includes('facebook')||s==='fb'||s.includes('فيس'))return'facebook';
+  if(s.includes('whatsapp')||s.includes('واتس')||s.includes('ww'))return'whatsapp';
+  if(s.includes('consult')||s.includes('استش'))return'consultations';
+  if(s.includes('admin')||s.includes('ادمن'))return'admin';
+  return'callcenter';
+}
+// Login number = the N in agent{N}@pharma.local (what the colleague types to log
+// in, e.g. 2027), falling back to the profile agentNumber for non-numeric logins.
+function loginNum(u){
+  const m=String(u.email||'').match(/agent(\d+)@/i);
+  if(m) return m[1];
+  const lid=String(u.loginId||'').match(/(\d{2,})/);
+  if(lid) return lid[1];
+  return String(u.agentNumber||'');
+}
+function initials(name){
+  const p=String(name||'').trim().split(/\s+/).filter(Boolean);
+  if(!p.length) return '؟';
+  const first=p.find(w=>!/^(dr|د)\.?$/i.test(w))||p[0];
+  return (first[0]||'؟').toUpperCase();
+}
+function avColor(seed){
+  const pals=[['#38c7ff','#3b82f6'],['#8b7fe8','#6d5fd6'],['#22d3ee','#0ea5c4'],['#c9a84c','#e6c86a'],['#5eead4','#199e70'],['#f0a5c0','#e5698f']];
+  let h=0; const s=String(seed||''); for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0;
+  return pals[h%pals.length];
+}
+function relTime(ms){
+  if(!ms) return '';
+  const s=Math.max(1,Math.floor((Date.now()-ms)/1000));
+  if(s<60) return 'من '+arNum(s)+' ثانية';
+  const m=Math.floor(s/60); if(m<60) return 'من '+arNum(m)+' دقيقة';
+  const h=Math.floor(m/60); if(h<24) return 'من '+arNum(h)+' ساعة';
+  const d=Math.floor(h/24); if(d<30) return 'من '+arNum(d)+' يوم';
+  return 'من '+arNum(Math.floor(d/30))+' شهر';
+}
+function fmtGB(bytes){
+  if(!bytes && bytes!==0) return '—';
+  const gb=bytes/(1024*1024*1024);
+  if(gb>=1) return gb.toFixed(gb>=10?0:1)+' GB';
+  return (bytes/(1024*1024)).toFixed(0)+' MB';
+}
+function onlineState(d){
+  if(!d || !d.at) return {cls:'',lbl:''};
+  const min=(Date.now()-d.at)/60000;
+  if(min<5) return {cls:'chip-on',lbl:'🟢 متصل الآن'};
+  return {cls:'',lbl:''};
+}
+function cmdStatusOf(u){
+  const c=u.deviceCommand, d=u.deviceInfo;
+  if(!c || !c.id) return null;
+  const done = d && String(d.lastCmdId)===String(c.id);
+  const label={message:'رسالة',refresh:'تحديث',logout:'خروج',clearcache:'مسح كاش',navigate:'فتح صفحة',reportnow:'تحديث مواصفات'}[c.type]||c.type;
+  return {done, label, at:c.at||c.id};
+}
+
+/* ---------- filters ---------- */
+function readF(){
+  return {
+    q:($('fSearch')?.value||'').toLowerCase().trim(),
+    team:$('fTeam')?.value||'',
+    status:$('fStatus')?.value||'',
+    sort:$('fSort')?.value||'seen'
+  };
+}
+function buildToolbar(){
+  $('toolbar').innerHTML = `
+    <div class="fld grow"><label>بحث</label><input id="fSearch" placeholder="اسم / رقم الدخول (2027) / إيميل / GPU / نظام / IP" oninput="renderDebounced()"></div>
+    <div class="fld"><label>الفريق</label><select id="fTeam" onchange="render()">
+      <option value="">كل الفرق</option><option value="callcenter">Call Center</option><option value="whatsapp">WhatsApp</option>
+      <option value="facebook">Facebook</option><option value="consultations">Consultations</option><option value="admin">Admin</option></select></div>
+    <div class="fld"><label>الحالة</label><select id="fStatus" onchange="render()">
+      <option value="">الكل</option><option value="weak">أجهزة ضعيفة</option><option value="strong">أجهزة قوية</option>
+      <option value="lite">على لايت مود</option><option value="nolite">من غير لايت مود</option>
+      <option value="online">متصل الآن</option><option value="nodata">لسه محصلش بيانات</option></select></div>
+    <div class="fld"><label>الترتيب</label><select id="fSort" onchange="render()">
+      <option value="seen">آخر ظهور</option><option value="name">الاسم</option>
+      <option value="weakest">الأضعف أولاً</option><option value="team">الفريق</option></select></div>
+    <span class="tb-count" id="tbCount"></span>`;
+}
+let _t=null;
+window.renderDebounced=()=>{ clearTimeout(_t); _t=setTimeout(render,180); };
+
+function passStatus(u,f){
+  const d=u.deviceInfo;
+  const weak = d && d.weak===true;
+  const lite = u.liteMode===true;
+  const on = onlineState(d).cls!=='';
+  if(f.status==='weak') return weak;
+  if(f.status==='strong') return d && !weak;
+  if(f.status==='lite') return lite;
+  if(f.status==='nolite') return !lite;
+  if(f.status==='online') return on;
+  if(f.status==='nodata') return !d;
+  return true;
+}
+
+/* ---------- render ---------- */
+function render(){
+  if(!$('kpis')) return;
+  renderKpis();
+  const f=readF();
+  let rows=USERS.filter(u=>{
+    const team=normTeam(u.team);
+    const d=u.deviceInfo||{};
+    const blob=[u.displayName,u.email,u.agentNumber,loginNum(u),d.gpu,d.os,d.browser,d.ip].join(' ').toLowerCase();
+    return (!f.q||blob.includes(f.q)) && (!f.team||team===f.team) && passStatus(u,f);
+  });
+  rows.sort((a,b)=>{
+    if(f.sort==='name') return String(a.displayName||'').localeCompare(String(b.displayName||''),'ar');
+    if(f.sort==='team') return normTeam(a.team).localeCompare(normTeam(b.team));
+    if(f.sort==='weakest'){ const wa=(a.deviceInfo&&a.deviceInfo.weak)?0:1, wb=(b.deviceInfo&&b.deviceInfo.weak)?0:1; if(wa!==wb) return wa-wb; }
+    return ((b.deviceInfo&&b.deviceInfo.at)||0)-((a.deviceInfo&&a.deviceInfo.at)||0);
+  });
+  const cnt=$('tbCount'); if(cnt) cnt.textContent=arNum(rows.length)+' جهاز';
+  const g=$('grid');
+  if(!rows.length){ g.innerHTML='<div class="empty">مفيش أجهزة مطابقة للفلاتر.</div>'; return; }
+  g.innerHTML=rows.map(cardHtml).join('');
+}
+
+function renderKpis(){
+  let total=USERS.length, weak=0, lite=0, online=0, nodata=0;
+  USERS.forEach(u=>{
+    const d=u.deviceInfo;
+    if(!d){ nodata++; return; }
+    if(d.weak) weak++;
+    if(u.liteMode===true) lite++;
+    if(onlineState(d).cls) online++;
+  });
+  $('kpis').innerHTML=[
+    ['k-cyan','🖥',total,'إجمالي الأجهزة'],
+    ['k-green','🟢',online,'متصل آخر ٥ دقايق'],
+    ['k-amber','⚠️',weak,'أجهزة ضعيفة'],
+    ['k-violet','🐢',lite,'على لايت مود'],
+    ['k-faint','⏳',nodata,'لسه محصلش بياناتهم']
+  ].map(([c,ic,v,l])=>`<div class="kpi ${c}"><div class="k-ico">${ic}</div><div class="k-v num">${arNum(v)}</div><div class="k-l">${l}</div></div>`).join('');
+}
+
+function spec(icon,label,val){
+  return `<div class="spec"><span class="s-l">${icon} ${label}</span><span class="s-v">${val}</span></div>`;
+}
+function cardHtml(u){
+  const d=u.deviceInfo;
+  const team=normTeam(u.team);
+  const [c1,c2]=avColor(u.email||u.id);
+  const lite=u.liteMode===true;
+  const on=onlineState(d);
+  const st=cmdStatusOf(u);
+  const ln=loginNum(u);
+  const chips=[
+    ln?`<span class="chip chip-login">🔑 ${esc(ln)}</span>`:'',
+    `<span class="chip chip-team">${esc(TEAM_LABEL[team]||team)}</span>`,
+    u.role==='admin'?'<span class="chip chip-role">Admin</span>':'',
+    (d&&d.weak)?'<span class="chip chip-weak">⚠ ضعيف</span>':'',
+    lite?'<span class="chip chip-lite">🐢 لايت</span>':'',
+    on.cls?`<span class="chip ${on.cls}">${on.lbl}</span>`:''
+  ].filter(Boolean).join('');
+
+  let body;
+  if(!d){
+    body=`<div class="specs"><div class="nodata">⏳ الزميل لسه محصلش تسجيل دخول من جهازه — أول ما يفتح النظام هتظهر مواصفاته هنا.</div></div>`;
+  }else{
+    const net=d.netType?`${esc(d.netType)}${d.netDownlink?' · '+d.netDownlink+'Mb':''}${d.netRtt?' · '+d.netRtt+'ms':''}`:'—';
+    let batt='—', battMeter='';
+    if(typeof d.batteryLevel==='number'){
+      const bc=d.batteryLevel<=20?'var(--red)':d.batteryLevel<=50?'var(--amber)':'var(--green)';
+      batt=`${d.batteryCharging?'⚡':''}${arNum(d.batteryLevel)}%`;
+      battMeter=`<div class="meter"><i style="width:${Math.max(4,d.batteryLevel)}%;--mc:${bc}"></i></div>`;
+    }
+    let stor='—', storMeter='';
+    if(d.storageQuota){
+      const pct=d.storageUsage?Math.min(100,Math.round(d.storageUsage/d.storageQuota*100)):0;
+      stor=`${fmtGB(d.storageUsage)} / ${fmtGB(d.storageQuota)}`;
+      storMeter=`<div class="meter"><i style="width:${Math.max(2,pct)}%;--mc:var(--blue)"></i></div>`;
+    }
+    body=`<div class="specs">
+      ${spec('💻','النظام / المتصفح',`${esc(d.os||'—')} · ${esc(d.browser||'—')}`)}
+      ${spec('⚙️','المعالج',d.cores?arNum(d.cores)+' كور':'—')}
+      ${spec('🧠','الرام',d.memory?arNum(d.memory)+' GB':'<span style="color:var(--faint)">غير مكشوف</span>')}
+      ${spec('🎮','كارت الشاشة',esc(d.gpu||'—'))}
+      ${spec('🖥️','الشاشة',`${esc(d.screen||'—')}${d.dpr?' @'+d.dpr+'x':''}`)}
+      ${spec('📶','الشبكة',net)}
+      <div class="spec"><span class="s-l">🔋 البطارية</span><span class="s-v">${batt}</span>${battMeter}</div>
+      <div class="spec"><span class="s-l">💾 التخزين</span><span class="s-v">${stor}</span>${storMeter}</div>
+      ${spec('🌐','IP',esc(d.ip||'—'))}
+      ${spec('🕒','آخر ظهور',relTime(d.at)||'—')}
+    </div>`;
+  }
+
+  const statusHtml = st
+    ? `<div class="cmd-status ${st.done?'done':'pending'}">${st.done?'✓':'⏳'} آخر أمر: ${esc(st.label)} — ${st.done?'اتنفّذ '+relTime(st.at):'مستني تنفيذ'}</div>`
+    : '';
+
+  return `<div class="dev ${d&&d.weak?'weak':''} ${lite?'lite':''}" data-uid="${esc(u.id)}">
+    <div class="dev-top" onclick="openDetail('${esc(u.id)}')">
+      <div class="dev-av" style="--av1:${c1};--av2:${c2}">${esc(initials(u.displayName||u.email))}</div>
+      <div class="dev-id">
+        <span class="dev-name">${esc(u.displayName||'—')}</span>
+        <span class="dev-mail">${esc(u.email||'—')}</span>
+        <div class="dev-chips">${chips}</div>
+      </div>
+    </div>
+    <div class="dev-body" onclick="openDetail('${esc(u.id)}')">${body}</div>
+    <div class="dev-foot">
+      <div class="lite-row">
+        <span class="lite-lbl">🐢 لايت مود <span style="color:var(--faint);font-weight:600">(يوقف الأنيميشن الزخرفي)</span></span>
+        <label class="sw"><input type="checkbox" ${lite?'checked':''} onchange="toggleLite('${esc(u.id)}',this.checked)"><i></i></label>
+      </div>
+      <div class="cmd-row">
+        <button class="cbtn" onclick="sendCmd('${esc(u.id)}','refresh')">🔄 تحديث</button>
+        <button class="cbtn" onclick="openMsg('${esc(u.id)}')">💬 رسالة</button>
+        <button class="cbtn danger" onclick="sendCmd('${esc(u.id)}','logout')">🚪 خروج</button>
+      </div>
+      <div class="cmd-row">
+        <button class="cbtn" onclick="sendCmd('${esc(u.id)}','clearcache')">🧹 مسح الكاش</button>
+        <button class="cbtn" onclick="openNav('${esc(u.id)}')">🧭 فتح صفحة</button>
+        <button class="cbtn" onclick="sendCmd('${esc(u.id)}','reportnow')">📊 حدّث المواصفات</button>
+      </div>
+      <div class="cmd-row">
+        ${u.active===false
+          ? `<button class="cbtn" style="flex:1;border-color:rgba(25,158,112,.4);color:#7ee0bd" onclick="toggleActive('${esc(u.id)}',true)">✅ تفعيل الحساب — موقوف حاليًا</button>`
+          : `<button class="cbtn danger" style="flex:1" onclick="toggleActive('${esc(u.id)}',false)">⛔ إيقاف الحساب (يمنع الدخول)</button>`}
+      </div>
+      ${statusHtml}
+    </div>
+  </div>`;
+}
+
+/* ---------- actions ---------- */
+async function writeUser(uid, patch){
+  try{
+    await setDoc(doc(db,'users',uid), Object.assign({updatedAt:serverTimestamp(),updatedBy:ME.email}, patch), {merge:true});
+    return true;
+  }catch(e){ console.error(e); toast('فشل — راجع الصلاحيات','err'); return false; }
+}
+window.toggleLite = async (uid,on)=>{
+  const ok=await writeUser(uid,{liteMode:!!on});
+  if(ok) toast(on?'🐢 اتفعّل لايت مود — هيتطبّق على شاشته فورًا':'اترفع لايت مود','ok');
+};
+const CMD_META = {
+  refresh:{verb:'إعادة تحميل صفحة', sent:'🔄 اتبعت أمر التحديث', confirm:true},
+  logout:{verb:'تسجيل خروج من', sent:'🚪 اتبعت أمر الخروج', confirm:true},
+  clearcache:{verb:'مسح الكاش وإعادة تحميل', sent:'🧹 اتبعت أمر مسح الكاش', confirm:true},
+  reportnow:{verb:'', sent:'📊 اتبعت طلب تحديث المواصفات', confirm:false}
+};
+window.sendCmd = async (uid,type)=>{
+  const u=USERS.find(x=>x.id===uid)||{};
+  const who=u.displayName||u.email||'الجهاز';
+  const meta=CMD_META[type]||{sent:'اتبعت الأمر',confirm:true};
+  if(meta.confirm && !confirm(`تأكيد: ${meta.verb} «${who}»؟\nهيتنفّذ لحظيًا لو الجهاز فاتح النظام، أو أول ما يفتحه.`)) return;
+  const ok=await writeUser(uid,{deviceCommand:{type, id:Date.now(), at:Date.now(), by:ME.email}});
+  if(ok) toast(meta.sent,'ok');
+};
+
+const APP_PAGES=[
+  ['/index.html','🏠 الرئيسية'],['/agent.html','📋 تسجيل استشارة'],['/review.html','🔍 مراجعة الاستشارات'],
+  ['/followup.html','📋 شيت الفولو أب'],['/agent-stats.html','📊 إحصائيات الزملاء'],['/reviewer-stats.html','📞 داش المراجعين'],
+  ['/consult-analytics.html','🔬 تحليل الاستشارات'],['/call-analytics.html','📈 تحليلات المكالمات'],['/cc-ops.html','📞 CC Ops'],
+  ['/my-fb.html','👤 لوحتي فيسبوك'],['/facebook.html','📘 فيسبوك الفريق'],['/fb-live.html','📡 فيسبوك لايف'],
+  ['/call-live.html','📡 NAZRA لايف'],['/devices.html','🖥 مركز الأجهزة'],['/admin.html','✏️ تعديل الأسئلة'],['/settings.html','⚙️ إعدادات الحقول']
+];
+window.openNav = (uid)=>{
+  const u=USERS.find(x=>x.id===uid)||{};
+  const opts=APP_PAGES.map(p=>`<option value="${p[0]}">${p[1]}</option>`).join('');
+  $('modalInner').innerHTML=`
+    <div class="m-head"><div class="dev-av" style="width:40px;height:40px;font-size:15px">🧭</div>
+      <div><h2>افتح صفحة على جهازه</h2><div class="m-sub">${esc(u.displayName||u.email||'')}</div></div>
+      <button class="m-x" onclick="closeOv()">✕</button></div>
+    <div class="m-body">
+      <p style="color:var(--muted);font-size:13px;margin:0 0 12px;line-height:1.6">هتوجّه متصفح الزميل لصفحة من صفحات النظام — لحظيًا لو فاتح النظام. (صفحات الموقع فقط للأمان.)</p>
+      <div class="fld" style="margin-bottom:14px"><label>الصفحة</label><select id="navSel" style="width:100%">${opts}</select></div>
+      <div class="m-actions">
+        <button class="m-send" onclick="doNav('${esc(uid)}')">🧭 وجّهه للصفحة</button>
+        <button class="m-cancel" onclick="closeOv()">إلغاء</button>
+      </div>
+    </div>`;
+  $('ov').classList.add('on');
+};
+window.doNav = async (uid)=>{
+  const url=$('navSel')?.value||'';
+  if(!url){ toast('اختار صفحة','err'); return; }
+  const ok=await writeUser(uid,{deviceCommand:{type:'navigate', url, id:Date.now(), at:Date.now(), by:ME.email}});
+  if(ok){ toast('🧭 اتبعت أمر الفتح','ok'); closeOv(); }
+};
+window.toggleActive = async (uid,active)=>{
+  const u=USERS.find(x=>x.id===uid)||{};
+  const who=u.displayName||u.email||'الحساب';
+  if(!active){
+    if(!confirm(`إيقاف حساب «${who}»؟\nمش هيقدر يسجّل دخول تاني، وهيتسجّل خروجه فورًا لو فاتح النظام.`)) return;
+    const ok=await writeUser(uid,{active:false, deviceCommand:{type:'logout', id:Date.now(), at:Date.now(), by:ME.email}});
+    if(ok) toast('⛔ الحساب اتوقف','ok');
+  }else{
+    const ok=await writeUser(uid,{active:true});
+    if(ok) toast('✅ الحساب اتفعّل','ok');
+  }
+};
+window.openMsg = (uid)=>{
+  const u=USERS.find(x=>x.id===uid)||{};
+  $('modalInner').innerHTML=`
+    <div class="m-head"><div class="dev-av" style="width:40px;height:40px;font-size:15px">💬</div>
+      <div><h2>رسالة على شاشة الجهاز</h2><div class="m-sub">${esc(u.displayName||u.email||'')}</div></div>
+      <button class="m-x" onclick="closeOv()">✕</button></div>
+    <div class="m-body">
+      <p style="color:var(--muted);font-size:13px;margin:0 0 12px;line-height:1.6">هتظهر للزميل كرسالة عائمة فوق الصفحة — لحظيًا لو فاتح النظام، أو أول ما يفتحه.</p>
+      <textarea class="m-ta" id="msgText" placeholder="اكتب الرسالة… مثال: من فضلك اقفل التابات الزيادة، الجهاز بطيء."></textarea>
+      <label style="display:flex;align-items:center;gap:8px;margin:12px 0 2px;font-size:13.5px;font-weight:700;color:var(--ink2);cursor:pointer">
+        <input type="checkbox" id="msgSound" checked style="width:17px;height:17px;accent-color:#38c7ff"> 🔊 صوت تنبيه مع الرسالة
+      </label>
+      <div class="m-actions">
+        <button class="m-send" onclick="doSendMsg('${esc(uid)}')">📤 ابعت الرسالة</button>
+        <button class="m-cancel" onclick="closeOv()">إلغاء</button>
+      </div>
+    </div>`;
+  $('ov').classList.add('on');
+  setTimeout(()=>$('msgText')?.focus(),50);
+};
+window.doSendMsg = async (uid)=>{
+  const t=($('msgText')?.value||'').trim();
+  if(!t){ toast('اكتب الرسالة الأول','err'); return; }
+  const sound=$('msgSound')?.checked===true;
+  const ok=await writeUser(uid,{deviceCommand:{type:'message', text:t, sound, id:Date.now(), at:Date.now(), by:ME.email}});
+  if(ok){ toast('💬 اتبعت الرسالة','ok'); closeOv(); }
+};
+
+/* ---------- detail modal ---------- */
+window.openDetail = (uid)=>{
+  const u=USERS.find(x=>x.id===uid); if(!u) return;
+  const d=u.deviceInfo||{};
+  const [c1,c2]=avColor(u.email||u.id);
+  const row=(k,v)=>`<dt>${esc(k)}</dt><dd>${esc(v==null||v===''?'—':v)}</dd>`;
+  const netFull=d.netType?`${d.netType}${d.netDownlink?' · '+d.netDownlink+' Mb/s':''}${d.netRtt?' · RTT '+d.netRtt+'ms':''}${d.netSave?' · توفير داتا':''}`:'—';
+  const hw=`<dl class="kv">
+    ${row('النظام',d.os)}${row('المتصفح',d.browser)}${row('المنصّة',d.platform)}
+    ${row('المعالج (كور)',d.cores)}${row('الرام (GB)',d.memory??'غير مكشوف')}${row('كارت الشاشة',d.gpu)}
+    ${row('الشاشة',d.screen)}${row('الـ Viewport',d.viewport)}${row('كثافة البكسل',d.dpr?d.dpr+'x':'')}${row('عمق الألوان',d.colorDepth)}${row('اللمس',d.touch?d.touch+' نقطة':'لا')}
+  </dl>`;
+  const net=`<dl class="kv">
+    ${row('نوع الشبكة',netFull)}${row('IP العام',d.ip)}${row('المنطقة الزمنية',d.tz)}${row('اللغة',d.lang)}${row('متصل بالنت',d.online===false?'لا':'أيوه')}
+    ${row('البطارية',typeof d.batteryLevel==='number'?(d.batteryLevel+'%'+(d.batteryCharging?' (بيشحن)':'')):'—')}
+    ${row('التخزين المستخدم',fmtGB(d.storageUsage))}${row('سعة التخزين',fmtGB(d.storageQuota))}
+    ${row('آخر ظهور',d.at?(new Date(d.at).toLocaleString('ar-EG')+' — '+relTime(d.at)):'—')}
+  </dl>`;
+  const acct=`<dl class="kv">
+    ${row('الاسم',u.displayName)}${row('الإيميل',u.email)}${row('الرقم',u.agentNumber)}${row('الدور',u.role)}${row('الفريق',TEAM_LABEL[normTeam(u.team)]||u.team)}
+    ${row('لايت مود',u.liteMode===true?'مفعّل':'مقفول')}${row('الحالة',u.active===false?'موقوف':'نشط')}
+  </dl>`;
+  $('modalInner').innerHTML=`
+    <div class="m-head"><div class="dev-av" style="--av1:${c1};--av2:${c2}">${esc(initials(u.displayName||u.email))}</div>
+      <div><h2>${esc(u.displayName||'—')}</h2><div class="m-sub">${esc(u.email||'')}</div></div>
+      <button class="m-x" onclick="closeOv()">✕</button></div>
+    <div class="m-body">
+      <div class="m-sec">👤 الحساب</div>${acct}
+      <div class="m-sec">💻 العتاد والشاشة</div>${!u.deviceInfo?'<div class="nodata">لسه محصلش بيانات من الجهاز.</div>':hw}
+      ${u.deviceInfo?('<div class="m-sec">🌐 الشبكة والنظام</div>'+net):''}
+      <div class="m-actions">
+        <button class="m-cancel" onclick='copyJson(${JSON.stringify(uid)})'>📋 نسخ المواصفات (JSON)</button>
+        <button class="m-cancel" onclick="closeOv()">إغلاق</button>
+      </div>
+    </div>`;
+  $('ov').classList.add('on');
+};
+window.copyJson = (uid)=>{
+  const u=USERS.find(x=>x.id===uid); if(!u) return;
+  const out={name:u.displayName,email:u.email,team:u.team,role:u.role,liteMode:u.liteMode===true,deviceInfo:u.deviceInfo||null};
+  const txt=JSON.stringify(out,null,2);
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject())
+    .then(()=>toast('📋 اتنسخت','ok')).catch(()=>toast('انسخ يدوي: '+txt.slice(0,40)+'…','err'));
+};
+window.closeOv = ()=>$('ov').classList.remove('on');
+$('ov').addEventListener('click',e=>{ if(e.target===$('ov')) closeOv(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeOv(); });
+
+/* ---------- toast ---------- */
+let _tt=null;
+window.toast=(msg,type)=>{
+  const t=$('toast'); if(!t) return;
+  t.textContent=msg; t.className=''+(type||''); void t.offsetWidth; t.classList.add('on'); if(type)t.classList.add(type);
+  clearTimeout(_tt); _tt=setTimeout(()=>t.classList.remove('on'),2600);
+};
+window.reloadUsers=reloadUsers;
+window.render=render;
+</script>
+</body>
+</html>

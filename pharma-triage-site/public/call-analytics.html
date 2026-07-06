@@ -1,0 +1,1243 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="لوحة تحليلات مكالمات فريق الاستشارات الدوائية — Pharma Triage.">
+<meta name="theme-color" content="#0d1f3c">
+<meta name="robots" content="noindex">
+<script src="/lite-mode.js"></script>
+<title>تحليلات المكالمات · Pharma Triage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap"></noscript>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   PHARMA TRIAGE — Call Analytics Dashboard
+   Navy · Teal · Gold · Ivory  |  Light + Dark
+═══════════════════════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0d1f3c; --navy2:#162d52; --navy3:#1e3d6e;
+  --teal:#0ea5a0; --teal2:#0cc8c2; --gold:#c9a84c;
+  --ivory:#f9f7f2; --white:#fff;
+  --bg:#eef1f6; --bg2:#f7f9fc;
+  --card:#ffffff; --card-2:#fbfcfe;
+  --ink:#0d1f3c; --text:#2d4060; --muted:#6b82a0;
+  --border:rgba(13,31,60,.10); --border2:rgba(13,31,60,.16);
+  --green:#0f8c5e; --red:#d34a3a; --amber:#d99a2b;
+  --grid:rgba(13,31,60,.07);
+  --heat-base:#c4eae8;
+  --shadow:0 1px 2px rgba(13,31,60,.06),0 8px 28px -12px rgba(13,31,60,.18);
+  --shadow-lg:0 2px 6px rgba(13,31,60,.08),0 26px 60px -22px rgba(13,31,60,.32);
+  --radius:18px; --radius-sm:13px;
+  --c1:#0ea5a0; --c2:#1e3d6e; --c3:#c9a84c; --c4:#5b86c4; --c5:#0f8c5e;
+  --maxw:1240px;
+}
+[data-theme="dark"]{
+  --bg:#070e1c; --bg2:#0b1424;
+  --card:rgba(255,255,255,.045); --card-2:rgba(255,255,255,.03);
+  --ink:#eaf1fb; --text:#cdd9ec; --muted:#8aa0c2;
+  --border:rgba(255,255,255,.09); --border2:rgba(255,255,255,.16);
+  --grid:rgba(255,255,255,.08);
+  --heat-base:#0b2535;
+  --teal:#16c3bd; --teal2:#2ee0d8; --gold:#e0c477;
+  --green:#28c07e; --red:#f56b58; --amber:#ecb44b;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 34px -14px rgba(0,0,0,.6);
+  --shadow-lg:0 2px 8px rgba(0,0,0,.45),0 32px 70px -24px rgba(0,0,0,.75);
+  --c1:#16c3bd; --c2:#6ea2e8; --c3:#e0c477; --c4:#8ab0e8; --c5:#28c07e;
+}
+html,body{height:100%}
+body{
+  font-family:"Cairo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:var(--text); background:var(--bg);
+  -webkit-font-smoothing:antialiased; line-height:1.6;
+  background-image:
+    radial-gradient(1100px 600px at 100% -8%, color-mix(in srgb, var(--teal) 12%, transparent), transparent 60%),
+    radial-gradient(900px 520px at -6% 4%, color-mix(in srgb, var(--navy3) 14%, transparent), transparent 58%);
+  min-height:100%;
+}
+h1,h2,h3,.num{font-family:"Noto Kufi Arabic","Cairo",sans-serif}
+a{color:inherit;text-decoration:none}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+
+/* ── Top bar ─────────────────────────────────────────────── */
+.topbar{
+  position:sticky;top:0;z-index:40;
+  backdrop-filter:saturate(160%) blur(14px);
+  background:color-mix(in srgb, var(--bg) 82%, transparent);
+  border-bottom:1px solid var(--border);
+}
+.topbar-in{max-width:var(--maxw);margin:0 auto;padding:13px 20px;display:flex;align-items:center;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.brand-logo{
+  width:42px;height:42px;border-radius:12px;flex:none;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--navy2),var(--navy3));
+  box-shadow:0 6px 16px -6px rgba(13,31,60,.5), inset 0 0 0 1px rgba(255,255,255,.08);
+}
+.brand-logo svg{width:23px;height:23px}
+.brand-tx b{display:block;font-family:"Noto Kufi Arabic";font-size:1.02rem;color:var(--ink);line-height:1.2}
+.brand-tx span{font-size:.74rem;color:var(--muted)}
+.spacer{flex:1}
+.tbtn{
+  display:inline-flex;align-items:center;gap:7px;height:40px;padding:0 15px;border-radius:11px;
+  border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;
+  font-family:inherit;font-size:.86rem;font-weight:600;transition:.18s;white-space:nowrap;
+}
+.tbtn:hover{border-color:var(--teal);color:var(--ink);transform:translateY(-1px)}
+.tbtn svg{width:17px;height:17px}
+.tbtn.icon{width:40px;padding:0;justify-content:center}
+
+/* ── Layout ──────────────────────────────────────────────── */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:26px 20px 70px}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:22px}
+.hero h1{font-size:clamp(1.5rem,3.4vw,2.15rem);color:var(--ink);line-height:1.18;font-weight:900}
+.hero .pill{display:inline-flex;align-items:center;gap:7px;margin-top:9px;font-size:.82rem;color:var(--muted)}
+.hero .pill b{color:var(--teal)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px var(--teal-soft, color-mix(in srgb,var(--teal) 22%,transparent))}
+
+/* segmented control */
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--border);border-radius:13px;padding:5px;gap:4px;box-shadow:var(--shadow)}
+.seg button{
+  border:0;background:transparent;color:var(--muted);font-family:inherit;font-weight:700;font-size:.88rem;
+  padding:9px 17px;border-radius:9px;cursor:pointer;transition:.18s;display:flex;align-items:center;gap:7px;white-space:nowrap;
+}
+.seg button svg{width:16px;height:16px}
+.seg button.on{color:#fff;background:linear-gradient(135deg,var(--teal),var(--teal2));box-shadow:0 8px 18px -8px color-mix(in srgb,var(--teal) 70%,transparent)}
+[data-theme="dark"] .seg button.on{color:#04222a}
+
+/* ── KPI cards ───────────────────────────────────────────── */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}
+.kpi{
+  position:relative;overflow:hidden;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:17px 18px;box-shadow:var(--shadow);
+  transition:transform .2s, box-shadow .2s, border-color .2s;
+}
+.kpi:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--border2)}
+.kpi::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:4px;background:var(--accent,var(--teal))}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.kpi-ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex:none;
+  background:color-mix(in srgb,var(--accent,var(--teal)) 14%,transparent);color:var(--accent,var(--teal))}
+.kpi-ic svg{width:20px;height:20px}
+.kpi-tag{font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:20px;background:color-mix(in srgb,var(--accent,var(--teal)) 12%,transparent);color:var(--accent,var(--teal))}
+.kpi-val{font-size:1.95rem;font-weight:900;color:var(--ink);line-height:1.05}
+.kpi-label{font-size:.82rem;color:var(--muted);margin-top:3px;font-weight:600}
+.kpi-sub{font-size:.74rem;color:var(--muted);margin-top:7px;display:flex;align-items:center;gap:5px}
+.kpi-sub b{font-weight:800}
+.up{color:var(--green)} .down{color:var(--red)} .neu{color:var(--gold)}
+
+/* ── Panels / charts ─────────────────────────────────────── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}
+.span-2{grid-column:1 / -1}
+.panel{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:18px 19px;margin-bottom:16px;
+}
+.panel-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+.panel-h h3{font-size:1.02rem;color:var(--ink);font-weight:800;display:flex;align-items:center;gap:9px}
+.panel-h h3 .hi{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:color-mix(in srgb,var(--teal) 13%,transparent);color:var(--teal)}
+.panel-h h3 .hi svg{width:17px;height:17px}
+.panel-sub{font-size:.78rem;color:var(--muted);margin-bottom:14px}
+.panel-tot{font-size:.78rem;color:var(--muted)}
+.panel-tot b{font-family:"Noto Kufi Arabic";color:var(--ink);font-size:1.05rem;font-weight:800}
+
+/* svg chart bits */
+.chart{width:100%;display:block;overflow:visible;direction:ltr}
+.gl{stroke:var(--grid);stroke-width:1}
+.axt{fill:var(--muted);font-size:11px;font-family:"Cairo",sans-serif}
+.bar{transition:opacity .15s;cursor:pointer}
+.bar:hover{opacity:.82}
+.barlbl{fill:var(--muted);font-size:10.5px;font-family:"Cairo";font-variant-numeric:tabular-nums}
+
+/* legend */
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:.8rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+
+/* donut center */
+.donut-wrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center}
+.donut-stat{display:flex;flex-direction:column;gap:9px;min-width:130px}
+.ds{display:flex;align-items:center;gap:10px}
+.ds i{width:12px;height:12px;border-radius:4px;flex:none}
+.ds .ds-v{font-family:"Noto Kufi Arabic";font-weight:800;color:var(--ink)}
+.ds .ds-l{font-size:.78rem;color:var(--muted)}
+
+/* calendar heatmap */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal .cell{aspect-ratio:1;border-radius:8px;display:grid;place-items:center;font-size:.74rem;font-weight:700;
+  color:var(--muted);background:var(--grid);position:relative;cursor:default;transition:transform .12s}
+.cal .cell.has:hover{transform:scale(1.12);z-index:2}
+.cal .cell .cd{position:absolute;top:3px;inset-inline-end:5px;font-size:.62rem;opacity:.7;font-weight:600}
+.cal .head{aspect-ratio:auto;background:none;color:var(--muted);font-size:.72rem;font-weight:700;padding-bottom:2px}
+.cal-scale{display:flex;align-items:center;gap:6px;justify-content:flex-end;margin-top:11px;font-size:.72rem;color:var(--muted)}
+.cal-scale i{width:15px;height:13px;border-radius:3px}
+
+/* table */
+.tbl{width:100%;border-collapse:collapse;font-size:.86rem}
+.tbl th{text-align:start;color:var(--muted);font-weight:700;font-size:.76rem;padding:9px 10px;border-bottom:1px solid var(--border);cursor:pointer;user-select:none}
+.tbl th:hover{color:var(--ink)}
+.tbl td{padding:10px;border-bottom:1px solid var(--border)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tbody tr{transition:background .12s}
+.tbl tbody tr:hover{background:color-mix(in srgb,var(--teal) 6%,transparent)}
+.rank{width:26px;height:26px;border-radius:8px;display:inline-grid;place-items:center;font-family:"Noto Kufi Arabic";font-weight:800;font-size:.78rem;
+  background:color-mix(in srgb,var(--navy3) 12%,transparent);color:var(--navy3)}
+[data-theme="dark"] .rank{color:var(--c2)}
+.rank.g1{background:linear-gradient(135deg,var(--gold),#e6cf86);color:#3a2e07}
+.tbl .mini{height:7px;border-radius:5px;background:linear-gradient(90deg,var(--teal),var(--teal2));min-width:5px}
+.tbl .mwrap{background:var(--grid);border-radius:5px;overflow:hidden;width:100%;max-width:160px}
+
+/* comparison */
+.cmp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.cmp{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.cmp h4{font-size:.82rem;color:var(--muted);font-weight:700;margin-bottom:13px}
+.cmp-row{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.cmp-row .nm{width:74px;font-size:.78rem;color:var(--text);font-weight:600;flex:none}
+.cmp-row .track{flex:1;height:10px;border-radius:6px;background:var(--grid);overflow:hidden}
+.cmp-row .fill{height:100%;border-radius:6px}
+.cmp-row .vv{width:62px;text-align:end;font-family:"Noto Kufi Arabic";font-weight:800;font-size:.85rem;color:var(--ink);flex:none}
+
+/* tooltip */
+#tip{position:fixed;z-index:99;pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .12s;
+  background:var(--navy);color:#fff;padding:8px 11px;border-radius:10px;font-size:.78rem;font-weight:600;
+  box-shadow:0 10px 30px -8px rgba(0,0,0,.5);white-space:nowrap}
+#tip b{font-family:"Noto Kufi Arabic";font-weight:800}
+[data-theme="dark"] #tip{background:#10243f;border:1px solid var(--border2)}
+
+footer{max-width:var(--maxw);margin:0 auto;padding:8px 20px 40px;color:var(--muted);font-size:.78rem;text-align:center}
+
+.fade{opacity:0;transform:translateY(14px);animation:fade .5s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes fade{to{opacity:1;transform:none}}
+
+/* ── Consult-team leaderboard ─────────────────────────────── */
+.ct-hdr{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:18px 22px;
+  background:linear-gradient(135deg,#070e1c 0%,#0d1f3c 50%,#0b2e3d 100%);
+  border-radius:var(--radius-sm) var(--radius-sm) 0 0;
+  margin:-18px -19px 20px;
+  position:relative;overflow:hidden;
+}
+.ct-hdr::after{
+  content:'';position:absolute;inset-inline-end:-60px;top:-60px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(14,200,194,.18),transparent 65%);
+  pointer-events:none;
+}
+.ct-hdr-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:relative;z-index:1}
+.ct-hdr-title{
+  font-family:"Noto Kufi Arabic","Cairo",sans-serif;font-size:.96rem;font-weight:900;
+  color:#fff;display:flex;align-items:center;gap:9px;
+}
+.ct-hdr-badge{
+  font-size:.66rem;font-weight:800;
+  background:rgba(14,200,194,.13);border:1px solid rgba(14,200,194,.30);
+  color:#0cc8c2;padding:3px 10px;border-radius:20px;
+}
+.ct-legend{display:flex;gap:14px;font-size:.7rem;color:rgba(255,255,255,.5);position:relative;z-index:1}
+.ct-legend span{display:flex;align-items:center;gap:5px}
+.ct-legend i{width:24px;height:5px;border-radius:3px;flex:none}
+
+/* Card grid */
+.ct-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
+  gap:14px;
+}
+
+/* Individual agent card */
+.ct-card{
+  position:relative;border-radius:16px;padding:18px;overflow:hidden;
+  background:var(--card);border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s,border-color .18s;
+  animation:ctCardIn .4s cubic-bezier(.22,.61,.36,1) both;
+}
+@keyframes ctCardIn{from{opacity:0;transform:translateY(12px) scale(.97);}to{opacity:1;transform:none;}}
+.ct-card:hover{transform:translateY(-5px) scale(1.012);box-shadow:var(--shadow-lg);}
+/* Top-3 accent tops */
+.ct-card.ct-top1{border-color:rgba(201,168,76,.35);}
+.ct-card.ct-top2{border-color:rgba(180,186,196,.28);}
+.ct-card.ct-top3{border-color:rgba(180,93,9,.28);}
+.ct-card.ct-top1::before,.ct-card.ct-top2::before,.ct-card.ct-top3::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+}
+.ct-card.ct-top1::before{background:linear-gradient(90deg,transparent,#c9a84c,#f0d060,#c9a84c,transparent);}
+.ct-card.ct-top2::before{background:linear-gradient(90deg,transparent,#9ca3b0,#cdd2da,#9ca3b0,transparent);}
+.ct-card.ct-top3::before{background:linear-gradient(90deg,transparent,#b45309,#e07010,#b45309,transparent);}
+/* Ambient glow blob in corner */
+.ct-card-blob{
+  position:absolute;inset-inline-start:-30px;bottom:-30px;
+  width:110px;height:110px;border-radius:50%;
+  filter:blur(22px);pointer-events:none;opacity:.5;
+}
+/* Card header: rank + avatar + name */
+.ct-card-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;}
+.ct-rank{
+  width:32px;height:32px;border-radius:10px;display:inline-grid;
+  place-items:center;font-family:"Noto Kufi Arabic","Cairo";
+  font-weight:900;font-size:.82rem;flex:none;
+}
+.ct-rank.r1{background:linear-gradient(135deg,#c9a84c,#f0d468);color:#3a2800;box-shadow:0 4px 12px rgba(201,168,76,.4)}
+.ct-rank.r2{background:linear-gradient(135deg,#8e99a8,#c6cdd6);color:#1a2035;box-shadow:0 4px 12px rgba(140,155,168,.3)}
+.ct-rank.r3{background:linear-gradient(135deg,#b45309,#e07212);color:#fff;box-shadow:0 4px 12px rgba(180,83,9,.35)}
+.ct-rank.rn{background:color-mix(in srgb,var(--navy3) 12%,transparent);color:var(--muted);font-size:.78rem}
+/* Avatar circle with initials */
+.ct-avatar{
+  width:42px;height:42px;border-radius:13px;display:grid;place-items:center;
+  font-family:"Noto Kufi Arabic","Cairo";font-size:.95rem;font-weight:900;
+  flex:none;border:1px solid rgba(255,255,255,.12);
+}
+/* Name area */
+.ct-name-area{flex:1;min-width:0}
+.ct-name{
+  font-size:.85rem;font-weight:700;color:var(--ink);line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;margin-bottom:5px;
+}
+.ct-login{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:.64rem;font-weight:900;color:var(--teal);letter-spacing:.02em;
+  background:color-mix(in srgb,var(--teal) 9%,transparent);
+  border:1px solid color-mix(in srgb,var(--teal) 24%,transparent);
+  padding:2px 8px;border-radius:6px;font-family:"Cairo",monospace;
+}
+.ct-login::before{content:"#";opacity:.6}
+/* Metrics */
+.ct-metrics{display:flex;flex-direction:column;gap:10px}
+.ct-metric-hdr{
+  display:flex;align-items:baseline;justify-content:space-between;gap:6px;margin-bottom:5px;
+}
+.ct-metric-lbl{font-size:.68rem;font-weight:700;color:var(--muted);white-space:nowrap}
+.ct-metric-val{
+  font-size:1.08rem;font-weight:900;font-family:"Cairo",sans-serif;
+  font-variant-numeric:tabular-nums;color:var(--ink);
+}
+.ct-metric-sub{font-size:.64rem;font-weight:600;color:var(--muted)}
+.ct-bar-track{height:7px;border-radius:4px;background:var(--grid);overflow:hidden}
+.ct-bar-fill{height:100%;border-radius:4px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+/* Divider */
+.ct-divider{height:1px;background:var(--border);margin:10px 0}
+
+/* palette switcher */
+.pal-sw{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.pal-sw-lbl{font-size:.7rem;color:var(--muted);font-weight:600;white-space:nowrap}
+.pal-btn{
+  width:22px;height:22px;border-radius:6px;padding:0;cursor:pointer;
+  transition:transform .14s,box-shadow .14s;border:none;
+}
+.pal-btn:hover{transform:scale(1.2);}
+.pal-btn:first-of-type{width:44px;border-radius:6px;}  /* wider for gradient thermal */
+/* month row */
+#monthRow{max-width:var(--maxw);margin:0 auto;padding:0 20px 16px;display:flex;justify-content:flex-end}
+#monthRow .seg{margin:0}
+
+@media(max-width:900px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .grid2,.grid3,.cmp-grid{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .hero{align-items:flex-start}
+  .seg{width:100%;overflow:auto}
+  .brand-tx span{display:none}
+}
+
+/* ── Portrait lock overlay ── */
+#portraitLock{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:var(--navy,#0d1f3c);
+  align-items:center;justify-content:center;flex-direction:column;
+  gap:20px;padding:32px;text-align:center;
+}
+@media(orientation:portrait) and (max-width:900px){
+  #portraitLock{display:flex;}
+  body>*:not(#portraitLock){visibility:hidden;}
+}
+.pl-icon{
+  width:72px;height:72px;border-radius:20px;
+  background:rgba(14,200,194,.12);border:1px solid rgba(14,200,194,.28);
+  display:grid;place-items:center;
+  animation:plRotate 2.2s ease-in-out infinite;
+}
+@keyframes plRotate{
+  0%,100%{transform:rotate(0deg);}
+  40%{transform:rotate(90deg);}
+  60%{transform:rotate(90deg);}
+}
+.pl-icon svg{width:36px;height:36px;stroke:#0cc8c2;fill:none;}
+.pl-title{
+  font-family:"Noto Kufi Arabic","Cairo",sans-serif;
+  font-size:1.1rem;font-weight:900;color:#e8f4ff;
+}
+.pl-sub{font-size:.82rem;color:rgba(180,210,240,.55);line-height:1.6;max-width:260px;}
+
+/* ── فلتر الفترة الزمنية ── */
+#monthRow{flex-wrap:wrap;gap:10px}
+.ca-dfbar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+  background:var(--card);border:1px solid var(--border);border-radius:13px;
+  padding:8px 12px;box-shadow:0 1px 2px rgba(13,31,60,.05)}
+.ca-df-ic{font-size:15px}
+.ca-df-lbl{font-size:12.5px;font-weight:800;color:var(--muted)}
+.ca-df-in{font-family:"Cairo",sans-serif;font-size:12.5px;font-weight:700;color:var(--ink);
+  background:var(--card-2);border:1px solid var(--border2);border-radius:9px;padding:6px 9px;cursor:pointer}
+[data-theme="dark"] .ca-df-in{color-scheme:dark}
+.ca-df-sep{color:var(--muted);font-weight:900}
+.ca-df-btn{font-family:"Cairo",sans-serif;font-size:12.5px;font-weight:800;cursor:pointer;
+  border:1px solid var(--border2);background:var(--card-2);color:var(--text);border-radius:9px;padding:6px 14px;transition:.15s}
+.ca-df-btn:hover{border-color:var(--teal);color:var(--teal)}
+.ca-df-apply{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff;border-color:transparent}
+[data-theme="dark"] .ca-df-apply{color:#04222a}
+.ca-df-note{display:flex;gap:8px;align-items:flex-start;font-size:12px;font-weight:700;line-height:1.7;
+  color:var(--muted);background:color-mix(in srgb,var(--gold) 12%,var(--card));
+  border:1px solid color-mix(in srgb,var(--gold) 32%,transparent);border-radius:12px;padding:10px 14px;margin-bottom:16px}
+</style>
+</head>
+<body>
+<div id="portraitLock" aria-hidden="true">
+  <div class="pl-icon">
+    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="5" y="2" width="14" height="20" rx="2"/>
+      <path d="M15 22H9M12 18h.01"/>
+    </svg>
+  </div>
+  <div class="pl-title">قلّب الشاشة أفقياً</div>
+  <div class="pl-sub">لوحة التحليلات مصممة للعرض الأفقي للاستخدام الأمثل</div>
+</div>
+<div id="tip"></div>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="index.html" title="الرئيسية">
+      <span class="brand-logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0cc8c2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </span>
+      <span class="brand-tx"><b>تحليلات المكالمات</b><span>Pharma Triage · Call Center</span></span>
+    </a>
+    <div class="spacer"></div>
+    <a class="tbtn" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      الرئيسية
+    </a>
+    <button class="tbtn icon" id="themeBtn" title="تبديل الوضع الليلي" aria-label="تبديل الوضع">
+      <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <div>
+      <h1 id="heroTitle">تحليلات مكالمات فريق الاستشارات</h1>
+      <div class="pill"><span class="dot"></span> الفترة: <b id="period">—</b></div>
+    </div>
+    <div class="seg" id="seg">
+      <button data-tab="customer" class="on">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        مكالمات العملاء
+      </button>
+      <button data-tab="internal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
+        المكالمات الداخلية
+      </button>
+      <button data-tab="cosmetic">
+        <span style="font-size:15px;line-height:1">💄</span>
+        الاستشارات التجميلية
+      </button>
+      <button data-tab="compare">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        مقارنة
+      </button>
+    </div>
+  </div>
+  <div id="monthRow"></div>
+  <section id="view"></section>
+</main>
+
+<footer>
+  لوحة تحليلات مكالمات · Pharma Triage —
+  البيانات مُولّدة في <span id="gen">—</span> ·
+  <span style="opacity:.8">المصدر: تقارير يونيو 2025 (العملاء + الداخلي)</span>
+</footer>
+
+<script>
+// DATA_START
+const DASH_DATA = {"generated":"2026-06-01 18:31","months":{"يونيو ٢٠٢٦":{"customer":{"period":"2026-04-21 → 2026-05-20","totals":{"total":4343,"abandoned":273,"answered":4070,"rate":0.0629},"days":[{"date":"2026-04-21","total":129,"abandoned":12,"answered":117,"rate":0.093,"status":"Warning"},{"date":"2026-04-22","total":157,"abandoned":8,"answered":149,"rate":0.051,"status":"Monitor"},{"date":"2026-04-23","total":116,"abandoned":13,"answered":103,"rate":0.1121,"status":"Warning"},{"date":"2026-04-24","total":122,"abandoned":12,"answered":110,"rate":0.0984,"status":"Warning"},{"date":"2026-04-25","total":143,"abandoned":7,"answered":136,"rate":0.049,"status":"Monitor"},{"date":"2026-04-26","total":162,"abandoned":6,"answered":156,"rate":0.037,"status":"Good"},{"date":"2026-04-27","total":145,"abandoned":5,"answered":140,"rate":0.0345,"status":"Good"},{"date":"2026-04-28","total":159,"abandoned":15,"answered":144,"rate":0.0943,"status":"Warning"},{"date":"2026-04-29","total":132,"abandoned":5,"answered":127,"rate":0.0379,"status":"Good"},{"date":"2026-04-30","total":142,"abandoned":12,"answered":130,"rate":0.0845,"status":"Warning"},{"date":"2026-05-01","total":152,"abandoned":9,"answered":143,"rate":0.0592,"status":"Monitor"},{"date":"2026-05-02","total":142,"abandoned":6,"answered":136,"rate":0.0423,"status":"Monitor"},{"date":"2026-05-03","total":136,"abandoned":9,"answered":127,"rate":0.0662,"status":"Monitor"},{"date":"2026-05-04","total":106,"abandoned":6,"answered":100,"rate":0.0566,"status":"Monitor"},{"date":"2026-05-05","total":125,"abandoned":5,"answered":120,"rate":0.04,"status":"Monitor"},{"date":"2026-05-06","total":164,"abandoned":13,"answered":151,"rate":0.0793,"status":"Monitor"},{"date":"2026-05-07","total":142,"abandoned":7,"answered":135,"rate":0.0493,"status":"Monitor"},{"date":"2026-05-08","total":148,"abandoned":9,"answered":139,"rate":0.0608,"status":"Monitor"},{"date":"2026-05-09","total":162,"abandoned":1,"answered":161,"rate":0.0062,"status":"Good"},{"date":"2026-05-10","total":159,"abandoned":8,"answered":151,"rate":0.0503,"status":"Monitor"},{"date":"2026-05-11","total":156,"abandoned":14,"answered":142,"rate":0.0897,"status":"Warning"},{"date":"2026-05-12","total":172,"abandoned":9,"answered":163,"rate":0.0523,"status":"Monitor"},{"date":"2026-05-13","total":139,"abandoned":12,"answered":127,"rate":0.0863,"status":"Warning"},{"date":"2026-05-14","total":136,"abandoned":8,"answered":128,"rate":0.0588,"status":"Monitor"},{"date":"2026-05-15","total":143,"abandoned":15,"answered":128,"rate":0.1049,"status":"Warning"},{"date":"2026-05-16","total":180,"abandoned":16,"answered":164,"rate":0.0889,"status":"Warning"},{"date":"2026-05-17","total":133,"abandoned":6,"answered":127,"rate":0.0451,"status":"Monitor"},{"date":"2026-05-18","total":156,"abandoned":7,"answered":149,"rate":0.0449,"status":"Monitor"},{"date":"2026-05-19","total":149,"abandoned":9,"answered":140,"rate":0.0604,"status":"Monitor"},{"date":"2026-05-20","total":136,"abandoned":9,"answered":127,"rate":0.0662,"status":"Monitor"}],"shifts":[{"raw":"12.00 AM : 7.00 AM","shift":"ليلي · ١٢ص–٧ص","total":922,"abandoned":57,"answered":865,"rate":0.0618,"avg_day":30.7333,"days":30,"status":"Monitor"},{"raw":"7:00 AM : 1.00 PM","shift":"صباحي · ٧ص–١م","total":817,"abandoned":128,"answered":689,"rate":0.1567,"avg_day":27.2333,"days":30,"status":"Critical"},{"raw":"1.00 PM : 5.00 PM","shift":"ظهري · ١م–٥م","total":875,"abandoned":25,"answered":850,"rate":0.0286,"avg_day":29.1667,"days":30,"status":"Good"},{"raw":"5.00 PM : 12.00 AM","shift":"مسائي · ٥م–١٢ص","total":1729,"abandoned":63,"answered":1666,"rate":0.0364,"avg_day":57.6333,"days":30,"status":"Good"}],"employees":[{"name":"عمر الازهري فوزي عبدالحميد","answered":523,"pct":0.1288},{"name":"باسم نبيل صبحي ميخائيل","answered":519,"pct":0.1278},{"name":"حسام وليد عبد العزيز عبد العزيز","answered":425,"pct":0.1047},{"name":"محمود شوقي محمد حسين","answered":390,"pct":0.0961},{"name":"محمد سعدالدين عبدالعزيز سلام","answered":348,"pct":0.0857},{"name":"مريم ماجد طلعت حنا","answered":332,"pct":0.0818},{"name":"كرستينا جورج توفيق فهمي","answered":325,"pct":0.08},{"name":"ايمن محمود عبدالعظيم الالفي","answered":318,"pct":0.0783},{"name":"اماني محمد ابراهيم محمد","answered":310,"pct":0.0764},{"name":"منة الله حسن السعيد ابراهيم","answered":283,"pct":0.0697},{"name":"محمد ابراهيم فوزي الجزار","answered":278,"pct":0.0685}],"n_employees":11,"insights":{"إجمالي المكالمات":4343,"إجمالي المهجورة":273,"إجمالي المردود عليها":4070,"النسبة الإجمالية للمهجورة":0.0629,"أسوأ شفت":"7:00 AM : 1.00 PM","نسبة المهجورة في أسوأ شفت":0.1567,"أفضل شفت":"1.00 PM : 5.00 PM","نسبة المهجورة في أفضل شفت":0.0286,"أسوأ يوم":"23/04/2026","نسبة المهجورة في أسوأ يوم":0.1121,"أفضل يوم":"09/05/2026","نسبة المهجورة في أفضل يوم":0.0062,"أعلى زميل في الرد":"عمر الازهري فوزي عبدالحميد","عدد مكالمات أعلى زميل":523,"نسبة مساهمته من إجمالي الرد":0.1288,"التقييم العام":"الوضع متوسط ويحتاج متابعة."}},"internal":{"period":"2026-04-21 → 2026-05-20","totals":{"total":11900,"abandoned":2098,"answered":9802,"rate":0.214},"days":[{"date":"2026-04-21","total":301,"abandoned":0,"answered":301,"rate":0,"status":"Good"},{"date":"2026-04-22","total":402,"abandoned":0,"answered":402,"rate":0,"status":"Good"},{"date":"2026-04-23","total":359,"abandoned":0,"answered":359,"rate":0,"status":"Good"},{"date":"2026-04-24","total":381,"abandoned":0,"answered":381,"rate":0,"status":"Good"},{"date":"2026-04-25","total":326,"abandoned":0,"answered":326,"rate":0,"status":"Good"},{"date":"2026-04-26","total":323,"abandoned":0,"answered":323,"rate":0,"status":"Good"},{"date":"2026-04-27","total":371,"abandoned":0,"answered":371,"rate":0,"status":"Good"},{"date":"2026-04-28","total":375,"abandoned":0,"answered":375,"rate":0,"status":"Good"},{"date":"2026-04-29","total":430,"abandoned":0,"answered":430,"rate":0,"status":"Good"},{"date":"2026-04-30","total":404,"abandoned":0,"answered":404,"rate":0,"status":"Good"},{"date":"2026-05-01","total":509,"abandoned":0,"answered":509,"rate":0,"status":"Good"},{"date":"2026-05-02","total":484,"abandoned":0,"answered":484,"rate":0,"status":"Good"},{"date":"2026-05-03","total":408,"abandoned":0,"answered":408,"rate":0,"status":"Good"},{"date":"2026-05-04","total":428,"abandoned":0,"answered":428,"rate":0,"status":"Good"},{"date":"2026-05-05","total":388,"abandoned":0,"answered":388,"rate":0,"status":"Good"},{"date":"2026-05-06","total":402,"abandoned":0,"answered":402,"rate":0,"status":"Good"},{"date":"2026-05-07","total":480,"abandoned":0,"answered":480,"rate":0,"status":"Good"},{"date":"2026-05-08","total":460,"abandoned":0,"answered":460,"rate":0,"status":"Good"},{"date":"2026-05-09","total":441,"abandoned":0,"answered":441,"rate":0,"status":"Good"},{"date":"2026-05-10","total":443,"abandoned":0,"answered":443,"rate":0,"status":"Good"},{"date":"2026-05-11","total":384,"abandoned":0,"answered":384,"rate":0,"status":"Good"},{"date":"2026-05-12","total":430,"abandoned":0,"answered":430,"rate":0,"status":"Good"},{"date":"2026-05-13","total":321,"abandoned":0,"answered":321,"rate":0,"status":"Good"},{"date":"2026-05-14","total":494,"abandoned":0,"answered":494,"rate":0,"status":"Good"},{"date":"2026-05-15","total":393,"abandoned":0,"answered":393,"rate":0,"status":"Good"},{"date":"2026-05-16","total":330,"abandoned":0,"answered":330,"rate":0,"status":"Good"},{"date":"2026-05-17","total":344,"abandoned":0,"answered":344,"rate":0,"status":"Good"},{"date":"2026-05-18","total":359,"abandoned":0,"answered":359,"rate":0,"status":"Good"},{"date":"2026-05-19","total":361,"abandoned":0,"answered":361,"rate":0,"status":"Good"},{"date":"2026-05-20","total":369,"abandoned":0,"answered":369,"rate":0,"status":"Good"}],"shifts":[{"raw":"12.00 AM : 7.00 AM","shift":"ليلي · ١٢ص–٧ص","total":2336,"abandoned":0,"answered":2336,"rate":0,"avg_day":77.8667,"days":30,"status":"Good"},{"raw":"7:00 AM : 1.00 PM","shift":"صباحي · ٧ص–١م","total":1593,"abandoned":0,"answered":1593,"rate":0,"avg_day":53.1,"days":30,"status":"Good"},{"raw":"1.00 PM : 5.00 PM","shift":"ظهري · ١م–٥م","total":2520,"abandoned":0,"answered":2520,"rate":0,"avg_day":84,"days":30,"status":"Good"},{"raw":"5.00 PM : 12.00 AM","shift":"مسائي · ٥م–١٢ص","total":5451,"abandoned":0,"answered":5451,"rate":0,"avg_day":181.7,"days":30,"status":"Good"}],"employees":[{"name":"W-173","answered":192,"pct":0.0162},{"name":"دينا محمد يحيى محمد شطا","answered":170,"pct":0.0143},{"name":"W-163","answered":165,"pct":0.0139},{"name":"W-170","answered":156,"pct":0.0132},{"name":"W-175","answered":153,"pct":0.0129},{"name":"فرع شارع قناة السويس","answered":150,"pct":0.0127},{"name":"W-167","answered":149,"pct":0.0126},{"name":"مريم ابراهيم محمد سعد الشبراوي","answered":148,"pct":0.0125},{"name":"رامى منير سامى صبحى","answered":144,"pct":0.0121},{"name":"احمد طارق فتحي محمد حامد شحاتة","answered":143,"pct":0.0121},{"name":"W-174","answered":141,"pct":0.0119},{"name":"W-223","answered":141,"pct":0.0119},{"name":"الاء عبدالسلام ابراهيم عبداللطيف","answered":137,"pct":0.0116},{"name":"فاطمه حسن السيد حسن","answered":133,"pct":0.0112},{"name":"W-182","answered":131,"pct":0.0111},{"name":"W-239","answered":129,"pct":0.0109},{"name":"W-237","answered":128,"pct":0.0108},{"name":"رانيا عصام احمد السيد","answered":127,"pct":0.0107},{"name":"ميرنا وجدى محمد عبد الرحمن","answered":127,"pct":0.0107},{"name":"خديجة طاهر","answered":124,"pct":0.0105},{"name":"اسلام صلاح الدين محمد عبدالحافظ","answered":117,"pct":0.0099},{"name":"W-229","answered":116,"pct":0.0098},{"name":"W-184","answered":114,"pct":0.0096},{"name":"فرع كلية أداب","answered":110,"pct":0.0093},{"name":"W-218","answered":110,"pct":0.0093},{"name":"W-168","answered":109,"pct":0.0092},{"name":"W-216","answered":107,"pct":0.009},{"name":"W-204","answered":105,"pct":0.0089},{"name":"W-188","answered":105,"pct":0.0089},{"name":"ليلى عصام الدين محمد محمد عمر","answered":105,"pct":0.0089},{"name":"عفاف وليد ابراهيم عبدالفتاح احمد","answered":105,"pct":0.0089},{"name":"W-165","answered":104,"pct":0.0088},{"name":"W-225","answered":103,"pct":0.0087},{"name":"W-192","answered":101,"pct":0.0085},{"name":"W-196","answered":100,"pct":0.0084},{"name":"اية بركات","answered":99,"pct":0.0084},{"name":"W-241","answered":98,"pct":0.0083},{"name":"W-228","answered":97,"pct":0.0082},{"name":"W-245","answered":97,"pct":0.0082},{"name":"عبد الرحمن اشرف عبد السلام","answered":96,"pct":0.0081},{"name":"W-","answered":92,"pct":0.0078},{"name":"ايمان مصطفى احمد محمد شعيب","answered":91,"pct":0.0077},{"name":"W-214","answered":91,"pct":0.0077},{"name":"W-213","answered":91,"pct":0.0077},{"name":"W-238","answered":91,"pct":0.0077},{"name":"W-181","answered":90,"pct":0.0076},{"name":"W-190","answered":89,"pct":0.0075},{"name":"W-70","answered":87,"pct":0.0073},{"name":"سامى امير سامى بدوى","answered":87,"pct":0.0073},{"name":"NDOMIIET4","answered":86,"pct":0.0073},{"name":"W-236","answered":86,"pct":0.0073},{"name":"W-194","answered":86,"pct":0.0073},{"name":"W-193","answered":86,"pct":0.0073},{"name":"W-215","answered":84,"pct":0.0071},{"name":"W-217","answered":84,"pct":0.0071},{"name":"احمد خالد","answered":82,"pct":0.0069},{"name":"W-176","answered":82,"pct":0.0069},{"name":"Gish2","answered":82,"pct":0.0069},{"name":"تهاني عزت عاشور","answered":81,"pct":0.0068},{"name":"W-209","answered":81,"pct":0.0068},{"name":"W-200","answered":80,"pct":0.0067},{"name":"W-208","answered":80,"pct":0.0067},{"name":"مريم ناجح عبد الفتاح الشهاوى","answered":78,"pct":0.0066},{"name":"ايمان احمد الشرقاوي","answered":78,"pct":0.0066},{"name":"فرع الجيش","answered":77,"pct":0.0065},{"name":"W-154","answered":75,"pct":0.0063},{"name":"W-153","answered":74,"pct":0.0062},{"name":"W-198","answered":73,"pct":0.0062},{"name":"W-197","answered":73,"pct":0.0062},{"name":"W-224","answered":73,"pct":0.0062},{"name":"دينا سامى عبدالله المحجوب","answered":73,"pct":0.0062},{"name":"W-227","answered":72,"pct":0.0061},{"name":"فرع الإسماعليه","answered":71,"pct":0.006},{"name":"رحاب عبد المطلب ذكى ابراهيم","answered":71,"pct":0.006},{"name":"Za3fran2-Branch","answered":68,"pct":0.0057},{"name":"W-199","answered":68,"pct":0.0057},{"name":"فرع الخلفاء","answered":68,"pct":0.0057},{"name":"W-244","answered":65,"pct":0.0055},{"name":"فرع أول الخلفاء","answered":64,"pct":0.0054},{"name":"هاجر محمد احمد عبدالله محمد","answered":64,"pct":0.0054},{"name":"حنين حامد دياب عبدالنبي ميلاد","answered":64,"pct":0.0054},{"name":"W-243","answered":63,"pct":0.0053},{"name":"اسماء محمد بدراوي حمزه","answered":63,"pct":0.0053},{"name":"منار محمود رمضان","answered":62,"pct":0.0052},{"name":"W-231","answered":60,"pct":0.0051},{"name":"W-186","answered":60,"pct":0.0051},{"name":"فرع عبد السلام عارف","answered":59,"pct":0.005},{"name":"دنيا انسي محمد","answered":58,"pct":0.0049},{"name":"سامح سمير عبدالمنعم عبده","answered":58,"pct":0.0049},{"name":"محمد عماد","answered":57,"pct":0.0048},{"name":"W-205","answered":56,"pct":0.0047},{"name":"W-189","answered":56,"pct":0.0047},{"name":"انس احمد عبدالعزيز محمد محمد عبدالعال","answered":56,"pct":0.0047},{"name":"W-191","answered":55,"pct":0.0046},{"name":"W-183","answered":55,"pct":0.0046},{"name":"مى محمد احمد محمود","answered":53,"pct":0.0045},{"name":"منة الله محمود","answered":53,"pct":0.0045},{"name":"نيرة هشام عيد عبدالسلام","answered":51,"pct":0.0043},{"name":"وفاء خاطر الحسانين عبده باشا","answered":51,"pct":0.0043},{"name":"منة الله ايهاب شعبان عبدالسميع","answered":51,"pct":0.0043},{"name":"فرع الجمهوريه","answered":51,"pct":0.0043},{"name":"فرع ش بورسعيد","answered":51,"pct":0.0043},{"name":"فرع طلخا","answered":51,"pct":0.0043},{"name":"فرع الجلاء","answered":50,"pct":0.0042},{"name":"امنية ابراهيم السعيد عبدالعزيز الطويل","answered":49,"pct":0.0041},{"name":"ريمون فكري فهمي ساويرس","answered":48,"pct":0.004},{"name":"W-195","answered":48,"pct":0.004},{"name":"APP-140","answered":47,"pct":0.004},{"name":"W-201","answered":46,"pct":0.0039},{"name":"W-187","answered":44,"pct":0.0037},{"name":"امانى عاطف كمال احمد","answered":42,"pct":0.0035},{"name":"W-172","answered":42,"pct":0.0035},{"name":"آية مصطفى محمدي محمد","answered":42,"pct":0.0035},{"name":"نجوى السعيد مختار على","answered":42,"pct":0.0035},{"name":"سهير ميسرة شفيق الالفي","answered":41,"pct":0.0035},{"name":"فرع مدينتي","answered":40,"pct":0.0034},{"name":"رحاب السيد عيد سلامه سلامه","answered":39,"pct":0.0033},{"name":"W-246","answered":38,"pct":0.0032},{"name":"NDomiett3","answered":38,"pct":0.0032},{"name":"فرع المنزله","answered":38,"pct":0.0032},{"name":"فرع الإستاد","answered":38,"pct":0.0032},{"name":"Gihan8","answered":37,"pct":0.0031},{"name":"عبدالرحمن محمد علي حسين هريدي","answered":37,"pct":0.0031},{"name":"W-106","answered":37,"pct":0.0031},{"name":"W-203","answered":36,"pct":0.003},{"name":"سارة علي مصطفى ابراهيم نعناع","answered":36,"pct":0.003},{"name":"مي السيد عبدالفتاح ابراهيم","answered":35,"pct":0.003},{"name":"احمد ابراهيم عبدالعزيز عبدالغني عبده","answered":32,"pct":0.0027},{"name":"W-242","answered":32,"pct":0.0027},{"name":"فرع المحافظه","answered":32,"pct":0.0027},{"name":"فرع شيراتون","answered":32,"pct":0.0027},{"name":"فرع حقوق","answered":32,"pct":0.0027},{"name":"فرع رفعت شعبان","answered":31,"pct":0.0026},{"name":"محمد رافت ابراهيم المتولي","answered":31,"pct":0.0026},{"name":"Gihan5","answered":29,"pct":0.0024},{"name":"هاجر جمعه عبدالمنعم عيد ابو الاسعاد","answered":29,"pct":0.0024},{"name":"احمد عبدالعال احمد محمد","answered":28,"pct":0.0024},{"name":"ايه عصام عبدالهادي ابوالنجا","answered":27,"pct":0.0023},{"name":"رمزى علاء احمد رمزى","answered":26,"pct":0.0022},{"name":"W-185","answered":26,"pct":0.0022},{"name":"ElZagazig2-Branch","answered":26,"pct":0.0022},{"name":"فرع الجولف","answered":23,"pct":0.0019},{"name":"عبدالله ايمن محمد الشحات ابراهيم","answered":23,"pct":0.0019},{"name":"W-171","answered":23,"pct":0.0019},{"name":"محمد عبدالمنعم الدسوقي","answered":23,"pct":0.0019},{"name":"عبدالحميد محمد عبدالحميد محمد شلبي","answered":23,"pct":0.0019},{"name":"W-211","answered":23,"pct":0.0019},{"name":"مريم احمد جاب الله عبدالهادي","answered":22,"pct":0.0019},{"name":"MostashfaAlaam2-branch","answered":22,"pct":0.0019},{"name":"W-161","answered":22,"pct":0.0019},{"name":"W-219","answered":22,"pct":0.0019},{"name":"محمد ابراهيم محمد اسعد","answered":21,"pct":0.0018},{"name":"W-220","answered":20,"pct":0.0017},{"name":"سهير ايهاب عبدالمحسن محسوب النجار","answered":20,"pct":0.0017},{"name":"سارة رضا محمد عبد الوهاب يوسف","answered":20,"pct":0.0017},{"name":"خالد وليد رشاد","answered":20,"pct":0.0017},{"name":"NDOMIETT","answered":19,"pct":0.0016},{"name":"فرع القومية","answered":19,"pct":0.0016},{"name":"Estad2-Branch","answered":18,"pct":0.0015},{"name":"فرع ميت غمر","answered":18,"pct":0.0015},{"name":"W-Rehab","answered":18,"pct":0.0015},{"name":"فرع دمياط","answered":18,"pct":0.0015},{"name":"APP-243","answered":15,"pct":0.0013},{"name":"سيف الدين صبري احمد علي","answered":15,"pct":0.0013},{"name":"المستشفى العام","answered":14,"pct":0.0012},{"name":"APP-143","answered":14,"pct":0.0012},{"name":"Madinty2-Branch","answered":14,"pct":0.0012},{"name":"محمد منتصر ابراهيم عبدالهادي","answered":14,"pct":0.0012},{"name":"Rehab2-Banch","answered":14,"pct":0.0012},{"name":"M NASR3","answered":13,"pct":0.0011},{"name":"مي وحيد حلمي رياض","answered":13,"pct":0.0011},{"name":"APP-147","answered":12,"pct":0.001},{"name":"Enas-Adel","answered":12,"pct":0.001},{"name":"Elmontazah-Branch","answered":12,"pct":0.001},{"name":"اماني عوض عبدالخالق عبدالمحسن","answered":12,"pct":0.001},{"name":"حسام حسن احمد موسي","answered":11,"pct":0.0009},{"name":"W-162","answered":11,"pct":0.0009},{"name":"عبدالرحمن ظريف ابراهيم احمد شحاته","answered":11,"pct":0.0009},{"name":"فرع السكه","answered":10,"pct":0.0008},{"name":"محمد صبري احمد احمد","answered":10,"pct":0.0008},{"name":"اماني وائل عبدالقادر الباز","answered":10,"pct":0.0008},{"name":"W-156","answered":10,"pct":0.0008},{"name":"رضا محمد محمد احمد عياد","answered":9,"pct":0.0008},{"name":"بسمه محمود عبدالحميد ابراهيم","answered":9,"pct":0.0008},{"name":"نور الدين رفعت عوض عباس","answered":9,"pct":0.0008},{"name":"W-250","answered":9,"pct":0.0008},{"name":"APP-145","answered":9,"pct":0.0008},{"name":"سمر علاء الدين عباس حمزه","answered":9,"pct":0.0008},{"name":"فرع مصر للطيران","answered":9,"pct":0.0008},{"name":"APP-207","answered":8,"pct":0.0007},{"name":"فرع الدراسات 2","answered":8,"pct":0.0007},{"name":"Domiett2","answered":8,"pct":0.0007},{"name":"فرع الزعران","answered":8,"pct":0.0007},{"name":"هنا محمد ابراهيم النجدى","answered":7,"pct":0.0006},{"name":"APP-136","answered":7,"pct":0.0006},{"name":"Talkha","answered":7,"pct":0.0006},{"name":"Ahmed-Reda","answered":7,"pct":0.0006},{"name":"APP-150","answered":7,"pct":0.0006},{"name":"APP-151","answered":7,"pct":0.0006},{"name":"APP-155","answered":7,"pct":0.0006},{"name":"ندى طارق حامد محمد","answered":6,"pct":0.0005},{"name":"الاء مسعد محمد احمد السيد","answered":6,"pct":0.0005},{"name":"Gihan2","answered":6,"pct":0.0005},{"name":"Gihan 7","answered":6,"pct":0.0005},{"name":"ElGolf2-Branch","answered":6,"pct":0.0005},{"name":"Arabisk-3","answered":6,"pct":0.0005},{"name":"gish3","answered":5,"pct":0.0004},{"name":"دعاء محمد محمد المغاوري","answered":5,"pct":0.0004},{"name":"شريف احمد احمد عبد الفتاح","answered":5,"pct":0.0004},{"name":"APP-101","answered":5,"pct":0.0004},{"name":"فايز السعيد زكي محمود","answered":5,"pct":0.0004},{"name":"ميرنا محمد كمال ابراهيم","answered":4,"pct":0.0003},{"name":"APP-148","answered":4,"pct":0.0003},{"name":"Za3fran3-Branch","answered":4,"pct":0.0003},{"name":"MNasr2","answered":4,"pct":0.0003},{"name":"APP-146","answered":3,"pct":0.0003},{"name":"ميرنا محمد محمود صبري","answered":3,"pct":0.0003},{"name":"APP-135","answered":3,"pct":0.0003},{"name":"Drasat-2-Branch","answered":3,"pct":0.0003},{"name":"فاطمة محمد بهجت محمد حسين شحاتة","answered":3,"pct":0.0003},{"name":"محمد عبدالستار سعد حبيب","answered":3,"pct":0.0003},{"name":"حسين محمد حسين محمد","answered":3,"pct":0.0003},{"name":"آية عبدالحكيم ابراهيم عطوه","answered":3,"pct":0.0003},{"name":"Gihan3","answered":3,"pct":0.0003},{"name":"APP-157","answered":3,"pct":0.0003},{"name":"Arabisk-4","answered":3,"pct":0.0003},{"name":"Sheraton2","answered":3,"pct":0.0003},{"name":"Arkan2-Branch","answered":2,"pct":0.0002},{"name":"كرستينا جورج توفيق فهمي","answered":2,"pct":0.0002},{"name":"APP-144","answered":2,"pct":0.0002},{"name":"APP-141","answered":2,"pct":0.0002},{"name":"نهال فادي فتحى العشري","answered":2,"pct":0.0002},{"name":"Branch-Tivoli2","answered":2,"pct":0.0002},{"name":"محمد حمدي محمد محمد السيد","answered":2,"pct":0.0002},{"name":"MasrEltayaran-Branch","answered":2,"pct":0.0002},{"name":"اميره السيد صقر مخلوف","answered":2,"pct":0.0002},{"name":"احمد وليد عبدالرازق عبدالحليم النجار","answered":2,"pct":0.0002},{"name":"محمد ثروت احمد الدسوقى","answered":2,"pct":0.0002},{"name":"فرع المنتزه","answered":2,"pct":0.0002},{"name":"فرع بنك مصر","answered":2,"pct":0.0002},{"name":"DRNahla","answered":2,"pct":0.0002},{"name":"فرع السويس","answered":2,"pct":0.0002},{"name":"فرع أول مارس","answered":2,"pct":0.0002},{"name":"فرع مدينة نصر","answered":2,"pct":0.0002},{"name":"APP-142","answered":1,"pct":0.0001},{"name":"منة الله حسن السعيد ابراهيم","answered":1,"pct":0.0001},{"name":"منار ماهر عبد الحميد محمد","answered":1,"pct":0.0001},{"name":"APP-149","answered":1,"pct":0.0001},{"name":"W-212","answered":1,"pct":0.0001},{"name":"Store-Delivery","answered":1,"pct":0.0001},{"name":"Office","answered":1,"pct":0.0001},{"name":"سارة اسامة احمد السيد","answered":1,"pct":0.0001},{"name":"روان اشرف عبد الحميد الحسيني","answered":1,"pct":0.0001},{"name":"داليا وليد حمودة عوض","answered":1,"pct":0.0001},{"name":"Suis2-Branch","answered":1,"pct":0.0001},{"name":"ايمان محمد الششتاوي محمد عبدالله","answered":1,"pct":0.0001},{"name":"باسم نبيل صبحي ميخائيل","answered":1,"pct":0.0001},{"name":"APP-248","answered":1,"pct":0.0001},{"name":"فرع كفر الشيخ","answered":1,"pct":0.0001},{"name":"فرع مدينة بورسعيد","answered":1,"pct":0.0001},{"name":"فرع السماد","answered":1,"pct":0.0001},{"name":"فرع أرابيسك","answered":1,"pct":0.0001},{"name":"فرع ناصر النادي","answered":1,"pct":0.0001},{"name":"مريم ماجد طلعت حنا","answered":1,"pct":0.0001},{"name":"وفية محمد محمد شعبان","answered":1,"pct":0.0001}],"n_employees":265,"insights":{"إجمالي المكالمات":11900,"إجمالي المهجورة":0,"إجمالي المردود عليها":11900,"النسبة الإجمالية للمهجورة":0,"أسوأ شفت":"1.00 PM : 5.00 PM","نسبة المهجورة في أسوأ شفت":0,"أفضل شفت":"1.00 PM : 5.00 PM","نسبة المهجورة في أفضل شفت":0,"أسوأ يوم":"01/05/2026","نسبة المهجورة في أسوأ يوم":0,"أفضل يوم":"01/05/2026","نسبة المهجورة في أفضل يوم":0,"أعلى زميل في الرد":"W-173","عدد مكالمات أعلى زميل":192,"نسبة مساهمته من إجمالي الرد":0.0162,"التقييم العام":"الوضع جيد نسبيًا."},"consult_team":[{"login_id":"2020","name":"باسم نبيل صبحي ميخائيل","consultations":1770},{"login_id":"2016","name":"عمر الازهري فوزي عبدالحميد","consultations":1195},{"login_id":"2017","name":"حسام وليد عبد العزيز عبد العزيز","consultations":1151},{"login_id":"2011","name":"محمود شوقي محمد حسين","consultations":1123},{"login_id":"2021","name":"محمد سعدالدين عبدالعزيز سلام","consultations":892},{"login_id":"2026","name":"كرستينا جورج توفيق فهمي","consultations":823},{"login_id":"2027","name":"مريم ماجد طلعت حنا","consultations":768},{"login_id":"2015","name":"اماني محمد ابراهيم محمد","consultations":765},{"login_id":"2013","name":"ايمن محمود عبدالعظيم الالفي","consultations":762},{"login_id":"2008","name":"منة الله حسن السعيد ابراهيم","consultations":758},{"login_id":"2012","name":"محمد ابراهيم فوزي الجزار","consultations":585}]}}},"datasets":{"customer":{"period":"2026-04-21 → 2026-05-20","totals":{"total":4343,"abandoned":273,"answered":4070,"rate":0.0629},"days":[{"date":"2026-04-21","total":129,"abandoned":12,"answered":117,"rate":0.093,"status":"Warning"},{"date":"2026-04-22","total":157,"abandoned":8,"answered":149,"rate":0.051,"status":"Monitor"},{"date":"2026-04-23","total":116,"abandoned":13,"answered":103,"rate":0.1121,"status":"Warning"},{"date":"2026-04-24","total":122,"abandoned":12,"answered":110,"rate":0.0984,"status":"Warning"},{"date":"2026-04-25","total":143,"abandoned":7,"answered":136,"rate":0.049,"status":"Monitor"},{"date":"2026-04-26","total":162,"abandoned":6,"answered":156,"rate":0.037,"status":"Good"},{"date":"2026-04-27","total":145,"abandoned":5,"answered":140,"rate":0.0345,"status":"Good"},{"date":"2026-04-28","total":159,"abandoned":15,"answered":144,"rate":0.0943,"status":"Warning"},{"date":"2026-04-29","total":132,"abandoned":5,"answered":127,"rate":0.0379,"status":"Good"},{"date":"2026-04-30","total":142,"abandoned":12,"answered":130,"rate":0.0845,"status":"Warning"},{"date":"2026-05-01","total":152,"abandoned":9,"answered":143,"rate":0.0592,"status":"Monitor"},{"date":"2026-05-02","total":142,"abandoned":6,"answered":136,"rate":0.0423,"status":"Monitor"},{"date":"2026-05-03","total":136,"abandoned":9,"answered":127,"rate":0.0662,"status":"Monitor"},{"date":"2026-05-04","total":106,"abandoned":6,"answered":100,"rate":0.0566,"status":"Monitor"},{"date":"2026-05-05","total":125,"abandoned":5,"answered":120,"rate":0.04,"status":"Monitor"},{"date":"2026-05-06","total":164,"abandoned":13,"answered":151,"rate":0.0793,"status":"Monitor"},{"date":"2026-05-07","total":142,"abandoned":7,"answered":135,"rate":0.0493,"status":"Monitor"},{"date":"2026-05-08","total":148,"abandoned":9,"answered":139,"rate":0.0608,"status":"Monitor"},{"date":"2026-05-09","total":162,"abandoned":1,"answered":161,"rate":0.0062,"status":"Good"},{"date":"2026-05-10","total":159,"abandoned":8,"answered":151,"rate":0.0503,"status":"Monitor"},{"date":"2026-05-11","total":156,"abandoned":14,"answered":142,"rate":0.0897,"status":"Warning"},{"date":"2026-05-12","total":172,"abandoned":9,"answered":163,"rate":0.0523,"status":"Monitor"},{"date":"2026-05-13","total":139,"abandoned":12,"answered":127,"rate":0.0863,"status":"Warning"},{"date":"2026-05-14","total":136,"abandoned":8,"answered":128,"rate":0.0588,"status":"Monitor"},{"date":"2026-05-15","total":143,"abandoned":15,"answered":128,"rate":0.1049,"status":"Warning"},{"date":"2026-05-16","total":180,"abandoned":16,"answered":164,"rate":0.0889,"status":"Warning"},{"date":"2026-05-17","total":133,"abandoned":6,"answered":127,"rate":0.0451,"status":"Monitor"},{"date":"2026-05-18","total":156,"abandoned":7,"answered":149,"rate":0.0449,"status":"Monitor"},{"date":"2026-05-19","total":149,"abandoned":9,"answered":140,"rate":0.0604,"status":"Monitor"},{"date":"2026-05-20","total":136,"abandoned":9,"answered":127,"rate":0.0662,"status":"Monitor"}],"shifts":[{"raw":"12.00 AM : 7.00 AM","shift":"ليلي · ١٢ص–٧ص","total":922,"abandoned":57,"answered":865,"rate":0.0618,"avg_day":30.7333,"days":30,"status":"Monitor"},{"raw":"7:00 AM : 1.00 PM","shift":"صباحي · ٧ص–١م","total":817,"abandoned":128,"answered":689,"rate":0.1567,"avg_day":27.2333,"days":30,"status":"Critical"},{"raw":"1.00 PM : 5.00 PM","shift":"ظهري · ١م–٥م","total":875,"abandoned":25,"answered":850,"rate":0.0286,"avg_day":29.1667,"days":30,"status":"Good"},{"raw":"5.00 PM : 12.00 AM","shift":"مسائي · ٥م–١٢ص","total":1729,"abandoned":63,"answered":1666,"rate":0.0364,"avg_day":57.6333,"days":30,"status":"Good"}],"employees":[{"name":"عمر الازهري فوزي عبدالحميد","answered":523,"pct":0.1288},{"name":"باسم نبيل صبحي ميخائيل","answered":519,"pct":0.1278},{"name":"حسام وليد عبد العزيز عبد العزيز","answered":425,"pct":0.1047},{"name":"محمود شوقي محمد حسين","answered":390,"pct":0.0961},{"name":"محمد سعدالدين عبدالعزيز سلام","answered":348,"pct":0.0857},{"name":"مريم ماجد طلعت حنا","answered":332,"pct":0.0818},{"name":"كرستينا جورج توفيق فهمي","answered":325,"pct":0.08},{"name":"ايمن محمود عبدالعظيم الالفي","answered":318,"pct":0.0783},{"name":"اماني محمد ابراهيم محمد","answered":310,"pct":0.0764},{"name":"منة الله حسن السعيد ابراهيم","answered":283,"pct":0.0697},{"name":"محمد ابراهيم فوزي الجزار","answered":278,"pct":0.0685}],"n_employees":11,"insights":{"إجمالي المكالمات":4343,"إجمالي المهجورة":273,"إجمالي المردود عليها":4070,"النسبة الإجمالية للمهجورة":0.0629,"أسوأ شفت":"7:00 AM : 1.00 PM","نسبة المهجورة في أسوأ شفت":0.1567,"أفضل شفت":"1.00 PM : 5.00 PM","نسبة المهجورة في أفضل شفت":0.0286,"أسوأ يوم":"23/04/2026","نسبة المهجورة في أسوأ يوم":0.1121,"أفضل يوم":"09/05/2026","نسبة المهجورة في أفضل يوم":0.0062,"أعلى زميل في الرد":"عمر الازهري فوزي عبدالحميد","عدد مكالمات أعلى زميل":523,"نسبة مساهمته من إجمالي الرد":0.1288,"التقييم العام":"الوضع متوسط ويحتاج متابعة."}},"internal":{"period":"2026-04-21 → 2026-05-20","totals":{"total":11900,"abandoned":2098,"answered":9802,"rate":0.214},"days":[{"date":"2026-04-21","total":301,"abandoned":0,"answered":301,"rate":0,"status":"Good"},{"date":"2026-04-22","total":402,"abandoned":0,"answered":402,"rate":0,"status":"Good"},{"date":"2026-04-23","total":359,"abandoned":0,"answered":359,"rate":0,"status":"Good"},{"date":"2026-04-24","total":381,"abandoned":0,"answered":381,"rate":0,"status":"Good"},{"date":"2026-04-25","total":326,"abandoned":0,"answered":326,"rate":0,"status":"Good"},{"date":"2026-04-26","total":323,"abandoned":0,"answered":323,"rate":0,"status":"Good"},{"date":"2026-04-27","total":371,"abandoned":0,"answered":371,"rate":0,"status":"Good"},{"date":"2026-04-28","total":375,"abandoned":0,"answered":375,"rate":0,"status":"Good"},{"date":"2026-04-29","total":430,"abandoned":0,"answered":430,"rate":0,"status":"Good"},{"date":"2026-04-30","total":404,"abandoned":0,"answered":404,"rate":0,"status":"Good"},{"date":"2026-05-01","total":509,"abandoned":0,"answered":509,"rate":0,"status":"Good"},{"date":"2026-05-02","total":484,"abandoned":0,"answered":484,"rate":0,"status":"Good"},{"date":"2026-05-03","total":408,"abandoned":0,"answered":408,"rate":0,"status":"Good"},{"date":"2026-05-04","total":428,"abandoned":0,"answered":428,"rate":0,"status":"Good"},{"date":"2026-05-05","total":388,"abandoned":0,"answered":388,"rate":0,"status":"Good"},{"date":"2026-05-06","total":402,"abandoned":0,"answered":402,"rate":0,"status":"Good"},{"date":"2026-05-07","total":480,"abandoned":0,"answered":480,"rate":0,"status":"Good"},{"date":"2026-05-08","total":460,"abandoned":0,"answered":460,"rate":0,"status":"Good"},{"date":"2026-05-09","total":441,"abandoned":0,"answered":441,"rate":0,"status":"Good"},{"date":"2026-05-10","total":443,"abandoned":0,"answered":443,"rate":0,"status":"Good"},{"date":"2026-05-11","total":384,"abandoned":0,"answered":384,"rate":0,"status":"Good"},{"date":"2026-05-12","total":430,"abandoned":0,"answered":430,"rate":0,"status":"Good"},{"date":"2026-05-13","total":321,"abandoned":0,"answered":321,"rate":0,"status":"Good"},{"date":"2026-05-14","total":494,"abandoned":0,"answered":494,"rate":0,"status":"Good"},{"date":"2026-05-15","total":393,"abandoned":0,"answered":393,"rate":0,"status":"Good"},{"date":"2026-05-16","total":330,"abandoned":0,"answered":330,"rate":0,"status":"Good"},{"date":"2026-05-17","total":344,"abandoned":0,"answered":344,"rate":0,"status":"Good"},{"date":"2026-05-18","total":359,"abandoned":0,"answered":359,"rate":0,"status":"Good"},{"date":"2026-05-19","total":361,"abandoned":0,"answered":361,"rate":0,"status":"Good"},{"date":"2026-05-20","total":369,"abandoned":0,"answered":369,"rate":0,"status":"Good"}],"shifts":[{"raw":"12.00 AM : 7.00 AM","shift":"ليلي · ١٢ص–٧ص","total":2336,"abandoned":0,"answered":2336,"rate":0,"avg_day":77.8667,"days":30,"status":"Good"},{"raw":"7:00 AM : 1.00 PM","shift":"صباحي · ٧ص–١م","total":1593,"abandoned":0,"answered":1593,"rate":0,"avg_day":53.1,"days":30,"status":"Good"},{"raw":"1.00 PM : 5.00 PM","shift":"ظهري · ١م–٥م","total":2520,"abandoned":0,"answered":2520,"rate":0,"avg_day":84,"days":30,"status":"Good"},{"raw":"5.00 PM : 12.00 AM","shift":"مسائي · ٥م–١٢ص","total":5451,"abandoned":0,"answered":5451,"rate":0,"avg_day":181.7,"days":30,"status":"Good"}],"employees":[{"name":"W-173","answered":192,"pct":0.0162},{"name":"دينا محمد يحيى محمد شطا","answered":170,"pct":0.0143},{"name":"W-163","answered":165,"pct":0.0139},{"name":"W-170","answered":156,"pct":0.0132},{"name":"W-175","answered":153,"pct":0.0129},{"name":"فرع شارع قناة السويس","answered":150,"pct":0.0127},{"name":"W-167","answered":149,"pct":0.0126},{"name":"مريم ابراهيم محمد سعد الشبراوي","answered":148,"pct":0.0125},{"name":"رامى منير سامى صبحى","answered":144,"pct":0.0121},{"name":"احمد طارق فتحي محمد حامد شحاتة","answered":143,"pct":0.0121},{"name":"W-174","answered":141,"pct":0.0119},{"name":"W-223","answered":141,"pct":0.0119},{"name":"الاء عبدالسلام ابراهيم عبداللطيف","answered":137,"pct":0.0116},{"name":"فاطمه حسن السيد حسن","answered":133,"pct":0.0112},{"name":"W-182","answered":131,"pct":0.0111},{"name":"W-239","answered":129,"pct":0.0109},{"name":"W-237","answered":128,"pct":0.0108},{"name":"رانيا عصام احمد السيد","answered":127,"pct":0.0107},{"name":"ميرنا وجدى محمد عبد الرحمن","answered":127,"pct":0.0107},{"name":"خديجة طاهر","answered":124,"pct":0.0105},{"name":"اسلام صلاح الدين محمد عبدالحافظ","answered":117,"pct":0.0099},{"name":"W-229","answered":116,"pct":0.0098},{"name":"W-184","answered":114,"pct":0.0096},{"name":"فرع كلية أداب","answered":110,"pct":0.0093},{"name":"W-218","answered":110,"pct":0.0093},{"name":"W-168","answered":109,"pct":0.0092},{"name":"W-216","answered":107,"pct":0.009},{"name":"W-204","answered":105,"pct":0.0089},{"name":"W-188","answered":105,"pct":0.0089},{"name":"ليلى عصام الدين محمد محمد عمر","answered":105,"pct":0.0089},{"name":"عفاف وليد ابراهيم عبدالفتاح احمد","answered":105,"pct":0.0089},{"name":"W-165","answered":104,"pct":0.0088},{"name":"W-225","answered":103,"pct":0.0087},{"name":"W-192","answered":101,"pct":0.0085},{"name":"W-196","answered":100,"pct":0.0084},{"name":"اية بركات","answered":99,"pct":0.0084},{"name":"W-241","answered":98,"pct":0.0083},{"name":"W-228","answered":97,"pct":0.0082},{"name":"W-245","answered":97,"pct":0.0082},{"name":"عبد الرحمن اشرف عبد السلام","answered":96,"pct":0.0081},{"name":"W-","answered":92,"pct":0.0078},{"name":"ايمان مصطفى احمد محمد شعيب","answered":91,"pct":0.0077},{"name":"W-214","answered":91,"pct":0.0077},{"name":"W-213","answered":91,"pct":0.0077},{"name":"W-238","answered":91,"pct":0.0077},{"name":"W-181","answered":90,"pct":0.0076},{"name":"W-190","answered":89,"pct":0.0075},{"name":"W-70","answered":87,"pct":0.0073},{"name":"سامى امير سامى بدوى","answered":87,"pct":0.0073},{"name":"NDOMIIET4","answered":86,"pct":0.0073},{"name":"W-236","answered":86,"pct":0.0073},{"name":"W-194","answered":86,"pct":0.0073},{"name":"W-193","answered":86,"pct":0.0073},{"name":"W-215","answered":84,"pct":0.0071},{"name":"W-217","answered":84,"pct":0.0071},{"name":"احمد خالد","answered":82,"pct":0.0069},{"name":"W-176","answered":82,"pct":0.0069},{"name":"Gish2","answered":82,"pct":0.0069},{"name":"تهاني عزت عاشور","answered":81,"pct":0.0068},{"name":"W-209","answered":81,"pct":0.0068},{"name":"W-200","answered":80,"pct":0.0067},{"name":"W-208","answered":80,"pct":0.0067},{"name":"مريم ناجح عبد الفتاح الشهاوى","answered":78,"pct":0.0066},{"name":"ايمان احمد الشرقاوي","answered":78,"pct":0.0066},{"name":"فرع الجيش","answered":77,"pct":0.0065},{"name":"W-154","answered":75,"pct":0.0063},{"name":"W-153","answered":74,"pct":0.0062},{"name":"W-198","answered":73,"pct":0.0062},{"name":"W-197","answered":73,"pct":0.0062},{"name":"W-224","answered":73,"pct":0.0062},{"name":"دينا سامى عبدالله المحجوب","answered":73,"pct":0.0062},{"name":"W-227","answered":72,"pct":0.0061},{"name":"فرع الإسماعليه","answered":71,"pct":0.006},{"name":"رحاب عبد المطلب ذكى ابراهيم","answered":71,"pct":0.006},{"name":"Za3fran2-Branch","answered":68,"pct":0.0057},{"name":"W-199","answered":68,"pct":0.0057},{"name":"فرع الخلفاء","answered":68,"pct":0.0057},{"name":"W-244","answered":65,"pct":0.0055},{"name":"فرع أول الخلفاء","answered":64,"pct":0.0054},{"name":"هاجر محمد احمد عبدالله محمد","answered":64,"pct":0.0054},{"name":"حنين حامد دياب عبدالنبي ميلاد","answered":64,"pct":0.0054},{"name":"W-243","answered":63,"pct":0.0053},{"name":"اسماء محمد بدراوي حمزه","answered":63,"pct":0.0053},{"name":"منار محمود رمضان","answered":62,"pct":0.0052},{"name":"W-231","answered":60,"pct":0.0051},{"name":"W-186","answered":60,"pct":0.0051},{"name":"فرع عبد السلام عارف","answered":59,"pct":0.005},{"name":"دنيا انسي محمد","answered":58,"pct":0.0049},{"name":"سامح سمير عبدالمنعم عبده","answered":58,"pct":0.0049},{"name":"محمد عماد","answered":57,"pct":0.0048},{"name":"W-205","answered":56,"pct":0.0047},{"name":"W-189","answered":56,"pct":0.0047},{"name":"انس احمد عبدالعزيز محمد محمد عبدالعال","answered":56,"pct":0.0047},{"name":"W-191","answered":55,"pct":0.0046},{"name":"W-183","answered":55,"pct":0.0046},{"name":"مى محمد احمد محمود","answered":53,"pct":0.0045},{"name":"منة الله محمود","answered":53,"pct":0.0045},{"name":"نيرة هشام عيد عبدالسلام","answered":51,"pct":0.0043},{"name":"وفاء خاطر الحسانين عبده باشا","answered":51,"pct":0.0043},{"name":"منة الله ايهاب شعبان عبدالسميع","answered":51,"pct":0.0043},{"name":"فرع الجمهوريه","answered":51,"pct":0.0043},{"name":"فرع ش بورسعيد","answered":51,"pct":0.0043},{"name":"فرع طلخا","answered":51,"pct":0.0043},{"name":"فرع الجلاء","answered":50,"pct":0.0042},{"name":"امنية ابراهيم السعيد عبدالعزيز الطويل","answered":49,"pct":0.0041},{"name":"ريمون فكري فهمي ساويرس","answered":48,"pct":0.004},{"name":"W-195","answered":48,"pct":0.004},{"name":"APP-140","answered":47,"pct":0.004},{"name":"W-201","answered":46,"pct":0.0039},{"name":"W-187","answered":44,"pct":0.0037},{"name":"امانى عاطف كمال احمد","answered":42,"pct":0.0035},{"name":"W-172","answered":42,"pct":0.0035},{"name":"آية مصطفى محمدي محمد","answered":42,"pct":0.0035},{"name":"نجوى السعيد مختار على","answered":42,"pct":0.0035},{"name":"سهير ميسرة شفيق الالفي","answered":41,"pct":0.0035},{"name":"فرع مدينتي","answered":40,"pct":0.0034},{"name":"رحاب السيد عيد سلامه سلامه","answered":39,"pct":0.0033},{"name":"W-246","answered":38,"pct":0.0032},{"name":"NDomiett3","answered":38,"pct":0.0032},{"name":"فرع المنزله","answered":38,"pct":0.0032},{"name":"فرع الإستاد","answered":38,"pct":0.0032},{"name":"Gihan8","answered":37,"pct":0.0031},{"name":"عبدالرحمن محمد علي حسين هريدي","answered":37,"pct":0.0031},{"name":"W-106","answered":37,"pct":0.0031},{"name":"W-203","answered":36,"pct":0.003},{"name":"سارة علي مصطفى ابراهيم نعناع","answered":36,"pct":0.003},{"name":"مي السيد عبدالفتاح ابراهيم","answered":35,"pct":0.003},{"name":"احمد ابراهيم عبدالعزيز عبدالغني عبده","answered":32,"pct":0.0027},{"name":"W-242","answered":32,"pct":0.0027},{"name":"فرع المحافظه","answered":32,"pct":0.0027},{"name":"فرع شيراتون","answered":32,"pct":0.0027},{"name":"فرع حقوق","answered":32,"pct":0.0027},{"name":"فرع رفعت شعبان","answered":31,"pct":0.0026},{"name":"محمد رافت ابراهيم المتولي","answered":31,"pct":0.0026},{"name":"Gihan5","answered":29,"pct":0.0024},{"name":"هاجر جمعه عبدالمنعم عيد ابو الاسعاد","answered":29,"pct":0.0024},{"name":"احمد عبدالعال احمد محمد","answered":28,"pct":0.0024},{"name":"ايه عصام عبدالهادي ابوالنجا","answered":27,"pct":0.0023},{"name":"رمزى علاء احمد رمزى","answered":26,"pct":0.0022},{"name":"W-185","answered":26,"pct":0.0022},{"name":"ElZagazig2-Branch","answered":26,"pct":0.0022},{"name":"فرع الجولف","answered":23,"pct":0.0019},{"name":"عبدالله ايمن محمد الشحات ابراهيم","answered":23,"pct":0.0019},{"name":"W-171","answered":23,"pct":0.0019},{"name":"محمد عبدالمنعم الدسوقي","answered":23,"pct":0.0019},{"name":"عبدالحميد محمد عبدالحميد محمد شلبي","answered":23,"pct":0.0019},{"name":"W-211","answered":23,"pct":0.0019},{"name":"مريم احمد جاب الله عبدالهادي","answered":22,"pct":0.0019},{"name":"MostashfaAlaam2-branch","answered":22,"pct":0.0019},{"name":"W-161","answered":22,"pct":0.0019},{"name":"W-219","answered":22,"pct":0.0019},{"name":"محمد ابراهيم محمد اسعد","answered":21,"pct":0.0018},{"name":"W-220","answered":20,"pct":0.0017},{"name":"سهير ايهاب عبدالمحسن محسوب النجار","answered":20,"pct":0.0017},{"name":"سارة رضا محمد عبد الوهاب يوسف","answered":20,"pct":0.0017},{"name":"خالد وليد رشاد","answered":20,"pct":0.0017},{"name":"NDOMIETT","answered":19,"pct":0.0016},{"name":"فرع القومية","answered":19,"pct":0.0016},{"name":"Estad2-Branch","answered":18,"pct":0.0015},{"name":"فرع ميت غمر","answered":18,"pct":0.0015},{"name":"W-Rehab","answered":18,"pct":0.0015},{"name":"فرع دمياط","answered":18,"pct":0.0015},{"name":"APP-243","answered":15,"pct":0.0013},{"name":"سيف الدين صبري احمد علي","answered":15,"pct":0.0013},{"name":"المستشفى العام","answered":14,"pct":0.0012},{"name":"APP-143","answered":14,"pct":0.0012},{"name":"Madinty2-Branch","answered":14,"pct":0.0012},{"name":"محمد منتصر ابراهيم عبدالهادي","answered":14,"pct":0.0012},{"name":"Rehab2-Banch","answered":14,"pct":0.0012},{"name":"M NASR3","answered":13,"pct":0.0011},{"name":"مي وحيد حلمي رياض","answered":13,"pct":0.0011},{"name":"APP-147","answered":12,"pct":0.001},{"name":"Enas-Adel","answered":12,"pct":0.001},{"name":"Elmontazah-Branch","answered":12,"pct":0.001},{"name":"اماني عوض عبدالخالق عبدالمحسن","answered":12,"pct":0.001},{"name":"حسام حسن احمد موسي","answered":11,"pct":0.0009},{"name":"W-162","answered":11,"pct":0.0009},{"name":"عبدالرحمن ظريف ابراهيم احمد شحاته","answered":11,"pct":0.0009},{"name":"فرع السكه","answered":10,"pct":0.0008},{"name":"محمد صبري احمد احمد","answered":10,"pct":0.0008},{"name":"اماني وائل عبدالقادر الباز","answered":10,"pct":0.0008},{"name":"W-156","answered":10,"pct":0.0008},{"name":"رضا محمد محمد احمد عياد","answered":9,"pct":0.0008},{"name":"بسمه محمود عبدالحميد ابراهيم","answered":9,"pct":0.0008},{"name":"نور الدين رفعت عوض عباس","answered":9,"pct":0.0008},{"name":"W-250","answered":9,"pct":0.0008},{"name":"APP-145","answered":9,"pct":0.0008},{"name":"سمر علاء الدين عباس حمزه","answered":9,"pct":0.0008},{"name":"فرع مصر للطيران","answered":9,"pct":0.0008},{"name":"APP-207","answered":8,"pct":0.0007},{"name":"فرع الدراسات 2","answered":8,"pct":0.0007},{"name":"Domiett2","answered":8,"pct":0.0007},{"name":"فرع الزعران","answered":8,"pct":0.0007},{"name":"هنا محمد ابراهيم النجدى","answered":7,"pct":0.0006},{"name":"APP-136","answered":7,"pct":0.0006},{"name":"Talkha","answered":7,"pct":0.0006},{"name":"Ahmed-Reda","answered":7,"pct":0.0006},{"name":"APP-150","answered":7,"pct":0.0006},{"name":"APP-151","answered":7,"pct":0.0006},{"name":"APP-155","answered":7,"pct":0.0006},{"name":"ندى طارق حامد محمد","answered":6,"pct":0.0005},{"name":"الاء مسعد محمد احمد السيد","answered":6,"pct":0.0005},{"name":"Gihan2","answered":6,"pct":0.0005},{"name":"Gihan 7","answered":6,"pct":0.0005},{"name":"ElGolf2-Branch","answered":6,"pct":0.0005},{"name":"Arabisk-3","answered":6,"pct":0.0005},{"name":"gish3","answered":5,"pct":0.0004},{"name":"دعاء محمد محمد المغاوري","answered":5,"pct":0.0004},{"name":"شريف احمد احمد عبد الفتاح","answered":5,"pct":0.0004},{"name":"APP-101","answered":5,"pct":0.0004},{"name":"فايز السعيد زكي محمود","answered":5,"pct":0.0004},{"name":"ميرنا محمد كمال ابراهيم","answered":4,"pct":0.0003},{"name":"APP-148","answered":4,"pct":0.0003},{"name":"Za3fran3-Branch","answered":4,"pct":0.0003},{"name":"MNasr2","answered":4,"pct":0.0003},{"name":"APP-146","answered":3,"pct":0.0003},{"name":"ميرنا محمد محمود صبري","answered":3,"pct":0.0003},{"name":"APP-135","answered":3,"pct":0.0003},{"name":"Drasat-2-Branch","answered":3,"pct":0.0003},{"name":"فاطمة محمد بهجت محمد حسين شحاتة","answered":3,"pct":0.0003},{"name":"محمد عبدالستار سعد حبيب","answered":3,"pct":0.0003},{"name":"حسين محمد حسين محمد","answered":3,"pct":0.0003},{"name":"آية عبدالحكيم ابراهيم عطوه","answered":3,"pct":0.0003},{"name":"Gihan3","answered":3,"pct":0.0003},{"name":"APP-157","answered":3,"pct":0.0003},{"name":"Arabisk-4","answered":3,"pct":0.0003},{"name":"Sheraton2","answered":3,"pct":0.0003},{"name":"Arkan2-Branch","answered":2,"pct":0.0002},{"name":"كرستينا جورج توفيق فهمي","answered":2,"pct":0.0002},{"name":"APP-144","answered":2,"pct":0.0002},{"name":"APP-141","answered":2,"pct":0.0002},{"name":"نهال فادي فتحى العشري","answered":2,"pct":0.0002},{"name":"Branch-Tivoli2","answered":2,"pct":0.0002},{"name":"محمد حمدي محمد محمد السيد","answered":2,"pct":0.0002},{"name":"MasrEltayaran-Branch","answered":2,"pct":0.0002},{"name":"اميره السيد صقر مخلوف","answered":2,"pct":0.0002},{"name":"احمد وليد عبدالرازق عبدالحليم النجار","answered":2,"pct":0.0002},{"name":"محمد ثروت احمد الدسوقى","answered":2,"pct":0.0002},{"name":"فرع المنتزه","answered":2,"pct":0.0002},{"name":"فرع بنك مصر","answered":2,"pct":0.0002},{"name":"DRNahla","answered":2,"pct":0.0002},{"name":"فرع السويس","answered":2,"pct":0.0002},{"name":"فرع أول مارس","answered":2,"pct":0.0002},{"name":"فرع مدينة نصر","answered":2,"pct":0.0002},{"name":"APP-142","answered":1,"pct":0.0001},{"name":"منة الله حسن السعيد ابراهيم","answered":1,"pct":0.0001},{"name":"منار ماهر عبد الحميد محمد","answered":1,"pct":0.0001},{"name":"APP-149","answered":1,"pct":0.0001},{"name":"W-212","answered":1,"pct":0.0001},{"name":"Store-Delivery","answered":1,"pct":0.0001},{"name":"Office","answered":1,"pct":0.0001},{"name":"سارة اسامة احمد السيد","answered":1,"pct":0.0001},{"name":"روان اشرف عبد الحميد الحسيني","answered":1,"pct":0.0001},{"name":"داليا وليد حمودة عوض","answered":1,"pct":0.0001},{"name":"Suis2-Branch","answered":1,"pct":0.0001},{"name":"ايمان محمد الششتاوي محمد عبدالله","answered":1,"pct":0.0001},{"name":"باسم نبيل صبحي ميخائيل","answered":1,"pct":0.0001},{"name":"APP-248","answered":1,"pct":0.0001},{"name":"فرع كفر الشيخ","answered":1,"pct":0.0001},{"name":"فرع مدينة بورسعيد","answered":1,"pct":0.0001},{"name":"فرع السماد","answered":1,"pct":0.0001},{"name":"فرع أرابيسك","answered":1,"pct":0.0001},{"name":"فرع ناصر النادي","answered":1,"pct":0.0001},{"name":"مريم ماجد طلعت حنا","answered":1,"pct":0.0001},{"name":"وفية محمد محمد شعبان","answered":1,"pct":0.0001}],"n_employees":265,"insights":{"إجمالي المكالمات":11900,"إجمالي المهجورة":0,"إجمالي المردود عليها":11900,"النسبة الإجمالية للمهجورة":0,"أسوأ شفت":"1.00 PM : 5.00 PM","نسبة المهجورة في أسوأ شفت":0,"أفضل شفت":"1.00 PM : 5.00 PM","نسبة المهجورة في أفضل شفت":0,"أسوأ يوم":"01/05/2026","نسبة المهجورة في أسوأ يوم":0,"أفضل يوم":"01/05/2026","نسبة المهجورة في أفضل يوم":0,"أعلى زميل في الرد":"W-173","عدد مكالمات أعلى زميل":192,"نسبة مساهمته من إجمالي الرد":0.0162,"التقييم العام":"الوضع جيد نسبيًا."},"consult_team":[{"login_id":"2020","name":"باسم نبيل صبحي ميخائيل","consultations":1770},{"login_id":"2016","name":"عمر الازهري فوزي عبدالحميد","consultations":1195},{"login_id":"2017","name":"حسام وليد عبد العزيز عبد العزيز","consultations":1151},{"login_id":"2011","name":"محمود شوقي محمد حسين","consultations":1123},{"login_id":"2021","name":"محمد سعدالدين عبدالعزيز سلام","consultations":892},{"login_id":"2026","name":"كرستينا جورج توفيق فهمي","consultations":823},{"login_id":"2027","name":"مريم ماجد طلعت حنا","consultations":768},{"login_id":"2015","name":"اماني محمد ابراهيم محمد","consultations":765},{"login_id":"2013","name":"ايمن محمود عبدالعظيم الالفي","consultations":762},{"login_id":"2008","name":"منة الله حسن السعيد ابراهيم","consultations":758},{"login_id":"2012","name":"محمد ابراهيم فوزي الجزار","consultations":585}]}}};
+// DATA_END
+
+/* ════════════════ helpers ════════════════ */
+const $ = (s,r=document)=>r.querySelector(s);
+const el = (t,a={},...k)=>{const n=document.createElement(t);for(const x in a){if(x==="class")n.className=a[x];else if(x==="html")n.innerHTML=a[x];else n.setAttribute(x,a[x]);}k.flat().forEach(c=>n.append(c));return n;};
+const fmt = n => (n==null?"—":Number(n).toLocaleString("en-US"));
+const DOW_AR = {Monday:"الإثنين",Tuesday:"الثلاثاء",Wednesday:"الأربعاء",Thursday:"الخميس",Friday:"الجمعة",Saturday:"السبت",Sunday:"الأحد"};
+const hourNum = s => parseInt(String(s).split(":")[0],10);
+const sortHours = arr => [...arr].sort((a,b)=>hourNum(a.k)-hourNum(b.k));
+const hh = s => { const t=String(s).split(":"); return t[0]+":"+(t[1]||"00"); };
+// "0:04:05" -> "4:05" , "1:11:35" -> "1:11:35"
+function trimTime(s){ if(s==null) return "—"; const p=String(s).split(":"); if(p.length===3&&p[0]==="0") return (+p[1])+":"+p[2]; return s; }
+function secsToHM(sec){ if(sec==null) return "—"; const h=Math.floor(sec/3600), m=Math.round((sec%3600)/60); return h?`${h} س ${m} د`:`${m} د`; }
+const pct = (a,b)=> b? Math.round(a/b*1000)/10 : 0;
+
+/* tooltip */
+const tip=$("#tip");
+function showTip(e,html){ tip.innerHTML=html; tip.style.opacity=1;
+  const x=(e.touches?e.touches[0].clientX:e.clientX), y=(e.touches?e.touches[0].clientY:e.clientY);
+  tip.style.left=Math.min(x+14,innerWidth-tip.offsetWidth-8)+"px"; tip.style.top=(y-tip.offsetHeight-10)+"px"; }
+function hideTip(){ tip.style.opacity=0; }
+
+/* css var color */
+const cssv = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+/* count-up */
+function countUp(node,to,suffix=""){
+  const dur=900, t0=performance.now(), from=0;
+  function step(t){ const p=Math.min((t-t0)/dur,1); const e=1-Math.pow(1-p,3);
+    let val=from+(to-from)*e;
+    node.textContent=(Number.isInteger(to)?Math.round(val).toLocaleString("en-US"):(Math.round(val*10)/10).toLocaleString("en-US"))+suffix;
+    if(p<1)requestAnimationFrame(step);}
+  requestAnimationFrame(step);
+}
+
+/* ════════════════ SVG charts ════════════════ */
+const NS="http://www.w3.org/2000/svg";
+function svg(w,h){ const s=document.createElementNS(NS,"svg"); s.setAttribute("viewBox",`0 0 ${w} ${h}`); s.setAttribute("class","chart"); s.setAttribute("preserveAspectRatio","none"); s.setAttribute("direction","ltr"); return s; }
+function S(tag,at){ const e=document.createElementNS(NS,tag); for(const k in at)e.setAttribute(k,at[k]); return e; }
+
+/* vertical bars */
+function barV(data,{h=230,color="var(--teal)",fmtv=fmt,label="مكالمة"}={}){
+  const W=720,H=h, padL=38,padB=26,padT=14,padR=8;
+  const s=svg(W,H); const max=Math.max(...data.map(d=>d.v),1);
+  const cw=(W-padL-padR)/data.length, bw=Math.min(cw*0.62,34);
+  for(let i=0;i<=4;i++){ const y=padT+(H-padT-padB)*i/4; const v=Math.round(max*(1-i/4));
+    s.append(S("line",{x1:padL,x2:W-padR,y1:y,y2:y,class:"gl"}));
+    const tx=S("text",{x:padL-6,y:y+3,class:"axt","text-anchor":"end"}); tx.textContent=fmt(v); s.append(tx);
+  }
+  data.forEach((d,i)=>{
+    const x=padL+cw*i+(cw-bw)/2, bh=(H-padT-padB)*(d.v/max), y=H-padB-bh;
+    const grad="g"+Math.random().toString(36).slice(2,7);
+    const lg=S("linearGradient",{id:grad,x1:0,y1:0,x2:0,y2:1});
+    lg.append(S("stop",{offset:0,"stop-color":color,"stop-opacity":1}));
+    lg.append(S("stop",{offset:1,"stop-color":color,"stop-opacity":.55}));
+    s.append(lg);
+    const r=S("rect",{x,y,width:bw,height:Math.max(bh,1),rx:Math.min(bw/2.4,6),fill:`url(#${grad})`,class:"bar"});
+    r.addEventListener("mousemove",e=>showTip(e,`<b>${fmtv(d.v)}</b> ${label}<br>${d.k}`));
+    r.addEventListener("mouseleave",hideTip);
+    s.append(r);
+    if(i%(data.length>16?2:1)===0){ const t=S("text",{x:x+bw/2,y:H-padB+15,class:"axt","text-anchor":"middle"}); t.textContent=hh(d.k); s.append(t); }
+  });
+  return s;
+}
+
+/* horizontal bars */
+function barH(data,{color="var(--teal)",rowh=34,fmtv=fmt,label="مكالمة",arDay=false,labelW=190,maxch=16}={}){
+  const W=720, padL=labelW, padR=54, padT=6, H=padT*2+data.length*rowh;
+  const s=svg(W,H); const max=Math.max(...data.map(d=>d.v),1);
+  data.forEach((d,i)=>{
+    const y=padT+i*rowh+rowh/2; const bw=(W-padL-padR)*(d.v/max);
+    const nm=arDay?(DOW_AR[d.k]||d.k):d.k;
+    const disp=(maxch&&String(nm).length>maxch)?String(nm).slice(0,maxch-1)+"…":nm;
+    const lt=S("text",{x:padL-8,y:y+4,class:"axt","text-anchor":"end",direction:"ltr"}); lt.textContent=disp; lt.style.fontWeight=600; s.append(lt);
+    s.append(S("rect",{x:padL,y:y-9,width:W-padL-padR,height:18,rx:9,fill:"var(--grid)"}));
+    const grad="g"+Math.random().toString(36).slice(2,7);
+    const lg=S("linearGradient",{id:grad,x1:0,y1:0,x2:1,y2:0});
+    lg.append(S("stop",{offset:0,"stop-color":color,"stop-opacity":.7}));
+    lg.append(S("stop",{offset:1,"stop-color":color,"stop-opacity":1}));
+    s.append(lg);
+    const r=S("rect",{x:padL,y:y-9,width:Math.max(bw,3),height:18,rx:9,fill:`url(#${grad})`,class:"bar"});
+    r.addEventListener("mousemove",e=>showTip(e,`<b>${fmtv(d.v)}</b> ${label}<br>${nm}`));
+    r.addEventListener("mouseleave",hideTip); s.append(r);
+    const vt=S("text",{x:Math.min(padL+bw+7,W-padR+44),y:y+4,class:"barlbl","text-anchor":"start"}); vt.textContent=fmtv(d.v); s.append(vt);
+  });
+  return s;
+}
+
+/* area / line */
+function area(data,{h=250,color="var(--teal)",fmtv=fmt,label="مكالمة"}={}){
+  const W=720,H=h, padL=40,padB=30,padT=14,padR=12;
+  const s=svg(W,H); const max=Math.max(...data.map(d=>d.v),1)*1.08;
+  const X=i=>padL+(W-padL-padR)*i/(data.length-1);
+  const Y=v=>padT+(H-padT-padB)*(1-v/max);
+  for(let i=0;i<=4;i++){ const y=padT+(H-padT-padB)*i/4;
+    s.append(S("line",{x1:padL,x2:W-padR,y1:y,y2:y,class:"gl"}));
+    const tx=S("text",{x:padL-6,y:y+3,class:"axt","text-anchor":"end"}); tx.textContent=fmt(Math.round(max*(1-i/4))); s.append(tx);
+  }
+  let dpath="", apath=`M ${X(0)} ${H-padB} `;
+  data.forEach((d,i)=>{ const x=X(i),y=Y(d.v); dpath+=(i?"L":"M")+` ${x} ${y} `; apath+=`L ${x} ${y} `; });
+  apath+=`L ${X(data.length-1)} ${H-padB} Z`;
+  const grad="ga"+Math.random().toString(36).slice(2,7);
+  const lg=S("linearGradient",{id:grad,x1:0,y1:0,x2:0,y2:1});
+  lg.append(S("stop",{offset:0,"stop-color":color,"stop-opacity":.34}));
+  lg.append(S("stop",{offset:1,"stop-color":color,"stop-opacity":0}));
+  s.append(lg);
+  s.append(S("path",{d:apath,fill:`url(#${grad})`}));
+  s.append(S("path",{d:dpath,fill:"none",stroke:color,"stroke-width":2.4,"stroke-linejoin":"round","stroke-linecap":"round"}));
+  data.forEach((d,i)=>{
+    const x=X(i),y=Y(d.v);
+    const c=S("circle",{cx:x,cy:y,r:3.2,fill:"var(--card)",stroke:color,"stroke-width":2});
+    const hit=S("circle",{cx:x,cy:y,r:11,fill:"transparent",class:"bar"});
+    const lbl=new Date(d.k).toLocaleDateString("ar-EG",{day:"numeric",month:"short"});
+    hit.addEventListener("mousemove",e=>{showTip(e,`<b>${fmtv(d.v)}</b> ${label}<br>${lbl}`);c.setAttribute("r",5);});
+    hit.addEventListener("mouseleave",()=>{hideTip();c.setAttribute("r",3.2);});
+    s.append(c); s.append(hit);
+    if(i%4===0||i===data.length-1){ const t=S("text",{x,y:H-padB+16,class:"axt","text-anchor":"middle"}); t.textContent=new Date(d.k).getDate(); s.append(t); }
+  });
+  return s;
+}
+
+/* donut */
+function donut(segs,{size=190}={}){
+  const r=size/2, ir=r*0.62, cx=r, cy=r;
+  const s=svg(size,size); s.setAttribute("preserveAspectRatio","xMidYMid meet"); s.style.maxWidth=size+"px";
+  const tot=segs.reduce((a,b)=>a+b.v,0)||1; let ang=-Math.PI/2;
+  segs.forEach(sg=>{
+    const a2=ang+sg.v/tot*Math.PI*2;
+    const x1=cx+r*Math.cos(ang),y1=cy+r*Math.sin(ang),x2=cx+r*Math.cos(a2),y2=cy+r*Math.sin(a2);
+    const xi1=cx+ir*Math.cos(a2),yi1=cy+ir*Math.sin(a2),xi2=cx+ir*Math.cos(ang),yi2=cy+ir*Math.sin(ang);
+    const large=(a2-ang)>Math.PI?1:0;
+    const p=S("path",{d:`M ${x1} ${y1} A ${r} ${r} 0 ${large} 1 ${x2} ${y2} L ${xi1} ${yi1} A ${ir} ${ir} 0 ${large} 0 ${xi2} ${yi2} Z`,fill:sg.color,class:"bar"});
+    p.addEventListener("mousemove",e=>showTip(e,`<b>${fmt(sg.v)}</b> ${sg.label}<br>${pct(sg.v,tot)}%`));
+    p.addEventListener("mouseleave",hideTip);
+    s.append(p); ang=a2;
+  });
+  const big=segs[0]?pct(segs[0].v,tot):0;
+  const t1=S("text",{x:cx,y:cy-2,"text-anchor":"middle",fill:"var(--ink)","font-family":"Noto Kufi Arabic","font-size":"26","font-weight":"800"}); t1.textContent=big+"%";
+  const t2=S("text",{x:cx,y:cy+18,"text-anchor":"middle",fill:"var(--muted)","font-size":"12"}); t2.textContent=segs[0]?segs[0].label:"";
+  s.append(t1); s.append(t2);
+  return s;
+}
+
+/* ════════════════ UI builders ════════════════ */
+function panel(titleHtml,icon,sub,bodyNode,extraClass=""){
+  const p=el("div",{class:"panel "+extraClass});
+  const head=el("div",{class:"panel-h"});
+  head.append(el("h3",{html:`<span class="hi">${icon}</span> ${titleHtml}`}));
+  p.append(head);
+  if(sub)p.append(el("div",{class:"panel-sub",html:sub}));
+  p.append(bodyNode);
+  return p;
+}
+const IC={
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.1 9.9a16 16 0 0 0 6 6l1.27-1.26a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+  miss:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.26a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 3.07 4.18 2 2 0 0 1 5 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91"/><line x1="23" y1="1" x2="17" y2="7"/><line x1="17" y1="1" x2="23" y2="7"/></svg>',
+  gauge:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12l4-4M3 12a9 9 0 0 1 18 0"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 16 14"/></svg>',
+  bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+  out:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 19V5a2 2 0 0 1 2-2h7M15 3l6 6-6 6M21 9H9"/></svg>',
+  users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>',
+  cal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+  bar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>',
+  trend:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>',
+  pie:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>'
+};
+
+function kpi(accent,icon,val,label,sub,tag){
+  const c=el("div",{class:"kpi",style:`--accent:${accent}`});
+  c.append(el("div",{class:"kpi-top"},
+    el("div",{class:"kpi-ic",html:icon}),
+    tag?el("div",{class:"kpi-tag",html:tag}):el("span")));
+  const v=el("div",{class:"kpi-val num"},"0"); c.append(v);
+  c.append(el("div",{class:"kpi-label"},label));
+  if(sub)c.append(el("div",{class:"kpi-sub",html:sub}));
+  c._anim=()=>{ const isf=String(val).includes("%")||String(val).includes(":")||/[^\d.,]/.test(String(val));
+    if(typeof val==="number")countUp(v,val); else v.textContent=val; };
+  return c;
+}
+
+/* ════════════════ render a dataset ════════════════ */
+const PALETTE=()=>[cssv("--c1"),cssv("--c2"),cssv("--c3"),cssv("--c4"),cssv("--c5")];
+
+const SHIFT_LABEL={"12.00 AM : 7.00 AM":"ليلي · ١٢ص–٧ص","7:00 AM : 1.00 PM":"صباحي · ٧ص–١م","1.00 PM : 5.00 PM":"ظهري · ١م–٥م","5.00 PM : 12.00 AM":"مسائي · ٥م–١٢ص"};
+const shiftLbl=s=>SHIFT_LABEL[String(s).trim()]||s;
+
+function renderDataset(key){
+  const raw=getDatasets()[key];
+  const v=$("#view"); v.innerHTML=""; v.className="fade";
+  if(!raw||!raw.totals){
+    const nm=key==="cosmetic"?"التجميلية":key==="customer"?"العملاء":key==="internal"?"الداخلي":"";
+    v.innerHTML=`<div class="panel" style="text-align:center;color:var(--muted);padding:46px 20px;line-height:1.9">
+      <div style="font-size:40px;margin-bottom:10px">📭</div>
+      <b style="color:var(--ink);font-size:1.05rem">لسه مفيش تقرير ${nm}</b><br>
+      حُط ملف التقرير${key==="cosmetic"?' باسم <b>cosmo.xlsx</b>':''} في فولدر <b>public</b> وشغّل <b>python build-analytics.py</b>.</div>`;
+    return;
+  }
+  const d=dsView(raw); const t=d.totals||{}; const ins=d.insights||{};
+  const total=t.total||0, answered=t.answered||0, aband=t.abandoned||0;
+  const ansRate=pct(answered,total), abRate=pct(aband,total);
+  const days=d.days||[], shifts=d.shifts||[];
+  const avgDay=days.length?Math.round(total/days.length):0;
+  const busiest=shifts.slice().sort((a,b)=>b.total-a.total)[0];
+  const peakDay=days.slice().sort((a,b)=>b.total-a.total)[0];
+
+  const kp=el("div",{class:"kpis"});
+  const kpiNodes=[
+    kpi("var(--c2)",IC.phone,total,"إجمالي المكالمات الواردة","خلال فترة التقرير","الفترة"),
+    kpi("var(--green)",IC.check,answered,"المكالمات المردود عليها",`<b class="up">${ansRate}%</b> نسبة الرد`,ansRate+"%"),
+    kpi("var(--red)",IC.miss,aband,"المكالمات المهجورة",`<b class="down">${abRate}%</b> نسبة الهجر`,abRate+"%"),
+    kpi("var(--teal)",IC.bolt,avgDay,"متوسط المكالمات يوميًا","على مدار "+days.length+" يوم"),
+    kpi("var(--gold)",IC.cal,days.length,"أيام التشغيل","عدد أيام التقرير"),
+    kpi("var(--c4)",IC.clock,busiest?busiest.total:0,"أكثر فترة ضغطًا",busiest?busiest.shift:"—"),
+    kpi("var(--c2)",IC.trend,peakDay?peakDay.total:0,"أعلى يوم في الشهر",peakDay?fmtDate(peakDay.date):"—"),
+    kpi("var(--teal)",IC.users,d.n_employees||0,"عدد الزملاء","ظهروا في التقرير")
+  ];
+  kpiNodes.forEach(x=>kp.append(x)); v.append(kp);
+
+  v.append(panel("الاتجاه اليومي للمكالمات",IC.trend,
+    `إجمالي <b style="color:var(--ink)">${fmt(total)}</b> مكالمة على مدار <b style="color:var(--ink)">${days.length}</b> يوم`,
+    area(days.map(x=>({k:x.date,v:x.total})),{color:cssv("--c1"),h:235}),"span-2"));
+
+  const g1=el("div",{class:"grid2"});
+  g1.append(panel("التوزيع حسب الفترات",IC.clock,"إجمالي المكالمات في كل فترة من فترات اليوم الأربع",
+    barH(shifts.map(x=>({k:x.shift,v:x.total})),{color:cssv("--c1"),rowh:40})));
+  const dn=el("div",{class:"donut-wrap"});
+  const segs=[{v:answered,label:"مردود عليها",color:cssv("--green")},{v:Math.max(aband,0.0001),label:"مهجورة",color:cssv("--red")}];
+  dn.append(donut(segs));
+  const stat=el("div",{class:"donut-stat"});
+  stat.append(dsRow(cssv("--green"),fmt(answered)+" ("+ansRate+"%)","مردود عليها"));
+  stat.append(dsRow(cssv("--red"),fmt(aband)+" ("+abRate+"%)","مهجورة"));
+  stat.append(dsRow(cssv("--gold"),fmt(total),"إجمالي معروض"));
+  dn.append(stat);
+  g1.append(panel("نسبة الرد مقابل الهجر",IC.pie,"توزيع المكالمات المعروضة",dn));
+  v.append(g1);
+
+  const g2=el("div",{class:"grid3"});
+  g2.append(panel("نسبة الهجر حسب الفترة",IC.miss,"كلما ارتفعت النسبة زاد الضغط أو نقصت التغطية",
+    barH(shifts.map(x=>({k:x.shift,v:Math.round((x.rate||0)*1000)/10})),{color:cssv("--red"),rowh:40,fmtv:y=>y+"%",label:"هجر"})));
+  g2.append(panel("أبرز المؤشرات",IC.gauge,"من تحليل الفترات والأيام",insightsCard(ins)));
+  v.append(g2);
+
+  v.append(calendarPanel(days.map(x=>({k:x.date,v:x.total}))));
+
+  const g3=el("div",{class:"grid3"});
+  const ag=d.employees.map(e=>({k:e.name,v:e.answered}));
+  const top=ag.slice(0,12);
+  g3.append(panel("المكالمات المردود عليها لكل زميل",IC.users,
+    `أعلى زميل: <b style="color:var(--ink)">${ag[0]?ag[0].k:"—"}</b> · إجمالي ${d.n_employees} زميل`,
+    barH(top,{color:cssv("--teal"),rowh:31,labelW:210,maxch:20})));
+  g3.append(panel("ترتيب الزملاء",IC.bar,"أعلى ١٢ من حيث عدد المكالمات",agentTable(top,answered)));
+  v.append(g3);
+
+  /* Consult-team panel — internal tab only */
+  if(key==='internal'&&d.consult_team&&d.consult_team.length>0){
+    v.append(consultTeamPanel(d.consult_team));
+  }
+
+  requestAnimationFrame(()=>kpiNodes.forEach(x=>x._anim()));
+}
+
+function dsRow(color,val,label){
+  return el("div",{class:"ds"},el("i",{style:`background:${color}`}),
+    el("div",{},el("div",{class:"ds-v num"},val),el("div",{class:"ds-l"},label)));
+}
+function fmtDate(iso){ if(!iso)return "—"; try{return new Date(iso).toLocaleDateString("ar-EG",{day:"numeric",month:"long"});}catch(e){return iso;} }
+function fmtDate2(s){ const m=String(s).match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/); if(!m)return s; try{return new Date(`${m[3]}-${m[2]}-${m[1]}`).toLocaleDateString("ar-EG",{day:"numeric",month:"long"});}catch(e){return s;} }
+function insightsCard(ins){
+  const rows=[
+    ["أفضل فترة (أقل هجر)", ins["أفضل شفت"]?shiftLbl(ins["أفضل شفت"]):null, "up"],
+    ["أسوأ فترة (أعلى هجر)", ins["أسوأ شفت"]?shiftLbl(ins["أسوأ شفت"]):null, "down"],
+    ["أفضل يوم (أقل هجر)", ins["أفضل يوم"]?fmtDate2(ins["أفضل يوم"]):null, "up"],
+    ["أسوأ يوم (أعلى هجر)", ins["أسوأ يوم"]?fmtDate2(ins["أسوأ يوم"]):null, "down"],
+  ].filter(r=>r[1]!=null);
+  const wrap=el("div",{style:"display:flex;flex-direction:column;gap:11px;padding-top:4px"});
+  rows.forEach(([l,val,cls])=>{
+    const r=el("div",{style:"display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 13px;border-radius:12px;background:var(--grid)"});
+    r.append(el("div",{class:"ds-l",style:"font-size:.81rem"},l));
+    r.append(el("div",{class:cls,style:"font-weight:800;font-size:.85rem"},String(val)));
+    wrap.append(r);
+  });
+  if(!rows.length) wrap.append(el("div",{class:"ds-l"},"لا توجد مؤشرات"));
+  return wrap;
+}
+
+/* ── Multi-month support ── */
+let CUR_MONTH=null;
+function getMonthKeys(){ return (DASH_DATA.months&&typeof DASH_DATA.months==="object")?Object.keys(DASH_DATA.months):null; }
+function getDatasets(){
+  const mk=getMonthKeys();
+  if(mk&&mk.length>0){
+    const m=(CUR_MONTH&&mk.includes(CUR_MONTH))?CUR_MONTH:mk[mk.length-1];
+    CUR_MONTH=m; return DASH_DATA.months[m];
+  }
+  return DASH_DATA.datasets;
+}
+
+/* ── Heatmap palette — multi-stop interpolation ── */
+let HEAT_PALETTE=(()=>{try{return localStorage.getItem('heatPalette')||'thermal'}catch(e){return'thermal'}})();
+
+/*  Each stop: [t, r, g, b]
+    l = light mode   d = dark mode   */
+const HEAT_PALETTES={
+  thermal:{
+    l:[[0,240,253,244],[0.25,134,239,172],[0.52,253,224,71],[0.72,249,115,22],[1.0,220,38,38]],
+    d:[[0,14,58,32],   [0.25,21,150,68],  [0.52,161,110,7],[0.72,194,67,14],[1.0,185,28,28]],
+  },
+  teal:{
+    l:[[0,198,240,238],[1,6,86,82]],
+    d:[[0,12,54,68],   [1,22,195,189]],
+  },
+  amber:{
+    l:[[0,254,243,196],[0.5,251,191,36],[1,173,92,10]],
+    d:[[0,44,26,4],    [0.5,180,120,8],[1,238,160,40]],
+  },
+  purple:{
+    l:[[0,237,232,255],[0.5,196,181,253],[1,98,32,205]],
+    d:[[0,18,11,46],   [0.5,109,40,217],[1,167,139,250]],
+  },
+};
+
+function interpStops(stops,t){
+  const last=stops[stops.length-1];
+  if(t>=last[0]) return [last[1],last[2],last[3]];
+  for(let i=0;i<stops.length-1;i++){
+    const [t0,r0,g0,b0]=stops[i], [t1,r1,g1,b1]=stops[i+1];
+    if(t>=t0&&t<=t1){
+      const p=t1>t0?(t-t0)/(t1-t0):0;
+      return [Math.round(r0+(r1-r0)*p),Math.round(g0+(g1-g0)*p),Math.round(b0+(b1-b0)*p)];
+    }
+  }
+  return [stops[0][1],stops[0][2],stops[0][3]];
+}
+
+function heatColor(t){
+  const dark=document.documentElement.getAttribute("data-theme")==="dark";
+  const p=HEAT_PALETTES[HEAT_PALETTE]||HEAT_PALETTES.thermal;
+  const [r,g,b]=interpStops(dark?p.d:p.l,t);
+  return `rgb(${r},${g},${b})`;
+}
+function heatTextColor(t){
+  const dark=document.documentElement.getAttribute("data-theme")==="dark";
+  const p=HEAT_PALETTES[HEAT_PALETTE]||HEAT_PALETTES.thermal;
+  const [r,g,b]=interpStops(dark?p.d:p.l,t);
+  const lum=(0.299*r+0.587*g+0.114*b)/255;
+  return lum>0.52?'#111827':'#fff';
+}
+function paletteSwitcher(){
+  const PALS=[
+    {k:'thermal',c:'linear-gradient(90deg,#86ef9e,#fde047,#f97316,#dc2626)',lbl:'حراري (ترافيك لايت)'},
+    {k:'teal',   c:'#0ea5a0',lbl:'تيل'},
+    {k:'amber',  c:'#d97706',lbl:'ذهبي'},
+    {k:'purple', c:'#7c3aed',lbl:'بنفسجي'},
+  ];
+  const sw=el("div",{class:"pal-sw"});
+  sw.append(el("span",{class:"pal-sw-lbl"},"لون:"));
+  PALS.forEach(pl=>{
+    const isActive=HEAT_PALETTE===pl.k;
+    const btn=el("button",{
+      class:"pal-btn"+(isActive?" on":""),title:pl.lbl,
+      style:`--pal-c:${pl.c.startsWith('linear')?'#dc2626':pl.c};`+
+            `border:2px solid ${pl.c.startsWith('linear')?'transparent':'#0000'};`+
+            `background:${pl.c};`+
+            (isActive?`outline:2.5px solid #fff;outline-offset:1.5px;`:'')
+    });
+    btn.addEventListener('click',()=>{
+      HEAT_PALETTE=pl.k;
+      try{localStorage.setItem('heatPalette',pl.k);}catch(e){}
+      render();
+    });
+    sw.append(btn);
+  });
+  return sw;
+}
+
+function calendar(daily){
+  const wrap=el("div",{});
+  const grid=el("div",{class:"cal"});
+  const days=["السبت","الأحد","الإثنين","الثلاثاء","الأربعاء","الخميس","الجمعة"];
+  days.forEach(h=>grid.append(el("div",{class:"cell head"},h)));
+  const max=Math.max(...daily.map(d=>d.v),1);
+  const first=new Date(daily[0].k);
+  const jsDay=first.getDay();
+  const off=(jsDay+1)%7;
+  for(let i=0;i<off;i++)grid.append(el("div",{class:"cell",style:"background:transparent"}));
+  daily.forEach(d=>{
+    const t=d.v/max;
+    const c=el("div",{class:"cell has",style:`background:${heatColor(t)};color:${heatTextColor(t)}`});
+    c.append(el("span",{class:"cd"},new Date(d.k).getDate()));
+    c.append(el("span",{class:"num"},fmt(d.v)));
+    c.addEventListener("mousemove",e=>showTip(e,`<b>${fmt(d.v)}</b> مكالمة<br>${new Date(d.k).toLocaleDateString("ar-EG",{weekday:"long",day:"numeric",month:"long"})}`));
+    c.addEventListener("mouseleave",hideTip);
+    grid.append(c);
+  });
+  wrap.append(grid);
+  const sc=el("div",{class:"cal-scale"});
+  sc.append(el("span",{},"أقل"));
+  [0,.25,.5,.75,1].forEach(t=>sc.append(el("i",{style:`background:${heatColor(t)}`})));
+  sc.append(el("span",{},"أكثر"));
+  wrap.append(sc);
+  return wrap;
+}
+function calendarPanel(daily){
+  const p=el("div",{class:"panel span-2"});
+  const head=el("div",{class:"panel-h"});
+  head.append(el("h3",{html:`<span class="hi">${IC.cal}</span> الخريطة الحرارية اليومية`}));
+  head.append(paletteSwitcher());
+  p.append(head);
+  p.append(el("div",{class:"panel-sub"},"كثافة المكالمات لكل يوم — كلما اشتد اللون زاد الضغط"));
+  p.append(calendar(daily));
+  return p;
+}
+
+/* ════════════════ Consult-team leaderboard ════════════════ */
+function consultTeamPanel(team){
+  /* ── Arabic normalizer: removes diacritics, unifies alef/ya/ta ── */
+  function normAr(s){
+    if(!s) return '';
+    return String(s).trim()
+      .replace(/\s+/g,' ')
+      .replace(/[أإآٱ]/g,'ا')
+      .replace(/ة/g,'ه')
+      .replace(/ى/g,'ي')
+      .replace(/ـ/g,'')
+      .replace(/[ً-ٟ]/g,'');  // strip all harakat
+  }
+
+  /* ── Customer calls map — 3 keys per employee ── */
+  const ds=getDatasets();
+  const custMap=new Map();
+  (ds.customer?.employees||[]).forEach(e=>{
+    const n=e.name; const v=e.answered;
+    custMap.set(n,v);                       // exact
+    custMap.set(normAr(n),v);               // normalized
+    if(n?.startsWith('W-')) custMap.set(n.slice(2),v);  // strip W-
+  });
+
+  function matchCust(name,lid){
+    /* 1 exact */
+    if(custMap.has(name)) return custMap.get(name);
+    /* 2 normalized */
+    const nn=normAr(name);
+    if(custMap.has(nn)) return custMap.get(nn);
+    /* 3 W-loginId */
+    if(lid&&custMap.has('W-'+lid)) return custMap.get('W-'+lid);
+    if(lid&&custMap.has(String(lid))) return custMap.get(String(lid));
+    /* 4 token intersection — all words in excel name exist in employee name */
+    if(nn.length>4){
+      const tokens=nn.split(' ').filter(t=>t.length>1);
+      for(const[k,v]of custMap){
+        const nk=normAr(k);
+        if(tokens.length>=2&&tokens.every(t=>nk.includes(t))) return v;
+      }
+    }
+    /* 5 first 12 normalized chars */
+    if(nn.length>8){
+      const p12=nn.slice(0,12);
+      for(const[k,v]of custMap) if(normAr(k).slice(0,12)===p12) return v;
+    }
+    console.debug('[CT] unmatched:',name,'| lid:',lid);
+    return 0;
+  }
+
+  const enriched=team.map(e=>({
+    ...e,
+    custCalls:matchCust(e.name,e.login_id),
+    intCalls: e.consultations||0,
+  }));
+  const maxC=Math.max(...enriched.map(e=>e.custCalls),1);
+  const maxI=Math.max(...enriched.map(e=>e.intCalls),1);
+  const totalC=enriched.reduce((s,e)=>s+e.custCalls,0);
+  const totalI=enriched.reduce((s,e)=>s+e.intCalls,0);
+
+  /* ── Avatar palette ── */
+  const AV=[
+    {bg:'linear-gradient(135deg,#c9a84c,#f0d468)',clr:'#3a2800',blob:'rgba(201,168,76,.22)'},
+    {bg:'linear-gradient(135deg,#8e99a8,#c6cdd6)',clr:'#1a2035',blob:'rgba(140,155,168,.18)'},
+    {bg:'linear-gradient(135deg,#b45309,#e07212)',clr:'#fff',   blob:'rgba(180,83,9,.2)'},
+    {bg:'linear-gradient(135deg,var(--teal),var(--teal2))',clr:'#042a2a',blob:'rgba(14,165,160,.18)'},
+    {bg:'linear-gradient(135deg,var(--navy2),var(--navy3))',clr:'#e8f4ff',blob:'rgba(30,61,110,.2)'},
+    {bg:'linear-gradient(135deg,#5b86c4,#7ba8e0)',clr:'#fff',   blob:'rgba(91,134,196,.18)'},
+    {bg:'linear-gradient(135deg,#0f8c5e,#28c07e)',clr:'#fff',   blob:'rgba(15,140,94,.18)'},
+  ];
+  /* avatar: login number (already Latin digits) or rank fallback */
+  function avatarLabel(e,i){ return e.login_id ? e.login_id : String(i+1); }
+
+  /* ── Build panel ── */
+  const p=el("div",{class:"panel span-2"});
+
+  /* Header */
+  const hdr=el("div",{class:"ct-hdr"});
+  const left=el("div",{class:"ct-hdr-left"});
+  const title=el("div",{class:"ct-hdr-title"});
+  title.innerHTML=`<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#0cc8c2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg> أداء فريق الاستشارات`;
+  title.append(el("span",{class:"ct-hdr-badge"},`${team.length} عضو`));
+  left.append(title);
+  hdr.append(left);
+  const leg=el("div",{class:"ct-legend"});
+  leg.innerHTML=
+    `<span><i style="background:linear-gradient(90deg,#5b86c4,#7ba8e0)"></i>مكالمات عملاء</span>`+
+    `<span><i style="background:linear-gradient(90deg,var(--teal),var(--teal2))"></i>مكالمات داخلي</span>`;
+  hdr.append(leg);
+  p.append(hdr);
+
+  /* Card grid */
+  const grid=el("div",{class:"ct-grid"});
+  enriched.forEach((e,i)=>{
+    const rk=i===0?'r1':i===1?'r2':i===2?'r3':'rn';
+    const tc=i===0?' ct-top1':i===1?' ct-top2':i===2?' ct-top3':'';
+    const av=AV[Math.min(i,AV.length-1)];
+
+    const card=el("div",{class:"ct-card"+tc,style:`animation-delay:${Math.min(i,8)*40}ms`});
+    card.append(el("div",{class:"ct-card-blob",style:`background:${av.blob}`}));
+
+    /* Top row */
+    const top=el("div",{class:"ct-card-top"});
+    const rnk=el("div",{class:"ct-rank "+rk}); rnk.textContent=String(i+1);
+    const avEl=el("div",{class:"ct-avatar",style:`background:${av.bg};color:${av.clr};font-family:'Cairo',monospace;letter-spacing:-.5px;font-size:.78rem`});
+    avEl.textContent=avatarLabel(e,i);
+    const na=el("div",{class:"ct-name-area"});
+    na.append(el("div",{class:"ct-name"},e.name||"—"));
+    if(e.login_id) na.append(el("span",{class:"ct-login"},e.login_id));
+    top.append(rnk); top.append(avEl); top.append(na);
+    card.append(top);
+    card.append(el("div",{class:"ct-divider"}));
+
+    /* Metrics */
+    const mets=el("div",{class:"ct-metrics"});
+
+    /* مكالمات عملاء */
+    const cSub=totalC?` · ${pct(e.custCalls,totalC)}٪`:'';
+    const m1=el("div",{});
+    const mh1=el("div",{class:"ct-metric-hdr"});
+    mh1.append(el("span",{class:"ct-metric-lbl"},"مكالمات عملاء"));
+    const v1=el("div",{style:"display:flex;align-items:baseline;gap:5px"});
+    v1.append(el("span",{class:"ct-metric-val",style:"color:var(--c2)"},fmt(e.custCalls)));
+    if(cSub)v1.append(el("span",{class:"ct-metric-sub"},cSub));
+    mh1.append(v1); m1.append(mh1);
+    const bt1=el("div",{class:"ct-bar-track"});
+    bt1.append(el("div",{class:"ct-bar-fill",style:`width:${Math.round(e.custCalls/maxC*100)}%;background:linear-gradient(90deg,#5b86c4,#7ba8e0)`}));
+    m1.append(bt1); mets.append(m1);
+
+    /* مكالمات داخلي */
+    const iSub=totalI?` · ${pct(e.intCalls,totalI)}٪`:'';
+    const m2=el("div",{style:"margin-top:8px"});
+    const mh2=el("div",{class:"ct-metric-hdr"});
+    mh2.append(el("span",{class:"ct-metric-lbl"},"مكالمات داخلي"));
+    const v2=el("div",{style:"display:flex;align-items:baseline;gap:5px"});
+    v2.append(el("span",{class:"ct-metric-val",style:"color:var(--teal)"},fmt(e.intCalls)));
+    if(iSub)v2.append(el("span",{class:"ct-metric-sub"},iSub));
+    mh2.append(v2); m2.append(mh2);
+    const bt2=el("div",{class:"ct-bar-track"});
+    bt2.append(el("div",{class:"ct-bar-fill",style:`width:${Math.round(e.intCalls/maxI*100)}%;background:linear-gradient(90deg,var(--teal),var(--teal2))`}));
+    m2.append(bt2); mets.append(m2);
+
+    card.append(mets);
+    grid.append(card);
+  });
+  p.append(grid);
+  return p;
+}
+
+function agentTable(ag,total){
+  const max=Math.max(...ag.map(a=>a.v),1);
+  const t=el("table",{class:"tbl"});
+  t.innerHTML=`<thead><tr><th>#</th><th>الموظف</th><th>المكالمات</th><th>الحصة</th></tr></thead>`;
+  const tb=el("tbody");
+  ag.forEach((a,i)=>{
+    const tr=el("tr");
+    tr.append(el("td",{},el("span",{class:"rank"+(i===0?" g1":"")},String(i+1))));
+    tr.append(el("td",{html:`<b style="color:var(--ink);font-weight:700">${a.k}</b>`}));
+    const cell=el("td",{});
+    cell.append(el("div",{class:"num",style:"font-weight:800;color:var(--ink);margin-bottom:4px"},fmt(a.v)));
+    const mw=el("div",{class:"mwrap"}); mw.append(el("div",{class:"mini",style:`width:${a.v/max*100}%`})); cell.append(mw);
+    tr.append(cell);
+    tr.append(el("td",{html:`<span class="num" style="color:var(--muted)">${pct(a.v,total)}%</span>`}));
+    tb.append(tr);
+  });
+  t.append(tb);
+  return t;
+}
+
+/* ════════════════ comparison view ════════════════ */
+function renderCompare(){
+  const v=$("#view"); v.innerHTML=""; v.className="fade";
+  const ds=getDatasets(); const C=dsView(ds.customer), I=dsView(ds.internal);
+  const Ct=C.totals||{}, It=I.totals||{};
+
+  const kp=el("div",{class:"kpis"});
+  kp.append(kpi("var(--c2)",IC.phone,(Ct.total||0)+(It.total||0),"إجمالي المكالمات","العملاء + الداخلي"));
+  kp.append(kpi("var(--green)",IC.check,(Ct.answered||0)+(It.answered||0),"إجمالي المردود عليها","لكل القنوات"));
+  kp.append(kpi("var(--red)",IC.miss,(Ct.abandoned||0)+(It.abandoned||0),"إجمالي المهجورة","لكل القنوات"));
+  kp.append(kpi("var(--gold)",IC.users,(C.n_employees||0)+(I.n_employees||0),"إجمالي الزملاء","في التقريرين"));
+  v.append(kp);
+  kp.childNodes.forEach(x=>x._anim&&x._anim());
+
+  const metrics=[["إجمالي المكالمات","total"],["المردود عليها","answered"],["المهجورة","abandoned"]];
+  const wrap=el("div",{class:"grid3"});
+  metrics.forEach(([lab,kk])=>{
+    const cv=Ct[kk]||0, iv=It[kk]||0, mx=Math.max(cv,iv,1);
+    const box=el("div",{class:"cmp"});
+    box.append(el("h4",{},lab));
+    box.append(cmpRow("العملاء",cv,mx,cssv("--c1")));
+    box.append(cmpRow("الداخلي",iv,mx,cssv("--c3")));
+    wrap.append(box);
+  });
+  v.append(panel("مقارنة الأحجام",IC.bar,"العملاء مقابل الداخلي خلال نفس الفترة",wrap,"span-2"));
+
+  const rates=el("div",{class:"cmp-grid"});
+  [["نسبة الرد",pct(Ct.answered,Ct.total),pct(It.answered,It.total),"%"],
+   ["نسبة الهجر",pct(Ct.abandoned,Ct.total),pct(It.abandoned,It.total),"%"],
+   ["متوسط يومي",Math.round((Ct.total||0)/((C.days||[]).length||1)),Math.round((It.total||0)/((I.days||[]).length||1)),""]
+  ].forEach(([lab,cv,iv,suf])=>{
+    const box=el("div",{class:"cmp"});
+    box.append(el("h4",{},lab));
+    const r=el("div",{style:"display:flex;gap:18px"});
+    r.append(el("div",{style:"flex:1"},el("div",{class:"num",style:"font-size:1.7rem;font-weight:900;color:var(--c1)"},cv+suf),el("div",{class:"ds-l"},"العملاء")));
+    r.append(el("div",{style:"flex:1"},el("div",{class:"num",style:"font-size:1.7rem;font-weight:900;color:var(--gold)"},iv+suf),el("div",{class:"ds-l"},"الداخلي")));
+    box.append(r); rates.append(box);
+  });
+  /* ── Volume ratio card (customer vs internal) ── */
+  const totalC=Ct.total||0, totalI=It.total||0, totalAll=Math.max(totalC+totalI,1);
+  const cPct=Math.round(totalC/totalAll*100), iPct=100-cPct;
+  const volBox=el("div",{class:"cmp"});
+  volBox.append(el("h4",{},"توزيع الحجم (خارجي / داخلي)"));
+  /* Stacked proportional bar */
+  const sbar=el("div",{style:"display:flex;height:10px;border-radius:5px;overflow:hidden;margin:8px 0 12px;gap:2px"});
+  sbar.append(el("div",{style:`flex:${totalC};background:var(--c1);border-radius:5px 0 0 5px;min-width:4px`}));
+  sbar.append(el("div",{style:`flex:${totalI};background:var(--c3);border-radius:0 5px 5px 0;min-width:4px`}));
+  volBox.append(sbar);
+  /* Numbers with pct */
+  const vRow=el("div",{style:"display:flex;gap:12px"});
+  vRow.append(el("div",{style:"flex:1"},
+    el("div",{class:"num",style:"font-size:1.45rem;font-weight:900;color:var(--c1)"},fmt(totalC)),
+    el("div",{class:"ds-l"},`عملاء · ${cPct}٪`)));
+  vRow.append(el("div",{style:"flex:1"},
+    el("div",{class:"num",style:"font-size:1.45rem;font-weight:900;color:var(--c3)"},fmt(totalI)),
+    el("div",{class:"ds-l"},`داخلي · ${iPct}٪`)));
+  volBox.append(vRow);
+  /* Ratio insight */
+  const ratio=(totalI>0?(totalI/Math.max(totalC,1)).toFixed(1):"—");
+  volBox.append(el("div",{style:"margin-top:10px;padding:7px 10px;border-radius:9px;background:var(--grid);font-size:.78rem;color:var(--muted)"},
+    `الداخلي = `,el("b",{style:"color:var(--ink)"},`${ratio}×`),` ضعف العملاء`));
+  rates.append(volBox);
+  v.append(panel("المؤشرات النسبية",IC.gauge,"جودة الخدمة لكل قناة + توزيع الحجم",rates,"span-2"));
+
+  const g=el("div",{class:"grid2"});
+  g.append(panel("اتجاه العملاء اليومي",IC.trend,`إجمالي ${fmt(Ct.total)} مكالمة`,area((C.days||[]).map(x=>({k:x.date,v:x.total})),{color:cssv("--c1"),h:215})));
+  g.append(panel("اتجاه الداخلي اليومي",IC.trend,`إجمالي ${fmt(It.total)} مكالمة`,area((I.days||[]).map(x=>({k:x.date,v:x.total})),{color:cssv("--c3"),h:215})));
+  v.append(g);
+}
+function cmpRow(nm,val,max,color){
+  const r=el("div",{class:"cmp-row"});
+  r.append(el("div",{class:"nm"},nm));
+  const tr=el("div",{class:"track"}); tr.append(el("div",{class:"fill",style:`width:${val/max*100}%;background:linear-gradient(90deg,${color},color-mix(in srgb,${color} 60%,#fff))`})); r.append(tr);
+  r.append(el("div",{class:"vv num"},fmt(val)));
+  return r;
+}
+
+/* ════════════════ tabs + theme ════════════════ */
+let CUR="customer";
+/* ── فلتر الفترة الزمنية (يصفّي المؤشرات والاتجاه اليومي — الشيفتات/الزملاء للشهر كامل) ── */
+let DF_FROM=null, DF_TO=null;
+function dfActive(){ return !!(DF_FROM && DF_TO); }
+function dsView(d){
+  if(!d || !dfActive()) return d;
+  const days=(d.days||[]).filter(x=>x.date>=DF_FROM && x.date<=DF_TO);
+  const total=days.reduce((s,x)=>s+(x.total||0),0);
+  const answered=days.reduce((s,x)=>s+(x.answered||0),0);
+  const abandoned=days.reduce((s,x)=>s+(x.abandoned||0),0);
+  return {...d, days, totals:{total,abandoned,answered,rate:total?abandoned/total:0}, _filtered:true};
+}
+function periodBounds(){
+  const ds=getDatasets(); const per=(ds&&ds.customer&&ds.customer.period)||'';
+  const mm=per.match(/(\d{4}-\d{2}-\d{2})[^\d]+(\d{4}-\d{2}-\d{2})/);
+  return mm?{lo:mm[1],hi:mm[2]}:{lo:'',hi:''};
+}
+function updatePeriodLabel(){
+  if(dfActive()) $("#period").textContent=`${DF_FROM} → ${DF_TO}`;
+  else { const ds=getDatasets(); if(ds&&ds.customer) $("#period").textContent=ds.customer.period||'—'; }
+}
+function buildDateBar(){
+  const mr=document.getElementById('monthRow'); if(!mr) return;
+  const {lo,hi}=periodBounds();
+  const bar=el("div",{class:"ca-dfbar"});
+  bar.innerHTML=`<span class="ca-df-ic">📅</span><span class="ca-df-lbl">الفترة الزمنية:</span>`+
+    `<input type="date" id="dfFrom" class="ca-df-in" value="${lo}" min="${lo}" max="${hi}">`+
+    `<span class="ca-df-sep">→</span>`+
+    `<input type="date" id="dfTo" class="ca-df-in" value="${hi}" min="${lo}" max="${hi}">`+
+    `<button class="ca-df-btn ca-df-apply" id="dfApply">تطبيق</button>`+
+    `<button class="ca-df-btn" id="dfClear">الكل</button>`;
+  mr.insertBefore(bar, mr.firstChild);
+  $("#dfApply").addEventListener('click',()=>{
+    const f=$("#dfFrom").value, t=$("#dfTo").value;
+    if(f&&t&&f<=t){ DF_FROM=f; DF_TO=t; } else { DF_FROM=DF_TO=null; }
+    updatePeriodLabel(); render();
+  });
+  $("#dfClear").addEventListener('click',()=>{
+    DF_FROM=DF_TO=null; const b=periodBounds();
+    if($("#dfFrom"))$("#dfFrom").value=b.lo; if($("#dfTo"))$("#dfTo").value=b.hi;
+    updatePeriodLabel(); render();
+  });
+}
+
+function render(){
+  if(CUR==="compare")renderCompare(); else renderDataset(CUR);
+  if(dfActive()){
+    const note=el("div",{class:"ca-df-note"},
+      "⚠️ التصفية بالتاريخ بتأثّر على المؤشرات والاتجاه اليومي والتقويم فقط — توزيع الشيفتات وترتيب الزملاء بيفضلوا للشهر كامل (مصدرهم تجميع شهري مش يومي).");
+    const view=$("#view"); if(view&&view.firstChild) view.insertBefore(note,view.firstChild); else if(view) view.append(note);
+  }
+}
+$("#seg").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b)return;
+  [...$("#seg").children].forEach(x=>x.classList.toggle("on",x===b));
+  CUR=b.dataset.tab;
+  $("#heroTitle").textContent = ({customer:"تحليلات مكالمات العملاء",internal:"تحليلات المكالمات الداخلية (الزملاء)",cosmetic:"تحليلات الاستشارات التجميلية",compare:"مقارنة شاملة — العملاء والداخلي"})[CUR]||"تحليلات المكالمات";
+  render();
+});
+
+/* theme */
+const KEY="pharmatheme";
+function applyTheme(t){
+  document.documentElement.setAttribute("data-theme",t);
+  $("#themeIcon").innerHTML = t==="dark"
+    ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/>'
+    : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  try{localStorage.setItem(KEY,t)}catch(e){}
+}
+$("#themeBtn").addEventListener("click",()=>{
+  const cur=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";
+  applyTheme(cur); render();
+});
+(function initTheme(){
+  let t="light";
+  try{ t=localStorage.getItem(KEY) || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"); }catch(e){}
+  applyTheme(t);
+})();
+
+/* boot */
+function boot(){
+  if(!DASH_DATA.datasets&&!DASH_DATA.months){
+    $("#view").innerHTML='<div class="panel" style="text-align:center;color:var(--muted)">لم يتم تحميل البيانات. شغّل <b>python build-analytics.py</b> لتوليدها.</div>';
+    return;
+  }
+  /* Month selector — only if multiple months exist */
+  const mk=getMonthKeys();
+  const monthRow=document.getElementById('monthRow');
+  if(mk&&mk.length>1&&monthRow){
+    CUR_MONTH=mk[mk.length-1];
+    const mseg=el("div",{class:"seg"});
+    mk.forEach(m=>{
+      const btn=document.createElement('button');
+      btn.textContent=m;
+      if(m===CUR_MONTH)btn.classList.add("on");
+      btn.addEventListener('click',()=>{
+        [...mseg.children].forEach(b=>b.classList.toggle("on",b===btn));
+        CUR_MONTH=m;
+        const ds2=getDatasets();
+        if(ds2&&ds2.customer) $("#period").textContent=ds2.customer.period||"—";
+        render();
+      });
+      mseg.append(btn);
+    });
+    monthRow.appendChild(mseg);
+  }
+  buildDateBar();
+  const ds=getDatasets();
+  if(ds&&ds.customer) $("#period").textContent=ds.customer.period||"—";
+  $("#gen").textContent=DASH_DATA.generated||"—";
+  render();
+}
+boot();
+</script>
+</body>
+</html>

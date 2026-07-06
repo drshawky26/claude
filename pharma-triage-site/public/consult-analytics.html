@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d1d">
+<script src="/lite-mode.js"></script>
+<title>تحليل الاستشارات التفصيلي — Pharma Triage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════ TOKENS (dark ops-center — cc-ops family) ═══════════════ */
+:root{
+  --plane:#080d1d;          /* page */
+  --surface:#111a33;        /* cards (chart surface — الباليت متحقق منها ضده) */
+  --surface2:#0d1528;       /* nested panels */
+  --ink:#f2f5ff;
+  --ink2:#b9c2dd;
+  --muted:#8891ad;
+  --grid:#232c47;
+  --border:rgba(255,255,255,.08);
+  --gold:#c9a84c;           /* برواز/شروم فقط — ممنوع كلون داتا */
+  --ser1:#3987e5;           /* sequential أساسي (magnitude) */
+  --ser2:#199e70;           /* sequential تاني في نفس الكارت */
+  --ser3:#c98500;
+  --ser4:#9085e9;
+  --ser5:#e66767;
+  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+  --r:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Tajawal',system-ui,sans-serif;
+  background:
+    radial-gradient(900px 480px at 85% -160px, rgba(57,135,229,.10), transparent 65%),
+    radial-gradient(700px 420px at 8% 12%, rgba(201,168,76,.05), transparent 60%),
+    var(--plane);
+  color:var(--ink); min-height:100vh;
+}
+.num{font-variant-numeric:tabular-nums}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#26304f;border-radius:9px}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ═══════════════ GATE ═══════════════ */
+.gate{position:fixed;inset:0;z-index:900;background:var(--plane);display:flex;align-items:center;justify-content:center;padding:20px}
+.gate.hidden{display:none}
+.gate-card{max-width:430px;width:100%;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:38px 28px;box-shadow:0 30px 70px -20px rgba(0,0,0,.6)}
+.gate-ic{font-size:44px;margin-bottom:14px}
+.gate-t{font-size:19px;font-weight:900;margin-bottom:8px}
+.gate-s{font-size:13.5px;color:var(--ink2);line-height:1.9}
+.gate-s a{color:var(--ser1);text-decoration:none;font-weight:800}
+.spin{width:34px;height:34px;border-radius:50%;border:3px solid var(--grid);border-top-color:var(--gold);animation:sp 1s linear infinite;margin:0 auto 16px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ═══════════════ HEADER ═══════════════ */
+.hdr{position:sticky;top:0;z-index:100;background:rgba(8,13,29,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.hdr-in{max-width:1280px;margin:0 auto;padding:13px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.hdr-logo{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:21px;background:linear-gradient(140deg,rgba(201,168,76,.22),rgba(57,135,229,.14));box-shadow:inset 0 0 0 1px rgba(201,168,76,.4)}
+.hdr-tt{flex:1;min-width:200px}
+.hdr-t{font-size:17.5px;font-weight:900;background:linear-gradient(90deg,#f2f5ff,#c9a84c 65%,#f2f5ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;background-size:220% 100%;animation:sheen 6s linear infinite}
+@keyframes sheen{to{background-position:220% 0}}
+.hdr-s{font-size:11.5px;color:var(--muted);margin-top:1px}
+.hbtn{border:1px solid var(--border);background:var(--surface);color:var(--ink2);border-radius:12px;padding:9px 15px;font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;transition:.18s;display:inline-flex;align-items:center;gap:7px}
+.hbtn:hover{border-color:rgba(201,168,76,.5);color:var(--ink);transform:translateY(-1px)}
+.hbtn.gold{background:linear-gradient(135deg,rgba(201,168,76,.2),rgba(201,168,76,.08));border-color:rgba(201,168,76,.45);color:#e8d9a8}
+.hdr-user{font-size:11.5px;color:var(--muted)}
+
+/* ═══════════════ PERIOD BAR ═══════════════ */
+.wrap{max-width:1280px;margin:0 auto;padding:20px}
+.pbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:13px 16px;margin-bottom:18px;position:relative;overflow:hidden}
+.pbar::before{content:'';position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.pbar label{font-size:12px;color:var(--muted);font-weight:800}
+.psel{background:var(--surface2);border:1px solid var(--border);color:var(--ink);border-radius:11px;padding:9px 13px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;min-width:210px}
+.pchip{border:1px solid var(--border);background:var(--surface2);color:var(--ink2);border-radius:999px;padding:8px 15px;font-family:inherit;font-size:12.5px;font-weight:800;cursor:pointer;transition:.16s}
+.pchip:hover{color:var(--ink);border-color:rgba(57,135,229,.5)}
+.pchip.on{background:linear-gradient(135deg,rgba(57,135,229,.28),rgba(57,135,229,.1));border-color:var(--ser1);color:#cfe3ff}
+.pdate{background:var(--surface2);border:1px solid var(--border);color:var(--ink);border-radius:11px;padding:8px 11px;font-family:inherit;font-size:12.5px;color-scheme:dark}
+.pcount{margin-inline-start:auto;font-size:12px;color:var(--muted)}
+.pcount b{color:var(--gold);font-size:15px;font-weight:900}
+
+/* ═══════════════ KPI TILES ═══════════════ */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:15px 16px 13px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s}
+.kpi:hover{transform:translateY(-3px);border-color:rgba(201,168,76,.35)}
+.kpi::after{content:'';position:absolute;inset:auto 0 0 0;height:2px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.55),transparent);opacity:0;transition:.2s}
+.kpi:hover::after{opacity:1}
+.kpi .l{font-size:11.5px;color:var(--muted);font-weight:800;display:flex;align-items:center;gap:6px}
+.kpi .v{font-size:25px;font-weight:900;margin-top:6px;color:var(--ink)}
+.kpi .s{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.5}
+
+/* ═══════════════ CARDS / SECTIONS ═══════════════ */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:980px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:19px 20px;margin-bottom:16px;position:relative}
+.card-h{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.card-ic{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:16px;background:var(--surface2);box-shadow:inset 0 0 0 1px var(--border)}
+.card-t{font-size:15.5px;font-weight:900}
+.card-s{font-size:11px;color:var(--muted);width:100%;margin-top:-6px;margin-inline-start:44px;line-height:1.6}
+.badge{margin-inline-start:auto;font-size:11px;color:var(--ink2);background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:4px 11px;font-weight:800}
+
+/* ── bar list (magnitude, sequential hue) ── */
+.blist{display:flex;flex-direction:column;gap:9px}
+.brow{display:grid;grid-template-columns:minmax(110px,32%) 1fr 62px;align-items:center;gap:10px;cursor:default}
+.brow .bl{font-size:12.5px;color:var(--ink2);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.brow .bt{height:11px;background:var(--surface2);border-radius:4px;overflow:hidden;position:relative}
+.brow .bf{position:absolute;inset-block:0;inset-inline-start:0;border-radius:0 4px 4px 0;background:var(--ser1);min-width:3px;transition:width .7s cubic-bezier(.2,.8,.25,1)}
+html[dir="rtl"] .brow .bf{border-radius:4px 0 0 4px}
+.brow .bv{font-size:12.5px;font-weight:900;color:var(--ink);text-align:start}
+.brow .bv small{color:var(--muted);font-weight:700;font-size:10.5px}
+.bf.c2{background:var(--ser2)} .bf.c4{background:var(--ser4)} .bf.crit{background:var(--crit)}
+
+/* ── columns (time) ── */
+.cols{display:flex;align-items:flex-end;gap:2px;height:120px;padding-top:16px;border-bottom:1px solid var(--grid);overflow-x:auto}
+.col{flex:1;min-width:7px;background:var(--ser1);border-radius:4px 4px 0 0;position:relative;cursor:pointer;transition:filter .15s}
+.col:hover{filter:brightness(1.3)}
+.col.c2{background:var(--ser2)}
+.col.peak{background:var(--ser3)}
+.col .pl{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:9.5px;color:var(--ink2);font-weight:800;padding-bottom:2px;white-space:nowrap}
+.cols-x{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:5px}
+.chart-note{font-size:10.5px;color:var(--muted);margin-top:8px;line-height:1.6}
+
+/* ── donut + legend (status: أيقونة + ليبل دايمًا) ── */
+.donut-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.donut{width:150px;height:150px;border-radius:50%;position:relative;flex:0 0 150px}
+.donut::after{content:'';position:absolute;inset:20px;border-radius:50%;background:var(--surface)}
+.donut .dc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1}
+.donut .dc b{font-size:22px;font-weight:900}
+.donut .dc span{font-size:10px;color:var(--muted)}
+.legend{display:flex;flex-direction:column;gap:8px;flex:1;min-width:200px}
+.lg{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--ink2);font-weight:700}
+.lg .dot{width:11px;height:11px;border-radius:4px;flex:0 0 11px}
+.lg b{margin-inline-start:auto;color:var(--ink);font-weight:900}
+.lg small{color:var(--muted);font-weight:700}
+
+/* ── tables ── */
+.twrap{overflow-x:auto;border:1px solid var(--border);border-radius:13px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:640px}
+th{background:var(--surface2);color:var(--muted);font-size:11px;font-weight:800;padding:10px 12px;text-align:start;white-space:nowrap;cursor:pointer;user-select:none;position:sticky;top:0}
+th:hover{color:var(--ink2)}
+th .arr{font-size:9px;opacity:.7}
+td{padding:9px 12px;border-top:1px solid var(--grid);color:var(--ink2);white-space:nowrap}
+td b{color:var(--ink);font-weight:900}
+tbody tr{transition:background .12s;cursor:pointer}
+tbody tr:hover{background:rgba(57,135,229,.06)}
+.mini-note{font-size:10.5px;color:var(--muted);margin-top:9px;line-height:1.7}
+
+/* ── chips ── */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:6px 13px;font-size:12px;font-weight:800;color:var(--ink2)}
+.chip b{color:var(--gold);font-weight:900}
+
+/* ── segmented bar (فئوي قليل + ليبل جوه كل جزء) ── */
+.segbar{display:flex;height:34px;border-radius:11px;overflow:hidden;gap:2px;background:var(--plane)}
+.seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#fff;min-width:0;overflow:hidden;white-space:nowrap;padding:0 6px}
+
+/* ── drill panel ── */
+.drill{background:var(--surface2);border:1px solid var(--border);border-radius:14px;padding:15px 16px;margin-top:13px}
+.drill.hidden{display:none}
+.drill-h{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:900;margin-bottom:11px}
+.drill-h .x{margin-inline-start:auto;cursor:pointer;color:var(--muted);border:0;background:none;font-size:15px;font-family:inherit}
+.drill-h .x:hover{color:var(--ink)}
+
+/* ── skeleton / empty ── */
+.skel{height:120px;border-radius:14px;background:linear-gradient(100deg,var(--surface2) 40%,#1a2547 50%,var(--surface2) 60%);background-size:200% 100%;animation:shim 1.4s linear infinite;margin-bottom:14px}
+@keyframes shim{to{background-position:-200% 0}}
+.empty{padding:34px;text-align:center;color:var(--muted);font-size:13px;line-height:2}
+.consensus{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 12px;font-size:11px;font-weight:900}
+.consensus.hi{background:rgba(12,163,12,.14);color:#5fd35f;border:1px solid rgba(12,163,12,.35)}
+.consensus.mid{background:rgba(250,178,25,.12);color:#fab219;border:1px solid rgba(250,178,25,.35)}
+.consensus.lo{background:rgba(208,59,59,.13);color:#e66767;border:1px solid rgba(208,59,59,.4)}
+
+/* ── tooltip ── */
+#tip{position:fixed;z-index:9999;background:#050a18;border:1px solid rgba(201,168,76,.4);color:var(--ink);font-size:11.5px;font-weight:800;padding:7px 11px;border-radius:10px;pointer-events:none;opacity:0;transition:opacity .12s;max-width:260px;line-height:1.7;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#tip.on{opacity:1}
+
+.foot{padding:20px;text-align:center;font-size:11px;color:var(--muted)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media(max-width:640px){.brow{grid-template-columns:minmax(90px,38%) 1fr 52px}.hdr-t{font-size:15px}}
+</style>
+</head>
+<body>
+
+<!-- gate -->
+<div class="gate" id="gate">
+  <div class="gate-card" id="gateCard">
+    <div class="spin"></div>
+    <div class="gate-t">جاري التحقق من الصلاحية…</div>
+    <div class="gate-s">لحظات وتفتح لوحة التحليل</div>
+  </div>
+</div>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="hdr-logo">🔬</div>
+    <div class="hdr-tt">
+      <div class="hdr-t">تحليل الاستشارات التفصيلي</div>
+      <div class="hdr-s">تشريح كامل لكل استشارات الفريق — العروض · الأدوية · التقييمات · الريد فلاج · الزملاء · المراجعون</div>
+    </div>
+    <span class="hdr-user" id="hdrUser"></span>
+    <button class="hbtn" id="csvBtn" title="تصدير ملخص CSV">📥 CSV</button>
+    <button class="hbtn gold" id="refreshBtn">🔄 تحديث</button>
+    <button class="hbtn" onclick="location.href='/index.html'">← الرئيسية</button>
+  </div>
+</header>
+
+<div class="wrap" id="app" style="display:none">
+
+  <!-- period -->
+  <div class="pbar">
+    <label>الفترة:</label>
+    <select class="psel num" id="cycleSel"></select>
+    <button class="pchip on" id="chipCycle">هذه الدورة (٢١→٢٠)</button>
+    <button class="pchip" id="chipPrev">الدورة السابقة</button>
+    <button class="pchip" id="chip90">آخر ٩٠ يوم</button>
+    <button class="pchip" id="chipAll">كل الوقت ⚠️</button>
+    <input type="date" class="pdate num" id="dFrom"><span style="color:var(--muted)">→</span><input type="date" class="pdate num" id="dTo">
+    <button class="pchip" id="chipCustom">تطبيق المدى</button>
+    <span class="pcount">📄 <b class="num" id="docCount">٠</b> استشارة</span>
+  </div>
+
+  <div id="loading"><div class="skel"></div><div class="skel" style="height:220px"></div></div>
+  <div id="content" style="display:none">
+
+    <!-- KPIs -->
+    <div class="kpis" id="kpis"></div>
+
+    <!-- النشاط الزمني -->
+    <div class="card">
+      <div class="card-h"><div class="card-ic">📆</div><div class="card-t">النشاط الزمني</div><span class="badge" id="tzBadge"></span></div>
+      <div class="cols" id="dayCols"></div>
+      <div class="cols-x"><span id="dayFirst"></span><span style="color:var(--ink2);font-weight:800">استشارات كل يوم</span><span id="dayLast"></span></div>
+      <div class="grid2" style="margin-top:18px">
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">⏰ التوزيع على ساعات اليوم
+            <button class="pchip on" id="hrAll" style="padding:3px 9px;font-size:11px">الكل</button>
+            <button class="pchip" id="hrRF" style="padding:3px 9px;font-size:11px">🚨 ريد فلاج/تحويل فقط</button>
+          </div>
+          <div class="cols" id="hourCols" style="height:90px"></div>
+          <div class="cols-x"><span>١٢ ص</span><span>١٢ م</span><span>١١ م</span></div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:6px">📅 أيام الأسبوع</div>
+          <div class="blist" id="weekdayBars"></div>
+        </div>
+      </div>
+      <div class="chart-note">العمود الدهبي = يوم/ساعة الذروة. مرّر على أي عمود لرؤية التفاصيل.</div>
+    </div>
+
+    <!-- العروض -->
+    <div class="card">
+      <div class="card-h"><div class="card-ic">🩺</div><div class="card-t">العروض (الأعراض) الأكثر اختيارًا</div><span class="badge" id="symBadge"></span></div>
+      <div class="grid2">
+        <div><div class="blist" id="symBars"></div></div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">🗂️ حسب التصنيف</div>
+          <div class="blist" id="catBars"></div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin:16px 0 8px">⭐ متوسط تقييم استشارات كل عرض (الأكثر تكرارًا)</div>
+          <div class="chips" id="symRatingChips"></div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin:16px 0 8px">🌡️ طفرات محتملة <small style="color:var(--muted);font-weight:700">(يوم عدده أعلى بكتير من معدل العرض — إنذار مبكر)</small></div>
+          <div class="chips" id="spikeChips"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- الأدوية -->
+    <div class="card">
+      <div class="card-h">
+        <div class="card-ic">💊</div><div class="card-t">الأدوية الموصوفة</div>
+        <span class="badge" id="aiBadge" title="نسبة الاستشارات المُصنّفة بالذكاء (medsStructured) مقابل التقسيم النصي القديم"></span>
+        <span class="badge" id="medBadge"></span>
+      </div>
+      <div class="card-s">أسماء الأدوية بس — متطبّعة وموحّدة (متغيرات الكتابة لنفس الدوا بتتجمّع في اسم واحد). الإجراءات (تحويل/متابعة/نصيحة) في كارت منفصل تحت — مش بتتخلط مع الأدوية.</div>
+      <div class="grid2" style="margin-top:12px">
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">الأكثر وصفًا إجمالًا</div>
+          <div class="blist" id="medBars"></div>
+          <div class="mini-note" id="backfillNote" style="margin-top:8px"></div>
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;flex-wrap:wrap">
+            <span style="font-size:12px;color:var(--muted);font-weight:800">🔎 أدوية عرض معيّن:</span>
+            <select class="psel" id="drillSym" style="min-width:170px;flex:1"></select>
+          </div>
+          <div id="consensusBox" style="margin-bottom:9px"></div>
+          <div class="blist" id="drillMedBars"></div>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">💊 جدول الأدوية التفصيلي — الاسم + الجرعة + التكرار (عشان نعرف كل دوا بيتاخد إزاي)</div>
+        <div class="twrap"><table id="medTable" style="min-width:560px">
+          <thead><tr><th>الدواء</th><th>الجرعة</th><th>التكرار</th><th>مرات</th><th>٪</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+        <div class="chart-note">الجرعة والتكرار بيبانوا كامل بعد تشغيل مصنّف الأدوية؛ قبل كده بنحاول نستخرجهم من النص ونربطهم بالاسم. «—» يعني مش مكتوبة في الاستشارة.</div>
+      </div>
+      <div style="margin-top:16px">
+        <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">📈 اتجاه الطلب (للمخزون) — أعلى ١٥ دواء: أول نص الفترة مقابل آخرها</div>
+        <div class="twrap"><table id="trendTbl" style="min-width:520px">
+          <thead><tr><th>الدواء</th><th>الإجمالي</th><th>أول النص</th><th>آخر النص</th><th>الاتجاه</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+        <div class="chart-note">الاتجاه = مقارنة عدد الوصفات في النص الأول من الفترة بالنص الأخير. ▲ صاعد (زوّد المخزون) · ▼ هابط · ▬ ثابت.</div>
+      </div>
+      <div style="margin-top:16px">
+        <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">🔗 أكثر أزواج (عرض ← دواء)</div>
+        <div class="twrap"><table id="pairTbl" style="min-width:480px">
+          <thead><tr><th>العرض</th><th>الدواء</th><th>مرات</th><th>٪ من استشارات العرض</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </div>
+      <div style="margin-top:16px">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;flex-wrap:wrap">
+          <span style="font-size:12px;color:var(--muted);font-weight:800">🔁 عكسي — دواء معيّن بيتوصف لإيه ومين بيوصفه:</span>
+          <select class="psel" id="drillDrug" style="min-width:190px;flex:1"></select>
+        </div>
+        <div class="grid2">
+          <div><div style="font-size:11.5px;color:var(--muted);font-weight:800;margin-bottom:7px">الأعراض اللي بيتوصف لها</div><div class="blist" id="drillDrugSym"></div></div>
+          <div><div style="font-size:11.5px;color:var(--muted);font-weight:800;margin-bottom:7px">الزملاء الأكثر وصفًا له</div><div class="blist" id="drillDrugAg"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- الإجراءات والتوصيات (منفصلة تمامًا عن الأدوية) -->
+    <div class="card">
+      <div class="card-h"><div class="card-ic">🏥</div><div class="card-t">الإجراءات والتوصيات</div><span class="badge" id="actBadge"></span></div>
+      <div class="card-s">التوصيات اللي مش دوا: تحويل لطبيب/مستشفى · متابعة أعراض · نصيحة عامة. دي كانت بتلوّث قائمة الأدوية في الطريقة القديمة — دلوقتي فئة مستقلة.</div>
+      <div class="kpis" style="margin:12px 0 14px" id="actKpis"></div>
+      <div class="grid2">
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">توزيع نوع الإجراء</div>
+          <div class="segbar" id="actSeg" style="margin-bottom:12px"></div>
+          <div class="blist" id="actBars"></div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">أكثر صيغ التوصية تكرارًا</div>
+          <div class="chips" id="actDetailChips"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- المراجعة -->
+    <div class="card">
+      <div class="card-h"><div class="card-ic">⭐</div><div class="card-t">المراجعة والتقييم</div><span class="badge" id="revBadge"></span></div>
+      <div class="grid2">
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">توزيع التقييمات (النجوم)</div>
+          <div class="blist" id="ratingBars"></div>
+          <div class="mini-note" id="ratingNote"></div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">حالات المراجعة</div>
+          <div class="donut-wrap">
+            <div class="donut" id="statusDonut"><div class="dc"><b class="num" id="statusTotal"></b><span>استشارة</span></div></div>
+            <div class="legend" id="statusLegend"></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:18px">
+        <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">👩‍⚕️ نشاط المراجعين</div>
+        <div class="twrap"><table id="revTbl">
+          <thead><tr><th>المراجع</th><th>راجع</th><th>متوسط تقييمه</th><th>٪ اعتماد</th><th>٪ طلب معلومات</th><th>كتب ملاحظات</th><th>متوسط زمن مراجعته</th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </div>
+      <div class="grid2" style="margin-top:18px">
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">⚖️ عدالة المراجعين <small style="color:var(--muted);font-weight:700">(انحراف متوسط كل مراجع عن المتوسط العام)</small></div>
+          <div class="blist" id="fairnessBars"></div>
+          <div class="mini-note" id="fairnessNote"></div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">⏱️ زمن المراجعة مقابل التقييم <small style="color:var(--muted);font-weight:700">(هل المراجعة السريعة أقل جودة؟)</small></div>
+          <div class="chips" id="delayRatingChips"></div>
+          <div class="mini-note" id="delayRatingNote"></div>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">💬 أكثر الكلمات تكرارًا في ملاحظات المراجعين <small style="color:var(--muted);font-weight:700">(مؤشر تدريب — إيه أكتر حاجة بتتصلّح)</small></div>
+        <div class="chips" id="noteChips"></div>
+      </div>
+    </div>
+
+    <!-- الزملاء -->
+    <div class="card">
+      <div class="card-h"><div class="card-ic">🎧</div><div class="card-t">أداء الزملاء</div><span class="badge" id="agBadge"></span><span style="font-size:10.5px;color:var(--muted)">اضغط على أي عمود للترتيب · اضغط على الصف لتفاصيل الزميل</span></div>
+      <div class="twrap"><table id="agTbl">
+        <thead><tr>
+          <th data-k="name">الزميل</th><th data-k="n">استشارات</th><th data-k="rated">اتقيّمت</th>
+          <th data-k="avg">متوسط ⭐</th><th data-k="five">٥★ ٪</th><th data-k="rf">ريد فلاج مؤكد</th>
+          <th data-k="team">مراجعة تيم ٪</th><th data-k="edited">عدّل ٪</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <div class="drill hidden" id="agDrill"></div>
+    </div>
+
+    <!-- الريد فلاج -->
+    <div class="card">
+      <div class="card-h"><div class="card-ic">🚨</div><div class="card-t">الريد فلاج (علامات الخطر)</div><span class="badge" id="rfBadge"></span></div>
+      <div class="card-s">«مؤكّد» = الزميل علّم العلامة في البوب-أب أو طبّق قرار التحويل (بيتسجّل من ميزة RF-V152 — الاستشارات الأقدم بتتفحص من نص الأدوية). «محتمل» = العرض المختار له علامات معرّفة (تلقائي مش مؤكد).</div>
+      <div class="kpis" style="margin:12px 0 14px" id="rfKpis"></div>
+      <div class="grid2">
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">العلامات المؤكّدة الأكثر تكرارًا</div>
+          <div class="blist" id="rfBars"></div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">آخر استشارات بعلم مؤكّد / قرار تحويل</div>
+          <div class="twrap"><table id="rfTbl" style="min-width:460px">
+            <thead><tr><th>التاريخ</th><th>الزميل</th><th>العرض</th><th>العلامة</th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- رحلة العميل -->
+    <div class="card">
+      <div class="card-h"><div class="card-ic">🧭</div><div class="card-t">رحلة العميل (العملاء المتكررون)</div><span class="badge" id="journeyBadge"></span></div>
+      <div class="card-s">بنربط استشارات العميل الواحد عبر الزمن بالرقم (تليفون/كود العميل). العودة بنفس العرض ممكن تعني إن العلاج ما حلّش المشكلة أو حالة مزمنة محتاجة بروتوكول مختلف. التحليل ده على <b>كل التاريخ</b> مش الفترة بس.</div>
+      <div class="kpis" style="margin:12px 0 14px" id="journeyKpis"></div>
+      <div class="grid2">
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">⏳ فترة العودة (أيام بين زيارتين متتاليتين لنفس العميل)</div>
+          <div class="blist" id="returnBars"></div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">📅 بقاء الأفواج (Cohort): عملاء أول زيارة في شهر ورجعوا الشهر اللي بعده</div>
+          <div class="twrap"><table id="cohortTbl" style="min-width:360px">
+            <thead><tr><th>فوج الشهر</th><th>عملاء جدد</th><th>رجعوا الشهر اللي بعده</th><th>٪ البقاء</th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+        </div>
+      </div>
+      <div class="grid2" style="margin-top:16px">
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">🔁 رجعوا بنفس العرض (تنبيه: العلاج ربما ما نفعش)</div>
+          <div class="twrap"><table id="recurTbl" style="min-width:420px">
+            <thead><tr><th>العميل</th><th>العرض المتكرر</th><th>مرات</th><th>آخر زيارة</th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px">🚩 عملاء بتحذير/ريد فلاج أكتر من مرة (يستحقوا انتباه)</div>
+          <div class="twrap"><table id="repWarnTbl" style="min-width:360px">
+            <thead><tr><th>العميل</th><th>تحذيرات/أعلام</th><th>زيارات</th><th>آخر زيارة</th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+        </div>
+      </div>
+      <div class="chart-note" id="journeyNote"></div>
+    </div>
+
+    <!-- الديموغرافيا + الجودة -->
+    <div class="grid2">
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-h"><div class="card-ic">🧑‍🤝‍🧑</div><div class="card-t">ديموغرافيا الحالات</div></div>
+        <div style="font-size:12px;color:var(--muted);font-weight:800;margin-bottom:7px">النوع</div>
+        <div class="segbar" id="genderSeg"></div>
+        <div style="font-size:12px;color:var(--muted);font-weight:800;margin:15px 0 7px">الفئات العمرية</div>
+        <div class="blist" id="ageBars"></div>
+        <div class="chips" style="margin-top:14px" id="demoChips"></div>
+      </div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-h"><div class="card-ic">🧪</div><div class="card-t">جودة تسجيل البيانات</div></div>
+        <div class="card-s">نسبة ملء كل حقل — بتوري مين محتاج تذكير بالتسجيل الكامل.</div>
+        <div class="blist" style="margin-top:12px" id="qualityBars"></div>
+        <div class="chips" style="margin-top:14px" id="qualityChips"></div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+  <div class="empty" id="emptyState" style="display:none">لا توجد استشارات في الفترة المحددة 🤷‍♂️<br>جرّب فترة أوسع أو «كل الوقت».</div>
+</div>
+
+<div id="tip"></div>
+<div class="foot" id="foot"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import { getFirestore, collection, doc, getDoc, setDoc, getDocs, query, where, Timestamp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyBvmHh6-KVlKNATzbfMk3hIswbMCrBZwf4",
+  authDomain:        "pharma-triage-5d165.firebaseapp.com",
+  projectId:         "pharma-triage-5d165",
+  storageBucket:     "pharma-triage-5d165.firebasestorage.app",
+  messagingSenderId: "1080517928737",
+  appId:             "1:1080517928737:web:9110f120203d0e6b7b0060"
+};
+const ADMIN_EMAIL = "drshawky530@gmail.com";
+const RF_MARKER = '⚠️ الحالة تحتوي على ريد فلاج';
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+const el = id => document.getElementById(id);
+const esc = s => String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = n => Number(n||0).toLocaleString('ar-EG');
+const fmt1 = n => Number(n||0).toLocaleString('ar-EG',{maximumFractionDigits:1});
+const pct = (a,b) => b>0 ? fmt1(a*100/b)+'٪' : '—';
+
+/* ─── gate ─── */
+function gate(state, msg){
+  const g = el('gate'), c = el('gateCard');
+  if(state==='ok'){ g.classList.add('hidden'); el('app').style.display='block'; return; }
+  g.classList.remove('hidden'); el('app').style.display='none';
+  if(state==='denied'){
+    c.innerHTML = `<div class="gate-ic">🔒</div><div class="gate-t">الصفحة دي مش متاحة ليك</div>
+      <div class="gate-s">${esc(msg||'محتاج صلاحية «تحليل الاستشارات التفصيلي» من الأدمن (د. شوقي).')}<br><br><a href="/index.html">← الرجوع للرئيسية</a></div>`;
+  }else if(state==='login'){
+    c.innerHTML = `<div class="gate-ic">👤</div><div class="gate-t">سجّل الدخول الأول</div>
+      <div class="gate-s">ادخل من الصفحة الرئيسية وبعدين ارجع هنا.<br><br><a href="/index.html">← تسجيل الدخول</a></div>`;
+  }
+}
+
+let currentUser=null, currentProfile=null;
+onAuthStateChanged(auth, async user=>{
+  if(!user){ gate('login'); return; }
+  currentUser=user;
+  let p={};
+  try{ const s=await getDoc(doc(db,'users',user.uid)); p = s.exists()? s.data():{}; }catch(e){ console.error(e); }
+  currentProfile=p;
+  try{ if(window.PTLite) window.PTLite.sync({db,doc,setDoc,uid:user.uid,profile:p}); }catch(e){}
+  const allowed = user.email===ADMIN_EMAIL || p.role==='admin' || p.canAdmin===true
+    || p.canViewConsultAnalytics===true || p.canDeleteConsultations===true;
+  if(!allowed){ gate('denied'); return; }
+  el('hdrUser').textContent = p.displayName || p.name || user.email;
+  gate('ok');
+  initPeriods();
+  loadRange(curFrom, curTo);
+});
+
+/* ─── الفترات (دورة ٢١→٢٠) ─── */
+const AR_MONTHS=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+function cycleFor(d){ // بترجع {from,to} للدورة اللي التاريخ ده جواها — من ٢١ إلى ٢٠ ضمنًا
+  const y=d.getFullYear(), m=d.getMonth();
+  if(d.getDate()>=21) return { from:new Date(y,m,21), to:new Date(y,m+1,20,23,59,59,999) };
+  return { from:new Date(y,m-1,21), to:new Date(y,m,20,23,59,59,999) };
+}
+function cycleLabel(c){
+  const em=c.to.getMonth(), ey=c.to.getFullYear();
+  return `دورة ${AR_MONTHS[em]} ${ey.toLocaleString('ar-EG',{useGrouping:false})} (٢١/${(c.from.getMonth()+1).toLocaleString('ar-EG')} ← ٢٠/${(em+1).toLocaleString('ar-EG')})`;
+}
+let curFrom=null, curTo=null, curLabel='';
+function setChips(on){
+  ['chipCycle','chipPrev','chip90','chipAll','chipCustom'].forEach(id=>el(id).classList.toggle('on', id===on));
+  if(on!=='') el('cycleSel').selectedIndex = on==='chipCycle'?0 : on==='chipPrev'?1 : el('cycleSel').selectedIndex;
+}
+function initPeriods(){
+  const sel=el('cycleSel'); sel.innerHTML='';
+  let ref=new Date();
+  for(let i=0;i<14;i++){
+    const c=cycleFor(ref);
+    const o=document.createElement('option');
+    o.value=c.from.toISOString()+'|'+c.to.toISOString();
+    o.textContent=cycleLabel(c);
+    sel.appendChild(o);
+    ref=new Date(c.from.getTime()-86400000); // يوم قبل بداية الدورة → الدورة اللي فاتت
+  }
+  const cur=cycleFor(new Date());
+  curFrom=cur.from; curTo=cur.to; curLabel=cycleLabel(cur);
+  sel.onchange=()=>{ const [f,t]=sel.value.split('|'); curFrom=new Date(f); curTo=new Date(t); curLabel=sel.options[sel.selectedIndex].textContent; setChips(''); loadRange(curFrom,curTo); };
+  el('chipCycle').onclick=()=>{ const c=cycleFor(new Date()); curFrom=c.from;curTo=c.to;curLabel=cycleLabel(c); setChips('chipCycle'); loadRange(curFrom,curTo); };
+  el('chipPrev').onclick=()=>{ const c0=cycleFor(new Date()); const c=cycleFor(new Date(c0.from.getTime()-86400000)); curFrom=c.from;curTo=c.to;curLabel=cycleLabel(c); setChips('chipPrev'); loadRange(curFrom,curTo); };
+  el('chip90').onclick=()=>{ curTo=new Date(); curFrom=new Date(Date.now()-90*86400000); curLabel='آخر ٩٠ يوم'; setChips('chip90'); loadRange(curFrom,curTo); };
+  el('chipAll').onclick=()=>{ curFrom=null; curTo=null; curLabel='كل الوقت'; setChips('chipAll'); loadRange(null,null); };
+  el('chipCustom').onclick=()=>{
+    const f=el('dFrom').value, t=el('dTo').value;
+    if(!f||!t) return alert('اختار تاريخ البداية والنهاية الأول');
+    curFrom=new Date(f+'T00:00:00'); curTo=new Date(t+'T23:59:59');
+    curLabel=`${f} → ${t}`; setChips('chipCustom'); loadRange(curFrom,curTo);
+  };
+  el('refreshBtn').onclick=()=>loadRange(curFrom,curTo);
+  el('csvBtn').onclick=exportCSV;
+}
+
+/* ─── تحميل البيانات ─── */
+let DOCS=[]; let ALLDOCS=null; let AGG=null; let loadT0=0;
+async function loadRange(from,to){
+  el('loading').style.display='block'; el('content').style.display='none'; el('emptyState').style.display='none';
+  loadT0=performance.now();
+  try{
+    let snap;
+    if(from && to){
+      snap = await getDocs(query(collection(db,'consultations'),
+        where('createdAt','>=',Timestamp.fromDate(from)),
+        where('createdAt','<=',Timestamp.fromDate(to))));
+    }else{
+      snap = await getDocs(collection(db,'consultations'));
+    }
+    DOCS = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    // full-history cache for the customer-journey card (fetched once, reused across ranges)
+    try{
+      if(!from && !to){ ALLDOCS = DOCS; }
+      else if(!ALLDOCS){ const asnap=await getDocs(collection(db,'consultations')); ALLDOCS=asnap.docs.map(x=>({id:x.id, ...x.data()})); }
+    }catch(je){ console.warn('journey all-docs load failed', je); if(!ALLDOCS) ALLDOCS=DOCS; }
+  }catch(e){
+    console.error(e);
+    el('loading').style.display='none';
+    el('emptyState').style.display='block';
+    el('emptyState').innerHTML='⚠️ فشل تحميل البيانات: '+esc(e.message||e.code||'خطأ')+'<br><small>لو «insufficient permissions»: صلاحيتك الجديدة محتاجة ديبلوي لقواعد Firestore — كلّم الأدمن.</small>';
+    return;
+  }
+  el('docCount').textContent=fmt(DOCS.length);
+  if(!DOCS.length){ el('loading').style.display='none'; el('emptyState').style.display='block'; el('emptyState').innerHTML='لا توجد استشارات في الفترة المحددة 🤷‍♂️<br>جرّب فترة أوسع أو «كل الوقت».'; return; }
+  AGG=aggregate(DOCS);
+  renderAll(AGG);
+  el('loading').style.display='none'; el('content').style.display='block';
+  el('foot').textContent=`⏱️ اتحمّلت ${fmt(DOCS.length)} استشارة وتحلّلت في ${fmt1((performance.now()-loadT0)/1000)} ثانية · ${curLabel} · آخر تحديث ${new Date().toLocaleTimeString('ar-EG')}`;
+}
+
+/* ─── تطبيع ─── */
+const AR_NORM = s => String(s||'').replace(/[ً-ْـ]/g,'').replace(/[أإآا]/g,'ا').replace(/ة/g,'ه').replace(/[ىي]/g,'ي').replace(/\s+/g,' ').trim().toLowerCase();
+const NO_MED_RE = /^(لا ?يوجد|لايوجد|لا ?شئ|لا ?شيء|مفيش|بدون|لا|no|none|nothing|-+|—+|\.+)$/i;
+function medTokens(t){
+  return String(t||'').split(/[\n,،;؛+&\/]| و /)
+    .map(x=>x.replace(/^[\s\-–—•*·().\d]+/,'').replace(/[\s.]+$/,'').trim())
+    .filter(x=>x.length>1 && !x.startsWith('⚠️') && !NO_MED_RE.test(AR_NORM(x)));
+}
+/* ─── الأدوية والإجراءات: structured-first (medsStructured من الـ AI) مع fallback للتقسيم القديم ─── */
+const ACTION_TYPES=['referral','follow_up','general_advice','other'];
+const ACTION_META={
+  referral:      {l:'تحويل لطبيب / مستشفى', ic:'🏥', c:'var(--ser5)'},
+  follow_up:     {l:'متابعة الأعراض',        ic:'🔁', c:'var(--ser3)'},
+  general_advice:{l:'نصيحة عامة',            ic:'💬', c:'var(--ser2)'},
+  other:         {l:'أخرى',                  ic:'▫️', c:'#5a6480'},
+};
+// كلمات مش دوا (وقت/جرعة/تعليمات) — لو التوكِن كله منها يتشال من الأدوية في الـ fallback القديم
+const NONDRUG_WORDS=new Set(['كل','ساعه','ساعات','ساعتين','ساعه','يوم','ايام','يومين','اسبوع','اسابيع','شهر','شهور','مره','مرات','مرتين','يوميا','يومى','صباحا','مساء','ظهرا','ليلا','قبل','بعد','الاكل','الاكل','علي','الريق','عند','اللزوم','حبه','حبتين','قرص','قرصين','قرصان','شريط','شرايط','كبسوله','كبسولتين','ملعقه','ملعقتين','نقطه','نقط','مل','مج','مجم','جم','جرام','عبوه','كيس','اكياس','مغلف','ظرف','صباح','مساءً','و','في','مع','ثم','او','لمده','لمدة']);
+function isNonDrugFragment(norm){
+  const words=String(norm).split(/\s+/).filter(w=>w && !/^\d+$/.test(w));  // تجاهل الأرقام
+  if(!words.length)return true;                                            // كله أرقام
+  return words.every(w=>NONDRUG_WORDS.has(w));                             // كله كلمات وقت/جرعة
+}
+const REFER_RE=/(مراجعه|مراجعة|طبيب|دكتور|مستشفي|مستشفى|تحويل|refer|اسعاف|طوارئ|اخصائي|أخصائي)/i;
+const FOLLOW_RE=/(متابعه|متابعة|مراقبه|مراقبة|follow|لو استمر|لو زاد|اعاده الكشف|إعادة الكشف)/i;
+/* استخراج الجرعة والتكرار من نص الدوا (للـ fallback القديم قبل تشغيل الـ AI) */
+const DOSE_RE=/(أقراص|اقراص|قرصين|قرص|برشام[ةه]?|كبسولتين|كبسول[ةه]?|شراب|معلّق|معلق|نقط|نقطة|نقطه|قطر[ةه]|لبوس|تحميل[ةه]|حقن[ةه]|أمبول|امبول|مرهم|كريم|جل|بخاخ[ةه]?|فوّار|فوار|أكياس|اكياس|كيس|ظرف|ملعق[ةه]|سيروب|دهان|غسول|لوشن)/;
+const FREQ_RE=/(كل\s*\d*\s*(?:ساعات|ساعة|ساعه|يوم|أيام|ايام)|\d+\s*مر(?:ات|ة|ه)(?:\s*(?:يوميا|في اليوم|فى اليوم))?|مر[ةه]\s*(?:واحدة|واحده)?\s*يوميا|صباحا?ً?|مساءً?|قبل\s*الأ?كل|بعد\s*الأ?كل|عند\s*اللزوم|يومياً?)/;
+function splitDoseFreq(raw){
+  let name=String(raw||''), dosage='', freq='';
+  const fm=name.match(FREQ_RE); if(fm){ freq=fm[0].replace(/\s+/g,' ').trim(); name=name.replace(fm[0],' '); }
+  const dm=name.match(DOSE_RE); if(dm){ dosage=dm[0].trim(); name=name.replace(dm[0],' '); }
+  name=name.replace(/\s+/g,' ').replace(/^[\s\-،,.]+|[\s\-،,.]+$/g,'').trim();
+  return {name, dosage, freq};
+}
+// بترجّع {structured, meds:[{key,disp,dosage,freq}], actions:[{type,detail}]}
+function medsFromDoc(d){
+  const ms=d.medsStructured;
+  if(ms && Array.isArray(ms.medications)){
+    const meds=[], seen=new Set();
+    ms.medications.forEach(m=>{
+      const disp=String(m.name||m.canonical||'').trim();
+      const key=AR_NORM(m.canonical||m.name);
+      if(!key||seen.has(key))return; seen.add(key);
+      meds.push({key,disp,dosage:String(m.dosage||'').trim(),freq:String(m.frequency||'').trim()});
+    });
+    const actions=(Array.isArray(ms.actions)?ms.actions:[]).map(a=>({
+      type:(a&&ACTION_TYPES.includes(a.type))?a.type:'other',
+      detail:String(a&&a.detail||'').trim()
+    })).filter(a=>a.detail);
+    return {structured:true, meds, actions};
+  }
+  // fallback قديم (لحد ما مصنّف الـ AI يشتغل): نستخرج الاسم + الجرعة + التكرار،
+  // وأي شظية جرعة/تكرار لوحدها («قرص كل 8 ساعات») نلزّقها بالدوا اللي قبلها بدل ما تتشال
+  const rawMeds=String(d.prescribedMeds||'');
+  const isRef=rawMeds.includes(RF_MARKER);
+  const meds=[], seen=new Set(), actions=[], aseen=new Set();
+  if(isRef){ actions.push({type:'referral',detail:'تحويل لطبيب (استشارة قديمة)'}); aseen.add('ref'); }
+  let lastMed=null;
+  medTokens(rawMeds).forEach(raw=>{
+    const rawN=AR_NORM(raw), sp=splitDoseFreq(raw);
+    if(isNonDrugFragment(rawN)){                                      // جرعة/تكرار لوحدها → الزقها بالدوا السابق
+      if(lastMed){ if(sp.dosage&&!lastMed.dosage)lastMed.dosage=sp.dosage; if(sp.freq&&!lastMed.freq)lastMed.freq=sp.freq; }
+      return;
+    }
+    if(REFER_RE.test(rawN)){ if(!aseen.has('ref')){aseen.add('ref'); actions.push({type:'referral',detail:raw});} lastMed=null; return; }
+    if(FOLLOW_RE.test(rawN)){ actions.push({type:'follow_up',detail:raw}); lastMed=null; return; }
+    const nm=(sp.name||raw).trim(), key=AR_NORM(nm);
+    if(!key||isNonDrugFragment(key))return;                          // بعد شيل الجرعة مافيش اسم → مش دوا
+    if(seen.has(key)){ lastMed=meds.find(m=>m.key===key)||null; if(lastMed){ if(sp.dosage&&!lastMed.dosage)lastMed.dosage=sp.dosage; if(sp.freq&&!lastMed.freq)lastMed.freq=sp.freq; } return; }
+    seen.add(key);
+    lastMed={key,disp:nm,dosage:sp.dosage,freq:sp.freq};
+    meds.push(lastMed);
+  });
+  return {structured:false, meds, actions};
+}
+const STOP = new Set(['من','في','على','الى','إلى','عن','مع','هذا','هذه','ذلك','التي','الذي','ان','أن','إن','الا','إلا','او','أو','ثم','قد','لم','لن','لو','ما','مش','هو','هي','هم','انت','انا','نحن','كان','كانت','يكون','تكون','بعد','قبل','عند','حتى','كل','بعض','غير','بين','تم','يتم','لا','نعم','اللي','علي','فيه','منه','له','لها','بها','كده','كدة','جدا','جداً','بس','لكن','لان','لأن','عشان','علشان','يعني','ايه','إيه','دي','ده','دى','وال','بال','فال','ولا','وهي','وهو','اي','أي','الي','زي','زى','عليه','عليها','فيها','منها','وده','ودي','هنا','هناك','وجود','يوجد','اكثر','أكثر','فقط','ايضا','أيضا','كمان',
+  'يفضل','يُفضل','عدم','ينصح','يُنصح','نصح','يجب','لازم','ممكن','محتاج','ضروري','ضرورة','ضروره','ينبغي',
+  'راجع','يراجع','مراجعة','مراجعه','متابعة','متابعه','بشكل','حالة','حاله','الحالة','الحاله','المريض','العميل',
+  'العرض','الأعراض','الاعراض','اعراض','الدواء','الدوا','ادوية','ادويه','توجيه','برضو','برضه','بردو','شوية','شويه']);
+function noteWords(t){
+  return String(t||'').split(/[^ء-يa-zA-Z]+/)
+    .map(w=>w.trim()).filter(w=>w.length>=3 && !STOP.has(w) && !STOP.has(AR_NORM(w)));
+}
+function toDate(d){
+  try{ if(d?.toDate) return d.toDate(); if(d?.seconds) return new Date(d.seconds*1000); }catch(_){}
+  return null;
+}
+
+/* ─── التجميع (باص واحد) ─── */
+function aggregate(docs){
+  const A={
+    total:docs.length, days:{}, hours:Array(24).fill(0), weekdays:Array(7).fill(0),
+    syms:{}, cats:{}, meds:{}, symMeds:{}, noMeds:0, referral:0,
+    actions:{referral:0,follow_up:0,general_advice:0,other:0}, actionDetails:{},
+    structuredDocs:0, legacyDocs:0, docsWithMeds:0,
+    ratingHist:[0,0,0,0,0,0], rated:0, ratingSum:0, statuses:{}, reviewers:{},
+    noteWordCount:{}, agents:{}, rfConfirmed:{}, rfRows:[], flagsPotential:0,
+    rfConfirmedDocs:0, rfApplied:0,
+    gender:{}, ages:{}, preg:0, females:0, chronic:0, allergy:0,
+    fill:{patientName:0,phone:0,customerCode:0,notes:0,nonDrugAdvice:0},
+    answersTotal:0, edited:0, teamRev:0, revDelaySum:0, revDelayN:0,
+    hoursRF:Array(24).fill(0), symDay:{}, delayRating:[],
+    minD:null, maxD:null
+  };
+  const AGE_BUCKETS=['أقل من سنتين','٢ – ١٢','١٣ – ١٨','١٩ – ٣٠','٣١ – ٤٥','٤٦ – ٦٠','فوق الـ٦٠','غير محدد'];
+  A.ageOrder=AGE_BUCKETS;
+  const bucketAge=raw=>{
+    const s=String(raw||'').trim();
+    if(!s) return 'غير محدد';
+    const n=parseInt(s,10);
+    if(isNaN(n)) return 'غير محدد';
+    if(/شهر|شهور|month/i.test(s)||n<2) return AGE_BUCKETS[0];
+    if(n<=12)return AGE_BUCKETS[1]; if(n<=18)return AGE_BUCKETS[2]; if(n<=30)return AGE_BUCKETS[3];
+    if(n<=45)return AGE_BUCKETS[4]; if(n<=60)return AGE_BUCKETS[5]; return AGE_BUCKETS[6];
+  };
+  docs.forEach(d=>{
+    const dt=toDate(d.createdAt);
+    let iso=null;
+    if(dt){
+      iso=dt.toISOString().slice(0,10);
+      A.days[iso]=(A.days[iso]||0)+1;
+      A.hours[dt.getHours()]++;
+      A.weekdays[dt.getDay()]++;
+      if(!A.minD||dt<A.minD)A.minD=dt;
+      if(!A.maxD||dt>A.maxD)A.maxD=dt;
+    }
+    const rev=d.review||{};
+    const rating=Number(rev.rating||0);
+    const status=rev.status||'pending_review';
+    A.statuses[status]=(A.statuses[status]||0)+1;
+    if(rating>=1&&rating<=5){ A.ratingHist[rating]++; A.rated++; A.ratingSum+=rating; } else A.ratingHist[0]++;
+    const rvAt=toDate(rev.reviewedAt);
+    if(rvAt&&dt){ const h=(rvAt-dt)/3600000; if(h>=0&&h<24*14){A.revDelaySum+=h;A.revDelayN++; if(rating>=1&&rating<=5)A.delayRating.push({h,rating});} }
+    const reviewed = rating>0 || status!=='pending_review' || rvAt;
+    if(reviewed){
+      const rk=rev.reviewerName||rev.reviewerEmail||'غير محدد';
+      const R=A.reviewers[rk]||(A.reviewers[rk]={n:0,sumR:0,nR:0,approved:0,nmi:0,notes:0,delaySum:0,delayN:0});
+      R.n++;
+      if(rating>0){R.sumR+=rating;R.nR++;}
+      if(status==='approved')R.approved++;
+      if(status==='needs_more_info')R.nmi++;
+      if(String(rev.reviewerNotes||'').trim())R.notes++;
+      if(rvAt&&dt){const h=(rvAt-dt)/3600000;if(h>=0&&h<24*14){R.delaySum+=h;R.delayN++;}}
+    }
+    noteWords(rev.reviewerNotes).forEach(w=>{A.noteWordCount[w]=(A.noteWordCount[w]||0)+1;});
+    /* الزميل */
+    const ak=d.agentName||d.agentLabel||d.agentNumber||d.agentEmail||'غير محدد';
+    const G=A.agents[ak]||(A.agents[ak]={n:0,rated:0,sumR:0,five:0,rf:0,team:0,edited:0,syms:{},meds:{}});
+    G.n++;
+    if(rating>0){G.rated++;G.sumR+=rating;if(rating===5)G.five++;}
+    if(d.teamReviewed===true){G.team++;A.teamRev++;}
+    if(d.editedOnce===true||d.editedAt){G.edited++;A.edited++;}
+    /* العروض */
+    (d.symptoms||[]).forEach(s=>{
+      const S=A.syms[s.name]||(A.syms[s.name]={n:0,sumR:0,nR:0,meds:{}});
+      S.n++;
+      if(rating>0){S.sumR+=rating;S.nR++;}
+      if(s.cat)A.cats[s.cat]=(A.cats[s.cat]||0)+1;
+      G.syms[s.name]=(G.syms[s.name]||0)+1;
+      if(iso){ const sd=A.symDay[s.name]||(A.symDay[s.name]={}); sd[iso]=(sd[iso]||0)+1; }
+    });
+    if((d.flags||[]).length)A.flagsPotential++;
+    /* الأدوية والإجراءات (structured-first + fallback) */
+    const mf=medsFromDoc(d);
+    if(mf.structured)A.structuredDocs++; else A.legacyDocs++;
+    if(mf.meds.length)A.docsWithMeds++;
+    const isReferral=mf.actions.some(a=>a.type==='referral');
+    if(isReferral)A.referral++;
+    if(!mf.meds.length && !mf.actions.length)A.noMeds++;
+    mf.actions.forEach(a=>{
+      A.actions[a.type]=(A.actions[a.type]||0)+1;
+      if(a.detail)A.actionDetails[a.detail]=(A.actionDetails[a.detail]||0)+1;
+    });
+    mf.meds.forEach(m=>{
+      const k=m.key;
+      const M=A.meds[k]||(A.meds[k]={n:0,disp:{},dosage:{},freq:{},ts:[]});
+      M.n++; M.disp[m.disp]=(M.disp[m.disp]||0)+1;
+      if(m.dosage)M.dosage[m.dosage]=(M.dosage[m.dosage]||0)+1;
+      if(m.freq)M.freq[m.freq]=(M.freq[m.freq]||0)+1;
+      if(dt)M.ts.push(dt.getTime());
+      G.meds[k]=(G.meds[k]||0)+1;
+      (d.symptoms||[]).forEach(s=>{
+        const SM=A.symMeds[s.name]||(A.symMeds[s.name]={});
+        SM[k]=(SM[k]||0)+1;
+        if(A.syms[s.name])A.syms[s.name].meds[k]=(A.syms[s.name].meds[k]||0)+1;
+      });
+    });
+    /* الريد فلاج المؤكد */
+    let conf=Array.isArray(d.confirmedRedFlags)?d.confirmedRedFlags:[];
+    /* امتثال التحويل: على الأعلام المؤكّدة الحقيقية فقط */
+    if(Array.isArray(d.confirmedRedFlags)&&d.confirmedRedFlags.length){ A.rfConfirmedDocs++; if(d.redFlagApplied===true)A.rfApplied++; }
+    if(!conf.length && isReferral) conf=['(قرار تحويل — استشارة قبل تسجيل تفاصيل العلم)'];
+    if(conf.length){
+      G.rf++;
+      conf.forEach(f=>{A.rfConfirmed[f]=(A.rfConfirmed[f]||0)+1;});
+      A.rfRows.push({dt, agent:ak, sym:(d.symptoms||[]).map(s=>s.name).join('، '), flag:conf.join(' + ')});
+    }
+    /* ديموغرافيا */
+    const g=d.gender||'غير محدد';
+    A.gender[g]=(A.gender[g]||0)+1;
+    if(g==='أنثى'){A.females++; if(String(d.pregnancy||'').startsWith('نعم')||String(d.pregnancy||'')==='حامل')A.preg++;}
+    A.ages[bucketAge(d.age)]=(A.ages[bucketAge(d.age)]||0)+1;
+    if(String(d.chronic||'').startsWith('نعم'))A.chronic++;
+    if(d.allergy==='نعم')A.allergy++;
+    /* جودة */
+    Object.keys(A.fill).forEach(f=>{ if(String(d[f]||'').trim())A.fill[f]++; });
+    A.answersTotal+=Object.keys(d.answers||{}).length;
+    /* ساعات الخطورة: استشارة فيها علم مؤكد أو قرار تحويل */
+    if(dt && ((conf&&conf.length)||isReferral)) A.hoursRF[dt.getHours()]++;
+  });
+  A.rfRows.sort((a,b)=>(b.dt?.getTime()||0)-(a.dt?.getTime()||0));
+  return A;
+}
+
+/* ─── الرسم ─── */
+function barRows(box, entries, total, cls, unit){
+  box.innerHTML='';
+  const max=Math.max(...entries.map(e=>e[1]), 1);
+  entries.forEach(([label,n])=>{
+    const row=document.createElement('div'); row.className='brow';
+    row.innerHTML=`<span class="bl" title="${esc(label)}">${esc(label)}</span>
+      <span class="bt"><span class="bf ${cls||''}" style="width:0%"></span></span>
+      <span class="bv num">${fmt(n)} <small>${total?pct(n,total):''}</small></span>`;
+    row.setAttribute('data-tip',`${label} — ${fmt(n)} ${unit||''}${total?' · '+pct(n,total):''}`);
+    box.appendChild(row);
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{ row.querySelector('.bf').style.width=Math.max(3,n*100/max)+'%'; }));
+  });
+  if(!entries.length) box.innerHTML='<div class="mini-note">لا توجد بيانات كافية.</div>';
+}
+function topEntries(map, n, getN){
+  return Object.entries(map).map(([k,v])=>[k, getN?getN(v):v]).sort((a,b)=>b[1]-a[1]).slice(0,n);
+}
+function medDisp(m){ // أكثر صيغة كتابة شيوعًا للتوكِن
+  return Object.entries(m.disp).sort((a,b)=>b[1]-a[1])[0][0];
+}
+function kpiTile(ic,label,val,sub){
+  return `<div class="kpi"><div class="l">${ic} ${label}</div><div class="v num" data-cv="${val}">٠</div><div class="s">${sub||''}</div></div>`;
+}
+function countUpAll(root){
+  root.querySelectorAll('.v[data-cv]').forEach(elm=>{
+    const target=elm.getAttribute('data-cv');
+    const isNum=/^[\d.]+$/.test(target);
+    if(!isNum){ elm.textContent=target; return; }
+    const to=parseFloat(target), dur=800, t0=performance.now();
+    const frac=target.includes('.');
+    (function tick(t){
+      const p=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-p,3);
+      elm.textContent=(frac?(to*e).toLocaleString('ar-EG',{maximumFractionDigits:1,minimumFractionDigits:1}):Math.round(to*e).toLocaleString('ar-EG'));
+      if(p<1)requestAnimationFrame(tick);
+    })(t0);
+  });
+}
+
+const STATUS_META={
+  approved:      {l:'معتمدة',        ic:'✅', c:'var(--good)'},
+  needs_more_info:{l:'طلب معلومات',  ic:'❓', c:'var(--warn)'},
+  needs_followup:{l:'تحتاج فولو أب', ic:'📞', c:'var(--serious)'},
+  pending_review:{l:'قيد المراجعة',  ic:'🕓', c:'#5a6480'},
+};
+function statusMeta(k){ return STATUS_META[k]||{l:k,ic:'▫️',c:'#8891ad'}; }
+
+function renderAll(A){
+  /* KPIs */
+  const daysN=Object.keys(A.days).length||1;
+  const avgR=A.rated?A.ratingSum/A.rated:0;
+  const rfCount=Object.values(A.agents).reduce((s,g)=>s+g.rf,0);
+  const k=el('kpis');
+  k.innerHTML=[
+    kpiTile('📄','إجمالي الاستشارات',A.total,`${fmt(daysN)} يوم نشاط`),
+    kpiTile('📈','متوسط يومي',(A.total/daysN).toFixed(1),'استشارة / يوم نشاط'),
+    kpiTile('🔍','نسبة المراجعة',((A.total-(A.statuses.pending_review||0))*100/A.total).toFixed(1),`${fmt(A.total-(A.statuses.pending_review||0))} اتراجعت · ${pct(A.rated,A.total)} اتقيّمت نجوم`),
+    kpiTile('⭐','متوسط التقييم',avgR.toFixed(1),`من ${fmt(A.rated)} استشارة مقيّمة`),
+    kpiTile('🌟','نسبة الـ٥ نجوم',A.rated?(A.ratingHist[5]*100/A.rated).toFixed(1):'0.0',`${fmt(A.ratingHist[5])} استشارة كاملة النجوم`),
+    kpiTile('🚨','ريد فلاج مؤكد',rfCount,`${pct(rfCount,A.total)} من الاستشارات · ${fmt(A.referral)} قرار تحويل`),
+    kpiTile('⏱️','متوسط زمن المراجعة',A.revDelayN?(A.revDelaySum/A.revDelayN).toFixed(1):'—','ساعة من التسجيل للمراجعة'),
+    kpiTile('🎧','زملاء نشطون',Object.keys(A.agents).length,`${fmt(Object.keys(A.reviewers).length)} مراجع نشط`),
+  ].join('');
+  countUpAll(k);
+
+  /* النشاط الزمني */
+  const dayKeys=Object.keys(A.days).sort();
+  const dBox=el('dayCols'); dBox.innerHTML='';
+  const dMax=Math.max(...dayKeys.map(x=>A.days[x]),1);
+  const peakDay=dayKeys.reduce((p,c)=>A.days[c]>(A.days[p]||0)?c:p,dayKeys[0]);
+  dayKeys.forEach(iso=>{
+    const c=document.createElement('div');
+    c.className='col'+(iso===peakDay?' peak':'');
+    c.style.height=Math.max(4,A.days[iso]*100/dMax)+'%';
+    const d=new Date(iso+'T12:00:00');
+    c.setAttribute('data-tip',`${d.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'})} — ${fmt(A.days[iso])} استشارة`);
+    if(iso===peakDay)c.innerHTML=`<span class="pl num">${fmt(A.days[iso])}</span>`;
+    dBox.appendChild(c);
+  });
+  el('dayFirst').textContent=dayKeys[0]?new Date(dayKeys[0]+'T12:00:00').toLocaleDateString('ar-EG',{day:'numeric',month:'short'}):'';
+  el('dayLast').textContent=dayKeys.length?new Date(dayKeys[dayKeys.length-1]+'T12:00:00').toLocaleDateString('ar-EG',{day:'numeric',month:'short'}):'';
+  el('tzBadge').textContent=`ذروة اليوم: ${peakDay?new Date(peakDay+'T12:00:00').toLocaleDateString('ar-EG',{day:'numeric',month:'long'}):'—'}`;
+  renderHours(A,'all');
+  el('hrAll').onclick=()=>{ el('hrAll').classList.add('on'); el('hrRF').classList.remove('on'); renderHours(A,'all'); };
+  el('hrRF').onclick=()=>{ el('hrRF').classList.add('on'); el('hrAll').classList.remove('on'); renderHours(A,'rf'); };
+  const WD=['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  barRows(el('weekdayBars'), A.weekdays.map((n,i)=>[WD[i],n]).sort((a,b)=>b[1]-a[1]), A.total,'','استشارة');
+
+  /* العروض */
+  const symTop=topEntries(A.syms,15,v=>v.n);
+  el('symBadge').textContent=`${fmt(Object.keys(A.syms).length)} عرض مختلف`;
+  barRows(el('symBars'), symTop, A.total,'','مرة');
+  barRows(el('catBars'), topEntries(A.cats,8), null,'c4','');
+  el('symRatingChips').innerHTML=symTop.slice(0,8).map(([name])=>{
+    const s=A.syms[name];
+    return `<span class="chip">${esc(name)} <b class="num">${s.nR?'⭐ '+(s.sumR/s.nR).toFixed(1):'—'}</b></span>`;
+  }).join('');
+
+  /* الأدوية */
+  const medTop=topEntries(A.meds,18,v=>v.n).map(([k,n])=>[medDisp(A.meds[k]),n,k]);
+  el('aiBadge').innerHTML=`🤖 ${pct(A.structuredDocs,A.total)} مصنّف بالذكاء`
+    + (A.legacyDocs?` · <span style="opacity:.75">${fmt(A.legacyDocs)} نصي قديم</span>`:'');
+  el('medBadge').textContent=`${fmt(Object.keys(A.meds).length)} دواء مختلف · بدون دوا: ${fmt(A.noMeds)}`;
+  barRows(el('medBars'), medTop.map(x=>[x[0],x[1]]), A.total,'','وصفة');
+  el('backfillNote').innerHTML = A.legacyDocs>0
+    ? `⏳ <b class="num">${fmt(A.legacyDocs)}</b> استشارة لسه بالتقسيم النصي القديم — شغّل <b>meds-classify</b> عشان أسماء نضيفة وجرعات وفصل الإجراءات.`
+    : '✅ كل الاستشارات مصنّفة بالذكاء.';
+  /* جدول الأدوية التفصيلي: الاسم + أكثر جرعة + أكثر تكرار لكل دوا */
+  const dash='<span style="color:var(--muted)">—</span>';
+  el('medTable').querySelector('tbody').innerHTML=topEntries(A.meds,20,v=>v.n).map(([k,n])=>{
+    const M=A.meds[k];
+    const td=Object.entries(M.dosage||{}).sort((a,b)=>b[1]-a[1])[0];
+    const tf=Object.entries(M.freq||{}).sort((a,b)=>b[1]-a[1])[0];
+    return `<tr><td><b>${esc(medDisp(M))}</b></td><td>${td?esc(td[0]):dash}</td><td>${tf?esc(tf[0]):dash}</td><td class="num"><b>${fmt(n)}</b></td><td class="num">${pct(n,A.total)}</td></tr>`;
+  }).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--muted)">لا توجد أدوية في الفترة</td></tr>';
+  /* اتجاه الطلب: أول نص الفترة مقابل آخرها */
+  const trendMid=(A.minD&&A.maxD)?(A.minD.getTime()+A.maxD.getTime())/2:0;
+  const trendRows=topEntries(A.meds,15,v=>v.n).map(([k,n])=>{
+    const M=A.meds[k]; let first=0,second=0;
+    (M.ts||[]).forEach(t=>{ if(t<trendMid)first++; else second++; });
+    return {disp:medDisp(M),n,first,second};
+  });
+  el('trendTbl').querySelector('tbody').innerHTML=trendRows.map(r=>{
+    const up=r.second>r.first*1.2, down=r.second<r.first*0.8;
+    const arr=up?'<span style="color:var(--good);font-weight:900">▲ صاعد</span>'
+      :down?'<span style="color:var(--crit);font-weight:900">▼ هابط</span>'
+      :'<span style="color:var(--muted);font-weight:900">▬ ثابت</span>';
+    return `<tr><td><b>${esc(r.disp)}</b></td><td class="num">${fmt(r.n)}</td><td class="num">${fmt(r.first)}</td><td class="num">${fmt(r.second)}</td><td>${arr}</td></tr>`;
+  }).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--muted)">لا توجد بيانات</td></tr>';
+  const ds=el('drillSym');
+  ds.innerHTML='<option value="">— اختار عرض —</option>'+symTop.map(([n])=>`<option>${esc(n)}</option>`).join('');
+  ds.onchange=()=>renderDrillMeds(A);
+  renderDrillMeds(A);
+  /* أزواج */
+  const pairs=[];
+  Object.entries(A.symMeds).forEach(([sym,mm])=>{
+    if(!A.syms[sym])return;
+    Object.entries(mm).forEach(([mk,n])=>{ if(A.meds[mk])pairs.push({sym,med:medDisp(A.meds[mk]),n,symN:A.syms[sym].n}); });
+  });
+  pairs.sort((a,b)=>b.n-a.n);
+  el('pairTbl').querySelector('tbody').innerHTML=pairs.slice(0,12).map(p=>
+    `<tr><td>${esc(p.sym)}</td><td><b>${esc(p.med)}</b></td><td class="num"><b>${fmt(p.n)}</b></td><td class="num">${pct(p.n,p.symN)}</td></tr>`).join('')
+    ||'<tr><td colspan="4" style="text-align:center;color:var(--muted)">لا توجد بيانات</td></tr>';
+  /* دريل عكسي: دواء ← أعراض + زملاء */
+  const dd=el('drillDrug');
+  dd.innerHTML='<option value="">— اختار دواء —</option>'+topEntries(A.meds,40,v=>v.n).map(([k])=>`<option value="${esc(k)}">${esc(medDisp(A.meds[k]))}</option>`).join('');
+  dd.onchange=()=>renderDrillDrug(A);
+  renderDrillDrug(A);
+  /* الإجراءات + الرحلة + عمق إضافي */
+  renderActions(A);
+  renderJourney(A);
+  renderFairness(A);
+  renderDelayRating(A);
+  renderSpikes(A);
+
+  /* المراجعة */
+  el('revBadge').textContent=`${fmt(A.rated)} مقيّمة من ${fmt(A.total)}`;
+  const rEntries=[5,4,3,2,1].map(r=>['★'.repeat(r)+'☆'.repeat(5-r)+` (${fmt(r)})`,A.ratingHist[r]]);
+  barRows(el('ratingBars'), rEntries, A.rated,'','استشارة');
+  el('ratingNote').textContent=`${fmt(A.ratingHist[0])} استشارة لسه من غير تقييم نجوم.`;
+  /* donut */
+  const stEntries=Object.entries(A.statuses).sort((a,b)=>b[1]-a[1]);
+  let acc=0; const segs=[];
+  stEntries.forEach(([st,n])=>{
+    const m=statusMeta(st), a0=acc/A.total*360, a1=(acc+n)/A.total*360;
+    segs.push(`${m.c} ${a0}deg ${Math.max(a0,a1-1.5)}deg`, `var(--surface) ${Math.max(a0,a1-1.5)}deg ${a1}deg`);
+    acc+=n;
+  });
+  el('statusDonut').style.background=`conic-gradient(${segs.join(',')})`;
+  el('statusTotal').textContent=fmt(A.total);
+  el('statusLegend').innerHTML=stEntries.map(([st,n])=>{
+    const m=statusMeta(st);
+    return `<div class="lg"><span class="dot" style="background:${m.c}"></span>${m.ic} ${esc(m.l)} <b class="num">${fmt(n)}</b> <small class="num">${pct(n,A.total)}</small></div>`;
+  }).join('');
+  /* المراجعون */
+  const rvRows=Object.entries(A.reviewers).sort((a,b)=>b[1].n-a[1].n);
+  el('revTbl').querySelector('tbody').innerHTML=rvRows.map(([name,R])=>
+    `<tr><td><b>${esc(name)}</b></td><td class="num"><b>${fmt(R.n)}</b></td>
+     <td class="num">${R.nR?'⭐ '+(R.sumR/R.nR).toFixed(2):'—'}</td>
+     <td class="num">${pct(R.approved,R.n)}</td><td class="num">${pct(R.nmi,R.n)}</td>
+     <td class="num">${pct(R.notes,R.n)}</td>
+     <td class="num">${R.delayN?fmt1(R.delaySum/R.delayN)+' س':'—'}</td></tr>`).join('')
+    ||'<tr><td colspan="7" style="text-align:center;color:var(--muted)">لا توجد مراجعات في الفترة</td></tr>';
+  /* كلمات الملاحظات */
+  el('noteChips').innerHTML=topEntries(A.noteWordCount,25).map(([w,n])=>
+    `<span class="chip">${esc(w)} <b class="num">${fmt(n)}</b></span>`).join('')
+    ||'<span class="mini-note">لا توجد ملاحظات مكتوبة في الفترة.</span>';
+
+  /* الزملاء */
+  el('agBadge').textContent=`${fmt(Object.keys(A.agents).length)} زميل`;
+  renderAgentsTable(A,'n',true);
+
+  /* الريد فلاج */
+  el('rfBadge').textContent=`${fmt(rfCount)} استشارة بعلم مؤكد`;
+  el('rfKpis').innerHTML=[
+    kpiTile('🚨','استشارات بعلم مؤكد',rfCount,pct(rfCount,A.total)+' من الإجمالي'),
+    kpiTile('🚑','قرارات تحويل لطبيب',A.referral,'اتكتبت في خانة الأدوية'),
+    kpiTile('✅','طبّقوا قرار التحويل',A.rfConfirmedDocs?(A.rfApplied*100/A.rfConfirmedDocs).toFixed(0):'—',`${fmt(A.rfApplied)} من ${fmt(A.rfConfirmedDocs)} علم مؤكد — امتثال السلامة`),
+    kpiTile('🟡','استشارات بأعلام محتملة',A.flagsPotential,'العرض له علامات معرّفة (تلقائي)'),
+  ].join('');
+  countUpAll(el('rfKpis'));
+  barRows(el('rfBars'), topEntries(A.rfConfirmed,10), null,'crit','مرة');
+  el('rfTbl').querySelector('tbody').innerHTML=A.rfRows.slice(0,15).map(r=>
+    `<tr><td class="num">${r.dt?r.dt.toLocaleDateString('ar-EG',{day:'numeric',month:'short'}):'—'}</td>
+     <td>${esc(r.agent)}</td><td>${esc(r.sym||'—')}</td><td style="white-space:normal;max-width:220px"><b>${esc(r.flag)}</b></td></tr>`).join('')
+    ||'<tr><td colspan="4" style="text-align:center;color:var(--muted)">لا توجد أعلام مؤكدة في الفترة — الميزة بتسجّل من دلوقتي ✅</td></tr>';
+
+  /* الديموغرافيا */
+  const gm={'ذكر':'var(--ser1)','أنثى':'var(--ser4)'};
+  const gEntries=Object.entries(A.gender).sort((a,b)=>b[1]-a[1]);
+  el('genderSeg').innerHTML=gEntries.map(([g,n])=>
+    `<div class="seg" style="flex:${n};background:${gm[g]||'#3a4463'}" data-tip="${esc(g)} — ${fmt(n)} (${pct(n,A.total)})">${esc(g)} ${pct(n,A.total)}</div>`).join('');
+  barRows(el('ageBars'), A.ageOrder.filter(b=>A.ages[b]).map(b=>[b,A.ages[b]]).sort((a,b)=>b[1]-a[1]), A.total,'','حالة');
+  el('demoChips').innerHTML=[
+    `<span class="chip">🤰 حوامل بين الإناث <b class="num">${pct(A.preg,A.females)}</b></span>`,
+    `<span class="chip">💉 أمراض مزمنة <b class="num">${pct(A.chronic,A.total)}</b></span>`,
+    `<span class="chip">⚠️ حساسية أدوية <b class="num">${pct(A.allergy,A.total)}</b></span>`,
+  ].join('');
+
+  /* الجودة */
+  const FL={patientName:'اسم العميل',phone:'رقم التليفون',customerCode:'كود العميل',notes:'الملاحظات',nonDrugAdvice:'النصائح غير الدوائية'};
+  barRows(el('qualityBars'), Object.entries(A.fill).map(([f,n])=>[FL[f],n]).sort((a,b)=>b[1]-a[1]), A.total,'c2','مسجّلة');
+  el('qualityChips').innerHTML=[
+    `<span class="chip">✍️ متوسط الإجابات المسجلة لكل استشارة <b class="num">${fmt1(A.answersTotal/A.total)}</b></span>`,
+    `<span class="chip">✏️ استشارات اتعدلت <b class="num">${fmt(A.edited)} (${pct(A.edited,A.total)})</b></span>`,
+    `<span class="chip">👥 مراجعة تيم الاستشارات <b class="num">${fmt(A.teamRev)} (${pct(A.teamRev,A.total)})</b></span>`,
+  ].join('');
+}
+
+function renderDrillMeds(A){
+  const sym=el('drillSym').value;
+  const box=el('drillMedBars'), cb=el('consensusBox');
+  if(!sym){ box.innerHTML='<div class="mini-note">اختار عرض من القائمة عشان تشوف إيه اللي بيتوصف ليه وهل الفريق متفق ولا كل واحد بيكتب حاجة مختلفة.</div>'; cb.innerHTML=''; return; }
+  const mm=A.symMeds[sym]||{};
+  const entries=topEntries(mm,10).map(([k,n])=>[medDisp(A.meds[k]),n]);
+  const symN=A.syms[sym]?.n||1;
+  barRows(box, entries, symN,'c2','مرة');
+  if(entries.length){
+    const share=entries[0][1]/symN;
+    const cls=share>=.5?'hi':share>=.25?'mid':'lo';
+    const txt=share>=.5?'إجماع عالي — الفريق متفق':share>=.25?'اتفاق متوسط':'تشتت — كل زميل بيكتب حاجة مختلفة (محتاج بروتوكول موثّق)';
+    cb.innerHTML=`<span class="consensus ${cls}">🎯 ${esc(entries[0][0])} في ${pct(entries[0][1],symN)} من استشارات العرض — ${txt}</span>`;
+  }else cb.innerHTML='<span class="mini-note">مفيش أدوية مسجلة للعرض ده في الفترة.</span>';
+}
+function renderDrillDrug(A){
+  const k=el('drillDrug').value, sBox=el('drillDrugSym'), aBox=el('drillDrugAg');
+  if(!k){ sBox.innerHTML='<div class="mini-note">اختار دواء عشان تشوف بيتوصف لأي أعراض ومين أكتر زميل بيوصفه — مفيد لمراجعة البروتوكول.</div>'; aBox.innerHTML=''; return; }
+  const syms=[]; Object.entries(A.symMeds).forEach(([sym,mm])=>{ if(mm[k])syms.push([sym,mm[k]]); });
+  syms.sort((a,b)=>b[1]-a[1]);
+  const ags=[]; Object.entries(A.agents).forEach(([name,G])=>{ if(G.meds&&G.meds[k])ags.push([name,G.meds[k]]); });
+  ags.sort((a,b)=>b[1]-a[1]);
+  const totalN=A.meds[k]?A.meds[k].n:0;
+  barRows(sBox, syms.slice(0,10), totalN,'','مرة');
+  barRows(aBox, ags.slice(0,10), totalN,'c2','مرة');
+}
+
+/* جدول الزملاء + الترتيب + الدريل */
+let agSortK='n', agSortDesc=true;
+function renderAgentsTable(A,k,desc){
+  agSortK=k; agSortDesc=desc;
+  const rows=Object.entries(A.agents).map(([name,G])=>({
+    name, n:G.n, rated:G.rated, avg:G.rated?G.sumR/G.rated:0,
+    five:G.rated?G.five/G.rated:0, rf:G.rf, team:G.n?G.team/G.n:0, edited:G.n?G.edited/G.n:0, G
+  }));
+  rows.sort((a,b)=>{
+    const av=a[k],bv=b[k];
+    if(typeof av==='string')return desc?bv.localeCompare(av,'ar'):av.localeCompare(bv,'ar');
+    return desc?bv-av:av-bv;
+  });
+  const tb=el('agTbl').querySelector('tbody');
+  tb.innerHTML=rows.map((r,i)=>
+    `<tr data-ag="${esc(r.name)}">
+      <td><b>${i<3&&agSortK!=='name'?['🥇','🥈','🥉'][i]+' ':''}${esc(r.name)}</b></td>
+      <td class="num"><b>${fmt(r.n)}</b></td><td class="num">${fmt(r.rated)}</td>
+      <td class="num">${r.rated?'⭐ '+r.avg.toFixed(2):'—'}</td>
+      <td class="num">${r.rated?fmt1(r.five*100)+'٪':'—'}</td>
+      <td class="num">${r.rf?'🚨 '+fmt(r.rf):'٠'}</td>
+      <td class="num">${fmt1(r.team*100)}٪</td><td class="num">${fmt1(r.edited*100)}٪</td>
+    </tr>`).join('');
+  el('agTbl').querySelectorAll('th').forEach(th=>{
+    const kk=th.getAttribute('data-k');
+    th.innerHTML=th.textContent.replace(/[▲▼]\s*$/,'').trim()+(kk===agSortK?` <span class="arr">${agSortDesc?'▼':'▲'}</span>`:'');
+    th.onclick=()=>renderAgentsTable(A, kk, kk===agSortK?!agSortDesc:true);
+  });
+  tb.querySelectorAll('tr').forEach(tr=>{
+    tr.onclick=()=>renderAgentDrill(A, tr.getAttribute('data-ag'));
+  });
+}
+function renderAgentDrill(A,name){
+  const G=A.agents[name]; if(!G)return;
+  const d=el('agDrill'); d.classList.remove('hidden');
+  const topS=topEntries(G.syms,6), topM=topEntries(G.meds,6).map(([k,n])=>[medDisp(A.meds[k]),n]);
+  d.innerHTML=`<div class="drill-h">🎧 ${esc(name)} — ${fmt(G.n)} استشارة
+      <button class="x" title="إغلاق">✕</button></div>
+    <div class="grid2">
+      <div><div style="font-size:11.5px;color:var(--muted);font-weight:800;margin-bottom:7px">أكثر العروض اللي بيتعامل معاها</div><div class="blist" id="agdS"></div></div>
+      <div><div style="font-size:11.5px;color:var(--muted);font-weight:800;margin-bottom:7px">أكثر الأدوية اللي بيوصفها</div><div class="blist" id="agdM"></div></div>
+    </div>`;
+  d.querySelector('.x').onclick=()=>d.classList.add('hidden');
+  barRows(el('agdS'), topS, G.n,'','مرة');
+  barRows(el('agdM'), topM, G.n,'c2','مرة');
+  d.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+/* ─── ساعات اليوم (كل الاستشارات أو حالات الخطورة فقط) ─── */
+function renderHours(A, mode){
+  const arr = mode==='rf' ? A.hoursRF : A.hours;
+  const hBox=el('hourCols'); hBox.innerHTML='';
+  const hMax=Math.max(...arr,1), hPeak=arr.indexOf(Math.max(...arr));
+  arr.forEach((n,h)=>{
+    const c=document.createElement('div');
+    c.className='col c2'+(h===hPeak&&n>0?' peak':'');
+    if(mode==='rf' && h!==hPeak) c.style.background='var(--crit)';
+    if(mode==='rf' && h===hPeak && n>0) c.style.background='var(--ser3)';
+    c.style.height=Math.max(3,n*100/hMax)+'%';
+    const h12=h%12===0?12:h%12, ap=h<12?'ص':'م';
+    c.setAttribute('data-tip',`الساعة ${fmt(h12)} ${ap} — ${fmt(n)} ${mode==='rf'?'حالة خطورة':'استشارة'}`);
+    if(h===hPeak&&n>0)c.innerHTML=`<span class="pl num">${fmt(n)}</span>`;
+    hBox.appendChild(c);
+  });
+}
+
+/* ─── الإجراءات والتوصيات ─── */
+function renderActions(A){
+  const acts=A.actions||{};
+  const total=ACTION_TYPES.reduce((s,t)=>s+(acts[t]||0),0);
+  el('actBadge').textContent=`${fmt(total)} إجراء · ${fmt(A.referral)} تحويل`;
+  el('actKpis').innerHTML=[
+    kpiTile('🏥','نسبة التحويل',A.total?(acts.referral*100/A.total).toFixed(1):'0.0',`${fmt(acts.referral||0)} استشارة`),
+    kpiTile('🔁','نسبة المتابعة',A.total?(acts.follow_up*100/A.total).toFixed(1):'0.0',`${fmt(acts.follow_up||0)} استشارة`),
+    kpiTile('💬','نسبة النصيحة العامة',A.total?(acts.general_advice*100/A.total).toFixed(1):'0.0',`${fmt(acts.general_advice||0)} استشارة`),
+  ].join('');
+  countUpAll(el('actKpis'));
+  const segEntries=ACTION_TYPES.map(t=>[t,acts[t]||0]).filter(([,n])=>n>0);
+  el('actSeg').innerHTML=segEntries.length?segEntries.map(([t,n])=>{
+    const m=ACTION_META[t];
+    return `<div class="seg" style="flex:${n};background:${m.c}" data-tip="${esc(m.l)} — ${fmt(n)} (${pct(n,total)})">${m.ic} ${pct(n,total)}</div>`;
+  }).join(''):'<div class="seg" style="flex:1;background:#3a4463">لا توجد إجراءات مسجّلة</div>';
+  barRows(el('actBars'),
+    ACTION_TYPES.map(t=>[ACTION_META[t].ic+' '+ACTION_META[t].l, acts[t]||0]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]),
+    total,'','مرة');
+  el('actDetailChips').innerHTML=topEntries(A.actionDetails,20).map(([d,n])=>
+    `<span class="chip">${esc(d)} <b class="num">${fmt(n)}</b></span>`).join('')
+    ||'<span class="mini-note">لا توجد توصيات مسجّلة في الفترة.</span>';
+}
+
+/* ─── رحلة العميل (على كل التاريخ) ─── */
+function median(arr){ if(!arr.length)return 0; const s=[...arr].sort((a,b)=>a-b); const m=Math.floor(s.length/2); return s.length%2?s[m]:(s[m-1]+s[m])/2; }
+function ymLabel(ym){ const [y,m]=ym.split('-').map(Number); return (AR_MONTHS[m-1]||m)+' '+String(y); }
+function normPhone(s){ const d=String(s||'').replace(/[^\d]/g,''); return d.length>=7?d:''; }
+function custKey(d){ return normPhone(d.phone) || String(d.customerCode||'').trim().toLowerCase() || ''; }
+function renderJourney(A){
+  const src=(ALLDOCS&&ALLDOCS.length)?ALLDOCS:DOCS;
+  const cust={};
+  src.forEach(d=>{
+    const key=custKey(d); if(!key)return;
+    const dt=toDate(d.createdAt);
+    const warn=(d.warning&&d.warning.active===true)||(Array.isArray(d.confirmedRedFlags)&&d.confirmedRedFlags.length>0);
+    (cust[key]=cust[key]||[]).push({dt, ts:dt?dt.getTime():0, syms:(d.symptoms||[]).map(s=>s.name), warn, name:d.patientName||d.customerCode||key});
+  });
+  Object.values(cust).forEach(list=>list.sort((a,b)=>a.ts-b.ts));
+  const inRange=d=>{ const t=toDate(d.createdAt); if(!t)return false; if(curFrom&&t<curFrom)return false; if(curTo&&t>curTo)return false; return true; };
+  const rangeKeys=new Set(); let rangeConsults=0, rangeRepeat=0;
+  src.forEach(d=>{ if(inRange(d)){ const k=custKey(d); if(k){ rangeKeys.add(k); rangeConsults++; if((cust[k]||[]).length>=2)rangeRepeat++; } } });
+  const withId=src.filter(d=>custKey(d)).length;
+  const repeatCusts=[...rangeKeys].filter(k=>(cust[k]||[]).length>=2);
+  const avgVisits=repeatCusts.length?repeatCusts.reduce((s,k)=>s+cust[k].length,0)/repeatCusts.length:0;
+  const gaps=[];
+  Object.values(cust).forEach(list=>{ for(let i=1;i<list.length;i++){ if(list[i].ts&&list[i-1].ts)gaps.push((list[i].ts-list[i-1].ts)/86400000); } });
+  const gbk=[['≤ ٧ أيام',0,7],['٨–١٤',8,14],['١٥–٣٠',15,30],['٣١–٦٠',31,60],['٦١–٩٠',61,90],['فوق ٩٠',91,1e9]];
+  el('journeyKpis').innerHTML=[
+    kpiTile('👥','نسبة العملاء المتكررين',rangeConsults?(rangeRepeat*100/rangeConsults).toFixed(1):'0.0',`${fmt(rangeRepeat)} من ${fmt(rangeConsults)} استشارة لعميل معروف`),
+    kpiTile('🔂','متوسط زيارات المتكرر',avgVisits?avgVisits.toFixed(1):'0.0',`${fmt(repeatCusts.length)} عميل متكرر في الفترة`),
+    kpiTile('📇','استشارات بمعرّف عميل',withId,pct(withId,src.length)+' من الكل'),
+    kpiTile('⏳','وسيط فترة العودة',gaps.length?fmt(Math.round(median(gaps))):'—',gaps.length?`يوم · ${fmt(gaps.length)} فترة عودة`:'مفيش عودات'),
+  ].join('');
+  countUpAll(el('journeyKpis'));
+  barRows(el('returnBars'), gbk.map(([lbl,lo,hi])=>[lbl, gaps.filter(g=>g>=lo&&g<=hi).length]), gaps.length,'c4','عودة');
+  /* رجعوا بنفس العرض */
+  const recur=[];
+  Object.entries(cust).forEach(([k,list])=>{
+    if(list.length<2||!rangeKeys.has(k))return;
+    const symCount={};
+    list.forEach(v=>{ const seen=new Set(); v.syms.forEach(s=>{ if(!seen.has(s)){seen.add(s); symCount[s]=(symCount[s]||0)+1;} }); });
+    Object.entries(symCount).forEach(([s,c])=>{ if(c>=2)recur.push({name:list[0].name, sym:s, c, last:list[list.length-1].dt}); });
+  });
+  recur.sort((a,b)=>b.c-a.c);
+  el('recurTbl').querySelector('tbody').innerHTML=recur.slice(0,15).map(r=>
+    `<tr><td>${esc(r.name)}</td><td><b>${esc(r.sym)}</b></td><td class="num">${fmt(r.c)}</td><td class="num">${r.last?r.last.toLocaleDateString('ar-EG',{day:'numeric',month:'short'}):'—'}</td></tr>`).join('')
+    ||'<tr><td colspan="4" style="text-align:center;color:var(--muted)">لا يوجد تكرار بنفس العرض ✅</td></tr>';
+  /* تحذير/ريد فلاج متكرر */
+  const repWarn=[];
+  Object.entries(cust).forEach(([k,list])=>{
+    if(!rangeKeys.has(k))return;
+    const w=list.filter(v=>v.warn).length;
+    if(w>=2)repWarn.push({name:list[0].name, w, v:list.length, last:list[list.length-1].dt});
+  });
+  repWarn.sort((a,b)=>b.w-a.w);
+  el('repWarnTbl').querySelector('tbody').innerHTML=repWarn.slice(0,15).map(r=>
+    `<tr><td>${esc(r.name)}</td><td class="num"><b>${fmt(r.w)}</b></td><td class="num">${fmt(r.v)}</td><td class="num">${r.last?r.last.toLocaleDateString('ar-EG',{day:'numeric',month:'short'}):'—'}</td></tr>`).join('')
+    ||'<tr><td colspan="4" style="text-align:center;color:var(--muted)">لا يوجد عميل بتحذير متكرر ✅</td></tr>';
+  /* بقاء الأفواج */
+  const cohort={};
+  Object.values(cust).forEach(list=>{
+    if(!list.length||!list[0].dt)return;
+    const f=list[0].dt, ym=f.getFullYear()+'-'+String(f.getMonth()+1).padStart(2,'0');
+    const c=cohort[ym]||(cohort[ym]={n:0,ret:0}); c.n++;
+    const nm=new Date(f.getFullYear(),f.getMonth()+1,1), nmEnd=new Date(f.getFullYear(),f.getMonth()+2,1);
+    if(list.some(v=>v.dt&&v.dt>=nm&&v.dt<nmEnd))c.ret++;
+  });
+  el('cohortTbl').querySelector('tbody').innerHTML=Object.entries(cohort).sort((a,b)=>a[0].localeCompare(b[0])).slice(-8).map(([ym,c])=>
+    `<tr><td>${esc(ymLabel(ym))}</td><td class="num">${fmt(c.n)}</td><td class="num">${fmt(c.ret)}</td><td class="num"><b>${pct(c.ret,c.n)}</b></td></tr>`).join('')
+    ||'<tr><td colspan="4" style="text-align:center;color:var(--muted)">لا توجد بيانات كافية</td></tr>';
+  el('journeyBadge').textContent=`${fmt(Object.keys(cust).length)} عميل مميّز`;
+  el('journeyNote').textContent=(src===DOCS&&(curFrom||curTo))
+    ? 'ملاحظة: تعذّر تحميل كل التاريخ — التحليل محسوب على استشارات الفترة فقط.'
+    : `محسوبة على كل التاريخ (${fmt(src.length)} استشارة). الأرقام للعملاء النشطين في الفترة المختارة. العميل بلا رقم/كود مش داخل التحليل.`;
+}
+
+/* ─── عدالة المراجعين ─── */
+function renderFairness(A){
+  const overall=A.rated?A.ratingSum/A.rated:0, MIN=5;
+  const rows=Object.entries(A.reviewers).map(([name,R])=>({name,n:R.nR,avg:R.nR?R.sumR/R.nR:0})).filter(r=>r.n>=MIN);
+  rows.sort((a,b)=>Math.abs(b.avg-overall)-Math.abs(a.avg-overall));
+  const box=el('fairnessBars');
+  if(!rows.length){ box.innerHTML='<div class="mini-note">مفيش مراجعين بعدد تقييمات كافٍ (≥٥) للمقارنة.</div>'; el('fairnessNote').textContent=''; return; }
+  const maxAbs=Math.max(...rows.map(r=>Math.abs(r.avg-overall)),0.1);
+  box.innerHTML=rows.slice(0,10).map(r=>{
+    const diff=r.avg-overall, w=Math.max(6,Math.abs(diff)*100/maxAbs), col=diff>=0?'var(--good)':'var(--crit)', sign=diff>=0?'+':'−';
+    return `<div class="brow" data-tip="${esc(r.name)}: متوسطه ${r.avg.toFixed(2)}★ · العام ${overall.toFixed(2)}★ · ${fmt(r.n)} تقييم">
+      <span class="bl">${esc(r.name)}</span>
+      <span class="bt"><span class="bf" style="width:${w}%;background:${col}"></span></span>
+      <span class="bv num" style="color:${col}">${sign}${Math.abs(diff).toFixed(2)}</span></div>`;
+  }).join('');
+  const harsh=rows.filter(r=>r.avg-overall<=-0.5).map(r=>r.name), lenient=rows.filter(r=>r.avg-overall>=0.5).map(r=>r.name);
+  el('fairnessNote').innerHTML=`المتوسط العام ${overall.toFixed(2)}★.`
+    +(harsh.length?` أقسى تقييمًا: ${harsh.map(esc).join('، ')}.`:'')
+    +(lenient.length?` أكثر تساهلًا: ${lenient.map(esc).join('، ')}.`:'')
+    +((harsh.length||lenient.length)?' — فرق ≥ نصف نجمة قد يعني تحيّز يؤثّر على عدالة تقييم الزملاء.':' مفيش شذوذ واضح ✅');
+}
+
+/* ─── زمن المراجعة مقابل التقييم ─── */
+function renderDelayRating(A){
+  const dr=A.delayRating||[];
+  const bk=[['أقل من ساعة',0,1],['١–٦ ساعات',1,6],['٦–٢٤ ساعة',6,24],['١–٣ أيام',24,72],['فوق ٣ أيام',72,1e9]];
+  const chips=bk.map(([lbl,lo,hi])=>{ const g=dr.filter(x=>x.h>=lo&&x.h<hi); return {lbl,n:g.length,avg:g.length?g.reduce((s,x)=>s+x.rating,0)/g.length:0}; }).filter(x=>x.n>0);
+  el('delayRatingChips').innerHTML=chips.map(c=>
+    `<span class="chip">${esc(c.lbl)} <b class="num">⭐ ${c.avg.toFixed(2)}</b> <small class="num">(${fmt(c.n)})</small></span>`).join('')
+    ||'<span class="mini-note">لا توجد مراجعات مؤرّخة كافية.</span>';
+  if(chips.length>=2){
+    const diff=chips[chips.length-1].avg-chips[0].avg;
+    el('delayRatingNote').textContent=Math.abs(diff)<0.15?'زمن المراجعة مالوش أثر واضح على التقييم.'
+      :(diff<0?'المراجعات الأبطأ ترتبط بتقييم أقل قليلًا.':'المراجعات الأسرع ترتبط بتقييم أقل قليلًا (قد تكون متعجّلة).');
+  } else el('delayRatingNote').textContent='';
+}
+
+/* ─── كشف طفرات الأعراض ─── */
+function renderSpikes(A){
+  const out=[];
+  Object.entries(A.symDay).forEach(([name,days])=>{
+    const counts=Object.values(days);
+    if(counts.length<4)return;
+    const total=counts.reduce((a,b)=>a+b,0);
+    if(total<8)return;
+    const mean=total/counts.length;
+    const sd=Math.sqrt(counts.reduce((s,c)=>s+(c-mean)*(c-mean),0)/counts.length);
+    let peak=0, day=null;
+    Object.entries(days).forEach(([iso,c])=>{ if(c>peak){peak=c;day=iso;} });
+    if(sd>0 && peak>mean+2*sd && peak>=Math.max(3,mean*1.8)) out.push({name,peak,mean,day,z:(peak-mean)/sd});
+  });
+  out.sort((a,b)=>b.z-a.z);
+  el('spikeChips').innerHTML=out.slice(0,12).map(s=>{
+    const d=new Date(s.day+'T12:00:00');
+    return `<span class="chip" style="border-color:rgba(250,178,25,.45)">🌡️ ${esc(s.name)} <b class="num">${fmt(s.peak)}</b> <small>${d.toLocaleDateString('ar-EG',{day:'numeric',month:'short'})} · المعدل ${fmt1(s.mean)}</small></span>`;
+  }).join('')||'<span class="mini-note">لا توجد طفرات لافتة في الفترة ✅</span>';
+}
+
+/* ─── تصدير CSV ─── */
+function exportCSV(){
+  if(!AGG){alert('حمّل البيانات الأول');return;}
+  const A=AGG, L=[];
+  const esc2=v=>`"${String(v??'').replace(/"/g,'""')}"`;
+  L.push('تحليل الاستشارات — '+curLabel);
+  L.push('');
+  L.push('المؤشر,القيمة');
+  L.push(`إجمالي الاستشارات,${A.total}`);
+  L.push(`متوسط التقييم,${A.rated?(A.ratingSum/A.rated).toFixed(2):''}`);
+  L.push(`استشارات بريد فلاج مؤكد,${Object.values(A.agents).reduce((s,g)=>s+g.rf,0)}`);
+  L.push(`قرارات تحويل,${A.referral}`);
+  L.push(`نسبة المصنّف بالذكاء %,${A.total?(A.structuredDocs*100/A.total).toFixed(1):'0'}`);
+  L.push(`نسبة المتابعة %,${A.total?((A.actions.follow_up||0)*100/A.total).toFixed(1):'0'}`);
+  L.push(`نسبة النصيحة العامة %,${A.total?((A.actions.general_advice||0)*100/A.total).toFixed(1):'0'}`);
+  L.push('');
+  L.push('— الإجراءات والتوصيات —');
+  L.push('النوع,مرات');
+  ACTION_TYPES.forEach(t=>L.push([esc2(ACTION_META[t].l),A.actions[t]||0].join(',')));
+  L.push('');
+  L.push('— الزملاء —');
+  L.push('الزميل,استشارات,اتقيمت,متوسط التقييم,ريد فلاج,مراجعة تيم %,عدل %');
+  Object.entries(A.agents).sort((a,b)=>b[1].n-a[1].n).forEach(([n,G])=>{
+    L.push([esc2(n),G.n,G.rated,G.rated?(G.sumR/G.rated).toFixed(2):'',G.rf,(G.team*100/G.n).toFixed(1),(G.edited*100/G.n).toFixed(1)].join(','));
+  });
+  L.push('');
+  L.push('— أكثر الأدوية وصفًا —');
+  L.push('الدواء,مرات,أكثر جرعة,أكثر تكرار');
+  topEntries(A.meds,40,v=>v.n).forEach(([k,n])=>{
+    const M=A.meds[k];
+    const topd=Object.entries(M.dosage||{}).sort((a,b)=>b[1]-a[1])[0];
+    const topf=Object.entries(M.freq||{}).sort((a,b)=>b[1]-a[1])[0];
+    L.push([esc2(medDisp(M)),n,esc2(topd?topd[0]:''),esc2(topf?topf[0]:'')].join(','));
+  });
+  L.push('');
+  L.push('— أكثر العروض —');
+  L.push('العرض,مرات,متوسط التقييم');
+  topEntries(A.syms,40,v=>v.n).forEach(([name,n])=>{
+    const s=A.syms[name];
+    L.push([esc2(name),n,s.nR?(s.sumR/s.nR).toFixed(2):''].join(','));
+  });
+  const blob=new Blob(['﻿'+L.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='consult-analytics.csv';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ─── tooltip ─── */
+const tip=el('tip');
+document.addEventListener('mouseover',e=>{
+  const t=e.target.closest('[data-tip]');
+  if(!t){tip.classList.remove('on');return;}
+  tip.textContent=t.getAttribute('data-tip');
+  tip.classList.add('on');
+});
+document.addEventListener('mousemove',e=>{
+  if(!tip.classList.contains('on'))return;
+  const x=Math.min(e.clientX+14, innerWidth-tip.offsetWidth-10);
+  const y=Math.min(e.clientY+16, innerHeight-tip.offsetHeight-10);
+  tip.style.left=x+'px'; tip.style.top=y+'px';
+});
+</script>
+</body>
+</html>

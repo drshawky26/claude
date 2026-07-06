@@ -1,0 +1,46 @@
+═══════════════════════════════════════════════════════════════
+   أسماء ملفات صور الزملاء — team photos
+   المكان: public/team/
+═══════════════════════════════════════════════════════════════
+
+قواعد مهمة:
+• الاسم كله حروف صغيرة (lowercase) — مهم جدًا! Firebase Hosting
+  بيفرّق بين الحروف الكبيرة والصغيرة، فلو الاسم فيه حرف كبير
+  الصورة مش هتظهر أونلاين حتى لو ظهرت على جهازك.
+• المسافات بين الأسماء تتحول لشرطة (-).
+• الامتداد المفضّل .jpg (يشتغل كمان jpeg / png / webp).
+• الصورة الأفضل تكون مربعة والوجه في النص/فوق شوية.
+
+───────────────────────────────────────────────────────────────
+   الاسم                        اسم الملف                    الحالة
+───────────────────────────────────────────────────────────────
+Abdulrahman Mohammed      abdulrahman-mohammed.jpg      ✅ موجودة
+Ahmed Walid               ahmed-walid.jpg               ❌ ناقصة
+Mohamed Khaled            mohamed-khaled.jpg            ✅ موجودة
+Mohamed Khalifa           mohamed-khalifa.jpg           ❌ ناقصة
+Sherif Ahmed              sherif-ahmed.jpg              ✅ موجودة
+Ali M Ibrahim             ali-m-ibrahim.jpg             ❌ ناقصة
+Nadah Tarek               nadah-tarek.jpg               ✅ موجودة
+Hu Da SaEed               hoda-saeed.jpg                ❌ ناقصة
+Hager Ahmed               hager-ahmed.jpg               ❌ ناقصة
+Aya Hakeem                aya-hakeem.jpg                ❌ ناقصة
+Alshaimaa Ahmed Hassan    alshaimaa-ahmed-hassan.jpg    ⚠️ محتاجة إعادة تسمية
+Shima Tarek               shima-tarek.jpg               ✅ موجودة
+Mariam Moustafa           mariam-moustafa.jpg           ✅ موجودة
+Asmaa Magdy               asmaa-magdy.jpg               ❌ ناقصة
+Yomna Mohammed            yomna-mohammed.jpg            ❌ ناقصة
+
+───────────────────────────────────────────────────────────────
+   ⚠️ تنبيه مهم على صورة موجودة بالفعل
+───────────────────────────────────────────────────────────────
+الملف الحالي اسمه:   Alshaimaa-Ahmed-Hassan.jpg   (حروف كبيرة)
+لازم يتسمّى:         alshaimaa-ahmed-hassan.jpg   (حروف صغيرة)
+غير كده الصورة مش هتظهر أونلاين على Firebase.
+
+───────────────────────────────────────────────────────────────
+   القاعدة العامة لأي زميل جديد
+───────────────────────────────────────────────────────────────
+اسم الملف = اسم الزميل (زي ما هو مكتوب في القائمة) بالحروف
+الصغيرة، والمسافة بشرطة، + .jpg
+
+مثال:  "Kirollos Nabil"  →  kirollos-nabil.jpg

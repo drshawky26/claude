@@ -1,0 +1,3009 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0d1f3c">
+<meta name="robots" content="noindex">
+<script src="/lite-mode.js"></script>
+<title>فيسبوك · Pharma Triage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap"></noscript>
+<style>
+/* ═══════ PHARMA TRIAGE — FACEBOOK ops board (offline, no libs) ═══════ */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0d1f3c; --navy2:#162d52; --navy3:#1e3d6e;
+  --teal:#0ea5a0; --teal2:#0cc8c2; --gold:#c9a84c; --fb:#1877f2; --fb2:#0a52c4;
+  --bg:#eef1f6; --bg2:#f7f9fc; --card:#ffffff; --card-2:#fbfcfe;
+  --ink:#0d1f3c; --text:#2d4060; --muted:#6b82a0;
+  --border:rgba(13,31,60,.10); --border2:rgba(13,31,60,.16);
+  --green:#0f8c5e; --red:#d34a3a; --amber:#d99a2b; --blue:#3f6fb5;
+  --shadow:0 1px 2px rgba(13,31,60,.06),0 8px 28px -12px rgba(13,31,60,.18);
+  --shadow-lg:0 2px 6px rgba(13,31,60,.08),0 26px 60px -22px rgba(13,31,60,.32);
+  --radius:18px; --radius-sm:13px; --maxw:980px;
+}
+[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#070e1c; --bg2:#0b1424; --card:rgba(255,255,255,.045); --card-2:rgba(255,255,255,.03);
+  --ink:#eaf1fb; --text:#cdd9ec; --muted:#8aa0c2;
+  --border:rgba(255,255,255,.09); --border2:rgba(255,255,255,.16);
+  --teal:#16c3bd; --gold:#e0c477; --fb:#3b8bf5; --green:#28c07e; --red:#f56b58; --amber:#ecb44b;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 34px -14px rgba(0,0,0,.6);
+  --shadow-lg:0 2px 8px rgba(0,0,0,.45),0 32px 70px -24px rgba(0,0,0,.75);
+}
+html,body{height:100%}
+body{font-family:"Cairo",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:var(--bg);
+  -webkit-font-smoothing:antialiased;line-height:1.65;min-height:100%;
+  background-image:radial-gradient(1100px 600px at 100% -8%,color-mix(in srgb,var(--fb) 12%,transparent),transparent 60%),
+    radial-gradient(900px 520px at -6% 4%,color-mix(in srgb,var(--navy3) 14%,transparent),transparent 58%);}
+h1,h2,h3,.num{font-family:"Noto Kufi Arabic","Cairo",sans-serif}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 18px 90px}
+a{color:inherit}
+
+/* Header */
+.hdr{position:sticky;top:0;z-index:50;backdrop-filter:blur(16px);background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom:1px solid var(--border)}
+.hdr-in{max-width:var(--maxw);margin:0 auto;padding:11px 18px;display:flex;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;gap:11px}
+.brand-logo{width:42px;height:42px;border-radius:12px;flex:none;display:grid;place-items:center;background:linear-gradient(135deg,var(--fb),var(--fb2));box-shadow:var(--shadow);color:#fff}
+.brand-t b{font-family:"Noto Kufi Arabic";font-size:16px;color:var(--ink);font-weight:900;display:block;line-height:1.2}
+.brand-t span{font-size:11.5px;color:var(--muted);font-weight:700}
+.hdr-sp{flex:1}
+.iconbtn{height:40px;min-width:40px;padding:0 12px;border-radius:11px;border:1px solid var(--border);background:var(--card);color:var(--text);display:inline-flex;align-items:center;gap:7px;cursor:pointer;transition:.2s;box-shadow:var(--shadow);font-family:inherit;font-weight:700;font-size:13px;text-decoration:none}
+.iconbtn:hover{border-color:var(--fb);color:var(--fb)}
+.iconbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hdr-user{display:flex;align-items:center;gap:9px}
+.av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--fb),var(--navy3));color:#fff;display:grid;place-items:center;font-weight:800}
+
+/* Gate */
+#gate{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:40px 18px}
+#gate .g-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);padding:34px 30px;max-width:440px}
+#gate h2{color:var(--ink);font-size:20px;margin-bottom:8px}
+#gate p{color:var(--muted);margin-bottom:18px}
+
+/* Hero */
+.hero{margin:22px 0 10px;background:linear-gradient(135deg,color-mix(in srgb,var(--fb) 14%,var(--card)),var(--card));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);padding:26px 26px 24px;position:relative;overflow:hidden}
+.hero h1{font-size:25px;color:var(--ink);margin-bottom:7px}
+.hero p{color:var(--text);max-width:760px}
+
+/* Period banner — الفترة من→إلى */
+.period{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:14px 0 4px;padding:13px 18px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:var(--shadow)}
+.period .pb-main{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--ink);font-size:14.5px}
+.period .pb-main .ic{font-size:18px}
+.period .pb-dates{font-family:"Noto Kufi Arabic";color:var(--fb);font-weight:900;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate}
+.period .pb-sp{flex:1}
+.period .pb-note{font-size:12px;font-weight:700;color:var(--muted);background:var(--card-2);border:1px solid var(--border);border-radius:999px;padding:4px 11px}
+
+/* Nav dock — premium glass (redesign 2026-07-05) */
+.nav{position:sticky;top:70px;z-index:40;display:flex;gap:6px;align-items:center;
+  padding:8px;margin:18px 0 8px;border-radius:999px;
+  background:color-mix(in srgb,var(--card) 80%,transparent);
+  border:1px solid var(--border2);backdrop-filter:blur(16px);
+  box-shadow:var(--shadow-lg);overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800;color:var(--muted);
+  padding:8px 16px;border-radius:999px;text-decoration:none;white-space:nowrap;transition:.2s;flex:none}
+.nav a svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav a:hover{color:var(--fb);background:color-mix(in srgb,var(--fb) 9%,transparent)}
+.nav a.act{color:#fff;background:linear-gradient(135deg,var(--fb),var(--fb2));
+  box-shadow:0 6px 16px -6px color-mix(in srgb,var(--fb) 70%,transparent)}
+[data-theme="dark"] .nav{background:rgba(13,23,44,.78)}
+
+/* Section + cards */
+section{margin:24px 0;scroll-margin-top:120px}
+.sec-h{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sec-h .ico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--fb) 14%,transparent);color:var(--fb);flex:none;font-size:17px}
+.sec-h h2{font-size:19px;color:var(--ink)}
+.sec-h .sub{color:var(--muted);font-size:12.5px;font-weight:700}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;margin-bottom:14px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:760px){.g2,.g3{grid-template-columns:1fr}}
+.card h3{color:var(--ink);font-size:15.5px;margin-bottom:9px;display:flex;align-items:center;gap:8px}
+.card p,.card li{font-size:14px}
+ul{padding-inline-start:20px;margin:6px 0}
+li{margin:4px 0}
+.tag{display:inline-block;font-size:11px;font-weight:800;padding:2px 9px;border-radius:999px;vertical-align:middle}
+.tag.good{background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green)}
+.tag.warn{background:color-mix(in srgb,var(--amber) 18%,transparent);color:var(--amber)}
+.tag.bad{background:color-mix(in srgb,var(--red) 16%,transparent);color:var(--red)}
+.tag.fb{background:color-mix(in srgb,var(--fb) 16%,transparent);color:var(--fb)}
+.note{border-inline-start:3px solid var(--fb);background:color-mix(in srgb,var(--fb) 7%,transparent);padding:10px 14px;border-radius:8px;margin:10px 0;font-size:13.5px}
+.note.amber{border-color:var(--amber);background:color-mix(in srgb,var(--amber) 9%,transparent)}
+.note.green{border-color:var(--green);background:color-mix(in srgb,var(--green) 9%,transparent)}
+b,strong{color:var(--ink)}
+.kpi{display:flex;flex-direction:column;gap:2px;background:var(--card-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px}
+.kpi .v{font-size:26px;font-weight:900;color:var(--ink);font-family:"Noto Kufi Arabic"}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:700}
+.kpi .v small{font-size:13px;color:var(--muted);font-weight:700}
+
+/* Bars (peak hours) */
+.bars{display:flex;flex-direction:column;gap:5px;margin-top:6px}
+.bar-row{display:grid;grid-template-columns:54px 1fr 52px;align-items:center;gap:8px;font-size:12px}
+.bar-row .h{color:var(--muted);font-weight:700;text-align:end}
+.bar-track{background:var(--card-2);border-radius:7px;height:18px;overflow:hidden;border:1px solid var(--border)}
+.bar-fill{height:100%;border-radius:7px;background:linear-gradient(90deg,var(--fb),var(--fb2))}
+.bar-row .n{color:var(--text);font-weight:700;font-variant-numeric:tabular-nums}
+.bar-row.peak .bar-fill{background:linear-gradient(90deg,#f56b58,#d34a3a)}
+.bar-row.low{opacity:.62}
+
+.placeholder{border:1.5px dashed var(--border2);border-radius:var(--radius-sm);padding:22px;text-align:center;color:var(--muted);font-weight:700;font-size:13.5px;background:repeating-linear-gradient(45deg,transparent,transparent 10px,color-mix(in srgb,var(--fb) 4%,transparent) 10px,color-mix(in srgb,var(--fb) 4%,transparent) 20px)}
+table.t{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+table.t th,table.t td{text-align:start;padding:8px 10px;border-bottom:1px solid var(--border)}
+table.t th{color:var(--muted);font-weight:800;font-size:12px}
+table.t td b{color:var(--ink)}
+table.t td.hot{color:var(--fb);font-weight:800;font-variant-numeric:tabular-nums}
+table.t td.rk{font-weight:800;color:var(--muted);width:34px}
+.seg{display:inline-flex;gap:4px;background:var(--card-2);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:12px}
+.seg button{border:none;background:transparent;color:var(--muted);font-family:inherit;font-weight:800;font-size:12.5px;padding:6px 14px;border-radius:7px;cursor:pointer;transition:.15s}
+.seg button.on{background:var(--fb);color:#fff}
+/* Date-range filter bar (live dashboard) */
+.lvbar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px;margin:4px 0 16px;padding:12px 14px;background:var(--card-2);border:1px solid var(--border);border-radius:var(--radius-sm)}
+.lvbar label{display:flex;flex-direction:column;gap:5px;font-size:11.5px;font-weight:800;color:var(--muted)}
+.lvbar input[type=date],.lvbar input[type=time]{font-family:inherit;font-size:13.5px;font-weight:700;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:9px;padding:8px 10px}
+.lvbar input[type=date]:focus,.lvbar input[type=time]:focus{outline:none;border-color:var(--fb)}
+.lvchip{font-family:inherit;font-size:12.5px;font-weight:800;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:7px 13px;cursor:pointer;transition:.15s}
+.lvchip:hover{border-color:var(--fb);color:var(--fb)}
+.lvchip.on{background:var(--fb);color:#fff;border-color:var(--fb)}
+.lvbar .sp{flex:1}
+/* Forms */
+.frm{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+@media(max-width:760px){.frm{grid-template-columns:1fr 1fr}}
+.frm label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:800;color:var(--muted)}
+.frm label.wide{grid-column:1/-1}
+.frm input,.frm select{font-family:inherit;font-size:14px;font-weight:700;color:var(--text);background:var(--card-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px;width:100%}
+.frm input:focus,.frm select:focus{outline:none;border-color:var(--fb)}
+.btnp{font-family:inherit;font-weight:800;font-size:14px;color:#fff;background:var(--fb);border:1px solid var(--fb);border-radius:10px;padding:9px 20px;cursor:pointer;transition:.15s}
+.btnp:hover{background:var(--fb2)}
+.btnp.ghost{background:transparent;color:var(--fb)}
+.btnp:disabled{opacity:.55;cursor:not-allowed}
+.emsg{font-size:13px;font-weight:800;margin-inline-start:12px}
+.emsg.ok{color:var(--green)}.emsg.err{color:var(--red)}
+.frm-row{display:flex;gap:10px;align-items:center;margin-top:8px}
+.frm-row input{flex:1;font-family:inherit;font-size:14px;font-weight:700;color:var(--text);background:var(--card-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px}
+.rosterItem{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13.5px}
+.rosterItem b{flex:1;color:var(--ink)}
+.rosterItem .st{font-size:11px;font-weight:800;padding:2px 9px;border-radius:999px}
+.rosterItem .st.on{background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green)}
+.rosterItem .st.off{background:color-mix(in srgb,var(--muted) 18%,transparent);color:var(--muted)}
+.rosterItem button{font-family:inherit;font-size:12px;font-weight:800;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:8px;padding:4px 10px;cursor:pointer}
+.rosterItem button:hover{border-color:var(--fb);color:var(--fb)}
+/* ── Channel cards (توزيع القنوات — كروت بدل الشيبس) ── */
+.ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px;margin:8px 0}
+.ch-card{position:relative;overflow:hidden;background:var(--card-2);border:1px solid var(--border);
+  border-radius:14px;padding:13px 14px;animation:pt-rise .35s both;transition:transform .2s,border-color .2s,box-shadow .2s}
+.ch-card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--fb) 32%,var(--border));box-shadow:var(--shadow)}
+.ch-ico{font-size:20px;margin-bottom:6px;line-height:1}
+.ch-num{font-family:"Noto Kufi Arabic";font-weight:900;font-size:22px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.1}
+.ch-lbl{font-size:11.5px;color:var(--muted);font-weight:800;margin-top:2px}
+.ch-bar{height:5px;border-radius:3px;background:var(--border);overflow:hidden;margin-top:9px}
+.ch-bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--fb),var(--teal))}
+.ch-pct{position:absolute;top:12px;inset-inline-end:13px;font-size:11px;font-weight:900;color:var(--fb);font-variant-numeric:tabular-nums}
+.recent{font-size:12.5px}
+.recent .r{display:flex;gap:8px;flex-wrap:wrap;padding:6px 0;border-bottom:1px dashed var(--border);color:var(--muted);font-weight:700}
+.recent .r b{color:var(--ink)}
+.recent .r .del{margin-inline-start:auto;cursor:pointer;color:var(--red);font-weight:800}
+h4.sub-h{color:var(--ink);font-size:14px;margin:16px 0 6px}
+.foot{color:var(--muted);font-size:12px;text-align:center;margin-top:30px}
+
+/* ── Custom searchable dropdown ── */
+.cust-sel{position:relative;user-select:none}
+.cust-sel-val{font-family:inherit;font-size:14px;font-weight:700;color:var(--text);
+  background:var(--card-2);border:1px solid var(--border);border-radius:10px;
+  padding:9px 32px 9px 11px;cursor:pointer;transition:.15s;position:relative}
+.cust-sel-val::after{content:"▾";position:absolute;inset-inline-end:10px;top:50%;
+  transform:translateY(-50%);font-size:11px;color:var(--muted)}
+.cust-sel-val:focus,.cust-sel.open .cust-sel-val{outline:none;border-color:var(--fb)}
+.cust-sel-drop{display:none;position:absolute;top:calc(100% + 4px);inset-inline-start:0;
+  inset-inline-end:0;z-index:300;background:var(--card);border:1px solid var(--border2);
+  border-radius:12px;box-shadow:0 8px 32px -8px rgba(0,0,0,.28);overflow:hidden}
+.cust-sel.open .cust-sel-drop{display:block}
+.cust-sel-search{width:100%;font-family:inherit;font-size:13px;font-weight:700;
+  color:var(--text);background:var(--card-2);border:none;border-bottom:1px solid var(--border);
+  padding:9px 12px;outline:none}
+.cust-sel-opts{max-height:220px;overflow-y:auto;overscroll-behavior:contain}
+.cust-sel-opt{padding:9px 14px;font-size:13.5px;font-weight:700;color:var(--text);
+  cursor:pointer;transition:.12s}
+.cust-sel-opt:hover,.cust-sel-opt.focused{background:color-mix(in srgb,var(--fb) 10%,transparent);color:var(--fb)}
+.cust-sel-opt.selected{color:var(--fb);background:color-mix(in srgb,var(--fb) 7%,transparent)}
+.cust-sel-empty{padding:10px 14px;font-size:13px;color:var(--muted);font-weight:700}
+/* الدارك: الدروب لازم خلفية صلبة (مش var(--card) الشفافة) عشان متبقاش شفافة وتقرا الكلام ورا */
+[data-theme="dark"] .cust-sel-val{background:#0e1a30;color:var(--ink)}
+[data-theme="dark"] .cust-sel-drop{background:#0f1c34;border-color:rgba(255,255,255,.2);box-shadow:0 16px 44px -10px rgba(0,0,0,.75)}
+[data-theme="dark"] .cust-sel-search{background:#0b1730;color:var(--ink);border-bottom-color:rgba(255,255,255,.12)}
+[data-theme="dark"] .cust-sel-search::placeholder{color:var(--muted)}
+[data-theme="dark"] .cust-sel-opt{color:var(--ink)}
+/* ليست الزميل في كروت الشفتات — select عادي، لازم خلفية صلبة زي فوق وإلا الليست بتفتح بيضا والاسم مايبانش */
+[data-theme="dark"] #shiftAgentFilter{background:#0e1a30;color:var(--ink)}
+[data-theme="dark"] #shiftAgentFilter option{background:#0f1c34;color:var(--ink)}
+
+/* ── Slot cards (shift schedule) ── */
+.slot-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:12px}
+.slot-card{background:var(--card-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 15px;cursor:pointer;transition:.18s;position:relative;overflow:hidden}
+.slot-card:hover{border-color:var(--fb);box-shadow:var(--shadow);transform:translateY(-2px)}
+.slot-card::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:4px;background:var(--muted)}
+.slot-card.done::before{background:var(--green)}
+.slot-card.pending::before{background:var(--amber)}
+.slot-card .sc-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.slot-card .sc-name{font-family:"Noto Kufi Arabic";font-weight:900;color:var(--ink);font-size:14.5px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.slot-card .sc-date{font-size:11.5px;color:var(--muted);font-weight:700}
+.slot-card .sc-row{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text);font-weight:700;margin:3px 0}
+.slot-card .sc-row b{color:var(--ink);font-variant-numeric:tabular-nums}
+.slot-card .sc-badge{font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:999px}
+.slot-card .sc-badge.done{background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green)}
+.slot-card .sc-badge.pending{background:color-mix(in srgb,var(--amber) 18%,transparent);color:var(--amber)}
+.slot-card .sc-stats{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;gap:7px;flex-wrap:wrap}
+.sc-pill{display:inline-flex;align-items:baseline;gap:5px;padding:5px 13px;border-radius:999px;font-weight:900;line-height:1}
+.sc-pill.p-msgs{background:color-mix(in srgb,var(--fb) 16%,transparent);color:var(--fb)}
+.sc-pill.p-convs{background:color-mix(in srgb,var(--teal) 15%,transparent);color:var(--teal)}
+.sc-pill .pn{font-size:17px;font-variant-numeric:tabular-nums}
+.sc-pill .pl{font-size:10.5px;font-weight:800;opacity:.8}
+.slot-card .sc-hint{font-size:11px;color:var(--muted);font-weight:700;margin-top:6px}
+
+/* ── Modal ── */
+.modal-ov{position:fixed;inset:0;z-index:200;background:rgba(8,15,30,.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:18px}
+.modal-ov.open{display:flex}
+.modal-box{background:var(--card);border:1px solid var(--border2);border-radius:var(--radius);box-shadow:var(--shadow-lg);width:100%;max-width:460px;max-height:90vh;overflow-y:auto;padding:22px 22px 20px}
+.modal-box h3{color:var(--ink);font-size:17px;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.modal-box .m-sub{color:var(--muted);font-size:12.5px;font-weight:700;margin-bottom:14px}
+.modal-box .m-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.modal-box label{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:800;color:var(--muted)}
+.modal-box input[type=time],.modal-box input[type=number]{font-family:inherit;font-size:14px;font-weight:700;color:var(--text);background:var(--card-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px}
+.modal-box input:focus{outline:none;border-color:var(--fb)}
+.modal-box .m-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:6px}
+.modal-x{margin-inline-start:auto;cursor:pointer;color:var(--muted);font-size:22px;line-height:1;font-weight:800;background:none;border:none}
+.modal-x:hover{color:var(--red)}
+
+/* ════════════════ PREMIUM INTERACTIVE LAYER (2026-06-24) ════════════════ */
+.btnp:active{transform:translateY(1px) scale(.985)}
+.iconbtn:active{transform:scale(.94)}
+.slot-card:active{transform:scale(.99)}
+.modal-box{animation:pt-pop .32s cubic-bezier(.2,.8,.2,1) both}
+@keyframes pt-pop{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+.kpi .v{font-variant-numeric:tabular-nums}
+
+/* ── Toasts ── */
+.toast-wrap{position:fixed;z-index:400;inset-block-end:18px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;gap:9px;align-items:center;pointer-events:none;max-width:92vw}
+.toast{display:flex;align-items:center;gap:9px;padding:11px 17px;border-radius:13px;
+  background:var(--card);border:1px solid var(--border2);box-shadow:var(--shadow-lg);
+  font-size:13.5px;font-weight:800;color:var(--ink);font-family:inherit;
+  opacity:0;transform:translateY(14px) scale(.96);transition:opacity .3s,transform .3s;pointer-events:auto;max-width:100%}
+.toast.show{opacity:1;transform:none}
+.toast .t-ico{font-size:17px;flex:none}
+.toast.ok{border-inline-start:4px solid var(--green)}
+.toast.err{border-inline-start:4px solid var(--red)}
+.toast.info{border-inline-start:4px solid var(--fb)}
+[data-theme="dark"] .toast{background:#11203a}
+
+/* ── Skeleton shimmer ── */
+@keyframes pt-shimmer{to{background-position:-200% 0}}
+.skel-card{border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 15px;background:var(--card-2)}
+.skel{border-radius:8px;background:linear-gradient(90deg,
+  color-mix(in srgb,var(--muted) 12%,transparent) 25%,
+  color-mix(in srgb,var(--muted) 24%,transparent) 37%,
+  color-mix(in srgb,var(--muted) 12%,transparent) 63%);
+  background-size:200% 100%;animation:pt-shimmer 1.3s ease-in-out infinite}
+.skel-line{height:11px;margin-bottom:9px}
+.skel-line.w40{width:40%}.skel-line.w60{width:60%}.skel-line.w80{width:80%}
+.skel-av{width:38px;height:38px;border-radius:11px}
+.skel-top{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+@media(prefers-reduced-motion:reduce){.skel{animation:none!important}}
+
+/* ── Branch Manager Modal ── */
+.brm-list{border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:16px;max-height:380px;overflow-y:auto}
+.brm-row{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--border)}
+.brm-row:last-child{border-bottom:none}
+.brm-row:hover{background:color-mix(in srgb,var(--blue) 4%,var(--card))}
+.brm-name{flex:1;font-weight:700;color:var(--ink);font-size:13.5px;display:flex;align-items:center;gap:7px}
+.brm-badge{display:inline-block;font-size:10.5px;font-weight:900;background:color-mix(in srgb,var(--blue) 13%,transparent);color:var(--blue);padding:2px 8px;border-radius:999px;border:1px solid color-mix(in srgb,var(--blue) 26%,transparent)}
+.brm-act{display:flex;gap:4px;flex:none}
+
+/* ── Orders Side Drawer ── */
+.ord-drawer{position:fixed;right:0;top:0;bottom:0;width:min(520px,100vw);background:var(--bg2);border-left:1px solid var(--border2);box-shadow:-12px 0 60px rgba(0,0,0,.24);z-index:310;transform:translateX(100%);transition:transform .38s cubic-bezier(.22,.8,.24,1);display:flex;flex-direction:column;overflow:hidden}
+.ord-drawer.open{transform:translateX(0)}
+.ord-dim{position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:309;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(3px)}
+.ord-dim.open{opacity:1;pointer-events:all}
+.ord-hdr{padding:18px 22px 14px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,color-mix(in srgb,var(--teal) 10%,var(--card)),var(--card));flex:none}
+.ord-hdr-row{display:flex;align-items:center;gap:10px}
+.ord-hdr h3{color:var(--ink);font-size:17px;font-weight:900;display:flex;align-items:center;gap:9px;margin:0;flex:1}
+.ord-hdr p{color:var(--muted);font-size:12px;font-weight:700;margin:4px 0 0}
+.ord-srch{padding:12px 18px;border-bottom:1px solid var(--border);flex:none;display:flex;gap:8px;align-items:center;background:var(--bg)}
+.ord-srch input{flex:1;font-family:inherit;font-size:14px;font-weight:700;color:var(--text);background:var(--card);border:1.5px solid var(--border2);border-radius:11px;padding:9px 14px;transition:.15s;min-width:0}
+.ord-srch input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px color-mix(in srgb,var(--teal) 15%,transparent)}
+[data-theme="dark"] .ord-srch input{background:#0e1a30;color:#cdd9ec;border-color:rgba(255,255,255,.18)}
+.ord-body{flex:1;overflow-y:auto;padding:14px 18px 22px}
+.ord-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.ord-row{display:flex;align-items:center;gap:11px;padding:11px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;cursor:pointer;transition:.18s}
+.ord-row:hover{border-color:var(--teal);background:color-mix(in srgb,var(--teal) 4%,var(--card));transform:translateX(-3px)}
+.ord-row:active{transform:scale(.99)}
+.ord-row .or-left{flex:1;min-width:0}
+.ord-row .or-no{font-weight:900;color:var(--ink);font-size:13.5px}
+.ord-row .or-meta{font-size:11.5px;color:var(--muted);font-weight:700;margin-top:2px}
+.ord-row .or-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}
+.ord-row .or-amt{font-weight:900;color:var(--fb);font-size:14px;white-space:nowrap}
+.ord-row .or-date{font-size:11px;color:var(--muted);white-space:nowrap}
+.ord-empty{padding:32px;text-align:center;color:var(--muted);font-weight:700;font-size:13.5px}
+.ord-more{text-align:center;padding:12px;color:var(--muted);font-size:12.5px;font-weight:700}
+/* ord-stats KPI — compact, no gradient text */
+.ord-stats .kpi{padding:10px 12px}
+.ord-stats .kpi .v{font-size:16px}
+/* Order detail — centered modal with animated gradient border */
+.ord-detail-sheet{position:fixed;inset:0;z-index:320;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.55);backdrop-filter:blur(7px)}
+@property --od-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes od-spin{to{--od-angle:360deg}}
+.ord-det-wrap{padding:2.5px;border-radius:22px;background:conic-gradient(from var(--od-angle),var(--fb) 0%,var(--teal) 34%,var(--gold) 66%,var(--fb) 100%);animation:od-spin 3s linear infinite,pt-pop .35s both;box-shadow:0 34px 90px -12px rgba(0,0,0,.55);width:100%;max-width:500px}
+@media(prefers-reduced-motion:reduce){.ord-det-wrap{animation:pt-pop .35s both;background:linear-gradient(135deg,var(--fb),var(--teal))}}
+.ord-det-inner{background:var(--card);border-radius:20px;padding:22px 22px 26px;max-height:78vh;overflow-y:auto}
+html[data-theme="dark"] .ord-det-inner{background:#0e1a30}
+.od-card{background:var(--card-2);border:1px solid var(--border);border-radius:11px;padding:10px 12px}
+html[data-theme="dark"] .od-card{background:#0b1730!important}
+.od-total-box{background:color-mix(in srgb,var(--fb) 8%,var(--card-2));border:1px solid color-mix(in srgb,var(--fb) 22%,var(--border));border-radius:14px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:baseline;gap:6px}
+html[data-theme="dark"] .od-total-box{background:#0b1f3a!important;border-color:color-mix(in srgb,var(--fb) 35%,#1a2a45)!important}
+
+/* ── Agent Tags Modal ── */
+.modal-box-lg{max-width:700px}
+.atm-hdr{background:linear-gradient(135deg,color-mix(in srgb,var(--fb) 10%,var(--card)),var(--card));margin:-22px -22px 18px;padding:22px 22px 16px;border-bottom:1px solid var(--border);border-radius:var(--radius) var(--radius) 0 0;position:relative}
+.atm-hdr h3{color:var(--ink);font-size:17px;font-weight:900;margin-bottom:5px;display:flex;align-items:center;gap:8px}
+.atm-hdr p{color:var(--muted);font-size:12px;font-weight:700}
+.atm-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:18px}
+.atm-table th{text-align:start;padding:9px 12px;font-size:11px;font-weight:900;color:var(--muted);border-bottom:2px solid var(--border);background:var(--card-2);text-transform:uppercase;letter-spacing:.04em}
+.atm-table td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.atm-table tr:last-child td{border-bottom:none}
+.atm-table tr:hover td{background:color-mix(in srgb,var(--fb) 4%,transparent);transition:.12s}
+.atm-badge{font-family:monospace,monospace;font-size:13px;font-weight:900;background:color-mix(in srgb,var(--fb) 13%,transparent);color:var(--fb);padding:3px 10px;border-radius:999px;border:1px solid color-mix(in srgb,var(--fb) 26%,transparent);display:inline-block;line-height:1.5}
+.atm-name{font-weight:700;color:var(--ink);font-size:13.5px}
+.atm-act{display:flex;gap:4px}
+.atm-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;padding:5px 8px;border-radius:8px;transition:.15s;line-height:1}
+.atm-btn:hover.edit{background:color-mix(in srgb,var(--fb) 12%,transparent);color:var(--fb)}
+.atm-btn:hover.del{background:color-mix(in srgb,var(--red) 12%,transparent);color:var(--red)}
+.atm-add-bar{display:grid;grid-template-columns:160px 1fr auto;gap:10px;align-items:end;padding:14px 16px;background:var(--card-2);border-radius:var(--radius-sm);border:1px solid var(--border)}
+.atm-add-bar label{display:flex;flex-direction:column;gap:5px;font-size:11.5px;font-weight:800;color:var(--muted)}
+.atm-add-bar input{font-family:inherit;font-size:13.5px;font-weight:700;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:9px;padding:9px 11px;width:100%;transition:.15s}
+.atm-add-bar input:focus{outline:none;border-color:var(--fb);box-shadow:0 0 0 3px color-mix(in srgb,var(--fb) 14%,transparent)}
+.atm-inline{display:flex;gap:6px;align-items:center;width:100%}
+.atm-inline input{font-family:inherit;font-size:13px;font-weight:700;color:var(--text);background:var(--card-2);border:1.5px solid var(--fb);border-radius:8px;padding:6px 9px;flex:1;min-width:0;outline:none}
+.atm-save{font-family:inherit;font-weight:800;font-size:12px;color:#fff;background:var(--green);border:none;border-radius:8px;padding:6px 11px;cursor:pointer;white-space:nowrap;transition:.15s}
+.atm-save:hover{opacity:.88}
+.atm-cncl{font-family:inherit;font-weight:800;font-size:12px;color:var(--muted);background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;transition:.15s}
+.atm-cncl:hover{border-color:var(--muted)}
+
+/* ══════ FB TEAM PODIUM — CHAMPIONS STAGE (2026-07-03) ══════
+   ستيدج ليلي دائم (مش بيتبع الثيم) — ألوان النصوص جوّاه ثابتة فاتحة. */
+@keyframes fbWave1    { from{transform:rotate(0deg)}  to{transform:rotate(360deg)} }
+@keyframes fbWave2    { from{transform:rotate(0deg)}  to{transform:rotate(-360deg)} }
+@keyframes fbWaterRise{ from{bottom:-160%} to{bottom:-65%} }
+@keyframes fbPodRise  { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:none} }
+@keyframes fbCrownFloat{0%,100%{transform:translateX(-50%) rotate(-7deg)}50%{transform:translateX(-50%) translateY(-7px) rotate(7deg)}}
+@keyframes fbTwinkle  {0%,100%{opacity:.18}50%{opacity:.85}}
+@keyframes fbSheen    {0%,55%{transform:translateX(-180%) skewX(-18deg)}100%{transform:translateX(320%) skewX(-18deg)}}
+@keyframes fbRingSpin {to{transform:rotate(360deg)}}
+@keyframes fbGoldPulse{0%,100%{box-shadow:0 0 0 4px rgba(251,191,36,.16),0 0 34px rgba(251,191,36,.4)}50%{box-shadow:0 0 0 7px rgba(251,191,36,.26),0 0 58px rgba(251,191,36,.65)}}
+
+.fb-pod-wrap{
+  position:relative;overflow:hidden;margin-bottom:14px;
+  border-radius:var(--radius);
+  border:1px solid rgba(122,152,255,.24);
+  background:
+    radial-gradient(900px 400px at 50% -12%,rgba(24,119,242,.38),transparent 62%),
+    radial-gradient(520px 300px at 10% 110%,rgba(124,58,237,.24),transparent 60%),
+    radial-gradient(520px 300px at 90% 110%,rgba(14,165,160,.20),transparent 60%),
+    linear-gradient(180deg,#0c1531 0%,#0a1028 55%,#070c1e 100%);
+  box-shadow:0 26px 60px -20px rgba(3,8,30,.7),inset 0 1px 0 rgba(255,255,255,.07);
+  padding:20px 20px 0;
+}
+.fb-pod-wrap::before{ /* نجوم متلألئة */
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    radial-gradient(2px 2px at 12% 20%,rgba(255,255,255,.8),transparent 60%),
+    radial-gradient(1.6px 1.6px at 78% 12%,rgba(255,255,255,.6),transparent 60%),
+    radial-gradient(1.4px 1.4px at 33% 7%,rgba(255,255,255,.5),transparent 60%),
+    radial-gradient(2px 2px at 62% 26%,rgba(255,255,255,.55),transparent 60%),
+    radial-gradient(1.5px 1.5px at 91% 40%,rgba(255,255,255,.45),transparent 60%),
+    radial-gradient(1.5px 1.5px at 6% 48%,rgba(255,255,255,.4),transparent 60%),
+    radial-gradient(1.3px 1.3px at 46% 16%,rgba(255,255,255,.5),transparent 60%);
+  animation:fbTwinkle 3.6s ease-in-out infinite;
+}
+.fb-pod-hdr{position:relative;z-index:2;text-align:center;margin-bottom:12px;}
+.fb-pod-title{
+  font-family:"Noto Kufi Arabic","Cairo",sans-serif;
+  font-size:17px;font-weight:900;display:inline-block;
+  background:linear-gradient(100deg,#fde047 8%,#fff7d6 30%,#fbbf24 55%,#fde047 85%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 2px 14px rgba(251,191,36,.35));
+}
+.fb-pod-title::before,.fb-pod-title::after{content:'✦';margin:0 10px;opacity:.6;}
+.fb-pod-sub{margin-top:4px;font-size:11.5px;font-weight:800;color:rgba(206,220,255,.72);}
+.fb-pod-sub b{color:#ffd75e;}
+
+/* ── فلتر البوديوم (منعزل — بيأثر على البوديوم بس) ── */
+.fb-pod-fbar{
+  position:relative;z-index:2;
+  display:flex;align-items:flex-end;gap:9px;flex-wrap:wrap;justify-content:center;
+  background:rgba(13,22,52,.62);
+  border:1px solid rgba(130,160,255,.26);
+  border-radius:16px;padding:10px 14px;margin:0 auto;max-width:900px;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 12px 30px -14px rgba(0,0,0,.6);
+}
+.fb-pod-fbar>label{display:flex;flex-direction:column;gap:4px;font-size:10.5px;font-weight:800;color:rgba(190,208,255,.85);}
+.fb-pod-fbar input{
+  font-family:inherit;font-size:12.5px;font-weight:700;color:#eaf1ff;
+  background:rgba(8,14,36,.85);border:1px solid rgba(130,160,255,.28);
+  border-radius:10px;padding:7px 9px;color-scheme:dark;transition:.15s;
+}
+.fb-pod-fbar input:focus{outline:none;border-color:#5b8cff;box-shadow:0 0 0 3px rgba(91,140,255,.22);}
+.fb-pf-apply{
+  font-family:inherit;font-weight:900;font-size:12.5px;color:#081020;cursor:pointer;
+  background:linear-gradient(135deg,#fde047,#fbbf24);border:none;border-radius:11px;
+  padding:9px 18px;box-shadow:0 6px 18px -6px rgba(251,191,36,.55);transition:.16s;
+}
+.fb-pf-apply:hover{transform:translateY(-1px);box-shadow:0 10px 24px -6px rgba(251,191,36,.7);}
+.fb-pf-clear{
+  font-family:inherit;font-weight:800;font-size:12px;color:#ffb4b4;cursor:pointer;
+  background:rgba(220,38,38,.14);border:1px solid rgba(248,113,113,.4);border-radius:11px;padding:8px 13px;transition:.15s;
+}
+.fb-pf-clear:hover{background:rgba(220,38,38,.26);}
+.fb-pf-chip{
+  font-family:inherit;font-weight:800;font-size:11.5px;color:rgba(200,215,255,.9);cursor:pointer;
+  background:rgba(120,150,255,.10);border:1px solid rgba(130,160,255,.28);border-radius:999px;padding:7px 13px;transition:.15s;
+}
+.fb-pf-chip:hover{background:rgba(120,150,255,.2);}
+.fb-pf-chip.on{background:linear-gradient(135deg,#1877f2,#0a52c4);color:#fff;border-color:transparent;box-shadow:0 4px 14px -4px rgba(24,119,242,.6);}
+
+/* ── الأرينا ── */
+.fb-pod-arena{position:relative;z-index:2;display:flex;align-items:flex-end;justify-content:center;gap:16px;padding-top:34px;min-height:120px;}
+.fb-pod-empty,.fb-pod-loading{
+  position:relative;z-index:2;flex:1;text-align:center;padding:44px 12px 58px;
+  font-weight:800;font-size:13.5px;color:rgba(200,214,250,.8);
+}
+.fb-pod-step{
+  flex:1;max-width:200px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  animation:fbPodRise .7s cubic-bezier(.34,1.56,.64,1) both;
+}
+.fb-pod-r1{animation-delay:.30s} .fb-pod-r2{animation-delay:.18s} .fb-pod-r3{animation-delay:.22s}
+.fb-pod-r4{animation-delay:.10s} .fb-pod-r5{animation-delay:.14s}
+.fb-pod-av-wrap{position:relative;}
+.fb-pod-crown{
+  position:absolute;top:-32px;left:50%;transform:translateX(-50%);
+  font-size:27px;z-index:4;pointer-events:none;
+  filter:drop-shadow(0 4px 12px rgba(251,191,36,.55));
+  animation:fbCrownFloat 2.6s ease-in-out infinite;
+}
+/* حلقة ميدالية بتلف حوالين الأفاتار (طبقة الجراديان بتلف تحت الأفاتار فتبان في الرِيم بس) */
+.fb-pod-ring{position:relative;border-radius:50%;padding:4px;overflow:hidden;}
+.fb-pod-ring::before{
+  content:'';position:absolute;inset:-30%;border-radius:50%;
+  animation:fbRingSpin 3.4s linear infinite;
+}
+.fb-pod-ring.r1::before{background:conic-gradient(#fde047,#b45309,#fff7d6,#fbbf24,#fde047);}
+.fb-pod-ring.r2::before{background:conic-gradient(#f1f5f9,#64748b,#ffffff,#cbd5e1,#f1f5f9);}
+.fb-pod-ring.r3::before{background:conic-gradient(#fbbf24,#92400e,#fcd34d,#d97706,#fbbf24);}
+.fb-pod-ring.r4::before{background:conic-gradient(#0cc8c2,#0a7570,#67e8f9,#0ea5a0,#0cc8c2);}
+.fb-pod-ring.r5::before{background:conic-gradient(#a5b4fc,#4338ca,#c7d2fe,#818cf8,#a5b4fc);}
+.fb-pod-av{
+  position:relative;z-index:1;overflow:hidden;
+  width:70px;height:70px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:20px;color:#fff;
+  border:2px solid rgba(6,10,26,.92);
+}
+.fb-pod-av span{position:relative;z-index:1;}
+.fb-pod-av img{
+  position:absolute;inset:0;width:100%;height:100%;z-index:2;
+  object-fit:cover;object-position:center 22%;
+  image-rendering:-webkit-optimize-contrast;backface-visibility:hidden;
+}
+.fb-pod-r1 .fb-pod-av{width:96px;height:96px;font-size:28px;}
+.fb-pod-r1 .fb-pod-ring{animation:fbGoldPulse 2.4s ease-in-out infinite;}
+.fb-pod-rank{
+  position:absolute;top:-8px;right:-8px;z-index:5;
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:11px;color:#0c0c0c;
+  border:2px solid rgba(6,10,26,.9);
+}
+.fb-pod-info{text-align:center;max-width:100%}
+.fb-pod-name{font-size:12.5px;font-weight:800;color:#f2f6ff;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px;text-shadow:0 2px 8px rgba(0,0,0,.4);}
+.fb-pod-meta{font-size:11px;color:rgba(190,205,240,.75);font-weight:700;}
+.fb-pod-meta strong{color:#7db4ff;}
+.fb-pod-block{
+  width:100%;border-radius:14px 14px 0 0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  position:relative;overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);border-bottom:none;
+  box-shadow:inset 0 4px 0 rgba(255,255,255,.22),0 -10px 30px rgba(24,119,242,.22);
+}
+.fb-pod-shine{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden;border-radius:inherit;}
+.fb-pod-shine::before{
+  content:'';position:absolute;top:-20%;bottom:-20%;left:0;width:40%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.3),transparent);
+  animation:fbSheen 4.2s ease-in-out infinite;
+}
+.fb-pod-block-num{
+  position:relative;z-index:2;
+  font-weight:900;font-size:27px;color:rgba(255,255,255,.94);line-height:1;
+  font-family:"Noto Kufi Arabic","Cairo",sans-serif;font-variant-numeric:tabular-nums;
+  text-shadow:0 2px 10px rgba(0,0,0,.35);
+}
+.fb-pod-block-lbl{position:relative;z-index:2;font-size:10px;font-weight:800;color:rgba(255,255,255,.72);}
+.fb-pod-block::before,.fb-pod-block::after{
+  content:'';position:absolute;width:220%;height:220%;left:-60%;bottom:-160%;pointer-events:none;
+}
+.fb-pod-block::before{
+  border-radius:42% 58% 48% 52%;background:rgba(255,255,255,.18);
+  animation:fbWave1 5s linear infinite,fbWaterRise 1.8s cubic-bezier(.22,.9,.32,1) both;
+}
+.fb-pod-block::after{
+  border-radius:55% 45% 52% 48%;background:rgba(255,255,255,.10);
+  animation:fbWave2 8s linear infinite,fbWaterRise 1.8s cubic-bezier(.22,.9,.32,1) .2s both;
+}
+/* Rank colors — قمة ذهبية/فضية/برونزية للتوب ٣ */
+.fb-pod-r1 .fb-pod-rank{background:linear-gradient(135deg,#fde047,#fbbf24);box-shadow:0 4px 12px rgba(251,191,36,.5);}
+.fb-pod-r1 .fb-pod-block{background:linear-gradient(170deg,#1877f2 0%,#0a52c4 55%,#063d9e 100%);height:150px;box-shadow:inset 0 4px 0 rgba(253,224,71,.8),0 -12px 36px rgba(251,191,36,.28);}
+.fb-pod-r2 .fb-pod-rank{background:linear-gradient(135deg,#e2e8f0,#cbd5e1);}
+.fb-pod-r2 .fb-pod-block{background:linear-gradient(170deg,#3b8bf5 0%,#1877f2 55%,#0a52c4 100%);height:110px;box-shadow:inset 0 4px 0 rgba(226,232,240,.75),0 -10px 30px rgba(24,119,242,.22);}
+.fb-pod-r3 .fb-pod-rank{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;}
+.fb-pod-r3 .fb-pod-block{background:linear-gradient(170deg,#60a5fa 0%,#3b8bf5 55%,#1877f2 100%);height:92px;box-shadow:inset 0 4px 0 rgba(245,158,11,.75),0 -10px 30px rgba(24,119,242,.2);}
+.fb-pod-r4 .fb-pod-rank{background:linear-gradient(135deg,#0cc8c2,#0ea5a0);color:#fff;}
+.fb-pod-r4 .fb-pod-block{background:linear-gradient(170deg,#0cc8c2 0%,#0ea5a0 55%,#0a7570 100%);height:70px;}
+.fb-pod-r5 .fb-pod-rank{background:linear-gradient(135deg,#a5b4fc,#818cf8);color:#fff;}
+.fb-pod-r5 .fb-pod-block{background:linear-gradient(170deg,#a5b4fc 0%,#818cf8 55%,#4338ca 100%);height:56px;}
+@media(max-width:680px){
+  .fb-pod-arena{gap:8px;padding-top:30px;}
+  .fb-pod-av{width:50px;height:50px;font-size:16px;}
+  .fb-pod-r1 .fb-pod-av{width:64px;height:64px;font-size:20px;}
+  .fb-pod-crown{font-size:21px;top:-26px;}
+  .fb-pod-r1 .fb-pod-block{height:118px;} .fb-pod-r2 .fb-pod-block{height:88px;}
+  .fb-pod-r3 .fb-pod-block{height:72px;} .fb-pod-r4 .fb-pod-block{height:56px;} .fb-pod-r5 .fb-pod-block{height:44px;}
+  .fb-pod-block-num{font-size:20px;} .fb-pod-name{font-size:11px;max-width:88px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .fb-pod-block::before,.fb-pod-block::after{animation:none;bottom:-65%;}
+  .fb-pod-step,.fb-pod-crown,.fb-pod-ring::before,.fb-pod-shine::before,.fb-pod-wrap::before,.fb-pod-r1 .fb-pod-ring{animation:none;}
+}
+/* FB Best-5 list */
+.fb-best5{
+  background:
+    radial-gradient(700px 280px at 95% -20%,color-mix(in srgb,var(--fb) 12%,transparent),transparent 60%),
+    linear-gradient(135deg,color-mix(in srgb,var(--fb) 7%,var(--card)),var(--card));
+  border:1px solid color-mix(in srgb,var(--fb) 22%,var(--border));
+  border-radius:var(--radius);box-shadow:var(--shadow-lg);overflow:hidden;margin-bottom:14px;
+}
+.fb-best5-hdr{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  padding:16px 22px;border-bottom:1px solid color-mix(in srgb,var(--fb) 12%,var(--border));
+  background:color-mix(in srgb,var(--fb) 5%,var(--card));
+}
+.fb-best5-title{font-size:15.5px;font-weight:900;color:var(--fb);display:flex;align-items:center;gap:8px;}
+.fb-best5-body{padding:12px 18px 18px;display:flex;flex-direction:column;gap:8px;}
+.fb-b5-row{
+  display:grid;grid-template-columns:34px 44px 1fr auto auto;
+  align-items:center;gap:13px;
+  background:color-mix(in srgb,var(--fb) 3%,var(--card-2));
+  border:1px solid color-mix(in srgb,var(--fb) 10%,var(--border));
+  border-radius:13px;padding:11px 15px;transition:.18s;
+}
+.fb-b5-row:hover{background:color-mix(in srgb,var(--fb) 8%,var(--card));border-color:color-mix(in srgb,var(--fb) 28%,var(--border));transform:translateX(-3px);}
+.fb-b5-rank{
+  width:34px;height:34px;border-radius:50%;
+  display:grid;place-items:center;font-weight:900;font-size:14px;color:var(--fb);
+  background:color-mix(in srgb,var(--fb) 12%,transparent);
+}
+.fb-b5-row.r1 .fb-b5-rank{background:linear-gradient(135deg,#fde047,#fbbf24);color:#0c0c0c;}
+.fb-b5-row.r2 .fb-b5-rank{background:linear-gradient(135deg,#e2e8f0,#cbd5e1);color:#0c0c0c;}
+.fb-b5-row.r3 .fb-b5-rank{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;}
+.fb-b5-av{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;font-weight:900;font-size:16px;color:#fff;position:relative;overflow:hidden;}
+.fb-b5-av span{position:relative;z-index:1;}
+.fb-b5-av img{position:absolute;inset:0;width:100%;height:100%;z-index:2;object-fit:cover;object-position:center 22%;image-rendering:-webkit-optimize-contrast;}
+.fb-b5-main{min-width:0;}
+.fb-b5-name{font-size:14px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fb-b5-tag{
+  display:inline-block;margin-top:2px;font-family:monospace;font-size:11px;font-weight:900;
+  background:color-mix(in srgb,var(--fb) 14%,transparent);color:var(--fb);
+  padding:1px 8px;border-radius:999px;border:1px solid color-mix(in srgb,var(--fb) 25%,transparent);
+}
+.fb-b5-stat{text-align:center;min-width:54px;}
+.fb-b5-stat-num{font-size:20px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums;}
+.fb-b5-stat-lbl{font-size:9.5px;color:var(--muted);font-weight:700;margin-top:2px;}
+@media(max-width:600px){
+  .fb-b5-row{grid-template-columns:34px 44px 1fr auto;gap:9px;}
+  .fb-b5-row .fb-b5-stat:last-child{display:none;}
+}
+
+/* ════════════════ PREMIUM REDESIGN LAYER (2026-07-05) ════════════════
+   مقتبس من my-fb.html: لاينر conic دوّار + جراديانت متحرك + فريمات سكاشن.
+   طبقة أوفررايد في آخر الـ<style> — بتكسب على القواعد الأقدم بنفس التخصيص. */
+@property --liner-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes liner-rotate{to{--liner-angle:360deg}}
+@keyframes pt-orb{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(26px,-20px) scale(1.08)}}
+@keyframes pt-shine{to{background-position:200% center}}
+@keyframes pt-pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--green) 60%,transparent)}70%,100%{box-shadow:0 0 0 9px transparent}}
+@keyframes pt-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ── Header premium ── */
+.hdr{border-bottom:none}
+.hdr::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--fb) 22%,var(--teal) 52%,var(--gold) 80%,transparent);opacity:.6}
+.brand-logo{box-shadow:0 10px 24px -8px color-mix(in srgb,var(--fb) 85%,transparent)}
+.iconbtn:hover{transform:translateY(-1px);box-shadow:var(--shadow-lg)}
+.av{box-shadow:0 0 0 2px color-mix(in srgb,var(--fb) 45%,transparent),0 6px 14px -6px color-mix(in srgb,var(--fb) 60%,transparent)}
+
+/* ── Hero — لوحة التشغيل ── */
+.hero{isolation:isolate;padding:28px 28px 24px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--fb) 17%,var(--card)),color-mix(in srgb,var(--navy3) 9%,var(--card)) 55%,var(--card))}
+.hero::before{content:"";position:absolute;inset:auto -60px -90px auto;width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,color-mix(in srgb,var(--teal) 50%,transparent),transparent 70%);
+  filter:blur(8px);opacity:.5;z-index:-1;animation:pt-orb 9s ease-in-out infinite}
+.hero::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;
+  background:conic-gradient(from var(--liner-angle),transparent 0 62%,color-mix(in srgb,var(--fb) 80%,#fff) 76%,color-mix(in srgb,var(--teal) 80%,#fff) 88%,transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  animation:liner-rotate 6s linear infinite;pointer-events:none;z-index:1}
+.hero h1{font-size:26px;display:inline-block;
+  background:linear-gradient(90deg,var(--ink),var(--fb) 45%,var(--teal) 70%,var(--ink));
+  background-size:200% auto;-webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;animation:pt-shine 7s linear infinite}
+.hero-sub{color:var(--text);font-size:14px;max-width:780px}
+.hero-chips{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px;position:relative;z-index:2}
+.hchip{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800;color:var(--text);
+  background:color-mix(in srgb,var(--card) 72%,transparent);border:1px solid var(--border);
+  border-radius:999px;padding:7px 14px;backdrop-filter:blur(4px);text-decoration:none;transition:.2s}
+.hchip.live{border-color:color-mix(in srgb,var(--green) 42%,transparent);color:var(--green)}
+.hchip.link{cursor:pointer}
+.hchip.link:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.hchip.link.green{background:color-mix(in srgb,var(--green) 13%,transparent);color:var(--green);border-color:color-mix(in srgb,var(--green) 38%,transparent)}
+.hchip.link.fb{background:color-mix(in srgb,var(--fb) 13%,transparent);color:var(--fb);border-color:color-mix(in srgb,var(--fb) 38%,transparent)}
+.hdot{width:8px;height:8px;border-radius:50%;background:var(--green);flex:none;
+  box-shadow:0 0 0 0 color-mix(in srgb,var(--green) 60%,transparent);animation:pt-pulse 2s infinite}
+
+/* ── Section frames — كل سكشن معزول بلاينر بريميوم دوّار ── */
+#replies{--sec-acc:var(--fb)} #live24{--sec-acc:var(--teal)} #shifts{--sec-acc:var(--green)} #entry{--sec-acc:var(--gold)}
+main section{position:relative;isolation:isolate;margin:26px 0;padding:22px 22px 16px;
+  background:color-mix(in srgb,var(--card) 82%,var(--bg2));
+  border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);
+  overflow:hidden;scroll-margin-top:140px;transition:box-shadow .3s}
+main section:hover{box-shadow:var(--shadow-lg)}
+main section::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.6px;
+  background:conic-gradient(from var(--liner-angle),transparent 0 58%,
+    color-mix(in srgb,var(--sec-acc,var(--fb)) 85%,#fff) 72%,
+    color-mix(in srgb,var(--teal) 85%,#fff) 86%,transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  animation:liner-rotate 11s linear infinite;pointer-events:none;z-index:2}
+main section .card{background:color-mix(in srgb,var(--card) 62%,transparent);box-shadow:none}
+main section .card:hover{border-color:var(--border2)}
+.sec-h{margin-bottom:16px;position:relative;z-index:3}
+.sec-h .ico{width:38px;height:38px;border-radius:12px;font-size:18px;color:var(--sec-acc,var(--fb));
+  background:linear-gradient(135deg,color-mix(in srgb,var(--sec-acc,var(--fb)) 22%,transparent),color-mix(in srgb,var(--sec-acc,var(--fb)) 8%,transparent));
+  box-shadow:0 8px 18px -10px color-mix(in srgb,var(--sec-acc,var(--fb)) 75%,transparent)}
+.sec-h .ico svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hchip svg{width:15px;height:15px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.btnp svg,.sec-open-btn svg{width:16px;height:16px;flex:none;vertical-align:-3px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.stat-card .si svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ch-ico{color:var(--fb)}
+.ch-ico svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── Collapsible section (الإدخال اليدوي — مخفي بالديفولت) ── */
+.sec-open-btn{margin-inline-start:auto;flex:none;font-family:inherit;font-weight:900;font-size:12.5px;color:#fff;
+  cursor:pointer;border:none;border-radius:999px;padding:9px 19px;
+  background:linear-gradient(135deg,var(--sec-acc,var(--fb)),color-mix(in srgb,var(--sec-acc,var(--fb)) 55%,#000));
+  box-shadow:0 8px 18px -8px color-mix(in srgb,var(--sec-acc,var(--fb)) 85%,transparent);transition:.2s}
+.sec-open-btn:hover{transform:translateY(-1px)}
+.sec-open-btn:active{transform:scale(.97)}
+section.collapsed .sec-body{display:none}
+section.collapsed{padding-bottom:16px}
+.sec-body{animation:pt-rise .35s both}
+
+/* ── KPI glass premium ── */
+.kpi{position:relative;overflow:hidden;animation:pt-rise .4s both;
+  background:linear-gradient(150deg,#fff 0%,rgba(240,244,255,.65) 100%);
+  border:1px solid rgba(24,119,242,.12);
+  box-shadow:0 4px 20px rgba(13,31,60,.07),inset 0 1px 0 rgba(255,255,255,.9);
+  transition:transform .25s,box-shadow .25s,border-color .25s}
+.kpi::before{content:"";position:absolute;top:0;inset-inline-start:0;inset-inline-end:0;height:3px;border-radius:3px 3px 0 0;
+  background:linear-gradient(90deg,var(--sec-acc,var(--fb)),color-mix(in srgb,var(--sec-acc,var(--fb)) 25%,transparent))}
+.kpi:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--sec-acc,var(--fb)) 28%,var(--border));
+  box-shadow:0 12px 34px rgba(13,31,60,.12),0 4px 16px -4px color-mix(in srgb,var(--sec-acc,var(--fb)) 30%,transparent)}
+.kpi .v{font-size:27px;
+  background:linear-gradient(135deg,var(--ink) 25%,color-mix(in srgb,var(--sec-acc,var(--fb)) 85%,var(--ink)) 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.kpi .v small{-webkit-text-fill-color:var(--muted)}
+[data-theme="dark"] .kpi{background:linear-gradient(150deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+  border-color:rgba(255,255,255,.1);box-shadow:0 4px 24px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.08)}
+
+/* ── بار الساعة الحالية في «آخر ٢٤ ساعة» ── */
+.bar-row.now .bar-fill{background:linear-gradient(90deg,var(--gold),#e7c877)}
+.bar-row.now .h{color:var(--gold);font-weight:900}
+.src-badge{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:900;border-radius:999px;padding:3px 10px;vertical-align:middle}
+.src-badge.graph{background:color-mix(in srgb,var(--green) 15%,transparent);color:var(--green)}
+.src-badge.cache{background:color-mix(in srgb,var(--amber) 16%,transparent);color:var(--amber)}
+
+/* ── CoreUI-style gradient stat widgets ── */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.stat-card{position:relative;overflow:hidden;border-radius:16px;padding:16px 18px 14px;color:#fff;
+  box-shadow:0 12px 28px -12px rgba(13,31,60,.45);animation:pt-rise .4s both;transition:transform .25s,box-shadow .25s}
+.stat-card:nth-child(1){animation-delay:.02s}.stat-card:nth-child(2){animation-delay:.07s}
+.stat-card:nth-child(3){animation-delay:.12s}.stat-card:nth-child(4){animation-delay:.17s}
+.stat-card:hover{transform:translateY(-4px);box-shadow:0 18px 40px -14px rgba(13,31,60,.55)}
+.stat-card::before{content:"";position:absolute;inset:auto -34px -46px auto;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.13)}
+.stat-card::after{content:"";position:absolute;inset:auto auto -60px -30px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.07)}
+.stat-card .sv{font-family:"Noto Kufi Arabic","Cairo",sans-serif;font-size:28px;font-weight:900;line-height:1.15;font-variant-numeric:tabular-nums;position:relative;z-index:1}
+.stat-card .sl{font-size:12px;font-weight:800;opacity:.88;margin-top:3px;position:relative;z-index:1}
+.stat-card .si{position:absolute;inset-inline-end:14px;top:12px;font-size:28px;opacity:.4;z-index:1}
+.stat-card.v-blue{background:linear-gradient(135deg,#1877f2,#0a52c4)}
+.stat-card.v-violet{background:linear-gradient(135deg,#7c3aed,#4c1d95)}
+.stat-card.v-teal{background:linear-gradient(135deg,#0cc8c2,#0a7570)}
+.stat-card.v-green{background:linear-gradient(135deg,#12b76a,#0a7f52)}
+.stat-card.v-amber{background:linear-gradient(135deg,#f0a92e,#c47f13)}
+.stat-card.v-red{background:linear-gradient(135deg,#f0604f,#c23a2b)}
+.stat-card.v-indigo{background:linear-gradient(135deg,#6366f1,#3730a3)}
+/* سبارك لاين أبيض شفاف أسفل الكارت — توقيع CoreUI widget-stat */
+@keyframes sp-grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.stat-card.has-spark{padding-bottom:38px}
+.stat-card .sp-bars{position:absolute;left:10px;right:10px;bottom:6px;height:26px;
+  display:flex;align-items:flex-end;gap:2px;z-index:1;pointer-events:none}
+.stat-card .sp-bars i{flex:1;min-width:2px;border-radius:2px 2px 0 0;background:rgba(255,255,255,.4);
+  transform-origin:bottom;animation:sp-grow .6s cubic-bezier(.22,.9,.32,1) both}
+.stat-card .sp-bars i:nth-child(odd){animation-delay:.08s}
+.stat-card .sp-bars i.hot{background:rgba(255,255,255,.85)}
+@media(prefers-reduced-motion:reduce){.stat-card .sp-bars i{animation:none}}
+
+/* ── Side dock (CoreUI sidebar vibe — ديسكتوب فقط) ── */
+.sdock{position:fixed;inset-inline-start:18px;top:50%;transform:translateY(-50%);z-index:60;
+  display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 9px;
+  background:linear-gradient(180deg,#141f3d,#0d1730);border:1px solid rgba(130,160,255,.22);
+  border-radius:22px;box-shadow:0 24px 60px -18px rgba(3,8,30,.65)}
+.sd-logo{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:19px;
+  background:linear-gradient(135deg,var(--fb),#0a52c4);box-shadow:0 10px 22px -8px rgba(24,119,242,.7);margin-bottom:4px}
+.sd-item{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;
+  color:rgba(210,224,255,.85);text-decoration:none;transition:.2s}
+.sd-item svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sd-item:hover{background:rgba(120,150,255,.15);transform:translateY(-1px);color:#fff}
+.sd-item.act{background:linear-gradient(135deg,var(--fb),#0a52c4);color:#fff;box-shadow:0 8px 18px -6px rgba(24,119,242,.65)}
+.sd-sep{width:26px;height:1px;background:rgba(130,160,255,.25);margin:4px 0}
+.sd-logo svg{width:22px;height:22px;fill:#fff}
+@media(max-width:1239px){.sdock{display:none!important}}
+
+/* ── برومبت «اختر الفترة يدوياً» ── */
+.pick-note{border:1.5px dashed color-mix(in srgb,var(--fb) 40%,var(--border2));border-radius:14px;
+  padding:22px 18px;text-align:center;color:var(--muted);font-weight:800;font-size:13.5px;
+  background:color-mix(in srgb,var(--fb) 4%,transparent);grid-column:1/-1}
+
+/* ── زرار "تطبيق" بريميوم (فلتر كروت الشفتات) — حلقة سميكة برّه الزرار (زي .ord-det-wrap) مش هيرلاين خافت ── */
+@property --apply-angle{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes apply-spin{to{--apply-angle:360deg}}
+.btnp-apply-wrap{display:inline-flex;padding:3px;border-radius:15px;
+  background:conic-gradient(from var(--apply-angle),var(--gold),var(--teal) 33%,var(--fb) 66%,var(--gold) 100%);
+  animation:apply-spin 2.6s linear infinite;
+  box-shadow:0 10px 28px -8px color-mix(in srgb,var(--fb) 65%,transparent);
+  transition:transform .18s,box-shadow .18s}
+.btnp-apply-wrap:hover{transform:translateY(-2px);box-shadow:0 18px 40px -8px color-mix(in srgb,var(--fb) 80%,transparent)}
+.btnp-apply-wrap:active{transform:translateY(0) scale(.96)}
+.btnp-apply{display:inline-flex;align-items:center;gap:7px;
+  font-family:inherit;font-weight:900;font-size:14px;color:#fff;cursor:pointer;
+  padding:9px 20px;border:none;border-radius:12px;
+  background:linear-gradient(120deg,var(--fb),var(--teal) 60%,var(--fb));
+  background-size:220% auto;animation:pt-shine 4.5s linear infinite}
+.btnp-apply svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+@media(prefers-reduced-motion:reduce){
+  .hero::before,.hero::after,.hero h1,main section::after,.hdot,.ch-card,.kpi,.sec-body{animation:none}
+  .btnp-apply-wrap,.btnp-apply{animation:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ░░ Access gate ░░ -->
+<div id="gate">
+  <div class="g-card">
+    <h2 id="gateTitle">جارٍ التحقّق…</h2>
+    <p id="gateMsg">لحظة واحدة.</p>
+    <a class="iconbtn" href="/index.html" style="margin:0 auto">← الرجوع للرئيسية</a>
+  </div>
+</div>
+
+<!-- ░░ Header ░░ -->
+<header class="hdr" id="mainHdr" style="display:none">
+  <div class="hdr-in">
+    <div class="brand">
+      <div class="brand-logo"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.44 2.9h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z"/></svg></div>
+      <div class="brand-t"><b>فيسبوك</b><span>Pharma Triage · لوحة تشغيل الصفحة</span></div>
+    </div>
+    <div class="hdr-sp"></div>
+    <a class="iconbtn" href="/index.html"><svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><path d="M9 21V9h6v12"/></svg><span>الرئيسية</span></a>
+    <button class="iconbtn" id="agentTagsBtn" style="display:none" title="إدارة هشتاجات الفريق"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg><span>هشتاجات</span></button>
+    <button class="iconbtn" id="branchMgrBtn" style="display:none;border-color:color-mix(in srgb,var(--blue) 40%,var(--border));color:var(--blue)" title="إدارة الفروع (أدمن)"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M14 9h1"/><path d="M9 13h1"/><path d="M14 13h1"/><path d="M10 21v-4h4v4"/></svg><span>الفروع</span></button>
+    <button class="iconbtn" id="ordersDrawerBtn" style="display:none;background:linear-gradient(135deg,color-mix(in srgb,var(--teal) 12%,var(--card)),var(--card));border-color:color-mix(in srgb,var(--teal) 40%,var(--border));color:var(--teal);font-weight:900" title="أوردراتنا كلنا"><svg viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg><span>أوردراتنا كلنا</span></button>
+    <button class="iconbtn" id="themeBtn" title="الوضع الليلي"><svg id="themeIco" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+    <div class="hdr-user"><div class="av" id="hdrAv">U</div></div>
+  </div>
+</header>
+
+<!-- ░░ Side dock — سايدبار أيقونات بستايل CoreUI (ديسكتوب فقط) ░░ -->
+<aside class="sdock" id="sdock" style="display:none">
+  <div class="sd-logo" title="لوحة تشغيل فيسبوك"><svg viewBox="0 0 24 24"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.44 2.9h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94z"/></svg></div>
+  <a class="sd-item" href="#replies" title="ردود الزملاء (لايف)"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></a>
+  <a class="sd-item" href="#live24" title="آخر ٢٤ ساعة"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></a>
+  <a class="sd-item" href="#shifts" title="مواعيد وشفتات"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></a>
+  <a class="sd-item" href="#entry" title="الإدخال اليدوي"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></a>
+  <div class="sd-sep"></div>
+  <a class="sd-item" href="/my-fb.html" title="لوحتي الشخصية"><svg viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+  <a class="sd-item" href="/fb-live.html" title="داش بورد لايف"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></a>
+</aside>
+
+<!-- ░░ App ░░ -->
+<main class="wrap" id="appView" style="display:none">
+
+  <div class="hero">
+    <h1>لوحة تشغيل صفحة الفيسبوك</h1>
+    <p class="hero-sub">مركز عمليات الفريق — الأرقام بتيجي من <b>ردود الزملاء الفعلية على فيسبوك</b> (بالهاشتاج) في الفترة اللي تحدّدها بنفسك.</p>
+    <div class="hero-chips">
+      <span class="hchip live"><span class="hdot"></span> متصل بفيسبوك مباشرة</span>
+      <span class="hchip"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg> الأرقام بتتجاب بزرار التحليل</span>
+      <span class="hchip"><svg viewBox="0 0 24 24"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg> كل الفترات يدوية</span>
+      <a href="/my-fb.html" class="hchip link green"><svg viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> لوحتي الشخصية</a>
+      <a href="/fb-live.html" class="hchip link fb"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> داش بورد لايف</a>
+    </div>
+  </div>
+
+  <!-- ═══ الفترة + جلب البيانات الفعلية ═══ -->
+  <div class="period">
+    <div class="pb-main"><span class="ic">📅</span><span>الفترة:</span><span class="pb-dates" id="periodDates">—</span></div>
+    <span class="pb-sp"></span>
+    <span class="pb-note">🕹️ مفيش تواريخ تلقائية — كل الفترات بتتحدّد يدوياً</span>
+  </div>
+  <div class="lvbar" id="anBar">
+    <label>من تاريخ<input type="date" id="anFromDate"></label>
+    <label>الساعة<input type="time" id="anFromTime" value="00:00"></label>
+    <label>إلى تاريخ<input type="date" id="anToDate"></label>
+    <label>الساعة<input type="time" id="anToTime" value="23:59"></label>
+    <button class="btnp" id="anFetchBtn" style="padding:9px 18px;display:inline-flex;align-items:center;gap:7px"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg> جلب وتحليل ردود الزملاء</button>
+    <span class="sp"></span>
+    <button class="lvchip" id="anCycle">هذه الدورة (٢٠→)</button>
+    <button class="lvchip" id="anToday">النهاردة</button>
+    <button class="lvchip" id="anYesterday">امبارح</button>
+  </div>
+  <div id="anStatus" class="note" style="display:none"></div>
+
+  <!-- ═══ FB TEAM PODIUM — بيتملى من fbLog فوراً عند تحميل الصفحة + فلتر منعزل ═══ -->
+  <div id="fbPodium" style="display:none">
+    <div class="fb-pod-wrap">
+      <div class="fb-pod-hdr">
+        <div class="fb-pod-title">🏆 أبطال الشفت</div>
+        <div class="fb-pod-sub" id="podFilterLbl">الفترة الحالية</div>
+      </div>
+      <div class="fb-pod-fbar" id="podFilterBar">
+        <label>من تاريخ<input type="date" id="podFromDate"></label>
+        <label>الساعة<input type="time" id="podFromTime" value="00:00"></label>
+        <label>إلى تاريخ<input type="date" id="podToDate"></label>
+        <label>الساعة<input type="time" id="podToTime" value="23:59"></label>
+        <button class="fb-pf-apply" id="podApplyBtn">🎯 تطبيق</button>
+        <button class="fb-pf-clear" id="podClearBtn" style="display:none">✕ إلغاء الفلتر</button>
+        <button class="fb-pf-chip" id="podToday">النهاردة</button>
+        <button class="fb-pf-chip" id="podYesterday">امبارح</button>
+        <button class="fb-pf-chip" id="podCycle">الدورة (٢٠→)</button>
+      </div>
+      <div class="fb-pod-arena" id="fbPodArena"></div>
+    </div>
+    <div class="fb-best5" id="fbBest5" style="display:none">
+      <div class="fb-best5-hdr">
+        <div class="fb-best5-title">🏅 أفضل الزملاء (Top 5)</div>
+        <span style="font-size:11.5px;color:var(--muted);font-weight:700" id="fbBest5Sub">ترتيب حسب المحادثات</span>
+      </div>
+      <div class="fb-best5-body" id="fbBest5Body"></div>
+    </div>
+  </div>
+
+  <nav class="nav" id="mainNav">
+    <a href="#replies"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg><span>ردود الزملاء (لايف)</span></a>
+    <a href="#live24"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span>آخر ٢٤ ساعة</span></a>
+    <a href="#shifts"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>مواعيد وشفتات</span></a>
+    <a href="#entry"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg><span>الإدخال اليدوي</span></a>
+  </nav>
+
+  <!-- ═══ REPLIES (live hashtag analysis) ═══ -->
+  <section id="replies">
+    <div class="sec-h"><div class="ico"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></div><div><h2>أداء الزملاء — ردود فيسبوك (لايف)</h2><div class="sub">كل زميل رد على كام محادثة + كام رد، من فيسبوك مباشرة بالهاشتاج، في الفترة المختارة فوق</div></div></div>
+    <div class="stat-grid" id="anKpis" style="margin-bottom:14px"></div>
+    <!-- بورد الأوردرات المستقل — عدد أوردرات كل زميل (الإجمالي + القيمة في الرد) -->
+    <div class="card" id="anOrdersCard" style="display:none;margin-bottom:14px"></div>
+    <div class="card" id="anResultCard"><div style="padding:24px;text-align:center;color:var(--muted);font-weight:700;font-size:13.5px">اختر الفترة فوق واضغط <b>«جلب وتحليل ردود الزملاء»</b> عشان يجيب الأرقام الفعلية من فيسبوك.</div></div>
+    <div class="card" id="anDetailCard" style="display:none">
+      <h3>👁 عرض ردود زميل معيّن</h3>
+      <select id="anAgentPicker" style="width:100%;max-width:340px;font-family:inherit;font-size:13.5px;font-weight:700;color:var(--text);background:var(--card-2);border:1px solid var(--border);border-radius:10px;padding:9px 11px"><option value="">— اختر زميل —</option></select>
+      <div id="anDetailPanel" style="margin-top:14px"></div>
+    </div>
+  </section>
+
+  <!-- ═══ LIVE 24H ═══ -->
+  <section id="live24">
+    <div class="sec-h">
+      <div class="ico"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+      <div><h2>آخر ٢٤ ساعة — لايف</h2><div class="sub" id="live24Sub">اضغط زرار الجلب عشان تجيب الأرقام الفعلية من فيسبوك</div></div>
+      <button class="sec-open-btn" id="live24FetchBtn" title="بيفحص محادثات آخر ٢٤ ساعة من فيسبوك مباشرة"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg> جلب من فيسبوك</button>
+    </div>
+    <div id="live24Status" class="note" style="display:none"></div>
+    <div class="stat-grid" id="live24Kpis" style="margin-bottom:14px"></div>
+    <div class="card" id="live24ChartCard" style="display:none">
+      <h3>توزيع الرسائل الداخلة بالساعة <span class="tag fb">آخر ٢٤ ساعة</span> <span id="live24Src"></span></h3>
+      <div class="bars" id="live24Bars"></div>
+    </div>
+    <div class="placeholder" id="live24Empty" style="display:none">
+      لسه مفيش أرقام معروضة — اضغط <b>«📡 جلب من فيسبوك»</b> فوق عشان يفحص آخر ٢٤ ساعة مباشرة.
+    </div>
+  </section>
+
+  <!-- ═══ DIRECT ENTRY (replaces sheets) — مطوي بالديفولت ═══ -->
+  <section id="entry" class="collapsed">
+    <div class="sec-h">
+      <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
+      <div><h2>الإدخال اليدوي</h2><div class="sub">تسجيل سلوت/فترة + السجل اليدوي — مخفي افتراضياً، افتحه وقت الحاجة</div></div>
+      <button class="sec-open-btn" id="entryToggle" aria-expanded="false">▾ فتح القسم</button>
+    </div>
+    <div class="sec-body" id="entryBody">
+
+    <!-- Roster (admin only) -->
+    <div class="card" id="rosterCard" style="display:none">
+      <h3>👥 إدارة الإيديتورز <span class="tag fb">أدمن</span></h3>
+      <div id="rosterList"></div>
+      <div class="frm-row">
+        <input id="newAgent" placeholder="اسم إيديتور جديد (يومنا، أسامة...)" autocomplete="off">
+        <button class="btnp" id="addAgentBtn">+ إضافة</button>
+      </div>
+      <div class="note">الأسماء دي بتظهر في فورم الإدخال والداش بورد. أي حد يبقى إيديتور — ضيفه هنا والداش بورد يلقطه فوراً.</div>
+      <span id="rosterMsg" class="emsg"></span>
+    </div>
+
+    <!-- Bulk backfill replies (admin only) -->
+    <div class="card" id="bulkBfCard" style="display:none">
+      <h3>🔁 جلب دفعة واحدة لزميل <span class="tag fb">أدمن</span></h3>
+      <div class="note">لزميل عنده سلوتات كتير من غير عدد ردود متسجّل (زي فترة طويلة اتنسيت). بيمسح فيسبوك <b>مرة واحدة بس</b> لكل الفترة ويوزّع الردود تلقائيًا على كل سلوت بتاعه حسب وقته — أسرع بكتير من جلب كل سلوت لوحده.</div>
+      <div class="frm">
+        <label>الزميل<select id="bulkBfAgent"></select></label>
+        <label>من تاريخ<input type="date" id="bulkBfFrom"></label>
+        <label>لـ تاريخ<input type="date" id="bulkBfTo"></label>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-top:6px">
+        <input type="checkbox" id="bulkBfOverwrite"> أعد حساب حتى السلوتات اللي ليها رقم متسجّل بالفعل
+      </label>
+      <div class="frm-row" style="margin-top:8px">
+        <button class="btnp" id="bulkBfBtn">🔁 ابدأ الجلب</button>
+      </div>
+      <div id="bulkBfStatus" class="emsg" style="display:none"></div>
+    </div>
+
+    <!-- Entry form -->
+    <div class="card">
+      <h3>➕ تسجيل سلوت / فترة</h3>
+      <div class="frm">
+        <label>التاريخ<input type="date" id="eDate"></label>
+        <label>الزميل
+          <div class="cust-sel" id="eAgentWrap">
+            <div class="cust-sel-val" id="eAgentVal" tabindex="0">— اختر —</div>
+            <div class="cust-sel-drop" id="eAgentDrop">
+              <input class="cust-sel-search" id="eAgentSearch" placeholder="ابحث…" autocomplete="off">
+              <div class="cust-sel-opts" id="eAgentOpts"></div>
+            </div>
+          </div>
+          <input type="hidden" id="eAgent">
+        </label>
+        <label>القناة *<select id="eChannel"><option value="">— اختر —</option><option>إنبوكس</option><option>نوتيفيكيشن</option><option>كومنت</option><option>إنستجرام</option><option>تاسك</option></select></label>
+        <label>عدد الرسائل <small style="color:var(--muted);font-weight:600">(اختياري)</small><input type="number" id="eMsgs" min="0" max="3000" placeholder="اتركه فاضي أو أدخل الرقم"></label>
+        <label>من<input type="time" id="eFrom"></label>
+        <label>إلى<input type="time" id="eTo"></label>
+        <label>أوردرات<input type="number" id="eOrders" min="0" max="500" placeholder="اختياري"></label>
+        <label>ملاحظة<input id="eNote" placeholder="اختياري" autocomplete="off"></label>
+      </div>
+      <button class="btnp" id="saveEntryBtn">💾 حفظ الإدخال</button>
+      <span id="entryMsg" class="emsg"></span>
+      <div class="note amber" style="margin-top:12px"><b>القناة إجبارية</b> — وده اللي بيحل مشكلة «مين بيرد إنبوكس ومين نوتيفيكيشن»، والأرقام بتتحقّق فمفيش خطأ زي المليار اللي حصل في الشيت.</div>
+    </div>
+
+    <!-- Manual slot log summary -->
+    <div class="card">
+      <h3>📋 السجل اليدوي للسلوتات — <span id="liveMonthLbl">اختر الفترة</span></h3>
+      <div class="note">دي ملخّص السلوتات المسجّلة يدوياً (للأوردرات والملاحظات). <b>أداء الزملاء الحقيقي بالأرقام في قسم «ردود الزملاء (لايف)» فوق</b> — جاي من فيسبوك مباشرة.</div>
+      <div class="lvbar">
+        <label>من<input type="date" id="lvFrom"></label>
+        <label>إلى<input type="date" id="lvTo"></label>
+        <button class="btnp ghost" id="lvApply" style="padding:8px 16px">تطبيق</button>
+        <span class="sp"></span>
+        <button class="lvchip" id="lvCycle">هذه الدورة (٢٠→)</button>
+        <button class="lvchip" id="lvToday">النهاردة</button>
+        <button class="lvchip" id="lvThisMonth">الشهر التقويمي</button>
+        <button class="lvchip" id="lvLastMonth">الشهر اللي فات</button>
+        <button class="lvchip" id="lvAll">الكل</button>
+      </div>
+      <div class="grid g3" id="liveKpis"></div>
+      <h4 class="sub-h">توزيع القنوات</h4>
+      <div class="ch-grid" id="liveChannels"></div>
+      <h4 class="sub-h">آخر الإدخالات</h4>
+      <div class="recent" id="liveRecent"></div>
+    </div>
+    </div><!-- /sec-body -->
+  </section>
+
+  <!-- ═══ FIXED SCHEDULES ═══ -->
+  <section id="shifts">
+    <div class="sec-h"><div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div><h2>مواعيد الزملاء الثابتة</h2><div class="sub">مواعيد يومية ثابتة — تُسجَّل مرة واحدة بواسطة الأدمن ولا تتغيّر يومياً</div></div></div>
+
+    <!-- Admin edit panel -->
+    <div class="card" id="schedEditCard" style="display:none">
+      <h3>⚙️ تعديل مواعيد زميل <span class="tag fb">أدمن</span></h3>
+      <div class="frm" style="grid-template-columns:1fr 1fr 1fr 2fr">
+        <label>الزميل<select id="schedAgent"></select></label>
+        <label>من<input type="time" id="schedFrom"></label>
+        <label>إلى<input type="time" id="schedTo"></label>
+        <label>ملاحظة<input id="schedNote" placeholder="اختياري" autocomplete="off"></label>
+      </div>
+      <button class="btnp" id="schedSaveBtn">💾 حفظ المواعيد</button>
+      <button class="btnp ghost" id="schedDelBtn" style="margin-inline-start:8px">🗑️ حذف</button>
+      <span id="schedMsg" class="emsg"></span>
+      <div class="note" style="margin-top:10px">المواعيد ثابتة ويومية — بتُسجَّل مرة واحدة وبتظهر لكل زميل في لوحته الشخصية.</div>
+    </div>
+
+    <!-- Schedule display -->
+    <div class="card">
+      <h3>🗓️ مواعيد كل زميل <span id="schedPersonalTag" class="tag good" style="display:none">مواعيدك</span></h3>
+      <div id="schedCards" class="slot-cards"><div class="note">جارٍ تحميل المواعيد…</div></div>
+    </div>
+
+    <!-- كروت السلوتات -->
+    <div class="card">
+      <h3>🗓️ كروت شفتات الفترة <span id="shiftDateLbl" style="font-size:13px;color:var(--muted);font-weight:700"></span></h3>
+      <div class="lvbar">
+        <label>من تاريخ<input type="date" id="shvFromDate"></label>
+        <label>الساعة<input type="time" id="shvFromTime" value="00:00"></label>
+        <label>إلى تاريخ<input type="date" id="shvToDate"></label>
+        <label>الساعة<input type="time" id="shvToTime" value="23:59"></label>
+        <span class="btnp-apply-wrap"><button class="btnp-apply" id="shvApply"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>تطبيق</span></button></span>
+        <span class="sp" style="flex:1"></span>
+        <button class="lvchip on" id="shvToday">النهاردة</button>
+        <button class="lvchip" id="shvYesterday">امبارح</button>
+      </div>
+      <div id="batchBar" style="display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:10px 14px;background:var(--card-2);border:1px solid var(--border);border-radius:var(--radius-sm)">
+        <button class="btnp" id="batchFetchBtn" style="background:var(--teal);border-color:var(--teal)">📊 جلب ردود كل الشفتات دفعة واحدة</button>
+        <span id="batchStatus" style="font-size:12.5px;font-weight:800;color:var(--teal)"></span>
+        <span style="flex:1"></span>
+        <span style="font-size:11.5px;color:var(--muted);font-weight:700">بيجيب المحادثات مرة واحدة ويعدّ ردود كل زميل في وقته</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+        <span style="font-size:13px;font-weight:800;color:var(--muted)">الزميل:</span>
+        <select id="shiftAgentFilter" style="padding:5px 12px;border-radius:8px;background:var(--card-2);border:1px solid var(--border);color:var(--ink);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer"><option value="">الكل</option></select>
+        <span id="shiftFilterCount" style="font-size:12px;font-weight:700;color:var(--muted)"></span>
+      </div>
+      <div id="shiftsCards" class="slot-cards"><div class="note" style="grid-column:1/-1">لا سلوتات مسجّلة في الفترة بعد.</div></div>
+    </div>
+  </section>
+
+  <div class="foot">Pharma Triage · لوحة فيسبوك</div>
+</main>
+
+
+<!-- ░░ Agent Tags Modal (admin only) ░░ -->
+<div class="modal-ov" id="agentTagsModal">
+  <div class="modal-box modal-box-lg">
+    <div class="atm-hdr">
+      <h3>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+        هشتاجات الفريق
+        <span class="tag fb" style="font-size:10px;padding:2px 8px;margin-inline-start:2px">أدمن</span>
+        <button class="modal-x" id="atmClose" style="margin-inline-start:auto">×</button>
+      </h3>
+      <p>كل زميل بيحط هشتاجه في آخر ردّه — الداش بورد بيتعرّف عليه ويعدّ ردوده تلقائياً من فيسبوك</p>
+    </div>
+    <div id="atmTableWrap"></div>
+    <div class="atm-add-bar">
+      <label>الهشتاج <span style="color:var(--muted);font-weight:700">(بدون #)</span>
+        <input id="atmNewTag" placeholder="مثال: os" autocomplete="off" spellcheck="false">
+      </label>
+      <label>الاسم الكامل
+        <input id="atmNewName" placeholder="مثال: Mohammed Osama" autocomplete="off">
+      </label>
+      <button class="btnp" id="atmAddBtn" style="padding:9px 18px;margin-top:auto">+ إضافة</button>
+    </div>
+    <span id="atmMsg" style="display:block;margin-top:10px;font-size:12.5px;font-weight:800;min-height:18px"></span>
+  </div>
+</div>
+
+<!-- ░░ Branch Manager Modal (admin only) ░░ -->
+<div class="modal-ov" id="branchMgrModal">
+  <div class="modal-box modal-box-lg">
+    <div class="atm-hdr">
+      <h3>🏥 إدارة الفروع
+        <span class="tag" style="font-size:10px;padding:2px 8px;margin-inline-start:2px;background:color-mix(in srgb,var(--blue) 15%,transparent);color:var(--blue)">أدمن</span>
+        <button class="modal-x" id="brmClose" style="margin-inline-start:auto">×</button>
+      </h3>
+      <p>الفروع دي بتظهر في فورم الأوردر للزملاء — أضِف أو احذف أو عدّل اسم أي فرع · التغييرات فورية</p>
+    </div>
+    <div class="brm-list" id="brmListWrap">
+      <div style="padding:18px;color:var(--muted);font-weight:700;font-size:13px">⏳ جارٍ تحميل الفروع…</div>
+    </div>
+    <div class="atm-add-bar" style="grid-template-columns:1fr auto">
+      <label>اسم الفرع الجديد
+        <input id="brmNewInput" placeholder="مثال: Alexandria - Smouha" autocomplete="off">
+      </label>
+      <button class="btnp" id="brmAddBtn" style="margin-top:auto;padding:9px 18px">+ إضافة</button>
+    </div>
+    <span id="brmMsg" style="display:block;margin-top:10px;font-size:12.5px;font-weight:800;min-height:18px"></span>
+  </div>
+</div>
+
+<!-- ░░ Orders Side Drawer ░░ -->
+<div class="ord-dim" id="ordDim"></div>
+<div class="ord-drawer" id="ordDrawer">
+  <div class="ord-hdr">
+    <div class="ord-hdr-row">
+      <h3>🛒 أوردراتنا كلنا</h3>
+      <button class="modal-x" id="ordClose" style="font-size:22px;color:var(--muted)">×</button>
+    </div>
+    <p>كل الأوردرات المسجّلة من كل الزملاء · ابحث برقم الأوردر أو اسم الفرع أو اسم الزميل</p>
+  </div>
+  <div class="ord-srch">
+    <input id="ordSrchInput" placeholder="رقم الأوردر، الفرع، اسم الزميل…" autocomplete="off">
+    <button class="btnp" id="ordSrchBtn" style="padding:9px 16px;white-space:nowrap;flex:none">🔍 بحث</button>
+  </div>
+  <div class="ord-body" id="ordBody">
+    <div class="ord-empty">جارٍ التحميل…</div>
+  </div>
+</div>
+
+<!-- ░░ Slot modal ░░ -->
+<div class="modal-ov" id="slotModal">
+  <div class="modal-box">
+    <h3>🗓️ <span id="smName">—</span><button class="modal-x" id="smClose" title="إغلاق">×</button></h3>
+    <div class="m-sub" id="smSub">—</div>
+    <div class="m-row">
+      <label>بدأ فعلي<input type="time" id="smActualFrom"></label>
+      <label>انتهى فعلي<input type="time" id="smActualTo"></label>
+    </div>
+    <div class="m-row" style="grid-template-columns:1fr">
+      <label>عدد الردود في الفترة<input type="number" id="smMsgs" min="0" max="5000" placeholder="اضغط «جيب عدد الردود»"></label>
+    </div>
+    <div class="m-actions">
+      <button class="btnp ghost" id="smFetchBtn" style="background:var(--teal);border-color:var(--teal);color:#fff">📊 جيب عدد الردود</button>
+      <button class="btnp" id="smSaveBtn">💾 حفظ</button>
+      <span id="smStatus" style="font-size:12.5px;font-weight:800;color:var(--fb);align-self:center"></span>
+    </div>
+    <div class="note" id="smNote" style="margin-top:12px;display:none"></div>
+  </div>
+</div>
+
+<!-- ░░ Toasts ░░ -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, addDoc, deleteDoc, getDocs, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyBvmHh6-KVlKNATzbfMk3hIswbMCrBZwf4",
+  authDomain:        "pharma-triage-5d165.firebaseapp.com",
+  projectId:         "pharma-triage-5d165",
+  storageBucket:     "pharma-triage-5d165.firebasestorage.app",
+  messagingSenderId: "1080517928737",
+  appId:             "1:1080517928737:web:9110f120203d0e6b7b0060"
+};
+const ADMIN_EMAIL = "drshawky530@gmail.com";
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+const el = id => document.getElementById(id);
+
+/* ── Theme ── */
+const THEME_KEY = "ptTheme";
+function applyTheme(t){ document.documentElement.setAttribute("data-theme", t); }
+(function(){ const t = localStorage.getItem(THEME_KEY) || "light"; applyTheme(t); })();
+el("themeBtn").onclick = () => {
+  const cur = document.documentElement.getAttribute("data-theme")==="dark" ? "light" : "dark";
+  applyTheme(cur); localStorage.setItem(THEME_KEY, cur);
+};
+
+/* helper for live24 hourly chart */
+function fmtHour(h){ const am = h<12?"ص":"م"; let hh=h%12; if(hh===0)hh=12; return hh+" "+am; }
+
+/* ══════ FACEBOOK GRAPH — تحليل ردود الزملاء بالهاشتاج (نفس منطق fb-live) ══════
+   التوكن/الصفحة محفوظين في appConfig/fbLiveConfig (نفس اللي بتستخدمه صفحة اللايف).
+   كل زميل ليه هاشتاج (#ma…) بيحطه في آخر ردّه؛ بنعدّ ردود الصفحة اللي فيها هاشتاجه
+   داخل الفترة المختارة — مصدر الأرقام الفعلي بدل الإدخالات اليدوية. */
+const GV = "v21.0";
+let fbToken = "", fbPageId = "";
+const AGENT_TAGS = {
+  "ab":"Abdulrahman Mohammed","aw":"Ahmed Walid","mk":"Mohamed Khaled","kh":"Mohamed Khalifa",
+  "sh":"Sherif Ahmed","3i":"Ali M Ibrahim","na":"Nadah Tarek","ho":"Hu Da SaEed",
+  "ha":"Hager Ahmed","ay":"Aya Hakeem","aa":"Alshaimaa Ahmed Hassan","st":"Shima Tarek",
+  "ma":"Mariam Moustafa","asm":"Asmaa Magdy","yo":"Yomna Mohammed","os":"Mohammed Osama"
+};
+function extractAgentTag(text){
+  if(!text) return null;
+  // يقبل أي حاجة بعد الهاشتاج (نقطة، إيموجي، مسافة، …) طالما مش حروف/أرقام/عربي
+  const m=String(text).trim().match(/#([a-z0-9]+)[^a-z؀-ۿ0-9]*$/i);
+  if(!m) return null;
+  const tag=m[1].toLowerCase();
+  return AGENT_TAGS[tag]?tag:null;
+}
+/* رسالة أوردر = فيها «الإجمالي» (بأي إملاء) + قيمة رقمية في نفس الرسالة (نفس الرسالة اللي
+   فيها هاشتاج الزميل) → تتنسب للزميل بدون لخبطة. (نفس منطق fb-live) */
+const _AR_DIG="0-9٠-٩۰-۹";
+const ORDER_RE=new RegExp("ال[اأإ]?جمال[يى][^"+_AR_DIG+"]{0,15}["+_AR_DIG+"]");
+function isOrderMsg(text){
+  if(!text) return false;
+  const t=String(text).replace(/#[a-z0-9]+\s*$/i,"");  // شيل الهاشتاج الأخير
+  return ORDER_RE.test(t);
+}
+async function loadFbLiveConfig(){
+  try{
+    const s=await getDoc(doc(db,"appConfig","fbLiveConfig"));
+    if(s.exists()){ fbToken=s.data().token||""; fbPageId=s.data().pageId||""; }
+  }catch(e){ /* قد تمنع الـ rules — نتجاهل */ }
+}
+async function gFetch(path, params={}){
+  const url=new URL(`https://graph.facebook.com/${GV}/${path}`);
+  url.searchParams.set("access_token", fbToken);
+  for(const [k,v] of Object.entries(params)) url.searchParams.set(k,v);
+  const res=await fetch(url.toString());
+  if(!res.ok && res.status>=500) throw new Error(`خطأ من فيسبوك (${res.status}) — التوكن منتهي أو غير صالح، كلّم الأدمن`);
+  const json=await res.json();
+  if(json.error){
+    const code=json.error.code, isTok=code===190||code===102||code===2500;
+    throw new Error(isTok?`التوكن منتهي الصلاحية (كود ${code}) — كلّم الأدمن`:(json.error.message||"خطأ غير معروف"));
+  }
+  return json;
+}
+
+let anBusy=false, anLastDetails={}, anLastTagOrders={}, anSetup=false;
+function anStatusSet(t,show=true){ const e=el("anStatus"); if(e){ e.style.display=show?"":"none"; e.textContent=t; } }
+async function analyzeAgentReplies(){
+  if(anBusy) return;
+  const fromDate=el("anFromDate").value, toDate=el("anToDate").value;
+  const fromTime=el("anFromTime").value||"00:00", toTime=el("anToTime").value||"23:59";
+  if(!fromDate||!toDate){ anStatusSet("⚠ اختر التاريخ من→لـ"); return; }
+  if(!fbToken||!fbPageId){ anStatusSet("⚠ إعدادات فيسبوك مش متظبطة — التوكن بيتحط من صفحة اللايف (د. شوقي)"); return; }
+  const fromMs=new Date(`${fromDate}T${fromTime}:00+03:00`).getTime();
+  const toMs  =new Date(`${toDate}T${toTime}:59+03:00`).getTime();
+  if(fromMs>toMs){ anStatusSet("⚠ البداية بعد النهاية"); return; }
+  anBusy=true; const btn=el("anFetchBtn"); if(btn) btn.disabled=true;
+  { const rc=el("anResultCard"); if(rc) rc.innerHTML=skelCards(4); }
+  try{
+    anStatusSet("⏳ جارٍ جلب المحادثات…");
+    const convIds=[]; const seenConvIds=new Set(); const convCustomers={}; let after="";
+    while(convIds.length<3000){
+      const params={ fields:"id,updated_time,participants", limit:200 };
+      if(after) params.after=after;
+      const data=await gFetch(`${fbPageId}/conversations`, params);
+      const convs=data.data||[]; if(!convs.length) break;
+      let hitOld=false;
+      for(const c of convs){
+        const t=new Date(c.updated_time).getTime();
+        if(t<fromMs){ hitOld=true; break; }
+        // مابنفلترش بالحد الأعلى هنا: المحادثة ممكن تتحدّث بعد الفترة بس جوّاها رد داخلها.
+        // dedupe: updated_time بيتغيّر لحظيًا فمحادثة ممكن تتزحزح وتتكرر بين الصفحات أثناء الفحص
+        if(seenConvIds.has(c.id)) continue;
+        seenConvIds.add(c.id);
+        convIds.push(c.id);
+        const parts=(c.participants?.data||[]).filter(p=>String(p.id)!==String(fbPageId));
+        convCustomers[c.id]=parts[0]?.name||"زائر";
+      }
+      after=data.paging?.cursors?.after||"";
+      if(hitOld||!data.paging?.next||!after) break;
+    }
+    anStatusSet(`⏳ ${convIds.length} محادثة — جارٍ تحليل الهاشتاجات…`);
+    const agentConvs={}, agentMsgs={}, agentDetails={};
+    for(let i=0;i<convIds.length;i++){
+      if(i>0&&i%25===0) anStatusSet(`⏳ ${i}/${convIds.length} محادثة…`);
+      const convId=convIds[i]; let msgAfter="";
+      while(true){
+        const mp={ fields:"from,created_time,message", limit:50 };
+        if(msgAfter) mp.after=msgAfter;
+        const md=await gFetch(`${convId}/messages`, mp);
+        let hitOld=false;
+        for(const msg of (md.data||[])){
+          const mt=new Date(msg.created_time).getTime();
+          if(mt<fromMs){ hitOld=true; break; }
+          if(mt>toMs) continue;
+          if(String(msg.from?.id)!==String(fbPageId)) continue;
+          const tag=extractAgentTag(msg.message||"");
+          if(!tag) continue;
+          (agentConvs[tag]=agentConvs[tag]||new Set()).add(convId);
+          agentMsgs[tag]=(agentMsgs[tag]||0)+1;
+          const isOrder=isOrderMsg(msg.message||"");
+          (agentDetails[tag]=agentDetails[tag]||[]).push({message:msg.message||"",created_time:msg.created_time,customerName:convCustomers[convId]||"زائر",isOrder});
+        }
+        msgAfter=md.paging?.cursors?.after||"";
+        if(hitOld||!md.paging?.next||!msgAfter) break;
+      }
+    }
+    anLastDetails=agentDetails;
+    const tagOrders={};
+    try{
+      const oq=query(collection(db,"fbOrders"),where("date",">=",fromDate),where("date","<=",toDate));
+      const os=await getDocs(oq);
+      os.forEach(d=>{
+        const r=d.data();
+        const entry=Object.entries(AGENT_TAGS).find(([,n])=>n===r.name);
+        if(entry) tagOrders[entry[0]]=(tagOrders[entry[0]]||0)+1;
+      });
+    }catch(e){ console.warn("fbOrders fetch",e); }
+    anLastTagOrders=tagOrders;
+    const results=Object.entries(AGENT_TAGS)
+      .map(([tag,name])=>({tag,name,convs:agentConvs[tag]?.size||0,msgs:agentMsgs[tag]||0,orders:tagOrders[tag]||0}))
+      .filter(r=>r.convs>0)
+      .sort((a,b)=>b.convs-a.convs||b.msgs-a.msgs);
+    const totConvs=new Set(Object.values(agentConvs).flatMap(s=>[...s])).size;
+    const totMsgs=Object.values(agentMsgs).reduce((s,v)=>s+v,0);
+    const totOrders=Object.values(tagOrders).reduce((s,v)=>s+v,0);
+    renderAnReplies(results, totConvs, totMsgs, totOrders, convIds.length);
+    anStatusSet(`✅ تم · فحصنا ${convIds.length.toLocaleString('ar-EG')} محادثة · ${totMsgs.toLocaleString('ar-EG')} رد مُعرَّف · ${totOrders.toLocaleString('ar-EG')} أوردر · ${results.length} زميل نشط`);
+  }catch(e){ anStatusSet("❌ "+e.message); }
+  finally{ anBusy=false; const b=el("anFetchBtn"); if(b) b.disabled=false; }
+}
+function renderAnReplies(results, totConvs, totMsgs, totOrders, scanned){
+  const spTop = results.slice(0,14);   // سبارك لاين: توزيع الأرقام على الزملاء (CoreUI style)
+  el("anKpis").innerHTML =
+    statCard("0","محادثات اترد عليها",SVGI.chat,"blue", spTop.map(r=>r.convs)) +
+    statCard("0","إجمالي الردود",SVGI.send,"teal", spTop.map(r=>r.msgs)) +
+    statCard("0","إجمالي الأوردرات",SVGI.cart,"green", spTop.map(r=>r.orders)) +
+    statCard("0","زميل نشط في الفترة",SVGI.users,"violet");
+  { const vs=el("anKpis").querySelectorAll(".stat-card .sv");
+    countUp(vs[0],totConvs); countUp(vs[1],totMsgs);
+    countUp(vs[2],totOrders||0); countUp(vs[3],results.length); }
+  renderAnOrders(results, totOrders||0);
+  const card=el("anResultCard");
+  if(!results.length){
+    card.innerHTML=`<div style="padding:24px;text-align:center;color:var(--muted);font-weight:700;font-size:13.5px">لا ردود مُعرَّفة بهاشتاج في الفترة دي — فُحصت ${scanned.toLocaleString('ar-EG')} محادثة.<br><span style="font-size:12px">تأكّد إن الزملاء بيكتبوا الهاشتاج في آخر الرد.</span></div>`;
+    el("anDetailCard").style.display="none"; return;
+  }
+  const maxC=results[0].convs;
+  card.innerHTML = `<div style="overflow-x:auto"><table class="t">
+    <tr><th>#</th><th>الزميل</th><th>الهاشتاج</th><th>محادثات</th><th>ردود</th><th style="color:var(--teal)">🛒 أوردرات</th><th>الحصة</th></tr>
+    ${results.map((r,i)=>{
+      const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":String(i+1);
+      const pct=totConvs?Math.round(r.convs/totConvs*100):0;
+      const bar=maxC?Math.round(r.convs/maxC*100):0;
+      return `<tr><td class="rk">${medal}</td>
+        <td><b>${esc(r.name)}</b><div style="margin-top:5px;height:5px;border-radius:3px;background:var(--border);max-width:160px;overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,var(--fb),var(--teal));width:${bar}%"></div></div></td>
+        <td><span style="font-family:monospace;font-weight:800;background:color-mix(in srgb,var(--fb) 14%,transparent);color:var(--fb);padding:2px 8px;border-radius:999px">#${esc(r.tag)}</span></td>
+        <td class="hot" style="font-size:16px">${r.convs.toLocaleString('en-US')}</td>
+        <td>${r.msgs.toLocaleString('en-US')}</td>
+        <td>${r.orders>0?`<span style="font-weight:900;color:var(--teal);background:color-mix(in srgb,var(--teal) 14%,transparent);padding:2px 9px;border-radius:999px">🛒 ${r.orders.toLocaleString('en-US')}</span>`:`<span style="color:var(--muted)">٠</span>`}</td>
+        <td style="color:var(--muted);font-weight:800">${pct}%</td></tr>`;
+    }).join("")}
+  </table></div>`;
+  const pick=el("anAgentPicker");
+  if(pick){
+    pick.innerHTML=`<option value="">— اختر زميل —</option>`+results.map(r=>`<option value="${esc(r.tag)}">${esc(r.name)} (#${esc(r.tag)}) — ${r.msgs} رد${r.orders>0?` · 🛒 ${r.orders} أوردر`:''}</option>`).join("");
+    pick.onchange=()=>renderAnDetail(pick.value);
+  }
+  el("anDetailCard").style.display="";
+  el("anDetailPanel").innerHTML="";
+  renderFbPodium(results);
+}
+/* بورد الأوردرات المستقل — ترتيب الزملاء بعدد الأوردرات (الإجمالي + القيمة في نفس الرد) */
+function renderAnOrders(results, totOrders){
+  const card=el("anOrdersCard"); if(!card) return;
+  const ord=results.filter(r=>r.orders>0).slice().sort((a,b)=>b.orders-a.orders||b.convs-a.convs);
+  card.style.display="";
+  const head=`<div class="sec-h" style="margin-bottom:12px"><div class="ico" style="background:linear-gradient(135deg,#0f8c5e,#0a6644);color:#fff">${SVGI.cart}</div><div><h2 style="font-size:16px">أوردرات الزملاء — من الردود</h2><div class="sub">عدد الأوردرات لكل زميل (الرسالة فيها «الإجمالي» + قيمة الأوردر + هاشتاج الزميل) في نفس الفترة</div></div></div>`;
+  if(!ord.length){
+    card.innerHTML=head+`<div style="padding:18px;text-align:center;color:var(--muted);font-weight:700;font-size:13px">مفيش أوردرات اتعرفت في الفترة دي — الأوردر لازم يكون مكتوب فيه «الإجمالي» + قيمة الأوردر + هاشتاج الزميل في نفس الرسالة.</div>`;
+    return;
+  }
+  const maxO=ord[0].orders;
+  card.innerHTML=head+
+    `<div style="font-size:13px;font-weight:900;color:var(--ink);margin-bottom:12px">🛒 إجمالي الأوردرات: <span style="color:var(--teal)">${totOrders.toLocaleString('en-US')}</span></div>`+
+    ord.map((r,i)=>{
+      const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":String(i+1);
+      const bar=maxO?Math.round(r.orders/maxO*100):0;
+      return `<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border)">
+        <span style="font-weight:900;color:var(--muted);min-width:24px;font-size:15px">${medal}</span>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><b style="color:var(--ink);font-size:13.5px">${esc(r.name)}</b><span style="font-family:monospace;font-size:11.5px;font-weight:800;background:color-mix(in srgb,var(--fb) 14%,transparent);color:var(--fb);padding:1px 7px;border-radius:999px">#${esc(r.tag)}</span></div>
+          <div style="margin-top:5px;height:6px;border-radius:3px;background:var(--border);overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,#0f8c5e,var(--teal));width:${bar}%"></div></div>
+        </div>
+        <span style="font-weight:900;font-size:18px;color:var(--teal);font-variant-numeric:tabular-nums;min-width:48px;text-align:end">${r.orders.toLocaleString('en-US')}</span>
+      </div>`;
+    }).join("");
+}
+function renderAnDetail(tag){
+  const panel=el("anDetailPanel"); if(!panel) return;
+  if(!tag){ panel.innerHTML=""; return; }
+  const msgs=(anLastDetails[tag]||[]).slice().sort((a,b)=>new Date(b.created_time)-new Date(a.created_time));
+  if(!msgs.length){ panel.innerHTML='<div class="note">لا ردود.</div>'; return; }
+  panel.innerHTML=`<div class="note" style="margin-top:0">${msgs.length} رد · أحدثها أولاً</div>`+msgs.map(m=>{
+    const d=new Date(m.created_time);
+    const when=d.toLocaleString('ar-EG',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+    const clean=(m.message||"").replace(/#[a-z0-9]+\s*$/i,"").trim();
+    const ordBadge=m.isOrder?` <span style="font-size:11px;font-weight:900;background:color-mix(in srgb,var(--teal) 15%,transparent);color:var(--teal);padding:1px 8px;border-radius:999px">🛒 أوردر</span>`:'';
+    return `<div style="padding:8px 0;border-bottom:1px dashed var(--border)"><b style="color:var(--ink)">${esc(m.customerName)}</b> · <span style="color:var(--muted);font-size:12px">${esc(when)}</span>${ordBadge}<div style="margin-top:3px;color:var(--text);font-size:13px">${esc(clean.slice(0,220))||'—'}</div></div>`;
+  }).join("");
+}
+function setAnRange(a,b,chipId){
+  if(el("anFromDate")) el("anFromDate").value=a;
+  if(el("anToDate")) el("anToDate").value=b;
+  ["anCycle","anToday","anYesterday"].forEach(x=>{ const e=el(x); if(e) e.classList.toggle("on",x===chipId); });
+  updatePeriodBanner();
+}
+function initAnalysis(){
+  if(anSetup) return; anSetup=true;
+  // مفيش تواريخ تلقائية — المستخدم بيحدّد الفترة يدوياً (أو بشيب سريع) قبل التحليل
+  updatePeriodBanner();
+  if(el("anFetchBtn"))   el("anFetchBtn").onclick=analyzeAgentReplies;
+  if(el("anCycle"))      el("anCycle").onclick=()=>{ const [x,y]=cycleFrom20(); setAnRange(x,y,"anCycle"); };
+  if(el("anToday"))      el("anToday").onclick=()=>setAnRange(todayISO(),todayISO(),"anToday");
+  if(el("anYesterday"))  el("anYesterday").onclick=()=>{ const y=isoOf(new Date(Date.now()-86400000)); setAnRange(y,y,"anYesterday"); };
+  ["anFromDate","anToDate"].forEach(id=>{ const e=el(id); if(e) e.addEventListener("change",updatePeriodBanner); });
+  loadFbLiveConfig();
+}
+
+/* ══════ DIRECT ENTRY SYSTEM (Firestore — replaces the sheets) ══════ */
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const FB_ROSTER_REF = doc(db, "appConfig", "fbRoster");
+const SEED_ROSTER = ["Abdulrahman Mohammed","Ahmed Walid","Mohamed Khaled","Mohamed Khalifa","Sherif Ahmed","Ali M Ibrahim","Nadah Tarek","Hu Da SaEed","Hager Ahmed","Aya Hakeem","Alshaimaa Ahmed Hassan","Shima Tarek","Mariam Moustafa","Asmaa Magdy"];
+let fbIsAdmin = false, fbEmail = "", fbDisplayName = "", fbRoster = [], fbLogUnsub = null, fbEntrySetup = false;
+
+const pad2 = n => String(n).padStart(2, "0");
+const isoOf = d => d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate());
+const todayISO = () => isoOf(new Date());
+const curYM = () => { const d = new Date(); return d.getFullYear()+"-"+pad2(d.getMonth()+1); };
+const ymOf = d => String(d||"").slice(0,7);
+const firstOfMonthISO = () => { const d = new Date(); return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-01"; };
+function lastMonthRange(){ const d=new Date(), y=d.getFullYear(), m=d.getMonth();
+  return [ isoOf(new Date(y,m-1,1)), isoOf(new Date(y,m,0)) ]; }
+/* الدورة الافتراضية تبدأ يوم ٢٠: يوم≥٢٠ → ٢٠ الشهر ده، غير كده → ٢٠ اللي فات */
+function cycleFrom20(){
+  const d=new Date(), y=d.getFullYear(), m=d.getMonth();
+  const start = d.getDate()>=20 ? new Date(y,m,20) : new Date(y,m-1,20);
+  return [ isoOf(start), todayISO() ];
+}
+
+/* ── Live dashboard date range — مفيش فترة تلقائية، المستخدم بيحدّدها يدوياً ── */
+let lvFrom = null, lvTo = null;
+/* ── كروت الشفتات: فترة مستقلة يختارها المستخدم، الديفولت = النهاردة (تاريخ + وقت) ── */
+let shvFrom = todayISO(), shvTo = todayISO(), shvFromTime = "00:00", shvToTime = "23:59";
+function setLvActiveChip(id){ ["lvCycle","lvToday","lvThisMonth","lvLastMonth","lvAll"].forEach(x=>{ const b=el(x); if(b) b.classList.toggle("on", x===id); }); }
+function updatePeriodBanner(){
+  const e = el("periodDates"); if(!e) return;
+  const a = (el("anFromDate")&&el("anFromDate").value) || "";
+  const b = (el("anToDate")&&el("anToDate").value) || "";
+  e.textContent = (a&&b) ? (a===b ? a : `${a} → ${b}`) : "لم تُحدَّد بعد";
+}
+function setRange(a,b,chipId){
+  lvFrom = a; lvTo = b;
+  if(el("lvFrom")) el("lvFrom").value = a;
+  if(el("lvTo"))   el("lvTo").value   = b;
+  setLvActiveChip(chipId||"");
+  updatePeriodBanner();
+  listenLog();
+  // كروت الشفتات بقت ليها فترتها المستقلة (شوف shvFrom/shvTo + setShiftRange)
+}
+
+/* لحظة بداية السلوت الفعلية (تاريخ + مقرر أو فعلي لو مفيش مقرر) — للترتيب الزمني الصحيح من الأقدم للأحدث */
+function shiftStartMs(r){
+  const d = r.date || "";
+  if(!d) return Infinity; // مفيش تاريخ خالص — يتحط آخر الترتيب مش الأول
+  const t = r.fromTime || r.actualFrom || "00:00";
+  const dt = new Date(d+"T"+t+":00");
+  return isNaN(dt.getTime()) ? Infinity : dt.getTime();
+}
+/* نطاق فلتر كروت الشفتات كلحظتين مطلقتين (مش تاريخ+نافذة-ساعة-متكررة منفصلين) — لو نفس التاريخ في الجهتين والساعة "لـ" أصغر من "من" يبقى المقصود يعدّي لليوم التالي (زي "من ٨م لـ ٤ص") */
+function shiftFilterRangeMs(){
+  let toDate = shvTo;
+  if(shvFrom === shvTo && shvToTime < shvFromTime){
+    toDate = isoOf(new Date(new Date(shvTo+"T00:00:00").getTime() + 86400000));
+  }
+  return [
+    new Date(shvFrom+"T"+shvFromTime+":00").getTime(),
+    new Date(toDate+"T"+shvToTime+":00").getTime()
+  ];
+}
+/* نطاق سلوت واحد كلحظتين مطلقتين — لو توقيت الانتهاء أصغر من البداية يبقى عدّى لليوم التالي (وردية ليلية) */
+function shiftRowRangeMs(r){
+  const d = r.date || "";
+  if(!d) return null;
+  const ft = r.fromTime || r.actualFrom || "00:00";
+  const tt = r.toTime   || r.actualTo   || ft;
+  const toDate = (tt < ft) ? isoOf(new Date(new Date(d+"T00:00:00").getTime() + 86400000)) : d;
+  const fromMs = new Date(d+"T"+ft+":00").getTime();
+  const toMs   = new Date(toDate+"T"+tt+":00").getTime();
+  if(isNaN(fromMs) || isNaN(toMs)) return null;
+  return [fromMs, toMs];
+}
+/* فترة كروت الشفتات — مستقلة عن السجل اليدوي، الديفولت النهاردة */
+function setShiftRange(a, b, fromT, toT, chipId){
+  shvFrom = a; shvTo = b;
+  shvFromTime = fromT || "00:00"; shvToTime = toT || "23:59";
+  if(el("shvFromDate")) el("shvFromDate").value = a;
+  if(el("shvToDate"))   el("shvToDate").value   = b;
+  if(el("shvFromTime")) el("shvFromTime").value = shvFromTime;
+  if(el("shvToTime"))   el("shvToTime").value   = shvToTime;
+  ["shvToday","shvYesterday"].forEach(x=>{ const e=el(x); if(e) e.classList.toggle("on", x===chipId); });
+  listenShifts();
+}
+function fbMsg(id,t,ok){ const e=el(id); if(!e)return; e.textContent=t; e.className="emsg "+(ok?"ok":"err"); toast(t,ok?"ok":"err"); setTimeout(()=>{ if(e.textContent===t){ e.textContent=""; e.className="emsg"; } },4500); }
+function kpi(v,l){ return `<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`; }
+
+async function loadRoster(){
+  try{
+    const s = await getDoc(FB_ROSTER_REF);
+    if(s.exists() && Array.isArray(s.data().agents)){
+      fbRoster = s.data().agents;
+    }else if(fbIsAdmin){
+      fbRoster = SEED_ROSTER.map(n => ({name:n, active:true}));
+      await setDoc(FB_ROSTER_REF, {agents:fbRoster, updatedAt:serverTimestamp(), updatedBy:fbEmail}, {merge:true});
+    }else{
+      fbRoster = SEED_ROSTER.map(n => ({name:n, active:true}));
+    }
+  }catch(e){ console.error("roster",e); fbRoster = SEED_ROSTER.map(n => ({name:n, active:true})); }
+  renderRoster(); fillAgentSelect();
+  if(typeof fillScheduleAgentSelect==="function") fillScheduleAgentSelect();
+  // لو البوديوم اترسم قبل ما الروستر يوصل، ارسمه تاني بالصور
+  if(_podLastResults && _podLastResults.length) renderFbPodium(_podLastResults);
+}
+function fillAgentSelect(){
+  const active = fbRoster.filter(a => a.active !== false);
+  buildCustSel("eAgentWrap","eAgentVal","eAgentSearch","eAgentOpts","eAgent", active.map(a=>a.name));
+}
+
+/* ── Custom searchable dropdown logic ── */
+function buildCustSel(wrapId, valId, searchId, optsId, hiddenId, items){
+  const wrap=el(wrapId), val=el(valId), search=el(searchId), opts=el(optsId), hidden=el(hiddenId);
+  if(!wrap) return;
+  let selected="", focusIdx=-1;
+
+  function renderOpts(filter=""){
+    const f=filter.toLowerCase();
+    const filtered=items.filter(n=>!f||n.toLowerCase().includes(f));
+    focusIdx=-1;
+    opts.innerHTML = filtered.length
+      ? filtered.map((n,i)=>`<div class="cust-sel-opt${n===selected?' selected':''}" data-v="${esc(n)}" data-i="${i}">${esc(n)}</div>`).join("")
+      : `<div class="cust-sel-empty">لا نتائج</div>`;
+    opts.querySelectorAll(".cust-sel-opt").forEach(o=>{
+      o.onmousedown=e=>{e.preventDefault(); pick(o.dataset.v);};
+    });
+  }
+
+  function pick(v){ selected=v; hidden.value=v; val.textContent=v||"— اختر —"; close(); }
+  function open(){ wrap.classList.add("open"); search.value=""; renderOpts(); setTimeout(()=>search.focus(),10); }
+  function close(){ wrap.classList.remove("open"); }
+
+  val.addEventListener("click", ()=>wrap.classList.contains("open")?close():open());
+  val.addEventListener("keydown", e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();open();} });
+  search.addEventListener("input", ()=>renderOpts(search.value));
+  search.addEventListener("keydown", e=>{
+    const rows=[...opts.querySelectorAll(".cust-sel-opt")];
+    if(e.key==="ArrowDown"){e.preventDefault();focusIdx=Math.min(focusIdx+1,rows.length-1);}
+    else if(e.key==="ArrowUp"){e.preventDefault();focusIdx=Math.max(focusIdx-1,0);}
+    else if(e.key==="Enter"&&focusIdx>=0){e.preventDefault();pick(rows[focusIdx].dataset.v);return;}
+    else if(e.key==="Escape"){close();return;}
+    rows.forEach((r,i)=>r.classList.toggle("focused",i===focusIdx));
+    if(focusIdx>=0) rows[focusIdx].scrollIntoView({block:"nearest"});
+  });
+  document.addEventListener("click", e=>{ if(!wrap.contains(e.target)) close(); }, true);
+  renderOpts();
+}
+function renderRoster(){
+  const box = el("rosterList"); if(!box) return;
+  box.innerHTML = fbRoster.map((a,i) => `<div class="rosterItem"><b>${esc(a.name)}</b>
+    <span class="st ${a.active!==false?'on':'off'}">${a.active!==false?'نشط':'موقوف'}</span>
+    <button data-i="${i}" data-act="toggle">${a.active!==false?'إيقاف':'تفعيل'}</button>
+    <button data-i="${i}" data-act="photo" title="صورة الزميل (تظهر على البوديوم)">🖼${a.photo?' ✓':''}</button>
+    <button data-i="${i}" data-act="del">حذف</button></div>`).join("") || '<div class="note">لا يوجد إيديتورز بعد.</div>';
+  box.querySelectorAll("button").forEach(b => { b.onclick = () => rosterAction(+b.dataset.i, b.dataset.act); });
+}
+async function saveRoster(msg){
+  try{
+    await setDoc(FB_ROSTER_REF, {agents:fbRoster, updatedAt:serverTimestamp(), updatedBy:fbEmail}, {merge:true});
+    renderRoster(); fillAgentSelect(); fbMsg("rosterMsg", msg||"تم الحفظ", true);
+    // إعادة رسم البوديوم عشان الصور الجديدة تظهر فوراً
+    if(_podLastResults && _podLastResults.length) renderFbPodium(_podLastResults);
+  }catch(e){ console.error(e); fbMsg("rosterMsg","فشل الحفظ (صلاحية الأدمن مطلوبة)", false); }
+}
+function rosterAction(i, act){
+  if(!fbIsAdmin) return;
+  if(act==="toggle"){ fbRoster[i].active = fbRoster[i].active===false; saveRoster("تم التحديث"); }
+  else if(act==="photo"){
+    const v = prompt("لينك صورة "+fbRoster[i].name+" (يفضّل مربّعة — هتظهر على البوديوم).\nسيبه فاضي واضغط OK لمسح الصورة:", fbRoster[i].photo||"");
+    if(v===null) return;
+    fbRoster[i].photo = v.trim();
+    saveRoster(v.trim()?"تم حفظ صورة "+fbRoster[i].name:"اتمسحت الصورة");
+  }
+  else if(act==="del"){ if(confirm("حذف "+fbRoster[i].name+" من القائمة؟")){ fbRoster.splice(i,1); saveRoster("تم الحذف"); } }
+}
+function addAgent(){
+  const v = el("newAgent").value.trim();
+  if(!v) return;
+  if(fbRoster.some(a => a.name.toLowerCase() === v.toLowerCase())) return fbMsg("rosterMsg","الاسم موجود بالفعل", false);
+  fbRoster.push({name:v, active:true}); el("newAgent").value = "";
+  saveRoster("تمت إضافة "+v);
+}
+
+async function saveEntry(){
+  const agent = el("eAgent").value.trim();
+  const channel = el("eChannel").value.trim();
+  const msgsRaw = el("eMsgs").value.trim();
+  const ordRaw = el("eOrders").value.trim();
+  if(!agent)   return fbMsg("entryMsg","اختر الزميل", false);
+  if(!channel) return fbMsg("entryMsg","اختر القناة (إجباري)", false);
+  const m = msgsRaw==="" ? 0 : Number(msgsRaw);
+  if(!Number.isFinite(m) || m<0 || m>3000) return fbMsg("entryMsg","عدد رسائل غير صحيح (0–3000)", false);
+  let o = 0;
+  if(ordRaw!==""){ o = Number(ordRaw); if(!Number.isFinite(o) || o<0 || o>500) return fbMsg("entryMsg","عدد أوردرات غير صحيح (0–500)", false); }
+  const date = el("eDate").value || todayISO();
+  const btn = el("saveEntryBtn"); btn.disabled = true;
+  try{
+    await addDoc(collection(db,"fbLog"), {
+      date, ym: ymOf(date), agent, channel,
+      fromTime: el("eFrom").value || "", toTime: el("eTo").value || "",
+      messages: m, orders: o, note: el("eNote").value.trim(),
+      by: fbEmail, at: serverTimestamp()
+    });
+    el("eMsgs").value=""; el("eOrders").value=""; el("eNote").value=""; el("eChannel").value="";
+    fbMsg("entryMsg","تم الحفظ ✓", true);
+  }catch(e){ console.error(e); fbMsg("entryMsg","فشل الحفظ — تأكد إن الـ rules منشورة", false); }
+  btn.disabled = false;
+}
+
+function renderLivePrompt(){
+  if(el("liveMonthLbl")) el("liveMonthLbl").textContent = "اختر الفترة";
+  if(el("liveKpis")) el("liveKpis").innerHTML = '<div class="pick-note">🕹️ مفيش تواريخ تلقائية — اختر «من → إلى» أو دوس شيب سريع (النهاردة / الدورة) وبعدين «تطبيق».</div>';
+  if(el("liveChannels")) el("liveChannels").innerHTML = "";
+  if(el("liveRecent")) el("liveRecent").innerHTML = "";
+}
+function listenLog(){
+  if(fbLogUnsub){ fbLogUnsub(); fbLogUnsub = null; }
+  if(!lvFrom || !lvTo){ renderLivePrompt(); return; }
+  const q = query(collection(db,"fbLog"), where("date",">=", lvFrom), where("date","<=", lvTo));
+  fbLogUnsub = onSnapshot(q, snap => {
+    renderLive(snap.docs.map(d => ({id:d.id, ...d.data()})));
+  }, err => { console.error("fbLog",err); const k=el("liveKpis"); if(k) k.innerHTML = '<div class="note amber">تعذّر تحميل الداش بورد اللحظي — انشر الـ Firestore rules.</div>'; });
+}
+function renderLive(rows){
+  el("liveMonthLbl").textContent = (lvFrom===lvTo) ? lvFrom : `${lvFrom} → ${lvTo}`;
+  const totMsg = rows.reduce((s,r)=>s+(+r.messages||0),0);
+  const totOrd = rows.reduce((s,r)=>s+(+r.orders||0),0);
+  el("liveKpis").innerHTML = kpi(totMsg.toLocaleString('en-US'),"إجمالي الرسائل")
+    + kpi(totOrd.toLocaleString('en-US'),"إجمالي الأوردرات") + kpi(rows.length.toLocaleString('en-US'),"عدد الإدخالات");
+  const ch = {};
+  rows.forEach(r => { const c = r.channel || "غير محدد"; ch[c] = (ch[c]||0) + (+r.messages||0); });
+  const CH_ICON = {"إنبوكس":SVGI.inbox,"نوتيفيكيشن":SVGI.bell,"كومنت":SVGI.chat,"إنستجرام":SVGI.insta,"تاسك":SVGI.task,"غير محدد":SVGI.q};
+  const chEntries = Object.entries(ch).sort((a,b)=>b[1]-a[1]);
+  const chTot = chEntries.reduce((s,[,v])=>s+v,0) || 1;
+  el("liveChannels").innerHTML = chEntries.map(([c,v])=>{
+    const pct = Math.round(v/chTot*100);
+    return `<div class="ch-card">
+      <div class="ch-ico">${CH_ICON[c]||SVGI.q}</div>
+      <div class="ch-num">${v.toLocaleString('en-US')}</div>
+      <div class="ch-lbl">${esc(c)}</div>
+      <div class="ch-bar"><i style="width:${pct}%"></i></div>
+      <span class="ch-pct">${pct}%</span>
+    </div>`;
+  }).join("") || '<div class="note" style="grid-column:1/-1">لا إدخالات في الفترة دي بعد.</div>';
+  const rec = [...rows].sort((a,b)=> ((b.at&&b.at.seconds)||0)-((a.at&&a.at.seconds)||0) || (b.date>a.date?1:-1)).slice(0,10);
+  el("liveRecent").innerHTML = rec.map(r => {
+    const canDel = fbIsAdmin || r.by === fbEmail;
+    return `<div class="r"><b>${esc(r.agent)}</b> · ${esc(r.channel)} · <b>${+r.messages||0}</b> رسالة${r.orders?` · ${+r.orders} أوردر`:''} · ${esc(r.date)}${r.fromTime?` (${fmtRange(r.fromTime,r.toTime||'')})`:''}${canDel?`<span class="del" data-id="${r.id}">حذف</span>`:''}</div>`;
+  }).join("") || '<div class="note">لا إدخالات بعد.</div>';
+  el("liveRecent").querySelectorAll(".del").forEach(s => { s.onclick = () => delEntry(s.dataset.id); });
+  renderFbPodiumFromLog(rows);
+}
+async function delEntry(id){
+  if(!confirm("حذف الإدخال ده؟")) return;
+  try{ await deleteDoc(doc(db,"fbLog",id)); }catch(e){ console.error(e); alert("فشل الحذف (صلاحية؟)"); }
+}
+
+function initEntry(){
+  if(!fbEntrySetup){
+    fbEntrySetup = true;
+    if(el("eDate")) el("eDate").value = todayISO();
+    if(el("saveEntryBtn")) el("saveEntryBtn").onclick = saveEntry;
+    if(el("addAgentBtn")) el("addAgentBtn").onclick = addAgent;
+    // toggle سكشن الإدخال اليدوي — مطوي بالديفولت
+    const tg = el("entryToggle"), secEntry = document.getElementById("entry");
+    if(tg && secEntry) tg.onclick = () => {
+      const c = secEntry.classList.toggle("collapsed");
+      tg.textContent = c ? "▾ فتح القسم" : "▴ إخفاء";
+      tg.setAttribute("aria-expanded", String(!c));
+    };
+    // date-range picker — بدون قيم تلقائية، لازم المستخدم يختار
+    if(el("lvApply")) el("lvApply").onclick = () => {
+      let a = el("lvFrom").value, b = el("lvTo").value;
+      if(!a && !b){ toast("اختر التاريخ الأول","err"); return; }
+      a = a || b; b = b || a;
+      if(a > b){ const t=a; a=b; b=t; }
+      setRange(a, b, "");
+    };
+    if(el("lvCycle"))     el("lvCycle").onclick     = () => { const [a,b]=cycleFrom20(); setRange(a,b,"lvCycle"); };
+    if(el("lvToday"))     el("lvToday").onclick     = () => setRange(todayISO(), todayISO(), "lvToday");
+    if(el("lvThisMonth")) el("lvThisMonth").onclick = () => setRange(firstOfMonthISO(), todayISO(), "lvThisMonth");
+    if(el("lvLastMonth")) el("lvLastMonth").onclick = () => { const [a,b]=lastMonthRange(); setRange(a,b,"lvLastMonth"); };
+    if(el("lvAll"))       el("lvAll").onclick       = () => setRange("2026-01-01", todayISO(), "lvAll");
+    initPodFilter();
+    renderFbPodium([]);   // البوديوم يظهر بحالة «اختر فترة» — مفيش فترة تلقائية
+  }
+  if(fbIsAdmin && el("rosterCard")) el("rosterCard").style.display = "";
+  if(fbIsAdmin && el("bulkBfCard")){
+    el("bulkBfCard").style.display = "";
+    const sel=el("bulkBfAgent");
+    if(sel && !sel.options.length){
+      sel.innerHTML = `<option value="">— اختر الزميل —</option>` +
+        Object.values(AGENT_TAGS).sort((a,b)=>a.localeCompare(b,'ar')).map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join("");
+    }
+    const bfBtn=el("bulkBfBtn");
+    if(bfBtn && !bfBtn.dataset.wired){ bfBtn.dataset.wired="1"; bfBtn.onclick=bulkBackfillReplies; }
+  }
+  loadRoster();
+  loadFbPhotos();
+  listenLog();
+}
+
+/* ══════ LIVE 24H — المصدر الأساسي: جلب مباشر من فيسبوك بالزرار (Graph API).
+   fbInsights/live (بتاع live.js) بقى مصدر كاش ثانوي بيتعرض بوسم «كاش» + وقت آخر تحديث،
+   وأي جلب يدوي بيكسب عليه (live24Manual). ══════ */
+let live24Manual = false, live24Busy = false;
+/* أيقونات SVG خطّية مودرن (Lucide-style) — بديل الإيموجي في الكروت والقنوات */
+const _SVG = p => `<svg viewBox="0 0 24 24">${p}</svg>`;
+const SVGI = {
+  chat:   _SVG('<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>'),
+  send:   _SVG('<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>'),
+  cart:   _SVG('<circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>'),
+  users:  _SVG('<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'),
+  inbox:  _SVG('<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>'),
+  timer:  _SVG('<line x1="10" y1="2" x2="14" y2="2"/><line x1="12" y1="14" x2="15" y2="11"/><circle cx="12" cy="14" r="8"/>'),
+  hourglass:_SVG('<path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>'),
+  bell:   _SVG('<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>'),
+  insta:  _SVG('<rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>'),
+  task:   _SVG('<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>'),
+  q:      _SVG('<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>')
+};
+function statCard(v,l,ico,variant,spark){
+  let sp="";
+  if(Array.isArray(spark) && spark.some(x=>x>0)){
+    const mx=Math.max(...spark);
+    sp=`<div class="sp-bars">${spark.map(x=>{
+      const h=Math.max(8,Math.round(x/mx*100));
+      return `<i class="${x===mx?'hot':''}" style="height:${h}%"></i>`;
+    }).join("")}</div>`;
+  }
+  return `<div class="stat-card v-${variant||'blue'}${sp?' has-spark':''}">
+    <span class="si">${ico||SVGI.chat}</span>
+    <div class="sv">${v}</div><div class="sl">${l}</div>${sp}
+  </div>`;
+}
+function renderLive24(d, src){
+  const kpis  = el("live24Kpis"), empty = el("live24Empty");
+  const sub   = el("live24Sub"),  chart = el("live24ChartCard"), srcEl = el("live24Src");
+  if(!d || !d.generatedAt){
+    kpis.innerHTML = ""; chart.style.display = "none"; empty.style.display = "";
+    sub.textContent = "اضغط «📡 جلب من فيسبوك» عشان تجيب أرقام آخر ٢٤ ساعة الفعلية";
+    return;
+  }
+  empty.style.display = "none"; chart.style.display = "";
+  const dt = d.generatedAt.toDate ? d.generatedAt.toDate() : null;
+  const hm = dt ? dt.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}) : "";
+  const stale = src!=="graph" && dt && (Date.now()-dt.getTime() > 3*3600*1000);
+  sub.textContent = `آخر تحديث: ${hm}`
+    + (stale ? " · ⚠ البيانات قديمة — اضغط زرار الجلب" : "");
+  if(srcEl) srcEl.innerHTML = src==="graph"
+    ? '<span class="src-badge graph">✓ من فيسبوك مباشرة</span>'
+    : `<span class="src-badge cache">🗂 كاش live.js${stale?' — قديم':''}</span>`;
+  const bl = d.backlog || 0;
+  kpis.innerHTML =
+    statCard("0","عدد المحادثات (العملاء)",SVGI.users,"indigo") +
+    statCard("0","رسائل داخلة (٢٤ ساعة)",SVGI.inbox,"blue", d.inboundByHour) +
+    statCard("0","ردود الصفحة",SVGI.chat,"teal", d.repliesByHour) +
+    statCard(`${d.avgResponseMin||0} د`,"متوسط زمن أول رد",SVGI.timer,"violet") +
+    statCard("0","محادثات مستنية رد (باكلوج)",SVGI.hourglass, bl>10?"red":bl>3?"amber":"green");
+  const svs = kpis.querySelectorAll(".stat-card .sv");
+  countUp(svs[0], Number(d.sampleConvos||0)); countUp(svs[1], Number(d.inbound||0)); countUp(svs[2], Number(d.replies||0)); countUp(svs[4], bl);
+  const arr = d.inboundByHour || new Array(24).fill(0);
+  const maxV = Math.max(1, ...arr);
+  const nowH = new Date().getHours();
+  el("live24Bars").innerHTML = arr.map((v,h)=>{
+    const pct = Math.round(v/maxV*100);
+    const peak = v >= maxV * 0.82, low = v <= maxV * 0.10;
+    return `<div class="bar-row ${peak?'peak':''} ${low?'low':''} ${h===nowH?'now':''}">
+      <div class="h">${fmtHour(h)}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <div class="n">${v}</div></div>`;
+  }).join("");
+}
+function live24Status(t){ const e=el("live24Status"); if(e){ e.style.display = t ? "" : "none"; e.textContent = t||""; } }
+/* الجلب المباشر: بيفحص محادثات آخر ٢٤ ساعة رسالة رسالة — نفس منطق تحليل الردود بالظبط */
+async function fetchLive24FromGraph(){
+  if(live24Busy) return;
+  if(!fbToken || !fbPageId){ live24Status("⚠ إعدادات فيسبوك مش متظبطة — التوكن بيتحط من صفحة اللايف (د. شوقي)"); return; }
+  live24Busy = true; const btn = el("live24FetchBtn"); if(btn) btn.disabled = true;
+  try{
+    const toMs = Date.now(), fromMs = toMs - 24*3600*1000;
+    live24Status("⏳ جارٍ جلب محادثات آخر ٢٤ ساعة…");
+    const convIds = []; const seenConvIds = new Set(); let after = "";
+    while(convIds.length < 800){
+      const params = { fields:"id,updated_time", limit:200 };
+      if(after) params.after = after;
+      const data = await gFetch(`${fbPageId}/conversations`, params);
+      const convs = data.data||[]; if(!convs.length) break;
+      let hitOld = false;
+      for(const c of convs){
+        const t = new Date(c.updated_time).getTime();
+        if(t < fromMs){ hitOld = true; break; }
+        if(seenConvIds.has(c.id)) continue;
+        seenConvIds.add(c.id);
+        convIds.push(c.id);
+      }
+      after = data.paging?.cursors?.after||"";
+      if(hitOld || !data.paging?.next || !after) break;
+    }
+    const byHour = new Array(24).fill(0), outByHour = new Array(24).fill(0);
+    let inbound = 0, replies = 0, backlog = 0; const respDeltas = [];
+    for(let i=0;i<convIds.length;i++){
+      if(i>0 && i%20===0) live24Status(`⏳ ${i}/${convIds.length} محادثة…`);
+      const msgs = []; let msgAfter = "", newest = null, stop = false;
+      while(!stop){
+        const mp = { fields:"from,created_time", limit:100 };
+        if(msgAfter) mp.after = msgAfter;
+        const md = await gFetch(`${convIds[i]}/messages`, mp);
+        for(const m of (md.data||[])){          // الرسائل بترجع الأحدث أولاً
+          const mt = new Date(m.created_time).getTime();
+          if(!newest) newest = m;
+          if(mt < fromMs){ stop = true; break; }
+          msgs.push({ t:mt, page:String(m.from?.id)===String(fbPageId) });
+        }
+        msgAfter = md.paging?.cursors?.after||"";
+        if(stop || !md.paging?.next || !msgAfter) break;
+      }
+      msgs.reverse();                            // نمشي عليها بالترتيب الزمني
+      let pendingCustomer = null;
+      for(const m of msgs){
+        if(m.page){
+          replies++; outByHour[new Date(m.t).getHours()]++;
+          if(pendingCustomer!=null){ respDeltas.push(m.t - pendingCustomer); pendingCustomer = null; }
+        }else{
+          inbound++; byHour[new Date(m.t).getHours()]++;
+          if(pendingCustomer==null) pendingCustomer = m.t;
+        }
+      }
+      if(newest && String(newest.from?.id)!==String(fbPageId)) backlog++;
+    }
+    const avgResponseMin = respDeltas.length ? Math.round(respDeltas.reduce((s,v)=>s+v,0)/respDeltas.length/60000) : 0;
+    live24Manual = true;
+    renderLive24({ inbound, replies, avgResponseMin, backlog, inboundByHour:byHour, repliesByHour:outByHour,
+      sampleConvos:convIds.length, generatedAt:{ toDate:()=>new Date() } }, "graph");
+    live24Status(`✅ اتجاب من فيسبوك مباشرة · اتفحصت ${convIds.length.toLocaleString('ar-EG')} محادثة`);
+    toast("أرقام آخر ٢٤ ساعة اتحدّثت من فيسبوك ✓","ok");
+  }catch(e){ live24Status("❌ "+e.message); }
+  finally{ live24Busy = false; const b = el("live24FetchBtn"); if(b) b.disabled = false; }
+}
+let apiSetup = false;
+function initApi(){
+  if(apiSetup) return; apiSetup = true;
+  if(el("live24FetchBtn")) el("live24FetchBtn").onclick = fetchLive24FromGraph;
+  onSnapshot(doc(db,"fbInsights","live"), s => {
+    if(live24Manual) return;                     // الجلب اليدوي أدق — ما يتداسش بالكاش
+    renderLive24(s.exists() ? s.data() : null, "cache");
+  }, e => { console.warn("live24",e); if(!live24Manual) renderLive24(null); });
+}
+/* ══════ FIXED SCHEDULES — مواعيد يومية ثابتة ══════ */
+const FB_SCHED_REF = doc(db, "appConfig", "fbFixedSchedules");
+let fixedSchedules = {}, schedSetup = false;
+
+async function loadFixedSchedules(){
+  try{
+    const s = await getDoc(FB_SCHED_REF);
+    fixedSchedules = (s.exists() && s.data().schedules) ? s.data().schedules : {};
+  }catch(e){ console.error("schedules", e); fixedSchedules = {}; }
+  renderFixedSchedules();
+}
+
+async function saveFixedSchedule(){
+  if(!fbIsAdmin) return;
+  const agent = el("schedAgent").value.trim();
+  const from = el("schedFrom").value, to = el("schedTo").value;
+  const note = el("schedNote").value.trim();
+  if(!agent) return fbMsg("schedMsg","اختر الزميل",false);
+  if(!from && !to) return fbMsg("schedMsg","حدّد وقت (من/لـ) على الأقل",false);
+  fixedSchedules[agent] = { from: from||"", to: to||"", note: note||"" };
+  const btn = el("schedSaveBtn"); btn.disabled = true;
+  try{
+    await setDoc(FB_SCHED_REF, { schedules: fixedSchedules, updatedAt: serverTimestamp(), updatedBy: fbEmail }, {merge:true});
+    renderFixedSchedules();
+    fbMsg("schedMsg","تم حفظ المواعيد ✓",true);
+  }catch(e){ console.error(e); fbMsg("schedMsg","فشل الحفظ (صلاحية الأدمن مطلوبة)",false); }
+  btn.disabled = false;
+}
+
+async function deleteFixedSchedule(){
+  if(!fbIsAdmin) return;
+  const agent = el("schedAgent").value.trim();
+  if(!agent) return fbMsg("schedMsg","اختر الزميل أول",false);
+  if(!confirm(`حذف مواعيد ${agent}؟`)) return;
+  delete fixedSchedules[agent];
+  const btn = el("schedDelBtn"); btn.disabled = true;
+  try{
+    await setDoc(FB_SCHED_REF, { schedules: fixedSchedules, updatedAt: serverTimestamp(), updatedBy: fbEmail }, {merge:true});
+    renderFixedSchedules();
+    fbMsg("schedMsg","تم الحذف",true);
+  }catch(e){ console.error(e); fbMsg("schedMsg","فشل الحذف",false); }
+  btn.disabled = false;
+}
+
+function renderFixedSchedules(){
+  const box = el("schedCards"); if(!box) return;
+  const entries = Object.entries(fixedSchedules);
+  const myName = fbIsAdmin ? null : fbDisplayName;
+  const personalTag = el("schedPersonalTag");
+
+  let filtered = entries;
+  if(!fbIsAdmin && myName){
+    filtered = entries.filter(([name]) => name.toLowerCase() === myName.toLowerCase());
+    if(personalTag) personalTag.style.display = filtered.length ? "" : "none";
+  } else {
+    if(personalTag) personalTag.style.display = "none";
+  }
+
+  if(!filtered.length){
+    box.innerHTML = fbIsAdmin
+      ? '<div class="note" style="grid-column:1/-1">لا مواعيد مسجّلة بعد — أضِف من الفورم فوق.</div>'
+      : '<div class="note" style="grid-column:1/-1">لا مواعيد ثابتة مسجّلة لك بعد — كلّم الأدمن.</div>';
+    return;
+  }
+
+  filtered.sort((a,b) => a[0].localeCompare(b[0],"ar"));
+
+  box.innerHTML = filtered.map(([name, sched]) => {
+    const from = sched.from || "—", to = sched.to || "—";
+    const note = sched.note || "";
+    const isOwn = !fbIsAdmin && myName && name.toLowerCase() === myName.toLowerCase();
+    return `<div class="slot-card done" style="cursor:${fbIsAdmin?'pointer':'default'}"${fbIsAdmin?` data-ag="${esc(name)}"`:''}>
+      <div class="sc-top"><span class="sc-name">${esc(name)}</span>${isOwn?'<span class="sc-badge done">أنت</span>':''}</div>
+      <div class="sc-row">🕐 من: <b>${esc(from)}</b></div>
+      <div class="sc-row">🕓 إلى: <b>${esc(to)}</b></div>
+      ${note?`<div class="sc-row" style="color:var(--muted)">📝 ${esc(note)}</div>`:''}
+    </div>`;
+  }).join("");
+
+  if(fbIsAdmin){
+    box.querySelectorAll(".slot-card[data-ag]").forEach(c => {
+      c.onclick = () => {
+        const ag = c.dataset.ag;
+        const sched = fixedSchedules[ag] || {};
+        if(el("schedAgent")) el("schedAgent").value = ag;
+        if(el("schedFrom")) el("schedFrom").value = sched.from || "";
+        if(el("schedTo")) el("schedTo").value = sched.to || "";
+        if(el("schedNote")) el("schedNote").value = sched.note || "";
+      };
+    });
+  }
+}
+
+function fillScheduleAgentSelect(){
+  const sel = el("schedAgent"); if(!sel) return;
+  const active = fbRoster.filter(a=>a.active!==false);
+  sel.innerHTML = '<option value="">— اختر —</option>' + active.map(a=>`<option>${esc(a.name)}</option>`).join("");
+}
+
+function initSchedules(){
+  if(schedSetup) return; schedSetup = true;
+  if(fbIsAdmin && el("schedEditCard")){
+    el("schedEditCard").style.display = "";
+    fillScheduleAgentSelect();
+    if(el("schedSaveBtn")) el("schedSaveBtn").onclick = saveFixedSchedule;
+    if(el("schedDelBtn")) el("schedDelBtn").onclick = deleteFixedSchedule;
+  }
+  loadFixedSchedules();
+}
+
+/* ══════ SHIFTS — كروت شفت كل زميل + موديل تسجيل الرد الفعلي ══════ */
+let NAME_TO_TAG = Object.fromEntries(Object.entries(AGENT_TAGS).map(([t,n])=>[n,t]));
+let shiftsUnsub = null, _shiftRows = {}, _allShiftRows = [], shAssignSetup = false, _smId = null, smBusy = false, _smLastConvs = 0;
+function fmt12(t){
+  if(!t) return "—";
+  const [h,m]=String(t).split(":").map(Number);
+  if(isNaN(h)||isNaN(m)) return t;
+  return `${h%12||12}:${String(m).padStart(2,"0")}${h<12?"ص":"م"}`;
+}
+/* نطاق وقت «الأقل – الأكبر» بترتيب ثابت يسار→يمين عبر inline-flex (مايتأثرش بالـ bidi
+   نهائياً، على عكس unicode-bidi اللي بيتلخبط في بعض الويب-فيوهات) + الأصغر يتعرض الأول */
+const bd=s=>`<bdi dir="ltr">${s}</bdi>`;
+const _hm=t=>{ const p=String(t||"").split(":"); const h=+p[0]; return isNaN(h)?null:h*60+(+p[1]||0); };
+function fmtRange(a,b){
+  let A=a, B=b;
+  if(B!=='…'){ const ma=_hm(a), mb=_hm(b); if(ma!=null&&mb!=null&&ma>mb){ A=b; B=a; } }
+  return `<span style="display:inline-flex;direction:rtl;gap:.28em;align-items:baseline">`+
+    `${bd(fmt12(A))}<span>–</span>${bd(B==='…'?'…':fmt12(B))}</span>`;
+}
+
+/* ═══════════ PREMIUM INTERACTIVE UTILS (2026-06-24) ═══════════ */
+const prefersReduced = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion:reduce)").matches);
+function countUp(elm,to,opts){
+  if(!elm) return; to=+to||0;
+  const loc=(opts&&opts.locale)||"en-US", pre=(opts&&opts.pre)||"";
+  const from=+(elm.dataset.cv||0);
+  elm.dataset.cv=to;
+  if(prefersReduced||from===to){ elm.textContent=pre+to.toLocaleString(loc); return; }
+  const dur=(opts&&opts.dur)||650, t0=performance.now();
+  (function step(t){
+    const p=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-p,3);
+    elm.textContent=pre+Math.round(from+(to-from)*e).toLocaleString(loc);
+    if(p<1) requestAnimationFrame(step);
+  })(performance.now());
+}
+function toast(msg,type){
+  const w=el("toastWrap"); if(!w||!msg) return;
+  const t=document.createElement("div");
+  t.className="toast "+(type||"ok");
+  const ic=document.createElement("span"); ic.className="t-ico";
+  ic.textContent=type==="err"?"⚠️":type==="info"?"ℹ️":"✅";
+  const tx=document.createElement("span"); tx.textContent=msg;
+  t.appendChild(ic); t.appendChild(tx); w.appendChild(t);
+  requestAnimationFrame(()=>t.classList.add("show"));
+  setTimeout(()=>{ t.classList.remove("show"); setTimeout(()=>t.remove(),320); }, type==="err"?4200:2600);
+}
+function skelCards(n){
+  let h=""; for(let i=0;i<(n||4);i++) h+=`<div class="skel-card">`+
+    `<div class="skel-top"><div class="skel skel-av"></div><div style="flex:1">`+
+    `<div class="skel skel-line w60"></div><div class="skel skel-line w40" style="margin-bottom:0"></div></div></div>`+
+    `<div class="skel skel-line w80"></div><div class="skel skel-line w60" style="margin-bottom:0"></div></div>`;
+  return h;
+}
+
+/* ═══════════ صور الزملاء — اكتشاف تلقائي من /team/ (2026-07-03) ═══════════
+   بدل ما الأدمن يحطّ لينك يدوي، أي صورة اسمها بيطابق slug الاسم بتتحط أوتوماتيك.
+   حقل roster.photo (زرار 🖼) لسه شغّال كأولوية/أوفررايد لو الأدمن حطّ لينك مخصّص.
+   نفس الدوال دي **متطابقة** في my-fb.html — لو عدّلت هنا عدّل هناك. */
+const PHOTO_EXTS = ["jpg","jpeg","png","webp"];
+const PHOTO_SLUG_OVERRIDES = { "Hu Da SaEed": "hoda-saeed" };
+function slugName(name){
+  if(PHOTO_SLUG_OVERRIDES[name]) return PHOTO_SLUG_OVERRIDES[name];
+  return String(name||"").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+}
+/* صور رفعها الزملاء بنفسهم من my-fb (fbProfiles في Firestore) — أولوية أولى.
+   slug(الاسم) → data URL. بتتحمّل مرة كل سيشن، فأي صورة جديدة بتظهر من غير deploy. */
+let FB_PHOTOS = {};
+async function loadFbPhotos(){
+  try{
+    const s = await getDocs(collection(db,"fbProfiles"));
+    const m = {};
+    s.forEach(d => { const v = d.data(); if(v && v.photo && v.name) m[slugName(v.name)] = v.photo; });
+    FB_PHOTOS = m;
+    // لو البوديوم اترسم قبل ما الصور توصل، ارسمه تاني بيها
+    if(_podLastResults && _podLastResults.length) renderFbPodium(_podLastResults);
+  }catch(e){ console.warn("fbProfiles", e); }
+}
+function fbPhotoCandidates(name){
+  const slug = slugName(name);
+  const self = FB_PHOTOS[slug] ? [FB_PHOTOS[slug]] : [];
+  const a = fbRoster.find(x => x.name === name);
+  const manual = (a && a.photo) ? [a.photo] : [];
+  return self.concat(manual, PHOTO_EXTS.map(e => `/team/${slug}.${e}`));
+}
+function fbImgFallback(img){
+  const cands = (img.dataset.cands||"").split("|");
+  const i = (+img.dataset.idx||0) + 1;
+  if(i < cands.length){ img.dataset.idx = i; img.src = cands[i]; }
+  else img.remove();
+}
+window.fbImgFallback = fbImgFallback;
+
+/* ── FB TEAM PODIUM — champions stage (2026-07-03) ──
+   Primary source: fbLog (real-time, no API call needed).
+   renderFbPodiumFromLog aggregates messages+convs per agent from the
+   existing fbLog listener and feeds renderFbPodium directly.
+   الفلتر المنعزل (podFilter): لما يتفعّل، البوديوم بيعمل getDocs مستقل على fbLog
+   بالتاريخ/الوقت المختار وبيتجاهل سنابشوتات اللايف لحد ما يتلغي. */
+function fbAvColor(tag){
+  const P=['linear-gradient(135deg,#1877f2,#0a52c4)','linear-gradient(135deg,#0ea5a0,#0cc8c2)',
+    'linear-gradient(135deg,#7c3aed,#a78bfa)','linear-gradient(135deg,#d97706,#f59e0b)',
+    'linear-gradient(135deg,#059669,#10b981)','linear-gradient(135deg,#dc2626,#f87171)',
+    'linear-gradient(135deg,#0369a1,#38bdf8)','linear-gradient(135deg,#9d174d,#f472b6)'];
+  let h=0; for(const c of (tag||'')) h=(h*31+c.charCodeAt(0))&0xffff;
+  return P[h%P.length];
+}
+function podIni(name){
+  const w=(name||'').trim().split(/\s+/).filter(w=>/^[a-zA-Z؀-ۿ]/.test(w));
+  return w.length>=2?(w[0][0]+w[1][0]).toUpperCase():w.length===1?w[0].slice(0,2).toUpperCase():(name||'?').slice(0,2).toUpperCase();
+}
+/* أفاتار بصورة الزميل — بيجرّب لينك يدوي (لو موجود) ثم /team/<slug>.(jpg|jpeg|png|webp)
+   بالترتيب، وفولباك تلقائي للحروف لو كل المحاولات فشلت */
+function podAvHTML(name, tag, cls){
+  const cands = fbPhotoCandidates(name);
+  const chain = cands.map(esc).join("|");
+  return `<div class="${cls}" style="background:${fbAvColor(tag)}">`+
+    `<img src="${esc(cands[0])}" data-cands="${chain}" data-idx="0" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="fbImgFallback(this)">`+
+    `<span>${esc(podIni(name))}</span></div>`;
+}
+let podFilter = null;          // {from,to,ft,tt} — null = بيتبع فترة اللايف
+let _podLiveRows = [];         // آخر سنابشوت من listenLog
+let _podLastResults = null;    // آخر نتائج اترسمت (لإعادة الرسم بعد تحديث صور الروستر)
+
+function renderFbPodium(results){
+  const box=el("fbPodium"); if(!box) return;
+  _podLastResults = results||[];
+  const arena=el("fbPodArena");
+  const b5=el("fbBest5"), b5body=el("fbBest5Body"), b5sub=el("fbBest5Sub");
+  if(!results||!results.length){
+    // البوديوم بيفضل ظاهر دايماً بحالة فاضية — الفترات كلها يدوية فمفيش داتا تلقائية
+    box.style.display="";
+    if(arena) arena.innerHTML = podFilter
+      ? '<div class="fb-pod-empty">🌙 مفيش نشاط مسجّل في الفترة دي — جرّب فترة تانية</div>'
+      : '<div class="fb-pod-empty">🎯 اختر فترة من الفلتر فوق (النهاردة / امبارح / الدورة) عشان الأبطال يظهروا</div>';
+    if(b5) b5.style.display="none";
+    return;
+  }
+  box.style.display="";
+  const top=results.slice(0,5);
+  /* Pyramid arena order — centre=1st (tallest) */
+  const arenaOrder=top.length>=5?[top[3],top[1],top[0],top[2],top[4]]
+    :top.length>=3?[top[1],top[0],top[2]]
+    :top.length>=2?[top[1],top[0]]:[top[0]];
+  const rankOf=a=>top.indexOf(a)+1;
+  const medal=r=>r===1?'🥇':r===2?'🥈':r===3?'🥉':String(r);
+  const mdlColor=r=>(r===3||r===4||r===5)?'#fff':'#0c0c0c';
+  arena.innerHTML=arenaOrder.map(r=>{
+    const rk=rankOf(r);
+    return `<div class="fb-pod-step fb-pod-r${rk}">
+      <div class="fb-pod-av-wrap">
+        ${rk===1?'<div class="fb-pod-crown">👑</div>':''}
+        <div class="fb-pod-ring r${rk}">${podAvHTML(r.name,r.tag,"fb-pod-av")}</div>
+        <div class="fb-pod-rank" style="color:${mdlColor(rk)}">${medal(rk)}</div>
+      </div>
+      <div class="fb-pod-info">
+        <div class="fb-pod-name">${esc(r.name)}</div>
+        <div class="fb-pod-meta">💬 <strong data-cu="${r.msgs}">٠</strong> رد</div>
+      </div>
+      <div class="fb-pod-block">
+        <div class="fb-pod-shine"></div>
+        <div class="fb-pod-block-num" data-cu="${r.convs}">٠</div>
+        <div class="fb-pod-block-lbl">محادثة</div>
+      </div>
+    </div>`;
+  }).join("");
+  /* Best-5 detailed list */
+  if(!b5||!b5body) return;
+  b5.style.display="";
+  if(b5sub) b5sub.textContent=`${top.length} زميل نشط · ترتيب حسب المحادثات`;
+  const maxC=top[0]?.convs||1;
+  b5body.innerHTML=top.map((r,i)=>{
+    const rk=i+1;
+    const bar=Math.round(r.convs/maxC*100);
+    return `<div class="fb-b5-row r${rk}">
+      <div class="fb-b5-rank">${rk}</div>
+      ${podAvHTML(r.name,r.tag,"fb-b5-av")}
+      <div class="fb-b5-main">
+        <div class="fb-b5-name">${esc(r.name)}</div>
+        <span class="fb-b5-tag">#${esc(r.tag)}</span>
+        <div style="margin-top:6px;height:5px;border-radius:3px;background:var(--border);overflow:hidden">
+          <div style="height:100%;background:linear-gradient(90deg,var(--fb),var(--teal));width:${bar}%;transition:width .8s cubic-bezier(.4,0,.2,1)"></div>
+        </div>
+      </div>
+      <div class="fb-b5-stat">
+        <div class="fb-b5-stat-num" style="color:var(--fb)" data-cu="${r.convs}">٠</div>
+        <div class="fb-b5-stat-lbl">محادثة</div>
+      </div>
+      <div class="fb-b5-stat">
+        <div class="fb-b5-stat-num" style="color:var(--teal)" data-cu="${r.msgs}">٠</div>
+        <div class="fb-b5-stat-lbl">رد</div>
+      </div>
+    </div>`;
+  }).join("");
+  /* عدّادات متحركة على كل الأرقام */
+  box.querySelectorAll("[data-cu]").forEach(e=>countUp(e,+e.dataset.cu,{locale:'ar-EG',dur:900}));
+}
+
+/* Aggregate fbLog rows → podium results */
+function aggPodRows(rows){
+  const map = {};
+  rows.forEach(r => {
+    const name = (r.agent||"").trim(); if(!name) return;
+    if(!map[name]) map[name] = {name, tag: NAME_TO_TAG[name]||"", msgs:0, convs:0};
+    map[name].msgs  += (+r.messages || 0);
+    map[name].convs += (+r.convs    || 0);
+  });
+  return Object.values(map)
+    .filter(a => a.msgs > 0 || a.convs > 0)
+    .sort((a,b) => b.convs - a.convs || b.msgs - a.msgs);
+}
+/* (called from renderLive on every snapshot) */
+function renderFbPodiumFromLog(rows){
+  _podLiveRows = rows;
+  if(podFilter) return;              // البوديوم مثبّت على فلتره الخاص — سيبه
+  setPodLbl();
+  renderFbPodium(aggPodRows(rows));
+}
+
+/* ── فلتر البوديوم المنعزل ── */
+function setPodLbl(){
+  const e=el("podFilterLbl"); if(!e) return;
+  if(!podFilter){
+    e.innerHTML = (lvFrom && lvTo)
+      ? `الفترة الحالية: <b>${lvFrom===lvTo?lvFrom:`${lvFrom} ← ${lvTo}`}</b>`
+      : "🎯 اختر فترة من الفلتر تحت — مفيش فترة تلقائية";
+    return;
+  }
+  const {from,to,ft,tt} = podFilter;
+  const d = from===to ? from : `${from} ← ${to}`;
+  const t = (ft!=="00:00"||tt!=="23:59") ? ` · ${fmtRange(ft,tt)}` : "";
+  e.innerHTML = `🎯 فلتر مفعّل: <b>${d}</b>${t}`;
+}
+function setPodChips(id){
+  ["podToday","podYesterday","podCycle"].forEach(x=>{ const b=el(x); if(b) b.classList.toggle("on", x===id); });
+}
+/* هل الصف بيتقاطع زمنياً مع نافذة الفلتر؟ (بيدعم السلوتات الليلية اللي بتعدي نص الليل) */
+function podTimeOverlap(r, fMin, tMin){
+  const a=_hm(r.actualFrom||r.fromTime), bRaw=_hm(r.actualTo||r.toTime);
+  if(a==null) return false;                       // صف من غير وقت — الفلتر الزمني بيستبعده
+  let s=a, e=(bRaw==null?a:bRaw); if(e<s) e+=1440;
+  let F=fMin, T=tMin; if(T<F) T+=1440;
+  return (s<=T && e>=F) || (s+1440<=T && e+1440>=F) || (s-1440<=T && e-1440>=F);
+}
+async function applyPodFilter(chipId){
+  const f=el("podFromDate").value, t=el("podToDate").value;
+  if(!f && !t) return toast("اختر التاريخ الأول","err");
+  let a=f||t, b=t||f; if(a>b){ const x=a; a=b; b=x; }
+  const ft=el("podFromTime").value||"00:00", tt=el("podToTime").value||"23:59";
+  podFilter = {from:a, to:b, ft, tt};
+  setPodChips(chipId||"");
+  const clr=el("podClearBtn"); if(clr) clr.style.display="";
+  setPodLbl();
+  const arena=el("fbPodArena");
+  if(arena) arena.innerHTML='<div class="fb-pod-loading">⏳ بيجمّع الأبطال…</div>';
+  const box=el("fbPodium"); if(box) box.style.display="";
+  try{
+    // نجيب يوم قبل البداية عشان السلوتات الليلية اللي تاريخها في اليوم السابق
+    const prev = isoOf(new Date(new Date(a+"T00:00:00").getTime() - 86400000));
+    const snap = await getDocs(query(collection(db,"fbLog"), where("date",">=",prev), where("date","<=",b)));
+    let rows = snap.docs.map(d=>d.data());
+    // صفوف اليوم السابق تتحسب بس لو سلوت ليلي (نهايته بعد نص الليل)
+    rows = rows.filter(r => r.date>=a ||
+      (_hm(r.fromTime)!=null && _hm(r.toTime)!=null && _hm(r.toTime)<_hm(r.fromTime)));
+    const fMin=_hm(ft)??0, tMin=_hm(tt)??1439;
+    const fullDay = fMin<=0 && tMin>=1439;
+    if(!fullDay) rows = rows.filter(r=>podTimeOverlap(r,fMin,tMin));
+    renderFbPodium(aggPodRows(rows));
+  }catch(e){
+    console.error("podFilter",e);
+    if(arena) arena.innerHTML='<div class="fb-pod-empty">⚠️ تعذّر جلب البيانات — حاول تاني</div>';
+    toast("فشل تطبيق فلتر البوديوم","err");
+  }
+}
+function clearPodFilter(){
+  podFilter = null;
+  setPodChips("");
+  const clr=el("podClearBtn"); if(clr) clr.style.display="none";
+  setPodLbl();
+  renderFbPodiumFromLog(_podLiveRows);
+}
+function initPodFilter(){
+  const ap=el("podApplyBtn"); if(!ap) return;
+  if(el("podFromDate")) el("podFromDate").value = todayISO();
+  if(el("podToDate"))   el("podToDate").value   = todayISO();
+  ap.onclick = () => applyPodFilter("");
+  if(el("podClearBtn")) el("podClearBtn").onclick = clearPodFilter;
+  const quick = (a,b,chip) => {
+    el("podFromDate").value=a; el("podToDate").value=b;
+    el("podFromTime").value="00:00"; el("podToTime").value="23:59";
+    applyPodFilter(chip);
+  };
+  if(el("podToday"))     el("podToday").onclick     = () => quick(todayISO(),todayISO(),"podToday");
+  if(el("podYesterday")) el("podYesterday").onclick = () => { const y=isoOf(new Date(Date.now()-86400000)); quick(y,y,"podYesterday"); };
+  if(el("podCycle"))     el("podCycle").onclick     = () => { const [a,b]=cycleFrom20(); quick(a,b,"podCycle"); };
+  setPodLbl();
+}
+
+function shiftRangeLabel(){
+  const t = (shvFromTime!=="00:00" || shvToTime!=="23:59") ? ` · ${shvFromTime} → ${shvToTime}` : "";
+  return ((shvFrom===shvTo) ? shvFrom : `${shvFrom} → ${shvTo}`) + t;
+}
+function listenShifts(){
+  if(shiftsUnsub) shiftsUnsub();
+  if(el("shiftDateLbl")) el("shiftDateLbl").textContent = shiftRangeLabel();
+  // نجيب يوم قبل shvFrom عشان السلوتات الليلية (9م→4ص) اللي تاريخها في اليوم السابق
+  const prevDay = isoOf(new Date(new Date(shvFrom+"T00:00:00").getTime() - 86400000));
+  const q2 = query(collection(db,"fbLog"), where("date",">=", prevDay), where("date","<=", shvTo));
+  shiftsUnsub = onSnapshot(q2, snap => {
+    _allShiftRows = snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderShifts(_allShiftRows);
+  }, e => console.warn("shifts",e));
+}
+/* «سجّل سلوت لزميل» اتشال (2026-07-05) — الزميل بيسجّل سلوته بنفسه من my-fb.html */
+function renderShifts(rows){
+  const box = el("shiftsCards"); if(!box) return;
+  if(el("shiftDateLbl")) el("shiftDateLbl").textContent = shiftRangeLabel();
+  let shifts = rows.filter(r => r.fromTime || r.toTime || r.actualFrom || r.actualTo);
+  // فلتر التاريخ+الوقت مجمّعين كنطاق زمني مطلق واحد (مش تاريخ لوحده + وقت-يوم متكرر لوحده)،
+  // وإلا سلوت من تاريخ تاني خالص بس بتوقيته يقع بالصدفة جوّه نافذة الساعات بيظهر غلط
+  const [filterFromMs, filterToMs] = shiftFilterRangeMs();
+  shifts = shifts.filter(r => {
+    const rng = shiftRowRangeMs(r);
+    if(!rng) return false;
+    return rng[0] <= filterToMs && rng[1] >= filterFromMs;
+  });
+  _shiftRows = {}; shifts.forEach(r => { _shiftRows[r.id] = r; });
+  // فلتر الزميل
+  const sel = el("shiftAgentFilter");
+  if(sel){
+    const agents=[...new Set(shifts.map(r=>r.agent||"?"))].sort((a,b)=>a.localeCompare(b,"ar"));
+    const cur=sel.value;
+    sel.innerHTML='<option value="">الكل</option>'+agents.map(a=>`<option value="${esc(a)}"${a===cur?" selected":""}>${esc(a)}</option>`).join("");
+  }
+  const filterAgent = sel?.value||"";
+  if(!shifts.length){ box.innerHTML='<div class="note" style="grid-column:1/-1">لا سلوتات مسجّلة في الفترة بعد.</div>'; return; }
+  const sorted=[...shifts].sort((a,b)=> shiftStartMs(a)-shiftStartMs(b) || String(a.agent||"").localeCompare(String(b.agent||""),"ar"));
+  const filtered = filterAgent ? sorted.filter(r=>r.agent===filterAgent) : sorted;
+  if(el("shiftFilterCount")) el("shiftFilterCount").textContent = filterAgent ? `${filtered.length} كارت` : `${sorted.length} كارت`;
+  if(!filtered.length){ box.innerHTML=`<div class="note" style="grid-column:1/-1">مفيش سلوتات لـ ${esc(filterAgent)}.</div>`; return; }
+  box.innerHTML = filtered.map(r=>{
+    const done = !!(r.actualFrom || r.actualTo);
+    const ft = r.fromTime || r.actualFrom || "";
+    const tt = r.toTime   || r.actualTo   || "";
+    const isOvernight = ft && tt && tt < ft;
+    const slot = (r.fromTime||r.toTime) ? fmtRange(r.fromTime,r.toTime) : "—";
+    const actual = done ? fmtRange(r.actualFrom,r.actualTo?r.actualTo:'…') : "لسه";
+    const badge = done ? '<span class="sc-badge done">مكتمل</span>' : '<span class="sc-badge pending">بانتظار</span>';
+    const nightBadge = isOvernight ? '<span class="sc-badge" style="background:color-mix(in srgb,#7c6eff 16%,transparent);color:#9d92ff">🌙 ليلية</span>' : '';
+    const msgs = (+r.messages>0) ? `<div class="sc-stats"><span class="sc-pill p-msgs"><span class="pn">${(+r.messages).toLocaleString('ar-EG')}</span><span class="pl">رد</span></span><span class="sc-pill p-convs"><span class="pn">${(+(r.convs||0)).toLocaleString('ar-EG')}</span><span class="pl">محادثة</span></span></div>` : '';
+    return `<div class="slot-card ${done?'done':'pending'}" data-id="${esc(r.id)}">
+      <div class="sc-top"><span class="sc-name">${esc(r.agent||'?')}</span>${badge}${nightBadge}</div>
+      <div class="sc-row">📅 <span class="sc-date">${esc(r.date||'—')}</span></div>
+      <div class="sc-row">🕐 مقرر: <b>${slot}</b></div>
+      <div class="sc-row">✅ فعلي: <b>${actual}</b></div>
+      ${msgs}
+      <div class="sc-hint">اضغط لتسجيل الرد الفعلي وعدد الردود ←</div>
+    </div>`;
+  }).join("");
+  box.querySelectorAll(".slot-card").forEach(c=>{ c.onclick=()=>openSlotModal(c.dataset.id); });
+}
+function openSlotModal(id){
+  const r = _shiftRows[id]; if(!r) return;
+  _smId = id;
+  el("smName").textContent = r.agent || "—";
+  const slot = (r.fromTime||r.toTime) ? `السلوت المقرر ${fmtRange(r.fromTime,r.toTime)}` : "بدون سلوت مقرر";
+  el("smSub").innerHTML = `${esc(r.date||'')} · ${slot}`;
+  el("smActualFrom").value = r.actualFrom || r.fromTime || "";
+  el("smActualTo").value   = r.actualTo || r.toTime || "";
+  el("smMsgs").value = (r.messages!=null && r.messages!=="") ? r.messages : "";
+  _smLastConvs = +(r.convs||0);
+  el("smStatus").textContent = "";
+  el("smNote").style.display = "none";
+  const tag = NAME_TO_TAG[r.agent];
+  if(!tag){ el("smNote").style.display=""; el("smNote").textContent = "⚠ مفيش هاشتاج معرّف للزميل ده — زر «جيب عدد الردود» مش هيشتغل."; }
+  const canSave = fbIsAdmin || r.by === fbEmail;
+  el("smSaveBtn").style.display = canSave ? "" : "none";
+  el("slotModal").classList.add("open");
+}
+function closeSlotModal(){ el("slotModal").classList.remove("open"); _smId = null; }
+async function countAgentReplies(tag, fromMs, toMs, statusFn){
+  const convIds=[]; const seenConvIds=new Set(); let after="";
+  while(convIds.length<2000){
+    const params={ fields:"id,updated_time", limit:200 };
+    if(after) params.after=after;
+    const data=await gFetch(`${fbPageId}/conversations`, params);
+    const convs=data.data||[]; if(!convs.length) break;
+    let hitOld=false;
+    for(const c of convs){
+      const t=new Date(c.updated_time).getTime();
+      if(t<fromMs){ hitOld=true; break; }
+      // لا نفلتر بالحد الأعلى: العميل ممكن يرد بعد الفترة فتتحدّث المحادثة،
+      // لكن رد الزميل جوّه الفترة لسه موجود — created_time على مستوى الرسالة هي اللي بتفلتر
+      // dedupe: updated_time بيتغيّر لحظيًا فمحادثة ممكن تتزحزح وتتكرر بين الصفحات أثناء الفحص
+      if(seenConvIds.has(c.id)) continue;
+      seenConvIds.add(c.id);
+      convIds.push(c.id);
+    }
+    after=data.paging?.cursors?.after||"";
+    if(hitOld||!data.paging?.next||!after) break;
+  }
+  if(statusFn) statusFn(`⏳ ${convIds.length} محادثة — جارٍ العد…`);
+  let msgs=0; const convSet=new Set();
+  for(let i=0;i<convIds.length;i++){
+    if(statusFn && i>0 && i%25===0) statusFn(`⏳ ${i}/${convIds.length}…`);
+    let msgAfter="";
+    while(true){
+      const mp={ fields:"from,created_time,message", limit:50 };
+      if(msgAfter) mp.after=msgAfter;
+      const md=await gFetch(`${convIds[i]}/messages`, mp);
+      let hitOld=false;
+      for(const m of (md.data||[])){
+        const mt=new Date(m.created_time).getTime();
+        if(mt<fromMs){ hitOld=true; break; }
+        if(mt>toMs) continue;
+        if(String(m.from?.id)!==String(fbPageId)) continue;
+        if(extractAgentTag(m.message||"")===tag){ msgs++; convSet.add(convIds[i]); }
+      }
+      msgAfter=md.paging?.cursors?.after||"";
+      if(hitOld||!md.paging?.next||!msgAfter) break;
+    }
+  }
+  return {msgs, convs:convSet.size, scanned:convIds.length};
+}
+/* ── جلب دفعة واحدة لزميل (بدل جلب كل سلوت لوحده — أسرع بكتير لزميل عنده سلوتات كتير
+   من غير عدد ردود). مسح شبكة واحد بس يغطي كل فترة السلوتات، وبعدين كل رد بيتوزّع
+   على السلوت المناسب حسب created_time بتاعه. ── */
+let bulkBfBusy=false;
+async function bulkBackfillReplies(){
+  if(bulkBfBusy) return;
+  const name=el("bulkBfAgent").value;
+  const tag=NAME_TO_TAG[name];
+  const fromDate=el("bulkBfFrom").value, toDate=el("bulkBfTo").value;
+  const overwrite=el("bulkBfOverwrite").checked;
+  const st=t=>{ const e=el("bulkBfStatus"); if(e){ e.style.display=""; e.textContent=t; } };
+  if(!name){ st("⚠ اختر الزميل"); return; }
+  if(!tag){ st("⚠ مفيش هاشتاج معرّف لاسم الزميل ده"); return; }
+  if(!fromDate||!toDate){ st("⚠ اختر من تاريخ ولـ تاريخ"); return; }
+  if(fromDate>toDate){ st("⚠ البداية بعد النهاية"); return; }
+  if(!fbToken||!fbPageId){ st("⚠ إعدادات فيسبوك مش متظبطة — التوكن من صفحة اللايف"); return; }
+  bulkBfBusy=true; const btn=el("bulkBfBtn"); if(btn) btn.disabled=true;
+  try{
+    st("⏳ جارٍ جلب سلوتات الزميل…");
+    const q1=query(collection(db,"fbLog"),where("agent","==",name),where("date",">=",fromDate),where("date","<=",toDate));
+    const snap=await getDocs(q1);
+    const slots=[];
+    snap.forEach(d=>{
+      const r=d.data();
+      if(!r.actualFrom||!r.actualTo) return;               // سلوت لسه ماخلصش (مفيش وقت فعلي)
+      if(!overwrite && r.messages!=null) return;           // متعدود بالفعل
+      const fMs=new Date(`${r.date}T${r.actualFrom}:00+03:00`).getTime();
+      const tMs=new Date(`${r.date}T${r.actualTo}:59+03:00`).getTime();
+      if(!Number.isFinite(fMs)||!Number.isFinite(tMs)||fMs>tMs) return;
+      slots.push({id:d.id, fromMs:fMs, toMs:tMs, convSet:new Set(), msgs:0});
+    });
+    if(!slots.length){ st("ℹ️ مفيش سلوتات محتاجة جلب في الفترة دي (أو كلها متعدودة بالفعل — استخدم «أعد الحساب» لو عايز تراجعها)."); return; }
+    slots.sort((a,b)=>a.fromMs-b.fromMs);
+    const globalFrom=slots[0].fromMs, globalTo=Math.max(...slots.map(s=>s.toMs));
+    st(`⏳ ${slots.length} سلوت — جارٍ جلب المحادثات (مرة واحدة لكل الفترة)…`);
+    const convIds=[]; const seenConvIds=new Set(); let after="";
+    while(convIds.length<3000){
+      const params={ fields:"id,updated_time", limit:200 };
+      if(after) params.after=after;
+      const data=await gFetch(`${fbPageId}/conversations`, params);
+      const convs=data.data||[]; if(!convs.length) break;
+      let hitOld=false;
+      for(const c of convs){
+        const t=new Date(c.updated_time).getTime();
+        if(t<globalFrom){ hitOld=true; break; }
+        if(seenConvIds.has(c.id)) continue;
+        seenConvIds.add(c.id);
+        convIds.push(c.id);
+      }
+      after=data.paging?.cursors?.after||"";
+      if(hitOld||!data.paging?.next||!after) break;
+    }
+    for(let i=0;i<convIds.length;i++){
+      if(i>0 && i%25===0) st(`⏳ ${i}/${convIds.length} محادثة…`);
+      let msgAfter="";
+      while(true){
+        const mp={ fields:"from,created_time,message", limit:50 };
+        if(msgAfter) mp.after=msgAfter;
+        const md=await gFetch(`${convIds[i]}/messages`, mp);
+        let hitOld=false;
+        for(const m of (md.data||[])){
+          const mt=new Date(m.created_time).getTime();
+          if(mt<globalFrom){ hitOld=true; break; }
+          if(mt>globalTo) continue;
+          if(String(m.from?.id)!==String(fbPageId)) continue;
+          if(extractAgentTag(m.message||"")!==tag) continue;
+          const slot=slots.find(s=>mt>=s.fromMs&&mt<=s.toMs);
+          if(slot){ slot.msgs++; slot.convSet.add(convIds[i]); }
+        }
+        msgAfter=md.paging?.cursors?.after||"";
+        if(hitOld||!md.paging?.next||!msgAfter) break;
+      }
+    }
+    st(`💾 جارٍ حفظ ${slots.length} سلوت…`);
+    let saved=0;
+    for(const s of slots){
+      await setDoc(doc(db,"fbLog",s.id), {messages:s.msgs, convs:s.convSet.size}, {merge:true});
+      saved++;
+      if(saved%10===0) st(`💾 ${saved}/${slots.length}…`);
+    }
+    const totMsgs=slots.reduce((a,s)=>a+s.msgs,0);
+    st(`✅ خلصنا — ${slots.length} سلوت اتحدّث (${totMsgs} رد إجمالي) من مسح ${convIds.length} محادثة بس.`);
+  }catch(e){ st("❌ "+e.message); }
+  finally{ bulkBfBusy=false; const b=el("bulkBfBtn"); if(b) b.disabled=false; }
+}
+async function smFetchReplies(){
+  if(smBusy) return;
+  const r = _shiftRows[_smId]; if(!r) return;
+  const tag = NAME_TO_TAG[r.agent];
+  const from = el("smActualFrom").value, to = el("smActualTo").value;
+  const date = r.date || todayISO();
+  const st = t => { el("smStatus").textContent = t; };
+  if(!tag){ st("⚠ مفيش هاشتاج معرّف للزميل ده"); return; }
+  if(!from || !to){ st("⚠ حدّد «بدأ فعلي» و«انتهى فعلي» أول"); return; }
+  if(!fbToken || !fbPageId){ st("⚠ إعدادات فيسبوك مش متظبطة — التوكن من صفحة اللايف"); return; }
+  const fromMs=new Date(`${date}T${from}:00+03:00`).getTime();
+  const toMs  =new Date(`${date}T${to}:59+03:00`).getTime();
+  if(fromMs>toMs){ st("⚠ البداية بعد النهاية"); return; }
+  smBusy=true; const b=el("smFetchBtn"); b.disabled=true;
+  try{
+    const res=await countAgentReplies(tag, fromMs, toMs, st);
+    el("smMsgs").value=res.msgs;
+    _smLastConvs=res.convs;
+    st(`✅ ${res.msgs} رد · ${res.convs} محادثة (فحصنا ${res.scanned})`);
+  }catch(e){ st("❌ "+e.message); }
+  finally{ smBusy=false; b.disabled=false; }
+}
+async function smSave(){
+  const r = _shiftRows[_smId]; if(!r) return;
+  if(!(fbIsAdmin || r.by === fbEmail)){ el("smStatus").textContent="⚠ مش مسموح"; return; }
+  const af = el("smActualFrom").value||"", at = el("smActualTo").value||"";
+  const mRaw = el("smMsgs").value.trim();
+  let m = 0;
+  if(mRaw!==""){ m=Number(mRaw); if(!Number.isFinite(m)||m<0||m>5000){ el("smStatus").textContent="⚠ عدد ردود غير صحيح (0–5000)"; return; } }
+  const btn=el("smSaveBtn"); btn.disabled=true;
+  try{
+    await setDoc(doc(db,"fbLog",_smId), {actualFrom:af, actualTo:at, messages:m, convs:_smLastConvs}, {merge:true});
+    el("smStatus").textContent="✅ اتحفظ";
+    setTimeout(closeSlotModal, 700);
+  }catch(e){ el("smStatus").textContent="❌ "+e.message; }
+  btn.disabled=false;
+}
+/* ── Batch fetch: جلب ردود كل الشفتات — سلوت سلوت (نفس منطق الموديل الفردي) ── */
+async function batchFetchShiftReplies(){
+  if(!fbToken||!fbPageId){ el("batchStatus").textContent="⚠ إعدادات فيسبوك مش متظبطة — التوكن من صفحة اللايف"; return; }
+  const setStatus = t => { const e=el("batchStatus"); if(e) e.textContent=t; };
+  const btn = el("batchFetchBtn"); if(btn) btn.disabled=true;
+
+  // جمع السلوتات اللي فيها وقت
+  const slots = Object.values(_shiftRows).filter(r => {
+    const from = r.actualFrom||r.fromTime, to = r.actualTo||r.toTime;
+    return NAME_TO_TAG[r.agent] && from && to;
+  });
+  if(!slots.length){ setStatus("⚠ مفيش سلوتات فيها وقت مكتمل"); if(btn) btn.disabled=false; return; }
+
+  try{
+    let done=0;
+    const agentTotals={};
+    for(const r of slots){
+      const tag = NAME_TO_TAG[r.agent];
+      const from = r.actualFrom||r.fromTime, to = r.actualTo||r.toTime;
+      const date = r.date||todayISO();
+      const fromMs = new Date(`${date}T${from}:00+03:00`).getTime();
+      const toMs   = new Date(`${date}T${to}:59+03:00`).getTime();
+      if(fromMs>=toMs) continue;
+      setStatus(`⏳ [${done+1}/${slots.length}] ${r.agent?.split(" ")[0]} ${fmt12(from)} ← ${fmt12(to)}`);
+      const res = await countAgentReplies(tag, fromMs, toMs, null);
+      await setDoc(doc(db,"fbLog",r.id), {messages:res.msgs, convs:res.convs}, {merge:true});
+      agentTotals[r.agent] = (agentTotals[r.agent]||0) + res.msgs;
+      done++;
+    }
+    const summary = Object.entries(agentTotals)
+      .filter(([,v])=>v>0)
+      .map(([n,v])=>`${n.split(" ")[0]}: ${v}`)
+      .join(" · ");
+    setStatus(`✅ ${done} سلوت${summary?" | "+summary:""}`);
+  }catch(e){ setStatus("❌ "+e.message); }
+  finally{ if(btn) btn.disabled=false; }
+}
+
+function initShifts(){
+  if(!shAssignSetup){
+    shAssignSetup = true;
+    if(fbIsAdmin && el("batchBar"))     el("batchBar").style.display="flex";
+    // فترة كروت الشفتات — الديفولت النهاردة (تاريخ + وقت)، والمستخدم يقدر يغيّرها
+    if(el("shvFromDate")) el("shvFromDate").value = shvFrom;
+    if(el("shvToDate"))   el("shvToDate").value   = shvTo;
+    if(el("shvFromTime")) el("shvFromTime").value = shvFromTime;
+    if(el("shvToTime"))   el("shvToTime").value   = shvToTime;
+    if(el("shvApply")) el("shvApply").onclick = () => {
+      const a = el("shvFromDate").value || todayISO();
+      const b = el("shvToDate").value   || a;
+      const ft = el("shvFromTime").value || "00:00";
+      const tt = el("shvToTime").value   || "23:59";
+      setShiftRange(a, b, ft, tt, "");
+    };
+    if(el("shvToday"))     el("shvToday").onclick     = () => setShiftRange(todayISO(), todayISO(), "00:00", "23:59", "shvToday");
+    if(el("shvYesterday")) el("shvYesterday").onclick = () => { const y = isoOf(new Date(Date.now()-86400000)); setShiftRange(y, y, "00:00", "23:59", "shvYesterday"); };
+    if(el("batchFetchBtn")) el("batchFetchBtn").onclick = batchFetchShiftReplies;
+    const af=el("shiftAgentFilter"); if(af) af.onchange=()=>renderShifts(_allShiftRows);
+    if(el("smClose"))    el("smClose").onclick    = closeSlotModal;
+    if(el("smFetchBtn")) el("smFetchBtn").onclick = smFetchReplies;
+    if(el("smSaveBtn"))  el("smSaveBtn").onclick  = smSave;
+    if(el("slotModal"))  el("slotModal").addEventListener("click", e=>{ if(e.target===el("slotModal")) closeSlotModal(); });
+  }
+  listenShifts();
+}
+
+/* ── Auth gate ── */
+function showGate(title, msg){
+  el("gate").style.display = "flex";
+  el("mainHdr").style.display = "none";
+  el("appView").style.display = "none";
+  el("gateTitle").textContent = title;
+  el("gateMsg").textContent = msg;
+}
+function showApp(displayName){
+  el("gate").style.display = "none";
+  el("mainHdr").style.display = "";
+  el("appView").style.display = "block";
+  if(el("sdock")) el("sdock").style.display = "";
+  el("hdrAv").textContent = String(displayName||"U").trim().charAt(0).toUpperCase() || "U";
+  initAnalysis(); initEntry(); initApi(); initSchedules(); initShifts();
+  initScrollSpy();
+  loadAgentTags();
+  initOrdersDrawer();
+  if(fbIsAdmin){ initTagsModal(); loadFbBranches().then(()=>{ renderBrmModal(); }); initBranchMgr(); }
+}
+
+/* ── Scroll-spy: تفعيل لينك السكشن الظاهر في الـnav والسايد دوك ── */
+let spySetup = false;
+function initScrollSpy(){
+  if(spySetup) return; spySetup = true;
+  const links = [...document.querySelectorAll('#mainNav a[href^="#"], .sdock a[href^="#"]')];
+  if(!links.length || !("IntersectionObserver" in window)) return;
+  const ids = [...new Set(links.map(a => a.getAttribute("href").slice(1)))];
+  const secs = ids.map(id => document.getElementById(id)).filter(Boolean);
+  const setAct = id => links.forEach(a => a.classList.toggle("act", a.getAttribute("href") === "#"+id));
+  const io = new IntersectionObserver(es => {
+    const vis = es.filter(e => e.isIntersecting)
+      .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+    if(vis) setAct(vis.target.id);
+  }, { rootMargin:"-25% 0px -55% 0px", threshold:[0,.15,.4] });
+  secs.forEach(s => io.observe(s));
+  links.forEach(a => a.addEventListener("click", () => setAct(a.getAttribute("href").slice(1))));
+}
+
+/* ══════ AGENT TAGS — Firestore-backed (appConfig/fbAgentTags) ══════ */
+const FB_AGENT_TAGS_REF = doc(db, "appConfig", "fbAgentTags");
+
+async function loadAgentTags(){
+  try{
+    const s = await getDoc(FB_AGENT_TAGS_REF);
+    if(s.exists() && s.data().tags){
+      Object.assign(AGENT_TAGS, s.data().tags);
+      NAME_TO_TAG = Object.fromEntries(Object.entries(AGENT_TAGS).map(([t,n])=>[n,t]));
+    }
+  }catch(e){ /* fallback to hardcoded */ }
+}
+
+/* ── Modal ── */
+function openTagsModal(){ renderTagsModal(); el("agentTagsModal").classList.add("open"); }
+function closeTagsModal(){ el("agentTagsModal").classList.remove("open"); }
+
+function renderTagsModal(){
+  const entries = Object.entries(AGENT_TAGS).sort((a,b)=>a[1].localeCompare(b[1],'ar'));
+  el("atmTableWrap").innerHTML = `
+    <table class="atm-table">
+      <thead><tr>
+        <th style="width:36px">#</th>
+        <th>الهشتاج</th>
+        <th>الاسم</th>
+        <th style="width:90px">إجراءات</th>
+      </tr></thead>
+      <tbody>${entries.map(([tag,name],i)=>`
+        <tr>
+          <td style="color:var(--muted);font-weight:800">${i+1}</td>
+          <td><span class="atm-badge">#${esc(tag)}</span></td>
+          <td id="atmCell-${esc(tag)}" class="atm-name">${esc(name)}</td>
+          <td><div class="atm-act">
+            <button class="atm-btn edit" title="تعديل" data-tag="${esc(tag)}">✏️</button>
+            <button class="atm-btn del"  title="حذف"   data-tag="${esc(tag)}">🗑️</button>
+          </div></td>
+        </tr>`).join("")}
+      </tbody>
+    </table>`;
+  el("atmTableWrap").querySelectorAll(".atm-btn.edit").forEach(b=>b.onclick=()=>startEditTag(b.dataset.tag));
+  el("atmTableWrap").querySelectorAll(".atm-btn.del").forEach(b=>b.onclick=()=>deleteAtmTag(b.dataset.tag));
+}
+
+function startEditTag(tag){
+  const cell = el("atmCell-"+tag); if(!cell) return;
+  const cur = esc(AGENT_TAGS[tag]||"");
+  cell.innerHTML = `<div class="atm-inline">
+    <input id="atmEI-${tag}" value="${cur}">
+    <button class="atm-save" data-tag="${tag}">حفظ</button>
+    <button class="atm-cncl">إلغاء</button>
+  </div>`;
+  cell.querySelector(".atm-save").onclick = ()=>commitEditTag(tag);
+  cell.querySelector(".atm-cncl").onclick = ()=>renderTagsModal();
+  const inp = el("atmEI-"+tag); if(inp){ inp.focus(); inp.select(); }
+}
+
+async function commitEditTag(tag){
+  const inp = el("atmEI-"+tag); if(!inp) return;
+  const name = inp.value.trim();
+  if(!name){ atmMsg("الاسم فاضي!",false); return; }
+  AGENT_TAGS[tag] = name;
+  await persistAgentTags(`تم تعديل #${tag} ✓`);
+}
+
+async function deleteAtmTag(tag){
+  if(!confirm(`حذف #${tag} (${AGENT_TAGS[tag]}) من قائمة الهشتاجات؟`)) return;
+  delete AGENT_TAGS[tag];
+  await persistAgentTags(`تم حذف #${tag} ✓`);
+}
+
+async function persistAgentTags(msg){
+  try{
+    await setDoc(FB_AGENT_TAGS_REF,{tags:{...AGENT_TAGS},updatedAt:serverTimestamp(),updatedBy:fbEmail},{merge:true});
+    NAME_TO_TAG = Object.fromEntries(Object.entries(AGENT_TAGS).map(([t,n])=>[n,t]));
+    atmMsg(msg||"تم الحفظ ✓",true);
+    renderTagsModal();
+  }catch(e){ console.error(e); atmMsg("فشل الحفظ — تحقّق من الصلاحية",false); }
+}
+
+function atmMsg(t,ok){
+  const e=el("atmMsg"); if(!e) return;
+  e.textContent=t; e.style.color=ok?"var(--green)":"var(--red)";
+  setTimeout(()=>{ if(e.textContent===t) e.textContent=""; },3500);
+}
+
+function initTagsModal(){
+  const btn=el("agentTagsBtn"); if(btn){ btn.style.display=""; btn.onclick=openTagsModal; }
+  const cls=el("atmClose"); if(cls) cls.onclick=closeTagsModal;
+  const ov=el("agentTagsModal"); if(ov) ov.addEventListener("click",e=>{ if(e.target===ov) closeTagsModal(); });
+  const add=el("atmAddBtn"); if(add) add.onclick=async()=>{
+    const tag=(el("atmNewTag").value||"").trim().toLowerCase().replace(/[^a-z0-9]/g,"");
+    const name=(el("atmNewName").value||"").trim();
+    if(!tag){ atmMsg("الهشتاج مطلوب — حروف إنجليزي أو أرقام",false); return; }
+    if(!name){ atmMsg("الاسم مطلوب",false); return; }
+    if(AGENT_TAGS[tag]){ atmMsg(`#${tag} موجود بالفعل — استخدم زر التعديل ✏️`,false); return; }
+    AGENT_TAGS[tag]=name;
+    el("atmNewTag").value=""; el("atmNewName").value="";
+    await persistAgentTags(`تمت إضافة #${tag} ✓`);
+  };
+}
+
+/* ══════ BRANCH MANAGER — إدارة الفروع (أدمن فقط) ══════ */
+const FB_BRANCHES_REF = doc(db,"appConfig","fbBranches");
+const DEFAULT_BRANCHES = [
+  "arabisk","Arkan","Drasat -2","Gamaa","Golf","ISMAILIA","kafrelshiekh","Manzala",
+  "met ghmr","MNasr","montazah","New Domitta","Old Domitta","Portsaid","Rehab","Sheraton",
+  "Swis -2","talkha","tevoli","Z3fran","ZAGAZIG",
+  "اول الخلفاء","اول مارس","الاستاد","الجمهوريه","الجيش","الخلفاء","المحافظه","المستشفى العام",
+  "بنك مصر","تيفولى","حقوق","ناصر النهدى","عبدالسلام عارف","قناه السويس","كليه اداب","مدينتى"
+];
+let FB_BRANCHES = [...DEFAULT_BRANCHES];
+async function loadFbBranches(){
+  try{
+    const s=await getDoc(FB_BRANCHES_REF);
+    if(s.exists()&&Array.isArray(s.data().list)&&s.data().list.length) FB_BRANCHES=s.data().list;
+  }catch(e){ console.warn("loadFbBranches",e); }
+}
+async function _saveFbBranches(msg){
+  await setDoc(FB_BRANCHES_REF,{list:FB_BRANCHES});
+  renderBrmModal();
+  _brmMsg(msg||"تم الحفظ ✓",true);
+  toast(msg||"تم الحفظ ✓","ok");
+}
+function renderBrmModal(){
+  const wrap=el("brmListWrap"); if(!wrap) return;
+  const sorted=[...FB_BRANCHES].sort((a,b)=>a.localeCompare(b,"ar"));
+  if(!sorted.length){ wrap.innerHTML='<div style="padding:16px;color:var(--muted);font-size:13px">لا فروع مضافة.</div>'; return; }
+  wrap.innerHTML=sorted.map(b=>{
+    const key=btoa(encodeURIComponent(b)).replace(/[+/=]/g,"_");
+    return `<div class="brm-row">
+      <div class="brm-name" id="brmCell-${key}">
+        <span class="brm-badge">🏥</span><span>${esc(b)}</span>
+      </div>
+      <div class="brm-act">
+        <button class="atm-btn edit" data-b="${esc(b)}" data-k="${key}" title="تعديل الاسم">✏️</button>
+        <button class="atm-btn del"  data-b="${esc(b)}" title="حذف">🗑️</button>
+      </div>
+    </div>`;
+  }).join("");
+  wrap.querySelectorAll(".atm-btn.edit").forEach(btn=>btn.onclick=()=>_startEditBranch(btn.dataset.b,btn.dataset.k));
+  wrap.querySelectorAll(".atm-btn.del").forEach(btn=>btn.onclick=()=>_deleteFbBranch(btn.dataset.b));
+}
+function _startEditBranch(b,key){
+  const cell=el("brmCell-"+key); if(!cell) return;
+  cell.innerHTML=`<div class="atm-inline" style="width:100%">
+    <input id="brmEI-${key}" value="${esc(b)}" autocomplete="off" style="flex:1">
+    <button class="atm-save" data-b="${esc(b)}" data-k="${key}">حفظ</button>
+    <button class="atm-cncl">إلغاء</button>
+  </div>`;
+  cell.querySelector(".atm-save").onclick=()=>_commitEditBranch(b,key);
+  cell.querySelector(".atm-cncl").onclick=()=>renderBrmModal();
+  const inp=el("brmEI-"+key); if(inp){ inp.focus(); inp.select();
+    inp.onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); _commitEditBranch(b,key); } };
+  }
+}
+async function _commitEditBranch(old,key){
+  const inp=el("brmEI-"+key); if(!inp) return;
+  const newName=inp.value.trim();
+  if(!newName){ _brmMsg("الاسم فاضي!",false); return; }
+  if(newName===old){ renderBrmModal(); return; }
+  if(FB_BRANCHES.includes(newName)){ _brmMsg("الفرع موجود بالفعل",false); return; }
+  FB_BRANCHES=FB_BRANCHES.map(x=>x===old?newName:x);
+  await _saveFbBranches(`تم تعديل "${old}" → "${newName}" ✓`);
+}
+async function _deleteFbBranch(b){
+  if(!confirm(`حذف الفرع "${b}"؟`)) return;
+  FB_BRANCHES=FB_BRANCHES.filter(x=>x!==b);
+  await _saveFbBranches(`تم حذف "${b}" ✓`);
+}
+async function addFbBranch(){
+  const inp=el("brmNewInput"); const val=(inp.value||"").trim();
+  if(!val){ _brmMsg("اكتب اسم الفرع",false); return; }
+  if(FB_BRANCHES.includes(val)){ _brmMsg("الفرع موجود بالفعل",false); return; }
+  FB_BRANCHES=[...FB_BRANCHES,val];
+  await _saveFbBranches(`تمت إضافة "${val}" ✓`); inp.value="";
+}
+function _brmMsg(t,ok){
+  const e=el("brmMsg"); if(!e) return;
+  e.textContent=t; e.style.color=ok?"var(--green)":"var(--red)";
+  setTimeout(()=>{ if(e.textContent===t) e.textContent=""; },3500);
+}
+function openBranchMgr(){ renderBrmModal(); el("branchMgrModal").classList.add("open"); }
+function closeBranchMgr(){ el("branchMgrModal").classList.remove("open"); }
+function initBranchMgr(){
+  const btn=el("branchMgrBtn"); if(btn){ btn.style.display=""; btn.onclick=openBranchMgr; }
+  const cls=el("brmClose"); if(cls) cls.onclick=closeBranchMgr;
+  const ov=el("branchMgrModal"); if(ov) ov.addEventListener("click",e=>{ if(e.target===ov) closeBranchMgr(); });
+  const add=el("brmAddBtn"); if(add) add.onclick=addFbBranch;
+  const inp=el("brmNewInput"); if(inp) inp.onkeydown=e=>{ if(e.key==="Enter"){ e.preventDefault(); addFbBranch(); } };
+}
+
+/* ══════ ORDERS DRAWER — أوردراتنا كلنا ══════ */
+const _ordFmtMoney = n => Number(n||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+let _ordAllRows=[], _ordLoaded=false;
+async function openOrdersDrawer(){
+  el("ordDrawer").classList.add("open");
+  el("ordDim").classList.add("open");
+  if(!_ordLoaded) await _loadAllOrdDrawer();
+}
+function closeOrdersDrawer(){
+  el("ordDrawer").classList.remove("open");
+  el("ordDim").classList.remove("open");
+}
+async function _loadAllOrdDrawer(){
+  const body=el("ordBody"); if(!body) return;
+  body.innerHTML='<div class="ord-empty">⏳ جارٍ تحميل الأوردرات…</div>';
+  try{
+    const snap=await getDocs(collection(db,"fbOrders"));
+    _ordAllRows=snap.docs.map(d=>({id:d.id,...d.data()}))
+      .sort((a,b)=>((b.at?.seconds||0)-(a.at?.seconds||0)));
+    _ordLoaded=true;
+    _renderOrdBody("");
+  }catch(e){ body.innerHTML=`<div class="ord-empty" style="color:var(--red)">خطأ: ${esc(e.message)}</div>`; }
+}
+function _renderOrdBody(q){
+  const body=el("ordBody"); if(!body) return;
+  const rows=q ? _ordAllRows.filter(r=>{
+    const s=q.toLowerCase();
+    return (r.orderNo||"").toLowerCase().includes(s)
+        || (r.branch||"").toLowerCase().includes(s)
+        || (r.name||"").toLowerCase().includes(s)
+        || (r.orderNo||"").includes(q)
+        || (r.branch||"").includes(q)
+        || (r.name||"").includes(q);
+  }) : _ordAllRows;
+  const totVal=rows.reduce((s,r)=>s+(+r.total||0),0);
+  const totPresc=rows.filter(r=>r.prescription).length;
+  let html=`<div class="ord-stats">
+    <div class="kpi"><div class="v">${rows.length.toLocaleString("ar-EG")}</div><div class="l">أوردر</div></div>
+    <div class="kpi"><div class="v">${_ordFmtMoney(totVal)} <small>ج.م</small></div><div class="l">إجمالي القيمة</div></div>
+    <div class="kpi"><div class="v">${totPresc.toLocaleString("ar-EG")}</div><div class="l">مع روشتة</div></div>
+  </div>`;
+  if(!rows.length){ html+='<div class="ord-empty">لا نتائج.</div>'; }
+  else{
+    html+=rows.map((r,i)=>{
+      const chan=r.channel==="INSTA"?"📸":"📘";
+      return `<div class="ord-row" data-oi="${i}">
+        <div class="or-left">
+          <div class="or-no">${chan} ${esc(r.orderNo||"—")}</div>
+          <div class="or-meta">${esc(r.branch||"—")} · <span style="color:var(--text)">${esc(r.name||"")}</span></div>
+        </div>
+        <div class="or-right">
+          <div class="or-amt">${_ordFmtMoney(r.total||0)} ج.م</div>
+          <div class="or-date">${esc(r.date||"")}</div>
+        </div>
+      </div>`;
+    }).join("");
+  }
+  body.innerHTML=html;
+  body.querySelectorAll(".ord-row").forEach(row=>{
+    row.onclick=()=>{ const r=rows[+row.dataset.oi]; if(r) _showOrdDetail(r); };
+  });
+}
+function _showOrdDetail(r){
+  const presc=r.prescription?`<span class="tag good">✓ معه روشتة</span>`:`<span style="color:var(--muted)">بدون روشتة</span>`;
+  const notes=(r.notes||[]).length
+    ? r.notes.map(n=>`<span class="tag" style="background:color-mix(in srgb,var(--amber) 14%,transparent);color:var(--amber);margin-left:4px">${esc(n)}</span>`).join("")
+    : '<span style="color:var(--muted)">—</span>';
+  const at=r.at?.toDate?r.at.toDate().toLocaleString("ar-EG"):"—";
+  const sheet=document.createElement("div");
+  sheet.className="ord-detail-sheet";
+  sheet.innerHTML=`<div class="ord-det-wrap"><div class="ord-det-inner">
+    <div style="display:flex;align-items:center;gap:9px;margin-bottom:16px">
+      <span style="font-size:22px">🛒</span>
+      <div>
+        <div style="font-size:18px;font-weight:900;color:var(--ink);line-height:1.1">${esc(r.orderNo||"—")}</div>
+        <div style="font-size:12px;font-weight:700;color:var(--muted);margin-top:2px">${esc(r.date||"")} · ${r.channel==="INSTA"?"📸 انستجرام":"📘 فيسبوك"}</div>
+      </div>
+      <button class="modal-x" style="margin-inline-start:auto;font-size:24px">×</button>
+    </div>
+    <div class="od-total-box">
+      <span style="font-size:28px;font-weight:900;color:var(--fb);font-family:'Noto Kufi Arabic'">${_ordFmtMoney(r.total||0)}</span>
+      <span style="font-size:14px;font-weight:800;color:var(--muted)">ج.م</span>
+      <span style="margin-inline-start:auto;font-size:12px;font-weight:700;color:var(--muted)">الإجمالي</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;font-size:13px">
+      <div class="od-card">
+        <div style="font-size:10.5px;font-weight:800;color:var(--muted);margin-bottom:4px">🏥 الفرع</div>
+        <b style="color:var(--ink)">${esc(r.branch||"—")}</b>
+      </div>
+      <div class="od-card">
+        <div style="font-size:10.5px;font-weight:800;color:var(--muted);margin-bottom:4px">👤 الزميل</div>
+        <b style="color:var(--ink)">${esc(r.name||"—")}</b>
+      </div>
+      <div class="od-card" style="grid-column:1/-1">
+        <div style="font-size:10.5px;font-weight:800;color:var(--muted);margin-bottom:6px">📋 ملاحظات</div>
+        <div>${notes}</div>
+      </div>
+      <div class="od-card" style="grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <span>${presc}</span>
+        <span style="font-size:11px;color:var(--muted);font-weight:700">⏱️ ${at}</span>
+      </div>
+    </div>
+  </div></div>`;
+  document.body.appendChild(sheet);
+  sheet.onclick=e=>{ if(e.target===sheet) sheet.remove(); };
+  sheet.querySelector(".modal-x").onclick=()=>sheet.remove();
+}
+function initOrdersDrawer(){
+  const btn=el("ordersDrawerBtn"); if(btn){ btn.style.display=""; btn.onclick=openOrdersDrawer; }
+  const cls=el("ordClose"); if(cls) cls.onclick=closeOrdersDrawer;
+  const dim=el("ordDim"); if(dim) dim.onclick=closeOrdersDrawer;
+  const inp=el("ordSrchInput"), srchBtn=el("ordSrchBtn");
+  let _t;
+  if(inp){
+    inp.oninput=()=>{ clearTimeout(_t); _t=setTimeout(()=>_renderOrdBody(inp.value.trim()),280); };
+    inp.onkeydown=e=>{ if(e.key==="Enter"){ clearTimeout(_t); _renderOrdBody(inp.value.trim()); } };
+  }
+  if(srchBtn) srchBtn.onclick=()=>_renderOrdBody((inp?inp.value:"").trim());
+}
+
+onAuthStateChanged(auth, async user => {
+  if(!user){ showGate("محتاج تسجّل الدخول", "ادخل من الصفحة الرئيسية الأول."); return; }
+  let allowed = user.email === ADMIN_EMAIL;
+  let isAdmin = user.email === ADMIN_EMAIL;
+  let displayName = user.email === ADMIN_EMAIL ? "Dr. Mahmoud Shawky" : user.email;
+  let profileForLite = null;
+  if(user.email !== ADMIN_EMAIL){
+    try{
+      const snap = await getDoc(doc(db,"users",user.uid));
+      if(snap.exists()){
+        const p = snap.data();
+        profileForLite = p;
+        if(p.active !== false){
+          if(p.role==="admin" || p.canAdmin===true){ allowed = true; isAdmin = true; }
+          if(p.canViewFacebook===true || p.canViewFbTeam===true) allowed = true;
+        }
+        if(p.displayName) displayName = p.displayName;
+      }
+    }catch(e){ console.error(e); }
+  }
+  try{ if(window.PTLite) window.PTLite.sync({db,doc,setDoc,uid:user.uid,profile:profileForLite}); }catch(e){}
+  if(!allowed){
+    showGate("ليس لديك صلاحية", "كارت فيسبوك متاح بصلاحية الأدمن فقط. كلّم الأدمن لتفعيلها.");
+    return;
+  }
+  fbIsAdmin = isAdmin; fbEmail = user.email; fbDisplayName = displayName;
+  showApp(displayName);
+  if(!isAdmin) applyFbSectionGrants(user.email);   // الزميل ميشوفش غير الأقسام الممنوحة (+ أداء الزملاء أساس)
+});
+
+/* صلاحيات أقسام صفحة فيسبوك — بتتدار من بورد اللايف (appConfig/fbDockGrants).
+   قسم «أداء الزملاء/الأوردرات» (#replies) أساس دايمًا ظاهر؛ الباقي بالمنح. */
+const FB_GATE_SECTIONS = ["live24","shifts","entry"];
+async function applyFbSectionGrants(email){
+  let fb = {};
+  try{
+    const s = await getDoc(doc(db,"appConfig","fbDockGrants"));
+    if(s.exists()) fb = s.data().fb || {};
+  }catch(e){ console.warn("fbGrants", e); return; }   // فشل القراءة → سيب الكل ظاهر
+  FB_GATE_SECTIONS.forEach(id=>{
+    if((fb[id]||[]).includes(email)) return;          // ممنوح → يفضل ظاهر
+    const sec = document.getElementById(id); if(sec) sec.style.display = "none";
+    document.querySelectorAll(`.nav a[href="#${id}"], .sdock a[href="#${id}"]`).forEach(a=> a.style.display = "none");
+  });
+}
+</script>
+</body>
+</html>

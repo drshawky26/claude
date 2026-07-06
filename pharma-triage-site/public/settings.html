@@ -1,0 +1,5561 @@
+﻿<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="إعدادات الحقول الأساسية وقواعد إظهار بيانات الحالة في Pharma Triage.">
+<meta name="theme-color" content="#0d1f3c">
+<script src="/lite-mode.js"></script>
+<title>إعدادات الحقول الأساسية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Noto+Kufi+Arabic:wght@400;700;900&display=swap"></noscript>
+<style>/* ═══════════════════════════════════════════════════════════════
+   PHARMA TRIAGE — Design System v2
+   Aesthetic: Medical Precision · Navy + Ivory + Teal accent
+   Font: Noto Kufi Arabic (display) + Cairo (body)
+═══════════════════════════════════════════════════════════════ */
+
+/* ── TOKENS ──────────────────────────────────────────────────── */
+:root {
+  --navy:        #0d1f3c;
+  --navy2:       #162d52;
+  --navy3:       #1e3d6e;
+  --teal:        #0ea5a0;
+  --teal2:       #0cc8c2;
+  --teal-glow:   rgba(14,165,160,.20);
+  --teal-soft:   rgba(14,165,160,.08);
+  --gold:        #c9a84c;
+  --gold-soft:   rgba(201,168,76,.12);
+  --ivory:       #f9f7f2;
+  --white:       #ffffff;
+  --ink:         #0d1f3c;
+  --body-text:   #2d4060;
+  --muted:       #6b82a0;
+  --border:      rgba(13,31,60,.10);
+  --border2:     rgba(13,31,60,.18);
+  --green:       #0f8c5e;
+  --green-soft:  rgba(15,140,94,.08);
+  --red:         #c0392b;
+  --red-soft:    rgba(192,57,43,.08);
+  --amber:       #d97706;
+  --amber-soft:  rgba(217,119,6,.10);
+
+  --r-xs:  6px;
+  --r-sm:  10px;
+  --r:     16px;
+  --r-lg:  22px;
+  --r-xl:  28px;
+
+  --sh-sm: 0 1px 4px rgba(13,31,60,.08), 0 0 0 1px rgba(13,31,60,.04);
+  --sh:    0 4px 20px rgba(13,31,60,.10), 0 1px 4px rgba(13,31,60,.06);
+  --sh-lg: 0 12px 40px rgba(13,31,60,.14), 0 4px 10px rgba(13,31,60,.07);
+  --sh-xl: 0 24px 60px rgba(13,31,60,.18);
+
+  --t: .2s cubic-bezier(.4,0,.2,1);
+
+  --hdr: 66px;
+}
+
+/* ── RESET ───────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: 'Cairo', Tahoma, sans-serif;
+  font-size: 14px;
+  color: var(--body-text);
+  background: var(--ivory);
+  min-height: 100vh;
+  line-height: 1.6;
+  /* Subtle grid background */
+  background-image:
+    radial-gradient(ellipse 70% 50% at 15% 0%, rgba(14,165,160,.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 10%, rgba(13,31,60,.05) 0%, transparent 55%),
+    linear-gradient(180deg, #f4f6fb 0%, #f9f7f2 100%);
+}
+
+/* ── TYPOGRAPHY ──────────────────────────────────────────────── */
+h1,h2,h3,h4,h5 {
+  font-family: 'Noto Kufi Arabic', 'Cairo', sans-serif;
+  color: var(--navy);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* ── HEADER ──────────────────────────────────────────────────── */
+header {
+  height: var(--hdr);
+  background: var(--navy);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  box-shadow: 0 2px 24px rgba(13,31,60,.35);
+}
+/* Decorative teal line at bottom of header */
+header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--teal), var(--gold), var(--teal), transparent);
+}
+.hdr-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hdr-logo {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, var(--teal), var(--teal2));
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 4px 14px var(--teal-glow);
+  flex-shrink: 0;
+}
+.hdr-name {
+  font-family: 'Noto Kufi Arabic', sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: .3px;
+}
+.hdr-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,.5);
+  margin-top: 1px;
+}
+.hdr-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  pointer-events: none;
+}
+.hdr-center-title {
+  font-family: 'Noto Kufi Arabic', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+}
+.hdr-center-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,.45);
+}
+.hdr-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── BUTTONS ─────────────────────────────────────────────────── */
+button, .btn {
+  font-family: 'Cairo', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  border-radius: var(--r-sm);
+  padding: 9px 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: transform var(--t), box-shadow var(--t), filter var(--t), background var(--t);
+  text-decoration: none;
+  white-space: nowrap;
+  line-height: 1;
+}
+button:hover, .btn:hover { transform: translateY(-1px); }
+button:active, .btn:active { transform: translateY(0) scale(.98); }
+
+.bluebtn {
+  background: linear-gradient(135deg, var(--navy2), var(--navy3));
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(13,31,60,.25);
+}
+.bluebtn:hover { box-shadow: 0 8px 24px rgba(13,31,60,.30); filter: brightness(1.12); }
+
+.teal-btn {
+  background: linear-gradient(135deg, var(--teal), var(--teal2));
+  color: #fff;
+  box-shadow: 0 4px 14px var(--teal-glow);
+}
+.teal-btn:hover { box-shadow: 0 8px 24px var(--teal-glow); filter: brightness(1.08); }
+
+.green {
+  background: linear-gradient(135deg, #0a7a52, var(--green));
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(15,140,94,.22);
+}
+.green:hover { box-shadow: 0 8px 22px rgba(15,140,94,.30); filter: brightness(1.08); }
+
+.redbtn {
+  background: linear-gradient(135deg, #a93226, var(--red));
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(192,57,43,.22);
+}
+.redbtn:hover { filter: brightness(1.1); }
+
+.yellowbtn {
+  background: linear-gradient(135deg, #b85c00, var(--amber));
+  color: #fff;
+}
+
+.light {
+  background: var(--white);
+  color: var(--navy);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--sh-sm);
+}
+.light:hover { border-color: var(--border2); background: #f4f6fb; }
+
+.ghost-teal {
+  background: var(--teal-soft);
+  color: var(--teal);
+  border: 1.5px solid rgba(14,165,160,.25);
+}
+.ghost-teal:hover { background: rgba(14,165,160,.14); }
+
+/* Header action buttons (on dark bg) */
+.hdr-btn {
+  background: rgba(255,255,255,.10);
+  color: rgba(255,255,255,.85);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: var(--r-sm);
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: background var(--t);
+  cursor: pointer;
+  font-family: 'Cairo', sans-serif;
+}
+.hdr-btn:hover { background: rgba(255,255,255,.18); }
+
+/* Logout btn */
+.logoutBtn {
+  background: rgba(192,57,43,.10);
+  color: var(--red);
+  border: 1.5px solid rgba(192,57,43,.20);
+  font-weight: 700;
+  border-radius: var(--r-sm);
+  padding: 9px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: 'Cairo', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background var(--t), box-shadow var(--t);
+}
+.logoutBtn:hover { background: rgba(192,57,43,.16); }
+
+/* ── USER BAR ────────────────────────────────────────────────── */
+.userbar {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 12px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.userpill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 16px 8px 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--navy);
+  box-shadow: var(--sh-sm);
+}
+.userpill::before {
+  content: "👤";
+  width: 28px;
+  height: 28px;
+  background: var(--teal-soft);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+/* ── PANELS / CARDS ──────────────────────────────────────────── */
+.panel {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh);
+  overflow: hidden;
+}
+.title {
+  padding: 14px 20px;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Noto Kufi Arabic', sans-serif;
+  min-height: 52px;
+}
+.title-badge {
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.25);
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.body { padding: 20px; }
+
+/* ── LOGIN BOX ───────────────────────────────────────────────── */
+.loginBox {
+  max-width: 460px;
+  margin: 48px auto;
+  padding: 36px 32px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-xl);
+  animation: fadeUp .35s ease both;
+}
+.loginBox h2 {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--navy);
+  margin-bottom: 4px;
+  font-family: 'Noto Kufi Arabic', sans-serif;
+}
+.loginBox .login-sub {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.login-divider::before, .login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── FORM FIELDS ─────────────────────────────────────────────── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 0; /* controlled by grid gap */
+}
+.field label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: .3px;
+  text-transform: uppercase;
+}
+input, select, textarea, .answer {
+  font-family: 'Cairo', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--ivory);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 10px 13px;
+  width: 100%;
+  transition: border-color var(--t), box-shadow var(--t), background var(--t);
+  outline: none;
+}
+input:focus, select:focus, textarea:focus, .answer:focus {
+  border-color: var(--teal);
+  background: var(--white);
+  box-shadow: 0 0 0 3px var(--teal-glow);
+}
+textarea { resize: vertical; min-height: 76px; }
+
+/* Field grid */
+.topFields {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 12px 14px;
+  margin-bottom: 18px;
+}
+.span2 { grid-column: span 2; }
+.span4 { grid-column: 1 / -1; }
+
+/* ── MAIN LAYOUT GRIDS ───────────────────────────────────────── */
+.wrap, .adminWrap {
+  max-width: 1500px;
+  margin: 20px auto 40px;
+  padding: 0 24px;
+  display: grid;
+  gap: 20px;
+}
+.wrap       { grid-template-columns: 360px minmax(0,1fr); }
+.adminWrap  { grid-template-columns: 380px minmax(0,1fr); }
+
+.page-wrap {
+  max-width: 1500px;
+  margin: 20px auto 40px;
+  padding: 0 24px;
+}
+.settingsWrap {
+  max-width: 900px;
+  margin: 20px auto 40px;
+  padding: 0 24px;
+}
+.settingsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 14px;
+}
+.settingsGrid > .field {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 12px;
+}
+.settingsGrid .field.choice-config {
+  border-color: rgba(14,165,160,.25);
+  background: rgba(14,165,160,.035);
+}
+.choice-config-box {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(14,165,160,.18);
+}
+.choice-config-box small {
+  color: var(--muted);
+  line-height: 1.6;
+}
+@media (max-width: 820px) {
+  .settingsGrid { grid-template-columns: 1fr; }
+}
+
+/* ── SEARCH INPUT ────────────────────────────────────────────── */
+.search {
+  width: 100%;
+  background: var(--ivory);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: 'Cairo', sans-serif;
+  color: var(--ink);
+  margin-bottom: 10px;
+  transition: border-color var(--t), box-shadow var(--t);
+  outline: none;
+}
+.search:focus { border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-glow); background: var(--white); }
+
+/* ── CHIPS / CATEGORY FILTER ─────────────────────────────────── */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.chip {
+  font-family: 'Cairo', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--ivory);
+  color: var(--body-text);
+  border-radius: 999px;
+  padding: 5px 12px;
+  transition: all var(--t);
+  white-space: nowrap;
+}
+.chip:hover:not(.active) { border-color: var(--teal); color: var(--teal); }
+.chip.active { background: var(--teal); color: #fff; border-color: var(--teal); box-shadow: 0 3px 10px var(--teal-glow); }
+
+/* ── SYMPTOMS GRID ───────────────────────────────────────────── */
+.gridSymptoms {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  max-height: 580px;
+  overflow-y: auto;
+  padding-inline-end: 3px;
+}
+.gridSymptoms::-webkit-scrollbar { width: 4px; }
+.gridSymptoms::-webkit-scrollbar-track { background: transparent; }
+.gridSymptoms::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+.symbtn {
+  font-family: 'Cairo', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--ivory);
+  color: var(--navy);
+  border-radius: var(--r-sm);
+  min-height: 50px;
+  padding: 9px 8px;
+  text-align: center;
+  transition: all var(--t);
+  line-height: 1.4;
+  position: relative;
+  overflow: hidden;
+}
+.symbtn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--teal), var(--teal2));
+  opacity: 0;
+  transition: opacity var(--t);
+}
+.symbtn span { position: relative; z-index: 1; }
+.symbtn:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-1px); box-shadow: var(--sh-sm); }
+.symbtn.sel { border-color: var(--teal); color: #fff; box-shadow: 0 4px 16px var(--teal-glow); }
+.symbtn.sel::before { opacity: 1; }
+
+/* ── SELECTED TAGS ───────────────────────────────────────────── */
+.selected {
+  margin-top: 12px;
+  border: 1.5px dashed var(--border2);
+  border-radius: var(--r-sm);
+  background: rgba(14,165,160,.03);
+  padding: 10px;
+  min-height: 46px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: flex-start;
+}
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--teal);
+  color: #fff;
+  border-radius: 999px;
+  padding: 4px 10px 4px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  animation: fadeUp .15s ease;
+}
+.tag button {
+  border: none;
+  background: rgba(255,255,255,.25);
+  color: #fff;
+  border-radius: 50%;
+  width: 17px;
+  height: 17px;
+  padding: 0;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--t);
+}
+.tag button:hover { background: rgba(255,255,255,.40); }
+
+/* ── CARDS GRID (consultation output) ───────────────────────── */
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-sm);
+  overflow: hidden;
+  transition: box-shadow var(--t);
+  animation: fadeUp .25s ease both;
+}
+.card:hover { box-shadow: var(--sh); }
+.card h3 {
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Noto Kufi Arabic', sans-serif;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(180deg, #fff 0%, var(--ivory) 100%);
+  color: var(--navy);
+}
+.card h3::before { content: "●"; color: var(--teal); font-size: 8px; }
+.card.red h3    { background: var(--red-soft); color: var(--red); }
+.card.red h3::before { color: var(--red); }
+.card.green h3  { background: var(--green-soft); color: var(--green); }
+.card.green h3::before { color: var(--green); }
+.card.wide, .wide { grid-column: 1 / -1; }
+.content { padding: 14px 16px; }
+
+/* ── QUESTION ROWS ───────────────────────────────────────────── */
+.qgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.qrow {
+  border: 1px solid var(--border);
+  background: var(--ivory);
+  border-radius: var(--r-sm);
+  padding: 12px;
+  transition: border-color var(--t);
+}
+.qrow:hover { border-color: var(--border2); }
+.qrow label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.choices { display: flex; gap: 6px; flex-wrap: wrap; }
+.choice {
+  font-family: 'Cairo', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  color: var(--body-text);
+  border-radius: 999px;
+  padding: 6px 12px;
+  transition: all var(--t);
+}
+.choice:hover { border-color: var(--teal); color: var(--teal); }
+.choice.active { background: var(--teal); color: #fff; border-color: var(--teal); box-shadow: 0 2px 8px var(--teal-glow); }
+.answer { margin-top: 6px; font-size: 13px; }
+
+/* ── DANGER BANNER ───────────────────────────────────────────── */
+.danger {
+  grid-column: 1 / -1;
+  background: var(--red-soft);
+  border: 1.5px solid rgba(192,57,43,.25);
+  color: var(--red);
+  font-weight: 700;
+  border-radius: var(--r-sm);
+  padding: 14px 16px;
+  line-height: 1.9;
+  font-size: 13.5px;
+  position: relative;
+  padding-inline-start: 44px;
+}
+.danger::before {
+  content: "⚠";
+  position: absolute;
+  right: 14px; top: 14px;
+  font-size: 18px;
+}
+
+/* ── FLAGS ───────────────────────────────────────────────────── */
+.flag {
+  color: var(--red);
+  font-weight: 600;
+  font-size: 13.5px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(192,57,43,.12);
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.flag:last-child { border-bottom: none; }
+.flag::before { content: "⚑"; font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+/* ── SUMMARY BOX ─────────────────────────────────────────────── */
+.summary {
+  background: var(--navy);
+  color: #c8d8f0;
+  border-radius: var(--r-sm);
+  padding: 16px 18px;
+  white-space: pre-wrap;
+  line-height: 2;
+  min-height: 120px;
+  font-size: 13.5px;
+  font-family: 'Cairo', sans-serif;
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+/* ── SAVE BAR ────────────────────────────────────────────────── */
+.savebar {
+  max-width: 1500px;
+  margin: 0 auto 16px;
+  padding: 0 24px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.historyWrap {
+  max-width: 1500px;
+  margin: 0 auto 20px;
+  padding: 0 24px;
+}
+
+/* ── EMPTY STATE ─────────────────────────────────────────────── */
+.empty {
+  text-align: center;
+  color: var(--muted);
+  border: 2px dashed var(--border);
+  border-radius: var(--r-sm);
+  background: var(--ivory);
+  padding: 32px 16px;
+  font-size: 14px;
+}
+
+/* ── HELP BOX ────────────────────────────────────────────────── */
+.helpBox {
+  background: rgba(201,168,76,.08);
+  border: 1px solid rgba(201,168,76,.22);
+  border-inline-start: 3px solid var(--gold);
+  border-radius: var(--r-sm);
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.75;
+  color: #7a5c10;
+  margin-bottom: 16px;
+}
+
+/* ── BADGES ──────────────────────────────────────────────────── */
+.badge, .userBadge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.badge { background: var(--teal-soft); color: var(--teal); border: 1px solid rgba(14,165,160,.2); }
+
+/* Status badges */
+.st-pending   { background: var(--amber-soft); color: #92400e; border: 1px solid rgba(217,119,6,.22); border-radius: 999px; padding: 3px 10px; font-size: 12px; font-weight: 700; }
+.st-approved  { background: var(--green-soft); color: #0a5c3a; border: 1px solid rgba(15,140,94,.22); border-radius: 999px; padding: 3px 10px; font-size: 12px; font-weight: 700; }
+.st-followup  { background: var(--red-soft);   color: #7f1d1d; border: 1px solid rgba(192,57,43,.22); border-radius: 999px; padding: 3px 10px; font-size: 12px; font-weight: 700; }
+
+/* ── ROLE CARDS (home page) ──────────────────────────────────── */
+.roleGrid {
+  max-width: 1200px;
+  margin: 28px auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+.roleCard {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 30px 26px;
+  box-shadow: var(--sh);
+  transition: transform var(--t), box-shadow var(--t);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  animation: fadeUp .3s ease both;
+  position: relative;
+  overflow: hidden;
+}
+.roleCard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--teal), var(--gold));
+}
+.roleCard:hover { transform: translateY(-4px); box-shadow: var(--sh-lg); }
+.roleCard .rc-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--r-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  background: linear-gradient(135deg, var(--teal-soft), rgba(14,165,160,.12));
+  border: 1px solid rgba(14,165,160,.2);
+  margin-bottom: 4px;
+}
+.roleCard h2 { font-size: 19px; color: var(--navy); }
+.roleCard p  { font-size: 13px; color: var(--muted); line-height: 1.65; }
+.roleCard .btn { margin-top: 8px; min-width: 160px; }
+
+/* ── MODAL ───────────────────────────────────────────────────── */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(13,31,60,.55);
+  z-index: 300;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+  backdrop-filter: blur(6px);
+  animation: fadeIn .2s ease;
+}
+.sheet {
+  background: var(--white);
+  max-width: 1020px;
+  width: 100%;
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-xl);
+  overflow: hidden;
+  margin-top: 20px;
+  animation: slideDown .25s ease;
+}
+.sheetHeader {
+  padding: 16px 20px;
+  background: linear-gradient(135deg, var(--navy), var(--navy2));
+  color: #fff;
+  font-weight: 700;
+  font-family: 'Noto Kufi Arabic', sans-serif;
+  font-size: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.sheetBody { padding: 20px; }
+
+/* ── REVIEW LIST ─────────────────────────────────────────────── */
+.consultRow {
+  border: 1px solid var(--border);
+  background: var(--white);
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all var(--t);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+  animation: fadeUp .2s ease both;
+}
+.consultRow:hover { border-color: var(--teal); box-shadow: 0 4px 18px var(--teal-glow); transform: translateY(-1px); }
+.consultRow-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-sm);
+  background: var(--teal-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  border: 1px solid rgba(14,165,160,.2);
+}
+.consultRow-title { font-weight: 700; color: var(--navy); font-size: 14px; }
+.consultRow-meta  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* ── ADMIN SIDEBAR LIST ──────────────────────────────────────── */
+.adminList { max-height: 680px; overflow-y: auto; padding-inline-end: 2px; }
+.adminList::-webkit-scrollbar { width: 4px; }
+.adminList::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+.adminItem {
+  border: 1px solid var(--border);
+  background: var(--ivory);
+  border-radius: var(--r-sm);
+  padding: 10px 13px;
+  margin-bottom: 7px;
+  cursor: pointer;
+  transition: all var(--t);
+}
+.adminItem:hover { border-color: var(--border2); background: #eef3fa; }
+.adminItem.active { background: var(--teal-soft); border-color: rgba(14,165,160,.4); box-shadow: var(--sh-sm); }
+.adminItem b { color: var(--navy); font-size: 13.5px; }
+.small { font-size: 12px; color: var(--muted); line-height: 1.65; }
+
+/* ── ADMIN EDITOR ────────────────────────────────────────────── */
+.adminGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.questionEditor {
+  border: 1px solid var(--border);
+  background: var(--white);
+  border-radius: var(--r-lg);
+  padding: 16px;
+  margin: 12px 0;
+  box-shadow: var(--sh-sm);
+  animation: fadeUp .2s ease;
+}
+.questionHeader {
+  background: linear-gradient(135deg, var(--teal-soft), rgba(14,165,160,.04));
+  border: 1px solid rgba(14,165,160,.2);
+  border-radius: var(--r-sm);
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.questionHeader b { color: var(--navy); font-size: 14px; }
+
+/* ── MINI DETAIL FORM ────────────────────────────────────────── */
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 2px solid var(--teal);
+  border-bottom: none;
+  border-radius: var(--r-sm) var(--r-sm) 0 0;
+  overflow: hidden;
+}
+.cell {
+  border-inline-start: 2px solid var(--teal);
+  border-bottom: 2px solid var(--teal);
+  min-height: 54px;
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.cell:last-child { border-inline-start: 0; }
+.cell label { display: block; color: var(--red); font-weight: 700; font-size: 11px; margin-bottom: 3px; text-transform: uppercase; letter-spacing: .4px; }
+.cell.wide2 { grid-column: span 2; }
+.cell.wide4 { grid-column: 1 / -1; }
+
+.consultText {
+  white-space: pre-wrap;
+  background: var(--navy);
+  color: #c8d8f0;
+  border-radius: var(--r-sm);
+  padding: 14px 16px;
+  line-height: 2;
+  font-size: 13.5px;
+  font-family: 'Cairo', sans-serif;
+}
+.reviewBox {
+  background: var(--green-soft);
+  border: 1px solid rgba(15,140,94,.2);
+  border-radius: var(--r-sm);
+  padding: 14px;
+  margin-top: 14px;
+}
+.signedBy {
+  background: rgba(201,168,76,.08);
+  border: 1px solid rgba(201,168,76,.25);
+  border-radius: var(--r-sm);
+  padding: 10px 14px;
+  margin-top: 12px;
+  font-weight: 700;
+  color: #7a5c10;
+  text-align: center;
+}
+
+/* ── USER TABLE ──────────────────────────────────────────────── */
+.userTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 7px;
+}
+.userTable th {
+  text-align: right;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.userTable td {
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 10px;
+  font-size: 13px;
+  vertical-align: middle;
+}
+.userTable td:first-child  { border-inline-end: 1px solid var(--border); border-radius: 0 var(--r-sm) var(--r-sm) 0; }
+.userTable td:last-child   { border-inline-start: 1px solid var(--border); border-radius: var(--r-sm) 0 0 var(--r-sm); }
+
+/* ── TOAST ───────────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  background: var(--navy);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: var(--r-sm);
+  box-shadow: var(--sh-lg);
+  z-index: 999;
+  font-size: 14px;
+  font-weight: 700;
+  animation: slideUp .2s ease;
+  border-inline-start: 3px solid var(--teal);
+}
+.toast.ok  { border-inline-start-color: var(--green); }
+.toast.err { border-inline-start-color: var(--red); }
+
+/* ── 404 ─────────────────────────────────────────────────────── */
+.notfound-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+.notfound-code {
+  font-family: 'Noto Kufi Arabic', sans-serif;
+  font-size: 140px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--navy2), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+.notfound-title { font-size: 28px; color: var(--navy); font-weight: 900; margin-top: -8px; }
+.notfound-msg   { color: var(--muted); margin-top: 10px; line-height: 1.7; }
+
+/* ── HIDDEN ──────────────────────────────────────────────────── */
+.hidden { display: none !important; }
+
+/* ── PRIORITY BADGE ──────────────────────────────────────────── */
+#priority {
+  font-size: 12.5px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 4px 12px;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.25);
+  color: #fff;
+}
+
+/* ── ANIMATIONS ──────────────────────────────────────────────── */
+@keyframes fadeUp   { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn   { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideDown{ from { transform: translateY(-16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes slideUp  { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .wrap, .adminWrap { grid-template-columns: 1fr; }
+  .cards, .qgrid, .adminGrid { grid-template-columns: 1fr; }
+  .hdr-center { display: none; }
+  .roleGrid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 700px) {
+  header { padding: 0 16px; }
+  .userbar, .page-wrap, .savebar, .historyWrap { padding-inline: 14px; }
+  .wrap, .adminWrap { padding: 0 14px 28px; margin-top: 14px; }
+  .topFields { grid-template-columns: 1fr 1fr; }
+  .span2, .span4 { grid-column: span 1; }
+  .gridSymptoms { grid-template-columns: 1fr 1fr; }
+  .loginBox { margin: 24px 16px; padding: 24px 20px; }
+  .roleGrid { grid-template-columns: 1fr; padding: 0 14px; }
+  .cards { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .topFields { grid-template-columns: 1fr; }
+  .span2 { grid-column: span 1; }
+}
+
+/* V61 final positioning on uploaded design */
+header{
+  direction:rtl;
+}
+.hdr-brand{
+  justify-content:flex-start;
+  min-width:260px;
+}
+.hdr-center{
+  flex:1;
+  text-align:center;
+}
+.hdr-actions{
+  min-width:260px;
+  justify-content:flex-end;
+}
+.userbar{
+  direction:rtl;
+}
+.roleGrid{
+  grid-template-columns:repeat(auto-fit, minmax(280px, 320px)) !important;
+  justify-content:center !important;
+  align-items:stretch !important;
+  gap:22px !important;
+}
+.roleCard{
+  width:100% !important;
+  min-height:220px !important;
+  height:auto !important;
+  justify-content:center !important;
+}
+.wrap{
+  align-items:start !important;
+}
+.cards{
+  align-items:start !important;
+}
+.adminWrap{
+  align-items:start !important;
+}
+.questionEditor{
+  scroll-margin-top:90px;
+}
+#homeView .roleGrid{
+  margin-top:30px !important;
+}
+#loginView .panel,
+.loginBox{
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+@media(max-width:850px){
+  header{
+    height:auto !important;
+    min-height:var(--hdr);
+    flex-direction:column;
+    gap:10px;
+    padding:14px 18px;
+  }
+  .hdr-brand,.hdr-center,.hdr-actions{
+    min-width:0;
+    width:100%;
+    justify-content:center;
+    text-align:center;
+  }
+  .wrap,.adminWrap{
+    grid-template-columns:1fr !important;
+    padding:0 14px 28px !important;
+  }
+  .topFields,.qgrid,.cards{
+    grid-template-columns:1fr !important;
+  }
+}
+
+
+/* V62 layout/readability fixes on uploaded design */
+
+/* 1) Tables/list rows: stop columns/buttons from colliding */
+table{
+  width:100% !important;
+  border-collapse:separate !important;
+  border-spacing:0 8px !important;
+  table-layout:auto !important;
+}
+th,td{
+  vertical-align:middle !important;
+  padding:10px 12px !important;
+  line-height:1.65 !important;
+  white-space:normal !important;
+  word-break:normal !important;
+  overflow-wrap:anywhere !important;
+}
+td:last-child,
+th:last-child,
+td:first-child,
+th:first-child{
+  white-space:nowrap !important;
+}
+td button,
+td .btn,
+.table button,
+.table .btn{
+  white-space:nowrap !important;
+  min-width:98px !important;
+  margin:3px !important;
+}
+.userTable,
+.consultationsTable,
+.reviewTable{
+  width:100% !important;
+  table-layout:auto !important;
+}
+.userTable td,
+.consultationsTable td,
+.reviewTable td{
+  max-width:260px !important;
+}
+
+/* If lists are div-based */
+.consultationRow,
+.consultRow,
+.reviewRow,
+.historyRow{
+  display:grid !important;
+  grid-template-columns:minmax(135px,1.1fr) minmax(120px,.8fr) minmax(110px,.65fr) minmax(130px,.8fr) minmax(220px,1.3fr) minmax(150px,.85fr) !important;
+  gap:12px !important;
+  align-items:center !important;
+  padding:12px 14px !important;
+  border-bottom:1px solid var(--border,#e5e7eb) !important;
+}
+.consultationRow .btn,
+.consultRow .btn,
+.reviewRow .btn,
+.historyRow .btn{
+  white-space:nowrap !important;
+}
+
+/* 2) Review/history panels: keep content readable */
+.panel .body{
+  overflow-x:auto !important;
+}
+.panel{
+  min-width:0 !important;
+}
+.content{
+  min-width:0 !important;
+}
+
+/* 3) Symptom selected buttons: make selected text visible */
+.symbtn.sel,
+.symbtn.active,
+.symbtn.selected,
+button.symbtn.sel,
+button.symbtn.active{
+  background:linear-gradient(135deg,var(--teal,#19b5aa),var(--navy2,#183b68)) !important;
+  color:#ffffff !important;
+  border-color:var(--teal,#19b5aa) !important;
+  box-shadow:0 8px 20px rgba(21,181,170,.24) !important;
+}
+.symbtn.sel *,
+.symbtn.active *,
+.symbtn.selected *{
+  color:#ffffff !important;
+}
+
+/* 4) Summary contrast/readability */
+.summary{
+  background:#07182f !important;
+  color:#ffffff !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 10px 28px rgba(7,24,47,.22) !important;
+  font-weight:700 !important;
+  font-size:15px !important;
+  line-height:2 !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.35) !important;
+}
+.summary *{
+  color:#ffffff !important;
+}
+
+/* 5) Buttons inside summary: keep separated and centered */
+.card.green .content,
+.card:has(.summary) .content{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+}
+.card.green .content .btn,
+.card:has(.summary) .content .btn{
+  align-self:center !important;
+  min-width:135px !important;
+}
+
+/* 6) Role cards normal size, not tall */
+.roleGrid{
+  grid-template-columns:repeat(auto-fit,minmax(260px,320px)) !important;
+  justify-content:center !important;
+  gap:22px !important;
+}
+.roleCard{
+  min-height:210px !important;
+  height:auto !important;
+  max-height:none !important;
+}
+
+/* 7) Header/actions/table responsive */
+@media(max-width:900px){
+  table{
+    min-width:760px !important;
+  }
+  .consultationRow,
+  .consultRow,
+  .reviewRow,
+  .historyRow{
+    grid-template-columns:1fr !important;
+  }
+}
+
+
+/* V63 consultation rows + selected symptom + summary polish */
+
+/* الجداول: خلي الأعمدة متناسقة ومش مترمية على الأطراف */
+.panel .body table,
+table{
+  width:100% !important;
+  max-width:100% !important;
+  margin:0 auto !important;
+  border-collapse:separate !important;
+  border-spacing:0 10px !important;
+  table-layout:fixed !important;
+}
+
+thead tr,
+table thead tr{
+  background:transparent !important;
+  box-shadow:none !important;
+}
+
+th{
+  background:transparent !important;
+  color:var(--navy,#0d1f3c) !important;
+  font-weight:900 !important;
+  text-align:center !important;
+  padding:10px 8px !important;
+  border:0 !important;
+  white-space:nowrap !important;
+}
+
+tbody tr{
+  background:var(--white,#fff) !important;
+  border-radius:16px !important;
+  box-shadow:0 6px 18px rgba(13,31,60,.07) !important;
+  outline:1px solid rgba(13,31,60,.08) !important;
+}
+
+td{
+  background:transparent !important;
+  color:var(--navy,#0d1f3c) !important;
+  text-align:center !important;
+  vertical-align:middle !important;
+  padding:13px 10px !important;
+  line-height:1.7 !important;
+  border:0 !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+}
+
+tbody tr td:first-child{
+  border-radius:0 16px 16px 0 !important;
+}
+tbody tr td:last-child{
+  border-radius:16px 0 0 16px !important;
+}
+
+/* عرض أعمدة منطقي في جداول المراجعة والاستشارات */
+th:nth-child(1), td:nth-child(1){ width:15% !important; }
+th:nth-child(2), td:nth-child(2){ width:22% !important; }
+th:nth-child(3), td:nth-child(3){ width:13% !important; }
+th:nth-child(4), td:nth-child(4){ width:13% !important; }
+th:nth-child(5), td:nth-child(5){ width:22% !important; }
+th:nth-child(6), td:nth-child(6){ width:15% !important; }
+
+/* لو فيه عمود تحديد في الأول */
+th:first-child:has(input[type="checkbox"]),
+td:first-child:has(input[type="checkbox"]){
+  width:54px !important;
+}
+
+/* الأزرار داخل الجدول */
+td button,
+td .btn,
+.table button,
+.table .btn{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  min-width:96px !important;
+  height:38px !important;
+  padding:8px 13px !important;
+  margin:3px !important;
+  border-radius:11px !important;
+  white-space:nowrap !important;
+  font-size:13px !important;
+  font-weight:900 !important;
+}
+
+/* كروت/صفوف لو معمولين div مش table */
+.consultationRow,
+.consultRow,
+.reviewRow,
+.historyRow,
+.consultation-card,
+.review-card,
+.history-card{
+  width:100% !important;
+  margin:10px auto !important;
+  padding:14px 16px !important;
+  border:1px solid rgba(13,31,60,.10) !important;
+  border-radius:18px !important;
+  background:var(--white,#fff) !important;
+  box-shadow:0 6px 18px rgba(13,31,60,.07) !important;
+  display:grid !important;
+  grid-template-columns:1.1fr 1.1fr .8fr .8fr 1.2fr auto !important;
+  gap:12px !important;
+  align-items:center !important;
+  text-align:center !important;
+}
+
+/* زر العرض المختار لازم اسمه يظهر */
+.symbtn{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  line-height:1.45 !important;
+  overflow:visible !important;
+  white-space:normal !important;
+  word-break:normal !important;
+}
+
+.symbtn.sel,
+.symbtn.active,
+.symbtn.selected,
+button.symbtn.sel,
+button.symbtn.active,
+button.symbtn.selected{
+  background:linear-gradient(135deg,var(--teal,#17b8ae),var(--teal2,#0f948c)) !important;
+  color:#ffffff !important;
+  border-color:var(--teal,#17b8ae) !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.20) !important;
+  font-weight:900 !important;
+}
+
+.symbtn.sel::before,
+.symbtn.active::before,
+.symbtn.selected::before{
+  color:#fff !important;
+}
+
+.symbtn.sel *,
+.symbtn.active *,
+.symbtn.selected *{
+  color:#ffffff !important;
+}
+
+/* لو النص اختفى بسبب لون داخلي أو line-height */
+.gridSymptoms .symbtn.sel{
+  font-size:14px !important;
+  min-height:52px !important;
+  padding:10px 12px !important;
+}
+
+/* الملخص: أبيض أوضح */
+.summary{
+  background:#06152b !important;
+  color:#ffffff !important;
+  font-weight:800 !important;
+  font-size:15px !important;
+  line-height:2.05 !important;
+  letter-spacing:.05px !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.45) !important;
+}
+.summary::selection{
+  background:rgba(255,255,255,.25) !important;
+}
+
+/* عناوين البانلز والجداول */
+.panel .title{
+  text-align:center !important;
+}
+.panel .title span:first-child{
+  width:100% !important;
+  text-align:center !important;
+}
+
+/* خلي جدول الاستشارات داخل الكارت ومريح */
+.panel .body{
+  overflow-x:auto !important;
+}
+.panel .body > table{
+  min-width:760px !important;
+}
+
+/* الصفحة الضيقة */
+@media(max-width:900px){
+  .panel .body > table{
+    min-width:820px !important;
+  }
+  .consultationRow,
+  .consultRow,
+  .reviewRow,
+  .historyRow,
+  .consultation-card,
+  .review-card,
+  .history-card{
+    grid-template-columns:1fr !important;
+    text-align:center !important;
+  }
+}
+
+
+/* V64 visual alignment fix */
+
+/* 1) Selected symptom: force the label to stay visible */
+.symbtn{
+  position:relative !important;
+  color:var(--navy,#0d1f3c) !important;
+}
+.symbtn.sel,
+.symbtn.active,
+.symbtn.selected,
+button.symbtn.sel,
+button.symbtn.active,
+button.symbtn.selected{
+  background:linear-gradient(135deg,var(--teal,#17b8ae),var(--teal2,#0f948c)) !important;
+  border-color:var(--teal,#17b8ae) !important;
+  color:#fff !important;
+  font-weight:900 !important;
+  text-align:center !important;
+}
+.symbtn.sel::after,
+.symbtn.active::after,
+.symbtn.selected::after{
+  content:attr(data-label);
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:8px 10px;
+  color:#fff !important;
+  font-size:14px;
+  line-height:1.35;
+  text-align:center;
+  pointer-events:none;
+  white-space:normal;
+}
+.symbtn.sel,
+.symbtn.active,
+.symbtn.selected{
+  font-size:0 !important;
+}
+
+/* 2) Review/history tables: centered compact table, not stretched to the edges */
+.panel .body > table,
+table{
+  width:min(1080px, 100%) !important;
+  max-width:1080px !important;
+  margin:0 auto !important;
+  table-layout:auto !important;
+  border-collapse:separate !important;
+  border-spacing:0 12px !important;
+}
+thead tr{
+  box-shadow:none !important;
+  background:transparent !important;
+}
+th{
+  padding:10px 12px !important;
+  text-align:center !important;
+  color:var(--navy,#0d1f3c) !important;
+  font-weight:900 !important;
+  border:0 !important;
+  white-space:nowrap !important;
+}
+td{
+  padding:13px 12px !important;
+  text-align:center !important;
+  vertical-align:middle !important;
+  line-height:1.65 !important;
+  border-top:1px solid rgba(13,31,60,.10) !important;
+  border-bottom:1px solid rgba(13,31,60,.10) !important;
+  background:#fff !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+  width:auto !important;
+  max-width:240px !important;
+}
+tbody tr{
+  box-shadow:0 7px 20px rgba(13,31,60,.075) !important;
+}
+tbody tr td:first-child{
+  border-right:1px solid rgba(13,31,60,.10) !important;
+  border-radius:0 16px 16px 0 !important;
+}
+tbody tr td:last-child{
+  border-left:1px solid rgba(13,31,60,.10) !important;
+  border-radius:16px 0 0 16px !important;
+}
+td button,
+td .btn{
+  min-width:98px !important;
+  height:38px !important;
+  margin:3px !important;
+  white-space:nowrap !important;
+  border-radius:11px !important;
+}
+
+/* If table has checkbox column, keep it small */
+td input[type="checkbox"],
+th input[type="checkbox"]{
+  width:16px !important;
+  height:16px !important;
+}
+
+/* 3) Div-based consultation rows also become separated cards */
+.consultationRow,
+.consultRow,
+.reviewRow,
+.historyRow,
+.consultation-card,
+.review-card,
+.history-card{
+  width:min(1080px,100%) !important;
+  margin:12px auto !important;
+  padding:14px 16px !important;
+  border:1px solid rgba(13,31,60,.11) !important;
+  border-radius:18px !important;
+  background:#fff !important;
+  box-shadow:0 7px 20px rgba(13,31,60,.075) !important;
+  display:grid !important;
+  grid-template-columns:repeat(auto-fit,minmax(130px,1fr)) !important;
+  gap:12px !important;
+  align-items:center !important;
+  text-align:center !important;
+}
+
+/* 4) Final consultation/details form: complete borders and readable dark boxes */
+.consultationDetails,
+.finalConsultation,
+.printForm,
+.formPreview,
+#consultationDetails,
+#finalConsultation,
+#reviewModal,
+.modalBox{
+  color:var(--navy,#0d1f3c) !important;
+}
+.consultationDetails table,
+.finalConsultation table,
+.printForm table,
+.formPreview table,
+#consultationDetails table,
+#finalConsultation table{
+  width:100% !important;
+  max-width:100% !important;
+  border-collapse:collapse !important;
+  border-spacing:0 !important;
+  table-layout:fixed !important;
+  margin:0 !important;
+}
+.consultationDetails td,
+.consultationDetails th,
+.finalConsultation td,
+.finalConsultation th,
+.printForm td,
+.printForm th,
+.formPreview td,
+.formPreview th,
+#consultationDetails td,
+#consultationDetails th,
+#finalConsultation td,
+#finalConsultation th{
+  border:1.5px solid var(--teal,#17b8ae) !important;
+  background:#fff !important;
+  text-align:right !important;
+  vertical-align:top !important;
+  padding:10px 12px !important;
+  color:var(--navy,#0d1f3c) !important;
+  max-width:none !important;
+}
+.consultationDetails .summary,
+.finalConsultation .summary,
+.printForm .summary,
+.formPreview .summary,
+#consultationDetails .summary,
+#finalConsultation .summary,
+.summary{
+  background:#06152b !important;
+  color:#fff !important;
+  font-weight:850 !important;
+  line-height:2.05 !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.45) !important;
+}
+.consultationDetails .summary *,
+.finalConsultation .summary *,
+.printForm .summary *,
+.formPreview .summary *,
+#consultationDetails .summary *,
+#finalConsultation .summary *,
+.summary *{
+  color:#fff !important;
+}
+
+/* Dark panels anywhere should have white text */
+[style*="background:#111827"],
+[style*="background: #111827"],
+[style*="background:#06152b"],
+[style*="background: #06152b"],
+.darkBox,
+.dark-section{
+  color:#fff !important;
+}
+[style*="background:#111827"] *,
+[style*="background: #111827"] *,
+[style*="background:#06152b"] *,
+[style*="background: #06152b"] *,
+.darkBox *,
+.dark-section *{
+  color:#fff !important;
+}
+
+/* 5) keep panels comfortable */
+.panel .body{
+  overflow-x:auto !important;
+}
+@media(max-width:900px){
+  .panel .body > table{
+    min-width:760px !important;
+  }
+}
+
+
+/* =========================================================
+   V65 CLEAN FINAL VISUAL FIXES
+   الهدف: طبقة نهائية واحدة وواضحة بدون تداخل مع اللوجيك.
+   ========================================================= */
+
+/* 1) أي بلوك غامق داخل فتح الاستشارة أو الملخص يكون الكلام فيه أبيض واضح */
+.summary,
+.summary *,
+.darkBox,
+.darkBox *,
+.dark-section,
+.dark-section *,
+.review-note-box,
+.review-note-box *,
+.medBox,
+.medBox *,
+.adviceBox,
+.adviceBox *,
+.finalConsultation .summary,
+.finalConsultation .summary *,
+.consultationDetails .summary,
+.consultationDetails .summary *,
+.printForm .summary,
+.printForm .summary *,
+.formPreview .summary,
+.formPreview .summary *,
+#finalConsultation .summary,
+#finalConsultation .summary *,
+#consultationDetails .summary,
+#consultationDetails .summary *,
+[style*="background:#06152b"],
+[style*="background:#06152b"] *,
+[style*="background: #06152b"],
+[style*="background: #06152b"] *,
+[style*="background:#07182f"],
+[style*="background:#07182f"] *,
+[style*="background: #07182f"],
+[style*="background: #07182f"] *,
+[style*="background:#0d1f3c"],
+[style*="background:#0d1f3c"] *,
+[style*="background: #0d1f3c"],
+[style*="background: #0d1f3c"] *,
+[style*="background:#111827"],
+[style*="background:#111827"] *,
+[style*="background: #111827"],
+[style*="background: #111827"] *{
+  color:#ffffff !important;
+  fill:#ffffff !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.38) !important;
+}
+
+.summary{
+  background:#06152b !important;
+  color:#ffffff !important;
+  border-radius:12px !important;
+  font-weight:850 !important;
+  line-height:2.05 !important;
+  letter-spacing:.02em !important;
+}
+
+/* 2) فتح الاستشارة: البوردرات تكمل والكروت لا تتداخل */
+.modalBox,
+#reviewModal .modalBox,
+.consultationDetails,
+.finalConsultation,
+.printForm,
+.formPreview,
+#consultationDetails,
+#finalConsultation{
+  overflow:visible !important;
+  padding-top:16px !important;
+}
+
+.consultationDetails table,
+.finalConsultation table,
+.printForm table,
+.formPreview table,
+#consultationDetails table,
+#finalConsultation table{
+  width:100% !important;
+  max-width:100% !important;
+  border-collapse:collapse !important;
+  table-layout:fixed !important;
+  margin:0 !important;
+}
+
+.consultationDetails td,
+.consultationDetails th,
+.finalConsultation td,
+.finalConsultation th,
+.printForm td,
+.printForm th,
+.formPreview td,
+.formPreview th,
+#consultationDetails td,
+#consultationDetails th,
+#finalConsultation td,
+#finalConsultation th{
+  border:1.5px solid var(--teal,#17b8ae) !important;
+  padding:11px 13px !important;
+  vertical-align:top !important;
+  background:#ffffff !important;
+  color:var(--navy,#0d1f3c) !important;
+  text-align:right !important;
+  box-shadow:none !important;
+}
+
+/* عنوان إجابات الأسئلة في النص */
+.consultationDetails h3,
+.finalConsultation h3,
+.printForm h3,
+.formPreview h3,
+#consultationDetails h3,
+#finalConsultation h3{
+  text-align:center !important;
+}
+
+
+/* دعم عملي للعنوان حتى لو CSS :contains غير مدعوم؛ JS سيضيف كلاس v65-center-title */
+.v65-center-title{
+  text-align:center !important;
+  display:block !important;
+  width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+
+/* 3) حالات الاستشارة: تم الاعتماد أخضر، والاستكمال/المراجعة ألوان واضحة */
+.status-approved,
+.st-approved,
+.badge-approved,
+.v65-status-approved{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:5px 12px !important;
+  border-radius:999px !important;
+  background:#dcfce7 !important;
+  color:#15803d !important;
+  border:1px solid #86efac !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+}
+
+.status-followup,
+.st-followup,
+.badge-followup,
+.v65-status-followup,
+.v65-status-review{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:5px 12px !important;
+  border-radius:999px !important;
+  background:#fef3c7 !important;
+  color:#92400e !important;
+  border:1px solid #fcd34d !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+}
+
+/* لو الحالة نص داخل td فقط، JS سيضيف span/class */
+td .v65-status-approved,
+td .v65-status-followup,
+td .v65-status-review{
+  margin:auto !important;
+}
+
+/* 4) اختيار العرض: زر مضبوط بدون خروج بوردر ولا اختفاء اسم */
+.gridSymptoms{
+  gap:10px !important;
+  padding:4px 4px 8px !important;
+}
+
+.symbtn{
+  position:relative !important;
+  overflow:hidden !important;
+  border:1.5px solid var(--border,#d7dccf) !important;
+  border-radius:13px !important;
+  min-height:52px !important;
+  padding:10px 12px !important;
+  background:#fbfaf5 !important;
+  color:var(--navy,#0d1f3c) !important;
+  box-shadow:none !important;
+  outline:none !important;
+  transform:none !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  line-height:1.35 !important;
+  font-size:14px !important;
+  font-weight:800 !important;
+  white-space:normal !important;
+  word-break:normal !important;
+}
+
+.symbtn:hover{
+  border-color:var(--teal,#17b8ae) !important;
+  box-shadow:0 6px 16px rgba(23,184,174,.12) !important;
+}
+
+.symbtn.sel,
+.symbtn.active,
+.symbtn.selected,
+button.symbtn.sel,
+button.symbtn.active,
+button.symbtn.selected{
+  background:linear-gradient(135deg,var(--teal,#17b8ae),var(--teal2,#0f948c)) !important;
+  color:#ffffff !important;
+  border:1.5px solid var(--teal2,#0f948c) !important;
+  box-shadow:0 8px 20px rgba(23,184,174,.22) !important;
+  outline:none !important;
+  font-size:14px !important;
+}
+
+.symbtn.sel *,
+.symbtn.active *,
+.symbtn.selected *{
+  color:#ffffff !important;
+}
+
+/* إلغاء حيلة after القديمة لو موجودة من V64 عشان ما تعملش تداخل */
+.symbtn.sel::after,
+.symbtn.active::after,
+.symbtn.selected::after{
+  content:none !important;
+}
+
+/* 5) جداول المراجعة والاستشارات: صفوف مفصولة ومريحة */
+.panel .body > table,
+table{
+  width:min(1080px,100%) !important;
+  max-width:1080px !important;
+  margin:0 auto !important;
+  border-collapse:separate !important;
+  border-spacing:0 10px !important;
+  table-layout:auto !important;
+}
+
+tbody tr{
+  background:#ffffff !important;
+  box-shadow:0 7px 18px rgba(13,31,60,.07) !important;
+  outline:1px solid rgba(13,31,60,.08) !important;
+  border-radius:16px !important;
+}
+
+th{
+  text-align:center !important;
+  color:var(--navy,#0d1f3c) !important;
+  font-weight:900 !important;
+  border:0 !important;
+  background:transparent !important;
+  padding:10px 12px !important;
+}
+
+td{
+  text-align:center !important;
+  vertical-align:middle !important;
+  color:var(--navy,#0d1f3c) !important;
+  background:#ffffff !important;
+  padding:13px 12px !important;
+  line-height:1.65 !important;
+  border-top:1px solid rgba(13,31,60,.09) !important;
+  border-bottom:1px solid rgba(13,31,60,.09) !important;
+  box-shadow:none !important;
+}
+
+tbody tr td:first-child{
+  border-right:1px solid rgba(13,31,60,.09) !important;
+  border-radius:0 16px 16px 0 !important;
+}
+
+tbody tr td:last-child{
+  border-left:1px solid rgba(13,31,60,.09) !important;
+  border-radius:16px 0 0 16px !important;
+}
+
+/* 6) منع أي كارت فوق من قص المحتوى */
+.card,
+.panel,
+.content,
+.body{
+  min-width:0 !important;
+}
+
+.panel .body{
+  overflow-x:auto !important;
+  overflow-y:visible !important;
+}
+
+@media(max-width:900px){
+  .panel .body > table{
+    min-width:760px !important;
+  }
+}
+
+
+/* =========================================================
+   V66 FINAL CLEAN PATCH
+   آخر طبقة بصرية واضحة: selected symptoms + dark text + full borders.
+   ========================================================= */
+
+/* A) زر العرض المختار: الاسم يظهر دائمًا */
+.gridSymptoms .symbtn,
+#symptoms .symbtn,
+button.symbtn{
+  text-indent:0 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  overflow:hidden !important;
+  white-space:normal !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  line-height:1.35 !important;
+}
+
+.gridSymptoms .symbtn.sel,
+.gridSymptoms .symbtn.active,
+.gridSymptoms .symbtn.selected,
+#symptoms .symbtn.sel,
+#symptoms .symbtn.active,
+#symptoms .symbtn.selected,
+button.symbtn.sel,
+button.symbtn.active,
+button.symbtn.selected{
+  font-size:14px !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  background:linear-gradient(135deg,#14b8a6,#0f948c) !important;
+  border:1.5px solid #0f948c !important;
+  outline:0 !important;
+  box-shadow:0 8px 18px rgba(20,184,166,.22) !important;
+  transform:none !important;
+}
+
+.gridSymptoms .symbtn.sel::after,
+.gridSymptoms .symbtn.active::after,
+.gridSymptoms .symbtn.selected::after,
+#symptoms .symbtn.sel::after,
+#symptoms .symbtn.active::after,
+#symptoms .symbtn.selected::after,
+button.symbtn.sel::after,
+button.symbtn.active::after,
+button.symbtn.selected::after{
+  content:none !important;
+  display:none !important;
+}
+
+.gridSymptoms .symbtn.sel *,
+.gridSymptoms .symbtn.active *,
+.gridSymptoms .symbtn.selected *,
+#symptoms .symbtn.sel *,
+#symptoms .symbtn.active *,
+#symptoms .symbtn.selected *{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+}
+
+/* B) أي خلفية غامقة في فتح الاستشارة أو الملخص = نص أبيض صريح */
+.summary,
+.summary *,
+.reviewSummary,
+.reviewSummary *,
+.darkBox,
+.darkBox *,
+.dark-section,
+.dark-section *,
+.medBox,
+.medBox *,
+.adviceBox,
+.adviceBox *,
+.v66-dark-readable,
+.v66-dark-readable *,
+.modalBox .summary,
+.modalBox .summary *,
+.modalBox [style*="background"],
+.modalBox [style*="background"] *,
+#reviewModal .summary,
+#reviewModal .summary *,
+#reviewModal [style*="background"],
+#reviewModal [style*="background"] *,
+#consultationDetails .summary,
+#consultationDetails .summary *,
+#finalConsultation .summary,
+#finalConsultation .summary *,
+[style*="background:#06152b"],
+[style*="background:#06152b"] *,
+[style*="background: #06152b"],
+[style*="background: #06152b"] *,
+[style*="background:#07182f"],
+[style*="background:#07182f"] *,
+[style*="background: #07182f"],
+[style*="background: #07182f"] *,
+[style*="background:#0d1f3c"],
+[style*="background:#0d1f3c"] *,
+[style*="background: #0d1f3c"],
+[style*="background: #0d1f3c"] *,
+[style*="background:#111827"],
+[style*="background:#111827"] *,
+[style*="background: #111827"],
+[style*="background: #111827"] *{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  text-shadow:0 1px 1px rgba(0,0,0,.42) !important;
+}
+
+.summary{
+  background:#06152b !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  font-weight:850 !important;
+  line-height:2.05 !important;
+  border-radius:12px !important;
+}
+
+/* C) فتح الاستشارة: خطوط البوردر تكمل ومفيش صف ناقص */
+.modalBox,
+#reviewModal .modalBox,
+.consultationDetails,
+.finalConsultation,
+.printForm,
+.formPreview,
+#consultationDetails,
+#finalConsultation{
+  overflow:visible !important;
+}
+
+.consultationDetails table,
+.finalConsultation table,
+.printForm table,
+.formPreview table,
+#consultationDetails table,
+#finalConsultation table,
+.modalBox table{
+  width:100% !important;
+  max-width:100% !important;
+  border-collapse:collapse !important;
+  border-spacing:0 !important;
+  table-layout:fixed !important;
+  margin:0 !important;
+  border:1.5px solid #14b8a6 !important;
+}
+
+.consultationDetails tr,
+.finalConsultation tr,
+.printForm tr,
+.formPreview tr,
+#consultationDetails tr,
+#finalConsultation tr,
+.modalBox table tr{
+  border:0 !important;
+  box-shadow:none !important;
+  outline:0 !important;
+}
+
+.consultationDetails td,
+.consultationDetails th,
+.finalConsultation td,
+.finalConsultation th,
+.printForm td,
+.printForm th,
+.formPreview td,
+.formPreview th,
+#consultationDetails td,
+#consultationDetails th,
+#finalConsultation td,
+#finalConsultation th,
+.modalBox table td,
+.modalBox table th{
+  border:1.5px solid #14b8a6 !important;
+  background:#ffffff !important;
+  color:#0d1f3c !important;
+  -webkit-text-fill-color:#0d1f3c !important;
+  padding:11px 13px !important;
+  text-align:right !important;
+  vertical-align:top !important;
+  box-shadow:none !important;
+  max-width:none !important;
+}
+
+/* لو فيه أقسام معمولة div بدل table */
+.consultationDetails > div,
+.finalConsultation > div,
+.printForm > div,
+.formPreview > div,
+#consultationDetails > div,
+#finalConsultation > div{
+  box-sizing:border-box !important;
+}
+
+.v66-bordered-section{
+  border:1.5px solid #14b8a6 !important;
+  border-radius:10px !important;
+  margin:10px 0 !important;
+  padding:10px 12px !important;
+  overflow:hidden !important;
+}
+
+.v66-bordered-section + .v66-bordered-section{
+  margin-top:12px !important;
+}
+
+/* عنوان إجابات الأسئلة */
+.v66-center-title,
+.v65-center-title{
+  display:block !important;
+  width:100% !important;
+  text-align:center !important;
+  margin:0 auto 10px !important;
+  color:#155eef !important;
+  font-weight:900 !important;
+}
+
+/* D) Status badges */
+.v65-status-approved,
+.v66-status-approved,
+.status-approved,
+.st-approved{
+  background:#dcfce7 !important;
+  color:#15803d !important;
+  -webkit-text-fill-color:#15803d !important;
+  border:1px solid #86efac !important;
+  border-radius:999px !important;
+  padding:5px 12px !important;
+  font-weight:900 !important;
+}
+
+.v65-status-followup,
+.v65-status-review,
+.v66-status-followup,
+.v66-status-review,
+.status-followup,
+.st-followup{
+  background:#fef3c7 !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  border:1px solid #fcd34d !important;
+  border-radius:999px !important;
+  padding:5px 12px !important;
+  font-weight:900 !important;
+}
+
+
+/* =========================================================
+   V67 FINAL: visible selected symptom + incomplete status
+   ========================================================= */
+
+/* Selected symptom label must remain visible */
+.symbtn,
+.gridSymptoms .symbtn,
+#symptoms .symbtn{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  position:relative !important;
+  overflow:hidden !important;
+  white-space:normal !important;
+  text-indent:0 !important;
+  font-size:14px !important;
+  line-height:1.35 !important;
+}
+
+.symbtn .v67-symptom-label{
+  display:block !important;
+  color:inherit !important;
+  -webkit-text-fill-color:inherit !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  text-indent:0 !important;
+  font-size:14px !important;
+  font-weight:900 !important;
+  line-height:1.35 !important;
+  text-align:center !important;
+  width:100% !important;
+  z-index:2 !important;
+  position:relative !important;
+}
+
+.symbtn.sel,
+.symbtn.active,
+.symbtn.selected,
+.gridSymptoms .symbtn.sel,
+.gridSymptoms .symbtn.active,
+.gridSymptoms .symbtn.selected,
+#symptoms .symbtn.sel,
+#symptoms .symbtn.active,
+#symptoms .symbtn.selected{
+  background:linear-gradient(135deg,#14b8a6,#0f948c) !important;
+  border:1.5px solid #0f948c !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+  font-size:14px !important;
+  box-shadow:0 8px 18px rgba(20,184,166,.22) !important;
+}
+
+.symbtn.sel .v67-symptom-label,
+.symbtn.active .v67-symptom-label,
+.symbtn.selected .v67-symptom-label{
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+
+.symbtn.sel::after,
+.symbtn.active::after,
+.symbtn.selected::after{
+  content:none !important;
+  display:none !important;
+}
+
+/* Status badges */
+.v67-status-approved{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:5px 12px !important;
+  border-radius:999px !important;
+  background:#dcfce7 !important;
+  color:#15803d !important;
+  -webkit-text-fill-color:#15803d !important;
+  border:1px solid #86efac !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+}
+
+.v67-status-incomplete{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:5px 12px !important;
+  border-radius:999px !important;
+  background:#fee2e2 !important;
+  color:#b91c1c !important;
+  -webkit-text-fill-color:#b91c1c !important;
+  border:1px solid #fca5a5 !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+}
+
+.v67-incomplete-btn{
+  background:linear-gradient(135deg,#ef4444,#b91c1c) !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+  border:0 !important;
+  box-shadow:0 7px 16px rgba(185,28,28,.22) !important;
+}
+
+/* Keep dark boxes readable */
+.summary,
+.summary *,
+.v66-dark-readable,
+.v66-dark-readable *,
+[style*="background:#06152b"],
+[style*="background:#06152b"] *,
+[style*="background:#111827"],
+[style*="background:#111827"] *,
+[style*="background:#0d1f3c"],
+[style*="background:#0d1f3c"] *{
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+
+/* Full borders for opened consultation/question answer rows */
+.modalBox table,
+#reviewModal table,
+#consultationDetails table,
+#finalConsultation table{
+  border-collapse:collapse !important;
+  border:1.5px solid #14b8a6 !important;
+}
+.modalBox td,
+.modalBox th,
+#reviewModal td,
+#reviewModal th,
+#consultationDetails td,
+#consultationDetails th,
+#finalConsultation td,
+#finalConsultation th{
+  border:1.5px solid #14b8a6 !important;
+}
+.v66-center-title,
+.v65-center-title{
+  text-align:center !important;
+  width:100% !important;
+}
+
+
+/* V69 safe final patch: no MutationObserver, no heavy loops */
+.symbtn .v69-symptom-label,
+.symbtn .v67-symptom-label{
+  display:block !important;
+  width:100% !important;
+  color:inherit !important;
+  -webkit-text-fill-color:inherit !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  font-size:14px !important;
+  font-weight:900 !important;
+  line-height:1.35 !important;
+  text-align:center !important;
+  position:relative !important;
+  z-index:3 !important;
+}
+.symbtn.sel,
+.symbtn.active,
+.symbtn.selected{
+  background:linear-gradient(135deg,#14b8a6,#0f948c) !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+  border:1.5px solid #0f948c !important;
+  font-size:14px !important;
+  text-indent:0 !important;
+}
+.symbtn.sel .v69-symptom-label,
+.symbtn.active .v69-symptom-label,
+.symbtn.selected .v69-symptom-label,
+.symbtn.sel .v67-symptom-label,
+.symbtn.active .v67-symptom-label,
+.symbtn.selected .v67-symptom-label{
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+.symbtn.sel::after,
+.symbtn.active::after,
+.symbtn.selected::after{
+  display:none !important;
+  content:none !important;
+}
+.v69-status-incomplete{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:5px 12px !important;
+  border-radius:999px !important;
+  background:#fee2e2 !important;
+  color:#b91c1c !important;
+  -webkit-text-fill-color:#b91c1c !important;
+  border:1px solid #fca5a5 !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+}
+.v69-status-approved{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:5px 12px !important;
+  border-radius:999px !important;
+  background:#dcfce7 !important;
+  color:#15803d !important;
+  -webkit-text-fill-color:#15803d !important;
+  border:1px solid #86efac !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+}
+.summary,
+.summary *,
+.v66-dark-readable,
+.v66-dark-readable *{
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+
+
+/* V71 separate FOLLOW UP track */
+.v71-review-grid{display:grid !important;grid-template-columns:1fr 1fr !important;gap:12px !important;align-items:start !important;}
+.v71-review-grid .field:first-child{grid-column:1 / -1 !important;}
+.v71-action-row{margin-top:12px !important;align-items:center !important;}
+.v71-follow-pill,.status.followUp,.statusBadge.stFollowUp{display:inline-flex !important;align-items:center !important;justify-content:center !important;padding:5px 12px !important;border-radius:999px !important;background:#fef3c7 !important;color:#92400e !important;-webkit-text-fill-color:#92400e !important;border:1px solid #fcd34d !important;font-weight:900 !important;white-space:nowrap !important;margin-top:6px !important;}
+.v71-follow-done-pill,.status.followDone,.statusBadge.stFollowDone{display:inline-flex !important;align-items:center !important;justify-content:center !important;padding:5px 12px !important;border-radius:999px !important;background:#dbeafe !important;color:#1d4ed8 !important;-webkit-text-fill-color:#1d4ed8 !important;border:1px solid #93c5fd !important;font-weight:900 !important;white-space:nowrap !important;margin-top:6px !important;}
+.v71-follow-box{margin-top:12px !important;padding:12px 14px !important;border-radius:14px !important;background:#fffbeb !important;border:1px solid #fcd34d !important;color:#78350f !important;-webkit-text-fill-color:#78350f !important;line-height:1.8 !important;font-weight:700 !important;}
+.v71-follow-box *{color:#78350f !important;-webkit-text-fill-color:#78350f !important;}
+.v71-follow-text{color:#92400e !important;-webkit-text-fill-color:#92400e !important;}
+.v71-follow-done-text{color:#1d4ed8 !important;-webkit-text-fill-color:#1d4ed8 !important;}
+.v70-follow-btn{background:linear-gradient(135deg,#f59e0b,#d97706) !important;color:#fff !important;-webkit-text-fill-color:#fff !important;}
+.v70-follow-done-btn{background:linear-gradient(135deg,#2563eb,#1d4ed8) !important;color:#fff !important;-webkit-text-fill-color:#fff !important;}
+@media(max-width:780px){.v71-review-grid{grid-template-columns:1fr !important;}}
+
+
+/* V72 follow-up details + warning + stacked statuses */
+.v72-status-stack{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+}
+.v72-status-stack .status,
+.v72-status-stack .statusBadge,
+.v72-status-stack > span,
+.v72-status-stack > div{
+  width:max-content !important;
+  max-width:190px !important;
+  white-space:nowrap !important;
+  text-align:center !important;
+  line-height:1.3 !important;
+}
+.status.follow,
+.statusBadge.stFollow,
+.v69-status-incomplete{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:6px 12px !important;
+  border-radius:999px !important;
+  background:#fee2e2 !important;
+  color:#b91c1c !important;
+  -webkit-text-fill-color:#b91c1c !important;
+  border:1px solid #fca5a5 !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+}
+.v72-warning-pill{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:5px 12px !important;
+  border-radius:999px !important;
+  background:#fce7f3 !important;
+  color:#be185d !important;
+  -webkit-text-fill-color:#be185d !important;
+  border:1px solid #f9a8d4 !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+  margin-top:6px !important;
+}
+.v72-warning-btn{
+  background:linear-gradient(135deg,#db2777,#be185d) !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+  border:0 !important;
+}
+.v72-warning-box,
+.v72-warning-cell{
+  background:#fdf2f8 !important;
+  border:1px solid #f9a8d4 !important;
+  color:#831843 !important;
+  -webkit-text-fill-color:#831843 !important;
+}
+.v72-warning-box{
+  margin-top:12px !important;
+  padding:12px 14px !important;
+  border-radius:14px !important;
+  line-height:1.8 !important;
+  font-weight:700 !important;
+}
+.v72-warning-box *,.v72-warning-cell *{
+  color:#831843 !important;
+  -webkit-text-fill-color:#831843 !important;
+}
+.v72-agent-extra-grid .cell{
+  border:1px solid rgba(13,31,60,.12) !important;
+  border-radius:12px !important;
+  padding:10px 12px !important;
+  background:#fff !important;
+}
+.v72-agent-review-box{
+  margin-top:14px !important;
+}
+@media(max-width:780px){
+  .v72-status-stack .status,
+  .v72-status-stack .statusBadge,
+  .v72-status-stack > span,
+  .v72-status-stack > div{
+    max-width:170px !important;
+    white-space:normal !important;
+  }
+}
+
+
+/* V73 clean follow-up layout + safe status stack */
+.v73-review-box h3{display:none !important;}
+.v73-review-box{
+  margin-top:14px !important;
+  padding-top:0 !important;
+}
+.v73-follow-grid{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:12px !important;
+  margin-top:12px !important;
+}
+.v73-follow-cell{
+  border:1px solid #fcd34d !important;
+  background:#fffbeb !important;
+  color:#78350f !important;
+  -webkit-text-fill-color:#78350f !important;
+  border-radius:14px !important;
+  padding:12px 14px !important;
+  line-height:1.8 !important;
+  font-weight:700 !important;
+}
+.v73-follow-cell label{
+  display:block !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  font-weight:900 !important;
+  margin-bottom:6px !important;
+}
+.v72-status-stack{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+}
+.status.follow,
+.statusBadge.stFollow,
+.v69-status-incomplete{
+  max-width:none !important;
+  white-space:nowrap !important;
+  line-height:1.3 !important;
+  padding:6px 12px !important;
+}
+.v71-follow-pill,.v71-follow-done-pill,.v72-warning-pill{
+  max-width:none !important;
+  white-space:nowrap !important;
+}
+@media(max-width:780px){
+  .v73-follow-grid{grid-template-columns:1fr !important;}
+}
+
+
+/* V74 save edits + clean agent detail + admin overflow containment */
+.v74-save-btn{
+  background:#f8fafc !important;
+  border:1px solid #cbd5e1 !important;
+  color:#0f172a !important;
+  font-weight:900 !important;
+}
+.v73-review-box .choices,
+.v71-action-row{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:8px !important;
+}
+.v73-review-box textarea{
+  min-height:90px !important;
+}
+
+/* Agent opened consultation: hide status badges in the detail action block only */
+.v72-agent-review-box .v72-status-stack{
+  display:none !important;
+}
+
+/* Admin overflow fixes */
+.adminWrap,
+.adminWrap *,
+#adminView,
+#adminView *,
+.panel,
+.panel *,
+.body,
+.body *{
+  box-sizing:border-box !important;
+}
+.adminWrap,
+#adminView{
+  width:min(1320px, calc(100vw - 24px)) !important;
+  max-width:1320px !important;
+  overflow-x:hidden !important;
+}
+.adminWrap .panel,
+#adminView .panel{
+  min-width:0 !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+}
+.adminWrap .body,
+#adminView .body{
+  min-width:0 !important;
+  max-width:100% !important;
+  overflow-x:auto !important;
+}
+.adminGrid,
+.topFields,
+.qgrid,
+.cards,
+.v71-review-grid{
+  min-width:0 !important;
+}
+.adminGrid > *,
+.topFields > *,
+.qgrid > *,
+.cards > *,
+.v71-review-grid > *{
+  min-width:0 !important;
+  max-width:100% !important;
+}
+.field input,
+.field select,
+.field textarea,
+.adminWrap input,
+.adminWrap select,
+.adminWrap textarea,
+#adminView input,
+#adminView select,
+#adminView textarea{
+  max-width:100% !important;
+  min-width:0 !important;
+}
+.questionEditor,
+.adminItem,
+.helpBox{
+  max-width:100% !important;
+  overflow:hidden !important;
+}
+.questionHeader{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:8px !important;
+}
+.questionHeader span{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:6px !important;
+}
+.adminWrap .btn,
+#adminView .btn,
+.adminWrap button,
+#adminView button{
+  white-space:normal !important;
+  max-width:100% !important;
+}
+@media(max-width:900px){
+  .adminWrap,
+  #adminView{
+    grid-template-columns:1fr !important;
+    width:calc(100vw - 18px) !important;
+    padding-inline:0 !important;
+  }
+}
+
+
+/* V76 Admin users safe fit - restore buttons and keep rows inside frame */
+
+/* Main admin page containment */
+.adminWrap,
+#adminView{
+  width:min(1400px, calc(100vw - 24px)) !important;
+  max-width:1400px !important;
+  margin-inline:auto !important;
+  overflow-x:hidden !important;
+}
+
+.adminWrap .panel,
+#adminView .panel{
+  max-width:100% !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+}
+
+.adminWrap .body,
+#adminView .body{
+  max-width:100% !important;
+  min-width:0 !important;
+}
+
+/* User-management area: allow internal scroll instead of eating the page */
+.adminUsersSafe,
+.adminUsersSafe .body{
+  max-width:100% !important;
+  overflow-x:auto !important;
+  overflow-y:visible !important;
+}
+
+/* Rows/cards/tables containing users */
+.adminUsersSafe table{
+  width:100% !important;
+  min-width:980px !important;
+  table-layout:auto !important;
+  border-collapse:separate !important;
+  border-spacing:0 8px !important;
+}
+
+.adminUsersSafe tr,
+.adminUsersSafe .userRow,
+.adminUsersSafe .userCard,
+.adminUsersSafe .adminItem{
+  max-width:100% !important;
+}
+
+/* Compact cells without hiding action buttons */
+.adminUsersSafe th,
+.adminUsersSafe td{
+  padding:8px 7px !important;
+  vertical-align:middle !important;
+  text-align:center !important;
+  font-size:12px !important;
+  line-height:1.45 !important;
+  white-space:normal !important;
+  word-break:break-word !important;
+}
+
+/* Inputs/selects compact */
+.adminUsersSafe input,
+.adminUsersSafe select,
+.adminUsersSafe textarea{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  height:38px !important;
+  padding:7px 8px !important;
+  font-size:12px !important;
+  border-radius:10px !important;
+}
+
+/* Buttons must stay visible */
+.adminUsersSafe button,
+.adminUsersSafe .btn{
+  width:auto !important;
+  min-width:70px !important;
+  max-width:none !important;
+  height:38px !important;
+  padding:7px 10px !important;
+  font-size:12px !important;
+  border-radius:10px !important;
+  white-space:nowrap !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+}
+
+/* Action area in user rows */
+.adminUsersSafe .actions,
+.adminUsersSafe td:last-child,
+.adminUsersSafe .userActions{
+  min-width:150px !important;
+  width:auto !important;
+  white-space:nowrap !important;
+  overflow:visible !important;
+}
+
+.adminUsersSafe td:last-child button,
+.adminUsersSafe .actions button,
+.adminUsersSafe .userActions button{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  margin:3px !important;
+}
+
+/* If rows are div based, turn them into a fitting grid */
+.adminUsersSafe .row,
+.adminUsersSafe .userRow,
+.adminUsersSafe .userCard{
+  display:grid !important;
+  grid-template-columns:
+    minmax(130px,1fr)
+    minmax(190px,1.2fr)
+    minmax(95px,.75fr)
+    minmax(105px,.8fr)
+    minmax(95px,.75fr)
+    minmax(95px,.75fr)
+    minmax(150px,.9fr) !important;
+  gap:8px !important;
+  align-items:center !important;
+  width:100% !important;
+  min-width:980px !important;
+  max-width:100% !important;
+  padding:10px !important;
+  overflow:visible !important;
+}
+
+/* Email fields can be smaller but readable */
+.adminUsersSafe [type="email"],
+.adminUsersSafe input[value*="@pharma.local"],
+.adminUsersSafe td{
+  overflow-wrap:anywhere !important;
+}
+
+/* Remove the bad V75-style global clamps if they exist in browser cache/order */
+#adminView button,
+.adminWrap button{
+  max-width:none !important;
+  overflow:visible !important;
+}
+
+/* Keep question editor/admin settings from spilling too */
+.questionEditor,
+.helpBox,
+.adminGrid,
+.topFields,
+.qgrid{
+  max-width:100% !important;
+  min-width:0 !important;
+}
+
+.questionEditor input,
+.questionEditor select,
+.questionEditor textarea,
+.adminGrid input,
+.adminGrid select,
+.adminGrid textarea{
+  max-width:100% !important;
+  min-width:0 !important;
+}
+
+.questionHeader{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:8px !important;
+}
+
+.questionHeader span{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:6px !important;
+}
+
+/* On medium screens use internal scroll rather than hiding buttons */
+@media(max-width:1150px){
+  .adminUsersSafe table,
+  .adminUsersSafe .row,
+  .adminUsersSafe .userRow,
+  .adminUsersSafe .userCard{
+    min-width:920px !important;
+  }
+}
+
+@media(max-width:700px){
+  .adminWrap,
+  #adminView{
+    width:calc(100vw - 16px) !important;
+    padding-inline:0 !important;
+  }
+}
+
+
+/* V77 Admin users columns fixed - compact small fields, visible actions */
+
+/* Target the real users management area */
+.adminUsersV77,
+.adminUsersV77 *{
+  box-sizing:border-box !important;
+}
+
+.adminUsersV77{
+  width:100% !important;
+  max-width:100% !important;
+  overflow-x:hidden !important;
+}
+
+/* No eaten left/right edges */
+.adminUsersV77 .body,
+.adminUsersV77Body{
+  width:100% !important;
+  max-width:100% !important;
+  overflow-x:hidden !important;
+  padding-inline:10px !important;
+}
+
+/* Tables if user management is rendered as table */
+.adminUsersV77 table{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  table-layout:fixed !important;
+  border-collapse:separate !important;
+  border-spacing:0 8px !important;
+}
+
+/* Column proportions: name/email large, role/team/status/permissions small, actions visible */
+.adminUsersV77 table th:nth-child(1),
+.adminUsersV77 table td:nth-child(1){width:16% !important;} /* الاسم */
+.adminUsersV77 table th:nth-child(2),
+.adminUsersV77 table td:nth-child(2){width:21% !important;} /* الإيميل */
+.adminUsersV77 table th:nth-child(3),
+.adminUsersV77 table td:nth-child(3){width:9% !important;}  /* الدور */
+.adminUsersV77 table th:nth-child(4),
+.adminUsersV77 table td:nth-child(4){width:10% !important;} /* الفريق */
+.adminUsersV77 table th:nth-child(5),
+.adminUsersV77 table td:nth-child(5){width:9% !important;}  /* الحالة */
+.adminUsersV77 table th:nth-child(6),
+.adminUsersV77 table td:nth-child(6){width:7% !important;}  /* تسجيل */
+.adminUsersV77 table th:nth-child(7),
+.adminUsersV77 table td:nth-child(7){width:7% !important;}  /* مراجعة */
+.adminUsersV77 table th:nth-child(8),
+.adminUsersV77 table td:nth-child(8){width:7% !important;}  /* مسح */
+.adminUsersV77 table th:nth-child(9),
+.adminUsersV77 table td:nth-child(9){width:14% !important;} /* تعديل/حفظ */
+
+/* Cells compact */
+.adminUsersV77 th,
+.adminUsersV77 td{
+  padding:7px 5px !important;
+  text-align:center !important;
+  vertical-align:middle !important;
+  white-space:normal !important;
+  word-break:break-word !important;
+  overflow:visible !important;
+  font-size:12px !important;
+  line-height:1.35 !important;
+}
+
+/* Inputs/selects: small fields get small controls */
+.adminUsersV77 input,
+.adminUsersV77 select{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  height:36px !important;
+  padding:6px 7px !important;
+  font-size:12px !important;
+  border-radius:10px !important;
+}
+
+.adminUsersV77 select{
+  text-align:center !important;
+  text-align-last:center !important;
+}
+
+/* Div-based rows: exact compact grid */
+.adminUsersV77 .userRow,
+.adminUsersV77 .userCard,
+.adminUsersV77 .adminItem,
+.adminUsersV77 .row{
+  display:grid !important;
+  grid-template-columns:
+    minmax(120px, 1.35fr)  /* name */
+    minmax(170px, 1.65fr)  /* email */
+    minmax(82px, .65fr)    /* role */
+    minmax(90px, .75fr)    /* team */
+    minmax(82px, .65fr)    /* active */
+    minmax(62px, .5fr)     /* submit */
+    minmax(62px, .5fr)     /* review */
+    minmax(62px, .5fr)     /* delete */
+    minmax(135px, .95fr)   /* actions */
+  !important;
+  gap:7px !important;
+  align-items:center !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  overflow:visible !important;
+  padding:9px !important;
+}
+
+/* Buttons must stay visible */
+.adminUsersV77 button,
+.adminUsersV77 .btn{
+  width:auto !important;
+  min-width:62px !important;
+  max-width:100% !important;
+  height:36px !important;
+  padding:6px 9px !important;
+  font-size:12px !important;
+  border-radius:10px !important;
+  white-space:nowrap !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  margin:2px !important;
+}
+
+/* Action area */
+.adminUsersV77 .actions,
+.adminUsersV77 .userActions,
+.adminUsersV77 td:last-child{
+  min-width:132px !important;
+  overflow:visible !important;
+  white-space:nowrap !important;
+  display:flex !important;
+  gap:5px !important;
+  justify-content:center !important;
+  align-items:center !important;
+  flex-wrap:nowrap !important;
+}
+
+/* Prevent vertical side text */
+.adminUsersV77 th,
+.adminUsersV77 td,
+.adminUsersV77 label,
+.adminUsersV77 span,
+.adminUsersV77 b{
+  writing-mode:horizontal-tb !important;
+  transform:none !important;
+  rotate:none !important;
+}
+
+/* Email wrapping without pushing columns */
+.adminUsersV77 td:nth-child(2),
+.adminUsersV77 .emailCell{
+  overflow-wrap:anywhere !important;
+  word-break:break-word !important;
+  font-size:11.5px !important;
+}
+
+/* Override broad previous admin button rules */
+#adminView .adminUsersV77 button,
+.adminWrap .adminUsersV77 button{
+  max-width:100% !important;
+  overflow:visible !important;
+}
+
+/* Make main admin panel use real width */
+.adminWrap,
+#adminView{
+  width:min(1480px, calc(100vw - 18px)) !important;
+  max-width:1480px !important;
+  overflow-x:hidden !important;
+  padding-inline:6px !important;
+}
+
+.adminWrap .panel,
+#adminView .panel{
+  min-width:0 !important;
+  max-width:100% !important;
+}
+
+/* Small screens: internal horizontal scroll rather than broken layout */
+@media(max-width:1120px){
+  .adminUsersV77{
+    overflow-x:auto !important;
+  }
+  .adminUsersV77 table{
+    min-width:980px !important;
+  }
+  .adminUsersV77 .userRow,
+  .adminUsersV77 .userCard,
+  .adminUsersV77 .adminItem,
+  .adminUsersV77 .row{
+    min-width:980px !important;
+  }
+}
+
+
+/* V78 multi independent action tracks */
+.v78-status-stack{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+}
+.v78-status-stack .status,
+.v78-status-stack .statusBadge,
+.v78-status-stack > span,
+.v78-status-stack > div{
+  width:max-content !important;
+  max-width:210px !important;
+  white-space:nowrap !important;
+  text-align:center !important;
+  line-height:1.3 !important;
+}
+.v78-follow-pill,
+.status.followUp,
+.statusBadge.stFollowUp{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:5px 12px !important;
+  border-radius:999px !important;
+  background:#fef3c7 !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  border:1px solid #fcd34d !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+}
+.v78-follow-done-pill,
+.status.followDone,
+.statusBadge.stFollowDone{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:5px 12px !important;
+  border-radius:999px !important;
+  background:#dbeafe !important;
+  color:#1d4ed8 !important;
+  -webkit-text-fill-color:#1d4ed8 !important;
+  border:1px solid #93c5fd !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+}
+.v78-warning-pill{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:5px 12px !important;
+  border-radius:999px !important;
+  background:#fce7f3 !important;
+  color:#be185d !important;
+  -webkit-text-fill-color:#be185d !important;
+  border:1px solid #f9a8d4 !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+}
+.v78-follow-grid{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:12px !important;
+  margin-top:12px !important;
+}
+.v78-follow-cell{
+  border:1px solid #fcd34d !important;
+  background:#fffbeb !important;
+  color:#78350f !important;
+  -webkit-text-fill-color:#78350f !important;
+  border-radius:14px !important;
+  padding:12px 14px !important;
+  line-height:1.8 !important;
+  font-weight:700 !important;
+}
+.v78-follow-cell label{
+  display:block !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  font-weight:900 !important;
+  margin-bottom:6px !important;
+}
+.v70-follow-btn{
+  background:linear-gradient(135deg,#f59e0b,#d97706) !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+.v70-follow-done-btn{
+  background:linear-gradient(135deg,#2563eb,#1d4ed8) !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+.v72-warning-btn{
+  background:linear-gradient(135deg,#db2777,#be185d) !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+}
+.v72-warning-cell,
+.v78-warning-box{
+  background:#fdf2f8 !important;
+  border:1px solid #f9a8d4 !important;
+  color:#831843 !important;
+  -webkit-text-fill-color:#831843 !important;
+}
+.v78-warning-box{
+  margin-top:12px !important;
+  padding:12px 14px !important;
+  border-radius:14px !important;
+  line-height:1.8 !important;
+  font-weight:700 !important;
+}
+.v78-warning-box label{
+  display:block !important;
+  color:#be185d !important;
+  -webkit-text-fill-color:#be185d !important;
+  font-weight:900 !important;
+  margin-bottom:6px !important;
+}
+@media(max-width:780px){
+  .v78-follow-grid{grid-template-columns:1fr !important;}
+  .v78-status-stack .status,
+  .v78-status-stack .statusBadge,
+  .v78-status-stack > span,
+  .v78-status-stack > div{
+    max-width:180px !important;
+    white-space:normal !important;
+  }
+}
+
+
+/* V80 action buttons + follow-up history */
+
+/* FOLLOW UP history: do not replace FOLLOW UP when DONE; show both stacked */
+.v80-follow-history{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:5px !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:100% !important;
+}
+.v80-follow-history .v78-follow-pill,
+.v80-follow-history .v78-follow-done-pill{
+  width:max-content !important;
+  max-width:100% !important;
+}
+
+/* Fix review/admin action buttons column */
+.reviewConsultationsV79 td:last-child,
+.reviewConsultationsTableV79 td:last-child,
+.reviewConsultationsV79 .consultActionsV79,
+.reviewConsultationsV79 .actions,
+.reviewConsultationsV79 .rowActions{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:7px !important;
+  min-width:120px !important;
+  width:120px !important;
+  max-width:140px !important;
+  overflow:visible !important;
+  white-space:normal !important;
+  padding:10px 6px !important;
+}
+
+.reviewConsultationsV79 td:last-child button,
+.reviewConsultationsTableV79 td:last-child button,
+.reviewConsultationsV79 .consultActionsV79 button,
+.reviewConsultationsV79 .actions button,
+.reviewConsultationsV79 .rowActions button,
+.reviewConsultationsV79 td:last-child .btn,
+.reviewConsultationsTableV79 td:last-child .btn{
+  width:104px !important;
+  min-width:104px !important;
+  max-width:104px !important;
+  height:38px !important;
+  padding:7px 8px !important;
+  margin:0 !important;
+  border-radius:11px !important;
+  font-size:12px !important;
+  line-height:1.2 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:clip !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+/* Make the action column wider and small columns tighter */
+.reviewConsultationsV79 table:has(th:nth-child(8)) th:nth-child(1),
+.reviewConsultationsV79 table:has(th:nth-child(8)) td:nth-child(1){width:5% !important;}   /* تحديد */
+.reviewConsultationsV79 table:has(th:nth-child(8)) th:nth-child(2),
+.reviewConsultationsV79 table:has(th:nth-child(8)) td:nth-child(2){width:12% !important;}  /* التاريخ */
+.reviewConsultationsV79 table:has(th:nth-child(8)) th:nth-child(3),
+.reviewConsultationsV79 table:has(th:nth-child(8)) td:nth-child(3){width:13% !important;}  /* الزميل */
+.reviewConsultationsV79 table:has(th:nth-child(8)) th:nth-child(4),
+.reviewConsultationsV79 table:has(th:nth-child(8)) td:nth-child(4){width:12% !important;}  /* العميل */
+.reviewConsultationsV79 table:has(th:nth-child(8)) th:nth-child(5),
+.reviewConsultationsV79 table:has(th:nth-child(8)) td:nth-child(5){width:10% !important;}  /* الأعراض */
+.reviewConsultationsV79 table:has(th:nth-child(8)) th:nth-child(6),
+.reviewConsultationsV79 table:has(th:nth-child(8)) td:nth-child(6){width:15% !important;}  /* الحالة */
+.reviewConsultationsV79 table:has(th:nth-child(8)) th:nth-child(7),
+.reviewConsultationsV79 table:has(th:nth-child(8)) td:nth-child(7){width:13% !important;}  /* FOLLOW UP */
+.reviewConsultationsV79 table:has(th:nth-child(8)) th:nth-child(8),
+.reviewConsultationsV79 table:has(th:nth-child(8)) td:nth-child(8){width:20% !important;}  /* الإجراء */
+
+/* If no V79 class exists, still target normal review tables by header text via JS class */
+.reviewActionsFixedV80 td:last-child{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:7px !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+.reviewActionsFixedV80 td:last-child button,
+.reviewActionsFixedV80 td:last-child .btn{
+  width:104px !important;
+  min-width:104px !important;
+  max-width:104px !important;
+  margin:0 !important;
+}
+
+/* Compact badges in review rows */
+.reviewConsultationsV79 .v78-follow-pill,
+.reviewConsultationsV79 .v78-follow-done-pill,
+.reviewConsultationsV79 .v78-warning-pill,
+.reviewActionsFixedV80 .v78-follow-pill,
+.reviewActionsFixedV80 .v78-follow-done-pill,
+.reviewActionsFixedV80 .v78-warning-pill{
+  font-size:12px !important;
+  padding:5px 9px !important;
+  line-height:1.25 !important;
+}
+
+/* Prevent action buttons clipping on far left */
+.panel.reviewConsultationsV79,
+.reviewConsultationsV79.panel{
+  padding-left:14px !important;
+}
+
+
+/* V81: FOLLOW UP inside status + fixed action buttons */
+
+/* Status stack now includes main status + warning + follow-up history */
+.v81-status-stack,
+.v78-status-stack,
+.v72-status-stack{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+  max-width:100% !important;
+}
+.v81-status-stack > *,
+.v78-status-stack > *,
+.v72-status-stack > *{
+  width:max-content !important;
+  max-width:160px !important;
+  white-space:normal !important;
+  text-align:center !important;
+  line-height:1.25 !important;
+}
+
+/* When JS identifies the old follow-up column, hide it completely */
+.v81-hidden-follow-col{
+  display:none !important;
+}
+
+/* Action cell must be vertical, visible, and not clipped */
+.v81-action-cell{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  min-width:128px !important;
+  width:128px !important;
+  max-width:140px !important;
+  overflow:visible !important;
+  white-space:normal !important;
+  padding:10px 8px !important;
+}
+
+.v81-action-cell button,
+.v81-action-cell .btn,
+.v81-action-cell a.btn{
+  width:112px !important;
+  min-width:112px !important;
+  max-width:112px !important;
+  height:38px !important;
+  padding:7px 8px !important;
+  margin:0 !important;
+  border-radius:11px !important;
+  font-size:12px !important;
+  line-height:1.2 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:clip !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+/* Ensure the panel does not clip the action column on the far left */
+.reviewConsultationsV79,
+.reviewActionsFixedV80,
+.v81-review-table,
+.panel:has(.v81-action-cell){
+  overflow:visible !important;
+  padding-left:18px !important;
+}
+
+.panel .body:has(.v81-action-cell),
+.reviewConsultationsBodyV79{
+  overflow-x:visible !important;
+  padding-left:18px !important;
+}
+
+/* Rebalance table once follow-up column is hidden */
+.v81-review-table{
+  width:100% !important;
+  max-width:100% !important;
+  table-layout:fixed !important;
+  border-collapse:separate !important;
+  border-spacing:0 9px !important;
+}
+
+.v81-review-table th,
+.v81-review-table td{
+  text-align:center !important;
+  vertical-align:middle !important;
+  padding:10px 7px !important;
+  font-size:13px !important;
+  line-height:1.55 !important;
+  white-space:normal !important;
+  word-break:break-word !important;
+}
+
+/* After hiding FOLLOW UP column, small columns get smaller, action gets room */
+.v81-review-table th:nth-child(1),
+.v81-review-table td:nth-child(1){width:5% !important;}   /* تحديد */
+.v81-review-table th:nth-child(2),
+.v81-review-table td:nth-child(2){width:13% !important;}  /* التاريخ */
+.v81-review-table th:nth-child(3),
+.v81-review-table td:nth-child(3){width:15% !important;}  /* الزميل */
+.v81-review-table th:nth-child(4),
+.v81-review-table td:nth-child(4){width:14% !important;}  /* العميل */
+.v81-review-table th:nth-child(5),
+.v81-review-table td:nth-child(5){width:12% !important;}  /* الأعراض */
+.v81-review-table th:nth-child(6),
+.v81-review-table td:nth-child(6){width:18% !important;}  /* الحالة */
+.v81-review-table th:nth-child(7),
+.v81-review-table td:nth-child(7){width:23% !important;}  /* الإجراء */
+
+/* Compact badges */
+.v81-status-stack .v78-follow-pill,
+.v81-status-stack .v78-follow-done-pill,
+.v81-status-stack .v72-warning-pill,
+.v81-status-stack .v78-warning-pill,
+.v81-status-stack .status,
+.v81-status-stack .statusBadge{
+  font-size:12px !important;
+  padding:5px 9px !important;
+  max-width:160px !important;
+}
+
+/* Follow history inside status */
+.v81-status-stack .v80-follow-history,
+.v81-status-stack .v78-follow-history{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:5px !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+/* Fallback for older classes */
+.reviewActionsFixedV80 td:last-child,
+.reviewConsultationsV79 td:last-child{
+  overflow:visible !important;
+}
+
+@media(max-width:1050px){
+  .panel .body:has(.v81-action-cell){
+    overflow-x:auto !important;
+  }
+  .v81-review-table{
+    min-width:920px !important;
+  }
+}
+
+
+/* V82 clean consultation tables: follow-up inside status, action column visible */
+
+.v82-follow-stack{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:5px !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:100% !important;
+}
+
+.v82-status-stack,
+.v81-status-stack,
+.v78-status-stack,
+.v72-status-stack{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+  max-width:100% !important;
+}
+
+.v82-status-stack > *,
+.v81-status-stack > *,
+.v78-status-stack > *,
+.v72-status-stack > *{
+  width:max-content !important;
+  max-width:170px !important;
+  white-space:normal !important;
+  text-align:center !important;
+  line-height:1.25 !important;
+}
+
+.v82-hidden-col{
+  display:none !important;
+}
+
+/* The actual consultation table after cleanup */
+.v82-consult-table{
+  width:100% !important;
+  max-width:100% !important;
+  table-layout:fixed !important;
+  border-collapse:separate !important;
+  border-spacing:0 10px !important;
+  margin:0 auto !important;
+}
+
+.v82-consult-table th,
+.v82-consult-table td{
+  text-align:center !important;
+  vertical-align:middle !important;
+  padding:10px 8px !important;
+  font-size:13px !important;
+  line-height:1.55 !important;
+  white-space:normal !important;
+  word-break:break-word !important;
+  overflow:visible !important;
+}
+
+/* Final 7 columns:
+   تحديد | التاريخ | الزميل | العميل | الأعراض | الحالة | الإجراء
+*/
+.v82-consult-table th:nth-child(1),
+.v82-consult-table td:nth-child(1){width:5% !important;}
+.v82-consult-table th:nth-child(2),
+.v82-consult-table td:nth-child(2){width:12% !important;}
+.v82-consult-table th:nth-child(3),
+.v82-consult-table td:nth-child(3){width:15% !important;}
+.v82-consult-table th:nth-child(4),
+.v82-consult-table td:nth-child(4){width:14% !important;}
+.v82-consult-table th:nth-child(5),
+.v82-consult-table td:nth-child(5){width:11% !important;}
+.v82-consult-table th:nth-child(6),
+.v82-consult-table td:nth-child(6){width:20% !important;}
+.v82-consult-table th:nth-child(7),
+.v82-consult-table td:nth-child(7){width:23% !important;}
+
+/* Action buttons */
+.v82-action-cell{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  min-width:128px !important;
+  overflow:visible !important;
+  padding:10px 8px !important;
+}
+
+.v82-action-cell button,
+.v82-action-cell .btn,
+.v82-action-cell a.btn{
+  width:116px !important;
+  min-width:116px !important;
+  max-width:116px !important;
+  height:38px !important;
+  padding:7px 8px !important;
+  margin:0 !important;
+  border-radius:11px !important;
+  font-size:12px !important;
+  line-height:1.2 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+/* Panels should not clip action column */
+.v82-consult-panel{
+  overflow:visible !important;
+  padding-left:18px !important;
+  padding-right:18px !important;
+}
+.v82-consult-body{
+  overflow-x:visible !important;
+  padding-left:10px !important;
+  padding-right:10px !important;
+}
+
+/* Compact badges */
+.v82-status-stack .status,
+.v82-status-stack .statusBadge,
+.v82-status-stack .v78-follow-pill,
+.v82-status-stack .v78-follow-done-pill,
+.v82-status-stack .v78-warning-pill,
+.v82-status-stack .v72-warning-pill,
+.v82-status-stack .v71-follow-pill,
+.v82-status-stack .v71-follow-done-pill{
+  font-size:12px !important;
+  padding:5px 9px !important;
+  max-width:170px !important;
+}
+
+/* Kill old follow-up column if any CSS hiding remains */
+.v81-hidden-follow-col,
+.v82-hidden-follow-col{
+  display:none !important;
+}
+
+/* Div-row fallback */
+.v82-consult-row{
+  display:grid !important;
+  grid-template-columns:5% 12% 15% 14% 11% 20% 23% !important;
+  gap:8px !important;
+  align-items:center !important;
+  width:100% !important;
+  max-width:100% !important;
+  padding:12px 10px !important;
+}
+
+@media(max-width:1050px){
+  .v82-consult-body{
+    overflow-x:auto !important;
+  }
+  .v82-consult-table,
+  .v82-consult-row{
+    min-width:920px !important;
+  }
+}
+
+
+/* V83 direct table render/layout fix */
+
+.v83-consult-table{
+  width:100% !important;
+  max-width:100% !important;
+  table-layout:fixed !important;
+  border-collapse:separate !important;
+  border-spacing:0 10px !important;
+  margin:0 auto !important;
+}
+
+.v83-consult-table th,
+.v83-consult-table td{
+  text-align:center !important;
+  vertical-align:middle !important;
+  padding:10px 8px !important;
+  font-size:13px !important;
+  line-height:1.55 !important;
+  white-space:normal !important;
+  word-break:break-word !important;
+  overflow:visible !important;
+}
+
+/* 7 columns after cleanup:
+   تحديد | التاريخ | الزميل | العميل | الأعراض | الحالة | الإجراء/فتح
+*/
+.v83-consult-table th:nth-child(1), .v83-consult-table td:nth-child(1){width:5% !important;}
+.v83-consult-table th:nth-child(2), .v83-consult-table td:nth-child(2){width:13% !important;}
+.v83-consult-table th:nth-child(3), .v83-consult-table td:nth-child(3){width:16% !important;}
+.v83-consult-table th:nth-child(4), .v83-consult-table td:nth-child(4){width:14% !important;}
+.v83-consult-table th:nth-child(5), .v83-consult-table td:nth-child(5){width:12% !important;}
+.v83-consult-table th:nth-child(6), .v83-consult-table td:nth-child(6){width:20% !important;}
+.v83-consult-table th:nth-child(7), .v83-consult-table td:nth-child(7){width:20% !important;}
+
+/* if only 6 columns in agent previous table: التاريخ | الأعراض | الحالة | ملاحظات | فتح */
+.v83-consult-table.v83-six th:nth-child(1), .v83-consult-table.v83-six td:nth-child(1){width:15% !important;}
+.v83-consult-table.v83-six th:nth-child(2), .v83-consult-table.v83-six td:nth-child(2){width:16% !important;}
+.v83-consult-table.v83-six th:nth-child(3), .v83-consult-table.v83-six td:nth-child(3){width:22% !important;}
+.v83-consult-table.v83-six th:nth-child(4), .v83-consult-table.v83-six td:nth-child(4){width:27% !important;}
+.v83-consult-table.v83-six th:nth-child(5), .v83-consult-table.v83-six td:nth-child(5){width:20% !important;}
+
+.v83-status-stack{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+  max-width:100% !important;
+}
+
+.v83-track-stack{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:5px !important;
+}
+
+.v83-badge,
+.v83-status-stack .status,
+.v83-status-stack .statusBadge{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:max-content !important;
+  max-width:170px !important;
+  padding:5px 10px !important;
+  border-radius:999px !important;
+  font-size:12px !important;
+  font-weight:900 !important;
+  line-height:1.25 !important;
+  white-space:normal !important;
+  text-align:center !important;
+}
+
+.v83-follow{background:#fef3c7 !important;color:#92400e !important;-webkit-text-fill-color:#92400e !important;border:1px solid #fcd34d !important;}
+.v83-follow-done{background:#dbeafe !important;color:#1d4ed8 !important;-webkit-text-fill-color:#1d4ed8 !important;border:1px solid #93c5fd !important;}
+.v83-warning{background:#fce7f3 !important;color:#be185d !important;-webkit-text-fill-color:#be185d !important;border:1px solid #f9a8d4 !important;}
+
+.v83-action-cell{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  min-width:130px !important;
+  overflow:visible !important;
+  padding:10px 8px !important;
+}
+
+.v83-action-cell button,
+.v83-action-cell .btn,
+.v83-action-cell a.btn{
+  width:118px !important;
+  min-width:118px !important;
+  max-width:118px !important;
+  height:38px !important;
+  padding:7px 8px !important;
+  margin:0 !important;
+  border-radius:11px !important;
+  font-size:12px !important;
+  line-height:1.2 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+.v83-consult-panel{
+  overflow:visible !important;
+  padding-left:18px !important;
+  padding-right:18px !important;
+}
+.v83-consult-body{
+  overflow-x:visible !important;
+  padding-left:10px !important;
+  padding-right:10px !important;
+}
+
+/* hide old follow up columns/classes if any survived */
+.v83-remove-col,
+.v82-hidden-col,
+.v81-hidden-follow-col,
+.v82-hidden-follow-col{
+  display:none !important;
+}
+
+/* neutralize older conflicting action layouts */
+.reviewConsultationsV79 td:last-child,
+.reviewActionsFixedV80 td:last-child,
+.v82-action-cell,
+.v81-action-cell{
+  width:auto !important;
+  max-width:none !important;
+}
+
+@media(max-width:1050px){
+  .v83-consult-body{overflow-x:auto !important;}
+  .v83-consult-table{min-width:900px !important;}
+}
+
+
+/* V84 final consultation table/action layout + follow-up delete fix visuals */
+
+.v84-table,
+.table.v84-table,
+.miniTable.v84-table{
+  width:100% !important;
+  max-width:100% !important;
+  table-layout:fixed !important;
+  border-collapse:separate !important;
+  border-spacing:0 10px !important;
+  margin:0 auto !important;
+  direction:rtl !important;
+}
+
+.v84-table th,
+.v84-table td{
+  text-align:center !important;
+  vertical-align:middle !important;
+  padding:10px 8px !important;
+  font-size:13px !important;
+  line-height:1.55 !important;
+  white-space:normal !important;
+  word-break:break-word !important;
+  overflow:visible !important;
+}
+
+/* Review/admin 7-column table */
+.v84-table:not(.v84-agent-mini) th:nth-child(1), .v84-table:not(.v84-agent-mini) td:nth-child(1){width:5% !important;}
+.v84-table:not(.v84-agent-mini) th:nth-child(2), .v84-table:not(.v84-agent-mini) td:nth-child(2){width:13% !important;}
+.v84-table:not(.v84-agent-mini) th:nth-child(3), .v84-table:not(.v84-agent-mini) td:nth-child(3){width:16% !important;}
+.v84-table:not(.v84-agent-mini) th:nth-child(4), .v84-table:not(.v84-agent-mini) td:nth-child(4){width:14% !important;}
+.v84-table:not(.v84-agent-mini) th:nth-child(5), .v84-table:not(.v84-agent-mini) td:nth-child(5){width:12% !important;}
+.v84-table:not(.v84-agent-mini) th:nth-child(6), .v84-table:not(.v84-agent-mini) td:nth-child(6){width:20% !important;}
+.v84-table:not(.v84-agent-mini) th:nth-child(7), .v84-table:not(.v84-agent-mini) td:nth-child(7){width:20% !important;}
+
+/* Agent mini table */
+.v84-agent-mini th:nth-child(1), .v84-agent-mini td:nth-child(1){width:14% !important;}
+.v84-agent-mini th:nth-child(2), .v84-agent-mini td:nth-child(2){width:15% !important;}
+.v84-agent-mini th:nth-child(3), .v84-agent-mini td:nth-child(3){width:23% !important;}
+.v84-agent-mini th:nth-child(4), .v84-agent-mini td:nth-child(4){width:30% !important;}
+.v84-agent-mini th:nth-child(5), .v84-agent-mini td:nth-child(5){width:18% !important;}
+
+.v84-status-stack,
+.v83-status-stack,
+.v82-status-stack,
+.v81-status-stack,
+.v78-status-stack,
+.v72-status-stack{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+  max-width:100% !important;
+}
+
+.v84-status-stack > *,
+.v83-status-stack > *,
+.v82-status-stack > *,
+.v81-status-stack > *,
+.v78-status-stack > *,
+.v72-status-stack > *{
+  width:max-content !important;
+  max-width:170px !important;
+  white-space:normal !important;
+  text-align:center !important;
+  line-height:1.25 !important;
+}
+
+.v84-action-cell{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  overflow:visible !important;
+  padding:10px 8px !important;
+  min-width:130px !important;
+}
+
+.v84-action-cell button,
+.v84-action-cell .btn,
+.v84-action-cell a.btn{
+  width:118px !important;
+  min-width:118px !important;
+  max-width:118px !important;
+  height:38px !important;
+  padding:7px 8px !important;
+  margin:0 !important;
+  border-radius:11px !important;
+  font-size:12px !important;
+  line-height:1.2 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+.v84-panel{
+  overflow:visible !important;
+  padding-left:22px !important;
+  padding-right:18px !important;
+}
+
+.v84-body{
+  overflow-x:visible !important;
+  padding-left:14px !important;
+  padding-right:14px !important;
+}
+
+.v84-hidden-follow-col{
+  display:none !important;
+}
+
+/* Override older conflicting rules */
+.reviewConsultationsV79 td:last-child,
+.reviewActionsFixedV80 td:last-child,
+.v83-action-cell,
+.v82-action-cell,
+.v81-action-cell{
+  width:auto !important;
+  max-width:none !important;
+}
+
+@media(max-width:1050px){
+  .v84-body{overflow-x:auto !important;}
+  .v84-table{min-width:900px !important;}
+}
+
+
+/* V86 clean agent detail + review table final layout */
+
+/* 1) داخل فتح الاستشارة للزميل: إخفاء بلوك FOLLOW UP العلوي الذي يحتوي badges فقط */
+.v72-agent-review-box > .formGrid.v72-agent-extra-grid:has(.cell.wide4 label:first-child),
+.v72-agent-review-box > .formGrid.v72-agent-extra-grid:has(.v83-badge),
+.v72-agent-review-box > .formGrid.v72-agent-extra-grid:has(.v78-follow-pill),
+.v72-agent-review-box > .formGrid.v72-agent-extra-grid:has(.v78-follow-done-pill),
+.v72-agent-review-box > .formGrid.v72-agent-extra-grid:has(.v82-follow-stack),
+.v72-agent-review-box > .formGrid.v72-agent-extra-grid:has(.v80-follow-history){
+  display:none !important;
+}
+
+/* نعيد إظهار أي grid فيه خانات سبب/نتيجة فقط */
+.v72-agent-review-box > .formGrid.v86-follow-detail-grid{
+  display:grid !important;
+}
+
+/* شكل خانات سبب/نتيجة الفولو أب في فتح الاستشارة */
+.v86-follow-detail-grid{
+  grid-template-columns:1fr 1fr !important;
+  gap:12px !important;
+  margin-top:12px !important;
+}
+.v86-follow-detail-cell{
+  border:1px solid #fcd34d !important;
+  background:#fffbeb !important;
+  color:#78350f !important;
+  -webkit-text-fill-color:#78350f !important;
+  border-radius:14px !important;
+  padding:12px 14px !important;
+  line-height:1.8 !important;
+  font-weight:700 !important;
+}
+.v86-follow-detail-cell label{
+  display:block !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  font-weight:900 !important;
+  margin-bottom:6px !important;
+}
+
+/* 2) جدول المراجع/الأدمن: توزيع نهائي متناسق */
+.v86-review-table{
+  width:100% !important;
+  max-width:100% !important;
+  table-layout:fixed !important;
+  border-collapse:separate !important;
+  border-spacing:0 10px !important;
+  direction:rtl !important;
+  margin:0 auto !important;
+}
+
+.v86-review-table th,
+.v86-review-table td{
+  text-align:center !important;
+  vertical-align:middle !important;
+  padding:10px 8px !important;
+  font-size:13px !important;
+  line-height:1.55 !important;
+  white-space:normal !important;
+  word-break:break-word !important;
+  overflow:visible !important;
+}
+
+/* 6 أعمدة في الصورة: التاريخ | الزميل | العميل | الأعراض | الحالة | الإجراء */
+.v86-review-table.v86-cols-6 th:nth-child(1),
+.v86-review-table.v86-cols-6 td:nth-child(1){width:13% !important;}
+.v86-review-table.v86-cols-6 th:nth-child(2),
+.v86-review-table.v86-cols-6 td:nth-child(2){width:17% !important;}
+.v86-review-table.v86-cols-6 th:nth-child(3),
+.v86-review-table.v86-cols-6 td:nth-child(3){width:15% !important;}
+.v86-review-table.v86-cols-6 th:nth-child(4),
+.v86-review-table.v86-cols-6 td:nth-child(4){width:13% !important;}
+.v86-review-table.v86-cols-6 th:nth-child(5),
+.v86-review-table.v86-cols-6 td:nth-child(5){width:22% !important;}
+.v86-review-table.v86-cols-6 th:nth-child(6),
+.v86-review-table.v86-cols-6 td:nth-child(6){width:20% !important;}
+
+/* 7 أعمدة: تحديد | التاريخ | الزميل | العميل | الأعراض | الحالة | الإجراء */
+.v86-review-table.v86-cols-7 th:nth-child(1),
+.v86-review-table.v86-cols-7 td:nth-child(1){width:5% !important;}
+.v86-review-table.v86-cols-7 th:nth-child(2),
+.v86-review-table.v86-cols-7 td:nth-child(2){width:12% !important;}
+.v86-review-table.v86-cols-7 th:nth-child(3),
+.v86-review-table.v86-cols-7 td:nth-child(3){width:16% !important;}
+.v86-review-table.v86-cols-7 th:nth-child(4),
+.v86-review-table.v86-cols-7 td:nth-child(4){width:13% !important;}
+.v86-review-table.v86-cols-7 th:nth-child(5),
+.v86-review-table.v86-cols-7 td:nth-child(5){width:12% !important;}
+.v86-review-table.v86-cols-7 th:nth-child(6),
+.v86-review-table.v86-cols-7 td:nth-child(6){width:22% !important;}
+.v86-review-table.v86-cols-7 th:nth-child(7),
+.v86-review-table.v86-cols-7 td:nth-child(7){width:20% !important;}
+
+/* خلية الإجراء ثابتة داخل الجدول */
+.v86-action-cell{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  overflow:visible !important;
+  padding:10px 8px !important;
+  min-width:128px !important;
+}
+
+.v86-action-cell button,
+.v86-action-cell .btn,
+.v86-action-cell a.btn{
+  width:118px !important;
+  min-width:118px !important;
+  max-width:118px !important;
+  height:38px !important;
+  padding:7px 8px !important;
+  margin:0 !important;
+  border-radius:11px !important;
+  font-size:12px !important;
+  line-height:1.2 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+/* status stack compact */
+.v86-review-table .v84-status-stack,
+.v86-review-table .v83-status-stack,
+.v86-review-table .v82-status-stack,
+.v86-review-table .v81-status-stack,
+.v86-review-table .v78-status-stack,
+.v86-review-table .v72-status-stack,
+.v86-review-table .v83-status-stack,
+.v86-review-table .v86-status-stack{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+}
+
+.v86-review-table .status,
+.v86-review-table .statusBadge,
+.v86-review-table .v83-badge,
+.v86-review-table .v78-follow-pill,
+.v86-review-table .v78-follow-done-pill,
+.v86-review-table .v72-warning-pill,
+.v86-review-table .v83-follow,
+.v86-review-table .v83-follow-done,
+.v86-review-table .v83-warning{
+  max-width:170px !important;
+  white-space:normal !important;
+  font-size:12px !important;
+  padding:5px 9px !important;
+  line-height:1.25 !important;
+}
+
+/* منع قص أول/آخر عمود */
+.v86-review-panel{
+  overflow:visible !important;
+  padding-left:22px !important;
+  padding-right:22px !important;
+}
+.v86-review-body{
+  overflow-x:visible !important;
+  padding-left:14px !important;
+  padding-right:14px !important;
+}
+
+/* إلغاء تأثيرات قديمة كانت بتطلع الإجراء بره */
+.reviewConsultationsV79 td:last-child,
+.reviewActionsFixedV80 td:last-child,
+.v84-action-cell,
+.v83-action-cell,
+.v82-action-cell,
+.v81-action-cell{
+  width:auto !important;
+  max-width:none !important;
+}
+
+/* إخفاء أي عمود FOLLOW UP منفصل لو لسه موجود */
+.v86-hide-col{
+  display:none !important;
+}
+
+@media(max-width:1050px){
+  .v86-review-body{overflow-x:auto !important;}
+  .v86-review-table{min-width:920px !important;}
+  .v86-follow-detail-grid{grid-template-columns:1fr !important;}
+}
+
+
+/* V87 agent detail follow-up fields + previous table */
+
+/* داخل فتح الاستشارة: نخفي فقط بلوك البادجات العلوي، وليس خانات السبب/النتيجة */
+.v72-agent-review-box .formGrid:not(.v87-follow-detail-grid):has(.v83-badge):not(:has(label)),
+.v72-agent-review-box .formGrid:not(.v87-follow-detail-grid):has(.v78-follow-pill):not(:has(label)),
+.v72-agent-review-box .formGrid:not(.v87-follow-detail-grid):has(.v78-follow-done-pill):not(:has(label)),
+.v72-agent-review-box .formGrid:not(.v87-follow-detail-grid):has(.v80-follow-history):not(:has(label)){
+  display:none !important;
+}
+
+.v87-follow-detail-grid{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:12px !important;
+  margin-top:12px !important;
+}
+
+.v87-follow-detail-cell{
+  border:1px solid #fcd34d !important;
+  background:#fffbeb !important;
+  color:#78350f !important;
+  -webkit-text-fill-color:#78350f !important;
+  border-radius:14px !important;
+  padding:12px 14px !important;
+  line-height:1.8 !important;
+  font-weight:700 !important;
+  min-height:70px !important;
+}
+
+.v87-follow-detail-cell label{
+  display:block !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  font-weight:900 !important;
+  margin-bottom:6px !important;
+}
+
+/* جدول استشاراتي السابقة عند الزميل */
+.v87-agent-history-table{
+  width:100% !important;
+  max-width:100% !important;
+  table-layout:fixed !important;
+  border-collapse:separate !important;
+  border-spacing:0 10px !important;
+  margin:0 auto !important;
+  direction:rtl !important;
+}
+
+.v87-agent-history-table th,
+.v87-agent-history-table td{
+  text-align:center !important;
+  vertical-align:middle !important;
+  padding:10px 8px !important;
+  font-size:13px !important;
+  line-height:1.55 !important;
+  white-space:normal !important;
+  word-break:break-word !important;
+  overflow:visible !important;
+}
+
+/* غالبًا جدول الزميل: التاريخ | الأعراض | الحالة | ملاحظات المراجع | فتح */
+.v87-agent-history-table.v87-agent-cols-5 th:nth-child(1),
+.v87-agent-history-table.v87-agent-cols-5 td:nth-child(1){width:14% !important;}
+.v87-agent-history-table.v87-agent-cols-5 th:nth-child(2),
+.v87-agent-history-table.v87-agent-cols-5 td:nth-child(2){width:16% !important;}
+.v87-agent-history-table.v87-agent-cols-5 th:nth-child(3),
+.v87-agent-history-table.v87-agent-cols-5 td:nth-child(3){width:24% !important;}
+.v87-agent-history-table.v87-agent-cols-5 th:nth-child(4),
+.v87-agent-history-table.v87-agent-cols-5 td:nth-child(4){width:28% !important;}
+.v87-agent-history-table.v87-agent-cols-5 th:nth-child(5),
+.v87-agent-history-table.v87-agent-cols-5 td:nth-child(5){width:18% !important;}
+
+/* لو فيه 6 أعمدة بعد تغييرات سابقة */
+.v87-agent-history-table.v87-agent-cols-6 th:nth-child(1),
+.v87-agent-history-table.v87-agent-cols-6 td:nth-child(1){width:13% !important;}
+.v87-agent-history-table.v87-agent-cols-6 th:nth-child(2),
+.v87-agent-history-table.v87-agent-cols-6 td:nth-child(2){width:14% !important;}
+.v87-agent-history-table.v87-agent-cols-6 th:nth-child(3),
+.v87-agent-history-table.v87-agent-cols-6 td:nth-child(3){width:21% !important;}
+.v87-agent-history-table.v87-agent-cols-6 th:nth-child(4),
+.v87-agent-history-table.v87-agent-cols-6 td:nth-child(4){width:18% !important;}
+.v87-agent-history-table.v87-agent-cols-6 th:nth-child(5),
+.v87-agent-history-table.v87-agent-cols-6 td:nth-child(5){width:20% !important;}
+.v87-agent-history-table.v87-agent-cols-6 th:nth-child(6),
+.v87-agent-history-table.v87-agent-cols-6 td:nth-child(6){width:14% !important;}
+
+.v87-agent-history-table .status,
+.v87-agent-history-table .statusBadge,
+.v87-agent-history-table .v83-badge,
+.v87-agent-history-table .v78-follow-pill,
+.v87-agent-history-table .v78-follow-done-pill,
+.v87-agent-history-table .v72-warning-pill,
+.v87-agent-history-table .v83-warning,
+.v87-agent-history-table .v83-follow,
+.v87-agent-history-table .v83-follow-done{
+  font-size:12px !important;
+  padding:5px 9px !important;
+  max-width:170px !important;
+  white-space:normal !important;
+  line-height:1.25 !important;
+}
+
+.v87-agent-history-table .v84-status-stack,
+.v87-agent-history-table .v83-status-stack,
+.v87-agent-history-table .v82-status-stack,
+.v87-agent-history-table .v81-status-stack,
+.v87-agent-history-table .v78-status-stack,
+.v87-agent-history-table .v72-status-stack{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+}
+
+.v87-agent-action-cell{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:8px !important;
+  overflow:visible !important;
+  padding:10px 8px !important;
+}
+
+.v87-agent-action-cell button,
+.v87-agent-action-cell .btn,
+.v87-agent-action-cell a.btn{
+  width:118px !important;
+  min-width:118px !important;
+  max-width:118px !important;
+  height:38px !important;
+  padding:7px 8px !important;
+  margin:0 !important;
+  border-radius:11px !important;
+  font-size:12px !important;
+  line-height:1.2 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+.v87-agent-history-panel{
+  overflow:visible !important;
+  padding-left:18px !important;
+  padding-right:18px !important;
+}
+
+.v87-agent-history-body{
+  overflow-x:visible !important;
+  padding-left:12px !important;
+  padding-right:12px !important;
+}
+
+@media(max-width:1050px){
+  .v87-agent-history-body{overflow-x:auto !important;}
+  .v87-agent-history-table{min-width:880px !important;}
+  .v87-follow-detail-grid{grid-template-columns:1fr !important;}
+}
+
+
+/* V88 agent warning detail */
+.v88-warning-detail-grid{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:12px !important;
+  margin-top:12px !important;
+}
+.v88-warning-detail-cell{
+  border:1px solid #f9a8d4 !important;
+  background:#fdf2f8 !important;
+  color:#831843 !important;
+  -webkit-text-fill-color:#831843 !important;
+  border-radius:14px !important;
+  padding:12px 14px !important;
+  line-height:1.8 !important;
+  font-weight:700 !important;
+  min-height:70px !important;
+}
+.v88-warning-detail-cell label{
+  display:block !important;
+  color:#be185d !important;
+  -webkit-text-fill-color:#be185d !important;
+  font-weight:900 !important;
+  margin-bottom:6px !important;
+}
+
+/* hide only warning badge-only blocks inside opened consultation; keep the detailed WARNING cell */
+.v72-agent-review-box .formGrid:not(.v88-warning-detail-grid):has(.v83-warning):not(:has(label)),
+.v72-agent-review-box .formGrid:not(.v88-warning-detail-grid):has(.v72-warning-pill):not(:has(label)),
+.v72-agent-review-box .formGrid:not(.v88-warning-detail-grid):has(.v78-warning-pill):not(:has(label)){
+  display:none !important;
+}
+
+
+/* V89 star rating */
+.v89-rating-field{
+  display:flex !important;
+  align-items:stretch !important;
+}
+.v89-rating-editor{
+  width:100% !important;
+  border:1px solid #fde68a !important;
+  background:#fffbeb !important;
+  border-radius:14px !important;
+  padding:10px 12px !important;
+}
+.v89-rating-editor label{
+  display:block !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  font-weight:900 !important;
+  margin-bottom:6px !important;
+}
+.v89-stars-row{
+  display:flex !important;
+  gap:4px !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  direction:ltr !important;
+}
+.v89-star-btn{
+  border:0 !important;
+  background:transparent !important;
+  color:#cbd5e1 !important;
+  -webkit-text-fill-color:#cbd5e1 !important;
+  font-size:28px !important;
+  line-height:1 !important;
+  padding:3px !important;
+  cursor:pointer !important;
+  width:auto !important;
+  height:auto !important;
+  min-width:0 !important;
+}
+.v89-star-btn.active{
+  color:#f59e0b !important;
+  -webkit-text-fill-color:#f59e0b !important;
+  text-shadow:0 1px 2px rgba(245,158,11,.25) !important;
+}
+.v89-clear-rating{
+  margin-top:7px !important;
+  border:1px solid #fde68a !important;
+  background:#fff !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  border-radius:999px !important;
+  padding:5px 10px !important;
+  font-size:12px !important;
+  font-weight:800 !important;
+}
+
+.v89-rating-badge{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:5px !important;
+  direction:ltr !important;
+  width:max-content !important;
+  max-width:180px !important;
+  padding:5px 10px !important;
+  border-radius:999px !important;
+  background:#fffbeb !important;
+  color:#b45309 !important;
+  -webkit-text-fill-color:#b45309 !important;
+  border:1px solid #fbbf24 !important;
+  font-weight:900 !important;
+  font-size:12px !important;
+  line-height:1.25 !important;
+  text-align:center !important;
+}
+.v89-rating-badge span{
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+}
+
+.v89-status-stack,
+.v84-status-stack,
+.v83-status-stack,
+.v82-status-stack,
+.v81-status-stack,
+.v78-status-stack,
+.v72-status-stack{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+}
+
+.v89-agent-rating-grid{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:12px !important;
+}
+.v89-agent-rating-cell{
+  border:1px solid #fbbf24 !important;
+  background:#fffbeb !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  border-radius:14px !important;
+  padding:12px 14px !important;
+  line-height:1.8 !important;
+  font-weight:700 !important;
+}
+.v89-agent-rating-cell label{
+  display:block !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  font-weight:900 !important;
+  margin-bottom:6px !important;
+}
+.v89-rating-display{
+  direction:ltr !important;
+  color:#f59e0b !important;
+  -webkit-text-fill-color:#f59e0b !important;
+  font-size:20px !important;
+  font-weight:900 !important;
+}
+.v89-rating-display span{
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  font-size:14px !important;
+  margin-left:6px !important;
+}
+
+
+/* V91 visible star rating */
+.v91-rating-field{
+  display:flex !important;
+  align-items:stretch !important;
+}
+.v91-rating-editor{
+  width:100% !important;
+  border:1px solid #fbbf24 !important;
+  background:#fffbeb !important;
+  border-radius:14px !important;
+  padding:10px 12px !important;
+}
+.v91-rating-editor label{
+  display:block !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  font-weight:900 !important;
+  margin-bottom:6px !important;
+}
+.v91-stars-row{
+  display:flex !important;
+  gap:4px !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  direction:ltr !important;
+}
+.v91-star-btn{
+  border:0 !important;
+  background:transparent !important;
+  color:#cbd5e1 !important;
+  -webkit-text-fill-color:#cbd5e1 !important;
+  font-size:30px !important;
+  line-height:1 !important;
+  padding:3px !important;
+  cursor:pointer !important;
+  width:auto !important;
+  height:auto !important;
+  min-width:0 !important;
+  box-shadow:none !important;
+}
+.v91-star-btn.active{
+  color:#f59e0b !important;
+  -webkit-text-fill-color:#f59e0b !important;
+  text-shadow:0 1px 2px rgba(245,158,11,.25) !important;
+}
+.v91-clear-rating{
+  margin-top:7px !important;
+  border:1px solid #fde68a !important;
+  background:#fff !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  border-radius:999px !important;
+  padding:5px 10px !important;
+  font-size:12px !important;
+  font-weight:800 !important;
+}
+.v91-rating-badge{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:5px !important;
+  direction:ltr !important;
+  width:max-content !important;
+  max-width:180px !important;
+  padding:5px 10px !important;
+  border-radius:999px !important;
+  background:#fffbeb !important;
+  color:#b45309 !important;
+  -webkit-text-fill-color:#b45309 !important;
+  border:1px solid #fbbf24 !important;
+  font-weight:900 !important;
+  font-size:12px !important;
+  line-height:1.25 !important;
+  text-align:center !important;
+}
+.v91-rating-badge span{
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+}
+.v91-agent-rating-grid{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:12px !important;
+}
+.v91-agent-rating-cell{
+  border:1px solid #fbbf24 !important;
+  background:#fffbeb !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  border-radius:14px !important;
+  padding:12px 14px !important;
+  line-height:1.8 !important;
+  font-weight:700 !important;
+}
+.v91-agent-rating-cell label{
+  display:block !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  font-weight:900 !important;
+  margin-bottom:6px !important;
+}
+.v91-rating-display{
+  direction:ltr !important;
+  color:#f59e0b !important;
+  -webkit-text-fill-color:#f59e0b !important;
+  font-size:22px !important;
+  font-weight:900 !important;
+}
+.v91-rating-display span{
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  font-size:14px !important;
+  margin-left:6px !important;
+}
+.v91-status-stack,
+.v89-status-stack,
+.v84-status-stack,
+.v83-status-stack,
+.v82-status-stack,
+.v81-status-stack,
+.v78-status-stack,
+.v72-status-stack{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:6px !important;
+}
+
+
+/* V93 WhatsApp users: hide patient name/code/phone fields */
+body.v93-whatsapp-user #patientName,
+body.v93-whatsapp-user #customerCode,
+body.v93-whatsapp-user #phone,
+body.v93-whatsapp-user input[name="patientName"],
+body.v93-whatsapp-user input[name="customerCode"],
+body.v93-whatsapp-user input[name="phone"],
+body.v93-whatsapp-user [data-field="patientName"],
+body.v93-whatsapp-user [data-field="customerCode"],
+body.v93-whatsapp-user [data-field="phone"],
+body.v93-whatsapp-user .v93-hide-whatsapp-field{
+  display:none !important;
+}
+body.v93-whatsapp-user .field:has(#patientName),
+body.v93-whatsapp-user .field:has(#customerCode),
+body.v93-whatsapp-user .field:has(#phone),
+body.v93-whatsapp-user .field:has(input[name="patientName"]),
+body.v93-whatsapp-user .field:has(input[name="customerCode"]),
+body.v93-whatsapp-user .field:has(input[name="phone"]),
+body.v93-whatsapp-user .field:has(label.v93-whatsapp-target),
+body.v93-whatsapp-user .topFields .field.v93-hide-whatsapp-field{
+  display:none !important;
+}
+body.v93-whatsapp-user .topFields{
+  grid-template-columns:repeat(3,minmax(160px,1fr)) !important;
+}
+@media(max-width:900px){
+  body.v93-whatsapp-user .topFields{grid-template-columns:1fr 1fr !important;}
+}
+@media(max-width:560px){
+  body.v93-whatsapp-user .topFields{grid-template-columns:1fr !important;}
+}
+
+
+/* V94 WhatsApp: keep phone visible, hide only patient name + customer code */
+body.v93-whatsapp-user #patientName,
+body.v93-whatsapp-user #customerCode,
+body.v93-whatsapp-user input[name="patientName"],
+body.v93-whatsapp-user input[name="customerCode"],
+body.v93-whatsapp-user [data-field="patientName"],
+body.v93-whatsapp-user [data-field="customerCode"],
+body.v93-whatsapp-user .v94-hide-whatsapp-name-code{
+  display:none !important;
+}
+
+/* IMPORTANT: phone must stay visible for WhatsApp users */
+body.v93-whatsapp-user #phone,
+body.v93-whatsapp-user input[name="phone"],
+body.v93-whatsapp-user [data-field="phone"],
+body.v93-whatsapp-user .v94-keep-whatsapp-phone{
+  display:block !important;
+}
+
+body.v93-whatsapp-user .field:has(#patientName),
+body.v93-whatsapp-user .field:has(#customerCode),
+body.v93-whatsapp-user .field:has(input[name="patientName"]),
+body.v93-whatsapp-user .field:has(input[name="customerCode"]),
+body.v93-whatsapp-user .field.v94-hide-whatsapp-name-code{
+  display:none !important;
+}
+
+body.v93-whatsapp-user .field:has(#phone),
+body.v93-whatsapp-user .field:has(input[name="phone"]),
+body.v93-whatsapp-user .field.v94-keep-whatsapp-phone{
+  display:block !important;
+}
+
+body.v93-whatsapp-user .topFields{
+  grid-template-columns:repeat(3,minmax(160px,1fr)) !important;
+}
+
+
+/* V94 single rating detail in agent opened consultation */
+.v94-agent-rating-grid{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:12px !important;
+}
+.v94-agent-rating-cell{
+  border:1px solid #fbbf24 !important;
+  background:#fffbeb !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  border-radius:14px !important;
+  padding:12px 14px !important;
+  line-height:1.8 !important;
+  font-weight:700 !important;
+}
+.v94-agent-rating-cell label{
+  display:block !important;
+  color:#92400e !important;
+  -webkit-text-fill-color:#92400e !important;
+  font-weight:900 !important;
+  margin-bottom:6px !important;
+}
+
+
+/* V95 Panel title radius + safe table scroll fix */
+.panel{
+  overflow:hidden !important;
+}
+
+.panel > .title,
+.panel .title:first-child{
+  border-radius:16px 16px 0 0 !important;
+  overflow:hidden !important;
+  background-clip:padding-box !important;
+}
+
+.panel > .body,
+.panel .body{
+  max-width:100% !important;
+  overflow-x:auto !important;
+  overflow-y:visible !important;
+}
+
+.panel table,
+.panel .table,
+.panel .miniTable,
+.panel .v84-table,
+.panel .v86-review-table,
+.panel .v87-agent-history-table,
+.panel .v83-consult-table,
+.panel .v82-consult-table,
+.panel .reviewConsultationsTableV79{
+  max-width:100% !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  border-collapse:separate !important;
+}
+
+/* Old panel-overflow fixes caused square/bleeding title corners. Keep panel hidden. */
+.panel.v84-panel,
+.panel.v86-review-panel,
+.panel.v87-agent-history-panel,
+.panel.v83-consult-panel,
+.panel.v82-consult-panel,
+.panel.reviewConsultationsV79,
+.panel.reviewActionsFixedV80{
+  overflow:hidden !important;
+}
+
+.v84-body,
+.v86-review-body,
+.v87-agent-history-body,
+.v83-consult-body,
+.v82-consult-body,
+.reviewConsultationsBodyV79,
+.panel .body.v84-body,
+.panel .body.v86-review-body,
+.panel .body.v87-agent-history-body,
+.panel .body.v83-consult-body,
+.panel .body.v82-consult-body{
+  overflow-x:auto !important;
+  overflow-y:visible !important;
+  max-width:100% !important;
+}
+
+/* Keep action buttons inside the scrollable body, not outside the panel */
+.v84-action-cell,
+.v86-action-cell,
+.v87-agent-action-cell,
+.v83-action-cell,
+.v82-action-cell,
+.v81-action-cell{
+  position:static !important;
+  transform:none !important;
+}
+
+
+
+/* V99 clean labels: no DOM relabel flicker */
+.v99-agent-label{white-space:nowrap !important;}
+
+
+/* CODEX_POLISH_PATCH: accessibility and responsive quality-of-life fixes */
+:root { color-scheme: light; }
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.answer:focus-visible {
+  outline: 3px solid rgba(14,165,160,.28);
+  outline-offset: 2px;
+}
+button:disabled,
+.btn:disabled,
+.teal-btn:disabled,
+.green:disabled,
+.redbtn:disabled,
+.bluebtn:disabled,
+.yellowbtn:disabled {
+  cursor: not-allowed !important;
+  opacity: .62;
+  transform: none !important;
+}
+input, select, textarea { min-height: 44px; }
+input::placeholder, textarea::placeholder { color: rgba(107,130,160,.86); }
+.noscript-warning {
+  max-width: 760px;
+  margin: 18px auto;
+  padding: 14px 18px;
+  border: 1px solid rgba(192,57,43,.22);
+  border-radius: 12px;
+  background: rgba(192,57,43,.08);
+  color: #7f1d1d;
+  text-align: center;
+  font-weight: 700;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
+@media (max-width: 520px) {
+  header { min-height: 60px; }
+  .hdr-brand, .hdr-center, .hdr-actions { min-width: 0; }
+  .hdr-center-title, .hdr-center-sub, .hdr-name, .hdr-sub { overflow-wrap: anywhere; }
+  .sheet { width: min(100vw - 18px, 960px); }
+  .savebar { padding-inline: 12px; }
+  .savebar button { min-width: 0; white-space: normal; }
+}
+
+/* V103 clean action buttons */
+td.v103-action-cell{
+  display:table-cell!important;
+  vertical-align:middle!important;
+  text-align:center!important;
+  padding:10px 8px!important;
+  min-width:140px!important;
+  width:140px!important;
+  position:static!important;
+  transform:none!important;
+  overflow:visible!important;
+}
+td.v103-action-cell .v103-action-stack{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+  min-height:84px!important;
+  width:100%!important;
+}
+td.v103-action-cell button,
+td.v103-action-cell .btn,
+td.v103-action-cell a.btn{
+  width:120px!important;
+  min-width:120px!important;
+  max-width:120px!important;
+  height:38px!important;
+  margin:0 auto!important;
+  position:static!important;
+  transform:none!important;
+  float:none!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  white-space:nowrap!important;
+}
+td.v96-row-action-cell,td.v97-action-cell,td.v86-action-cell,td.v87-agent-action-cell,td.v84-action-cell,td.v83-action-cell,td.v82-action-cell,td.v81-action-cell{
+  display:table-cell!important;
+  vertical-align:middle!important;
+  text-align:center!important;
+  position:static!important;
+  transform:none!important;
+  overflow:visible!important;
+}
+.v103-fixed-table td,.v103-fixed-table th{vertical-align:middle!important}
+
+/* V103 BMI UI */
+.v103-bmi-box{
+  border:1px solid #bfdbfe!important;
+  background:#eff6ff!important;
+  border-radius:12px!important;
+  padding:12px!important;
+  color:#1e3a8a!important;
+  font-weight:900!important;
+  line-height:1.8!important;
+}
+.v103-bmi-number{
+  display:inline-flex!important;
+  padding:5px 10px!important;
+  border-radius:999px!important;
+  background:#fff!important;
+  border:1px solid #93c5fd!important;
+  color:#1d4ed8!important;
+  margin-inline-start:6px!important;
+}
+.v103-bmi-alert{
+  margin-top:8px!important;
+  background:#fff7ed!important;
+  border:1px solid #f97316!important;
+  color:#9a3412!important;
+  border-radius:10px!important;
+  padding:10px!important;
+  font-weight:900!important;
+  line-height:1.8!important;
+}
+
+/* V130 persistent site credit */
+body{padding-bottom:46px!important;}
+.siteCreditV130{position:fixed;inset-inline:0;bottom:10px;z-index:900;display:flex;justify-content:center;pointer-events:none;}
+.siteCreditV130 span{display:inline-flex;align-items:center;justify-content:center;max-width:min(92vw,560px);padding:8px 14px;border:1px solid rgba(13,31,60,.10);border-radius:999px;background:rgba(255,255,255,.88);color:#334155;font:800 11px/1.4 Cairo,Arial,sans-serif;box-shadow:0 10px 28px rgba(13,31,60,.10);backdrop-filter:blur(12px);text-align:center;}
+@media(max-width:760px){.siteCreditV130 span{font-size:10px;padding:7px 10px;}}
+
+/* ── HEADER USER PILL + DROPDOWN ────────────────────────────── */
+.hdr-user-wrap { position: relative; }
+.hdr-user-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  padding: 5px 12px 5px 6px;
+  cursor: pointer;
+  transition: background var(--t), border-color var(--t);
+  font-family: 'Cairo', sans-serif;
+}
+.hdr-user-pill:hover { background: rgba(255,255,255,.18); }
+.hdr-user-wrap.open .hdr-user-pill { background: rgba(255,255,255,.22); border-color: rgba(255,255,255,.35); }
+.hdr-user-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--teal2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 900; color: #fff;
+  flex-shrink: 0;
+  font-family: 'Noto Kufi Arabic', sans-serif;
+  position: relative;
+}
+.hdr-user-avatar::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  background: var(--green);
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 4px rgba(15, 140, 94, 0.4);
+}
+.hdr-user-info { line-height: 1.25; text-align: start; }
+.hdr-user-name  { font-size: 13px; font-weight: 700; color: #fff; }
+.hdr-user-role  { font-size: 10px; color: var(--teal2); font-weight: 600; }
+.hdr-chevron { width: 12px; height: 12px; opacity: .55; transition: transform .2s; flex-shrink: 0; }
+.hdr-user-wrap.open .hdr-chevron { transform: rotate(180deg); }
+.hdr-user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 230px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  box-shadow: var(--sh-lg);
+  z-index: 600;
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity .15s ease, transform .15s ease;
+}
+.hdr-user-wrap.open .hdr-user-dropdown { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.hdr-dropdown-info { padding: 14px 16px 12px; border-bottom: 1px solid var(--border); }
+.hdr-dropdown-name { font-size: 14px; font-weight: 800; color: var(--navy); }
+.hdr-dropdown-email { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.hdr-dropdown-btn {
+  display: flex; align-items: center; gap: 8px;
+  width: 100%; padding: 11px 16px;
+  font-family: 'Cairo', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; border: none; background: transparent;
+  color: var(--body-text); text-align: start;
+  border-radius: 0; box-shadow: none !important; transform: none !important;
+  transition: background var(--t);
+}
+.hdr-dropdown-btn:hover { background: var(--ivory); transform: none !important; }
+.hdr-dropdown-btn:active { transform: none !important; }
+.hdr-dropdown-btn.logout { color: var(--red); border-radius: 0 0 var(--r) var(--r); }
+.hdr-dropdown-btn.logout:hover { background: var(--red-soft); }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-brand">
+    <div class="hdr-logo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="9" y="2" width="6" height="20" rx="3" fill="white"/>
+        <rect x="2" y="9" width="20" height="6" rx="3" fill="white"/>
+      </svg>
+    </div>
+    <div>
+      <div class="hdr-name">Pharma Triage</div>
+      <div class="hdr-sub">إعدادات الحقول</div>
+    </div>
+  </div>
+  <div class="hdr-center">
+    <div class="hdr-center-title">إعدادات الحقول الأساسية</div>
+    <div class="hdr-center-sub">تعديل خانات بيانات الحالة</div>
+  </div>
+  <div class="hdr-actions">
+    <a class="hdr-btn" href="/index.html">← الرئيسية</a>
+    <a class="hdr-btn" href="/admin.html">✏️ تعديل الأسئلة</a>
+    <div class="hdr-user-wrap hidden" id="hdrUserWrap">
+      <button class="hdr-user-pill" id="hdrUserPill" onclick="toggleUserDropdown(event)" aria-haspopup="true" aria-expanded="false">
+        <div class="hdr-user-avatar" id="hdrUserAvatar">A</div>
+        <div class="hdr-user-info">
+          <div class="hdr-user-name" id="hdrUserName">الأدمن</div>
+          <div class="hdr-user-role" id="hdrUserRole">مدير</div>
+        </div>
+        <svg class="hdr-chevron" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="hdr-user-dropdown" id="hdrUserDropdown" role="menu">
+        <div class="hdr-dropdown-info">
+          <div class="hdr-dropdown-name" id="hdrDropdownName">الأدمن</div>
+          <div class="hdr-dropdown-email" id="hdrDropdownEmail"></div>
+        </div>
+        <button class="hdr-dropdown-btn logout" onclick="logout()" role="menuitem">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          تسجيل الخروج
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div id="loginView" class="loginBox">
+  <h2>دخول الأدمن</h2>
+  <p class="login-sub">للوصول لإعدادات الحقول الأساسية</p>
+  <div class="field" style="margin-bottom:12px">
+    <label>الإيميل</label>
+    <input id="email" type="email" autocomplete="username" inputmode="email" autocapitalize="none" spellcheck="false" value="drshawky530@gmail.com">
+  </div>
+  <div class="field" style="margin-bottom:20px">
+    <label>كلمة المرور</label>
+    <input id="password" type="password" autocomplete="current-password" placeholder="••••••••">
+  </div>
+  <button class="teal-btn" onclick="login()" style="width:100%">دخول ←</button>
+  <div id="msg" class="small" role="alert" aria-live="polite" style="margin-top:10px;color:var(--red);text-align:center"></div>
+</div>
+
+<div id="settingsView" class="settingsWrap hidden">
+  <div class="panel">
+    <div class="title">
+      <span>إعدادات بيانات الحالة الأساسية</span>
+    </div>
+    <div class="body">
+      <div class="helpBox">بعد التعديل اضغط حفظ. التعديلات تظهر للزملاء بعد تحديث صفحة الاستشارة.</div>
+      <div id="editor"></div>
+      <div style="margin-top:18px">
+        <button class="green" onclick="saveSettings()">💾 حفظ الإعدادات على Firebase</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="siteCreditV130"><span>Designed by Dr.M.Shawky | All copyrights reserved</span></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBvmHh6-KVlKNATzbfMk3hIswbMCrBZwf4",
+  authDomain: "pharma-triage-5d165.firebaseapp.com",
+  projectId: "pharma-triage-5d165",
+  storageBucket: "pharma-triage-5d165.firebasestorage.app",
+  messagingSenderId: "1080517928737",
+  appId: "1:1080517928737:web:9110f120203d0e6b7b0060"
+};
+
+const ADMIN_EMAIL='drshawky530@gmail.com';
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const DATA_REF=doc(db,'triageData','main');
+const el=id=>document.getElementById(id);
+const esc=s=>String(s||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+
+const defaultFieldSettings = {
+  fields:{
+    patientName:{label:'اسم المريض',placeholder:'اختياري'},
+    customerCode:{label:'كود العميل',placeholder:'اختياري'},
+    phone:{label:'رقم التليفون',placeholder:'اختياري'},
+    age:{label:'السن',placeholder:'مثال: 30'},
+    gender:{label:'النوع',options:['غير محدد','ذكر','أنثى']},
+    preg:{label:'حمل / رضاعة',options:['غير معروف','لا يوجد','حمل','رضاعة']},
+    month:{label:'حامل في الشهر الكام؟',placeholder:'الشهر الثالث'},
+    chronic:{label:'أمراض مزمنة',placeholder:'لا / سكر / ضغط...',inputMode:'choiceDetails',options:['نعم','لا'],detailTriggerValue:'نعم',detailPlaceholder:'اكتب المرض المزمن',summaryYes:'عنده أمراض مزمنة: {details}',summaryNo:'مفيش أمراض مزمنة'},
+    meds:{label:'أدوية حالية',placeholder:'لا / اسم الأدوية',inputMode:'choiceDetails',options:['نعم','لا'],detailTriggerValue:'نعم',detailPlaceholder:'اكتب أسماء الأدوية الحالية',summaryYes:'ماشي على أدوية حالية: {details}',summaryNo:'مش ماشي على أدوية حاليًا'},
+    taken:{label:'هل أخذ أدوية للأعراض؟',placeholder:'لا / مسكن / مضاد...',inputMode:'choiceDetails',options:['نعم','لا'],detailTriggerValue:'نعم',detailPlaceholder:'اكتب أسماء الأدوية التي أخذها للأعراض',summaryYes:'أخد للأعراض: {details}',summaryNo:'ماخدش حاجة للأعراض'},
+    prescribedMeds:{label:'ما هي الأدوية التي تم وصفها؟',placeholder:'اكتب الأدوية التي تم وصفها أو لا يوجد'},
+    nonDrugAdvice:{label:'النصائح الغير دوائيه',placeholder:'اكتب النصائح غير الدوائية إن وجدت'},
+    allergy:{label:'حساسية من أدوية؟',options:['غير معروف','لا','نعم']},
+    allergyText:{label:'نوع الحساسية',placeholder:'حساسية بنسلين'},
+    notes:{label:'ملاحظات',placeholder:'أي تفاصيل إضافية'}
+  },
+  rules:{
+    pregnancyHideForGender:['ذكر','طفل','طفلة'],
+    femaleGenderValues:['أنثى'],
+    pregnancyAgeMin:17,
+    pregnancyAgeMax:50,
+    pregnancyNoValue:'لا يوجد',
+    pregnancyValue:'حمل'
+  }
+};
+let fieldSettings = JSON.parse(JSON.stringify(defaultFieldSettings));
+
+function mergeSettings(base, extra){
+  const out = JSON.parse(JSON.stringify(base));
+  if(extra && extra.fields){
+    Object.keys(extra.fields).forEach(k=>{ out.fields[k]={...(out.fields[k]||{}),...extra.fields[k]}; });
+  }
+  if(extra && extra.rules) out.rules={...out.rules,...extra.rules};
+  return out;
+}
+function splitLines(v,fallback){
+  const arr=String(v||'').split(/\n|،|,/).map(x=>x.trim()).filter(Boolean);
+  return arr.length?arr:fallback;
+}
+const configurableChoiceFieldsV115 = ['chronic','meds','taken'];
+function isConfigurableChoiceFieldV115(id){
+  return configurableChoiceFieldsV115.includes(id);
+}
+async function login(){
+  try{ await signInWithEmailAndPassword(auth,el('email').value.trim(),el('password').value); }
+  catch(e){ console.error(e); el('msg').textContent='فشل تسجيل الدخول. تأكد من الباسورد.'; }
+}
+async function logout(){
+  try{ await signOut(auth); }catch(e){ console.error(e); }
+  window.location.replace('https://pharma-triage-5d165.web.app/');
+}
+async function loadSettings(){
+  const snap=await getDoc(DATA_REF);
+  const d=snap.exists()?snap.data():{};
+  fieldSettings=mergeSettings(defaultFieldSettings, d.fieldSettingsV14 || d.basicSettings || null);
+  renderEditor();
+}
+function renderEditor(){
+  const f=fieldSettings.fields||{};
+  const r=fieldSettings.rules||{};
+  const rows=[
+    ['patientName','اسم المريض'],['customerCode','كود العميل'],['phone','رقم التليفون'],['age','السن'],
+    ['gender','النوع'],['preg','حمل / رضاعة'],['month','شهر الحمل'],['chronic','أمراض مزمنة'],
+    ['meds','أدوية حالية'],['taken','هل أخذ أدوية للأعراض؟'],['prescribedMeds','ما هي الأدوية التي تم وصفها؟'],
+    ['allergy','حساسية من أدوية؟'],['allergyText','نوع الحساسية'],['notes','ملاحظات'],['nonDrugAdvice','النصائح الغير دوائيه']
+  ];
+  let html='';
+  rows.forEach(([id,title])=>{
+    const cfg=f[id]||{};
+    const opts=Array.isArray(cfg.options)?cfg.options.join('\n'):'';
+    const isConfigurable=isConfigurableChoiceFieldV115(id);
+    const mode=cfg.inputMode||'text';
+    html += '<div class="field '+(isConfigurable?'choice-config':'')+'">'
+      + '<label>'+esc(title)+' - اسم الخانة</label>'
+      + '<input id="label_'+id+'" value="'+esc(cfg.label||title)+'">'
+      + '<label style="margin-top:6px">النص داخل الخانة</label>'
+      + '<input id="ph_'+id+'" value="'+esc(cfg.placeholder||'')+'">';
+    if(['gender','preg','allergy'].includes(id)){
+      html += '<label style="margin-top:6px">الاختيارات - كل اختيار في سطر</label><textarea id="opts_'+id+'">'+esc(opts)+'</textarea>';
+    }
+    if(isConfigurable){
+      html += '<div class="choice-config-box">'
+        + '<label>نوع الإجابة في صفحة الاستشارة</label>'
+        + '<select id="mode_'+id+'">'
+        + '<option value="text" '+(mode==='choiceDetails'?'':'selected')+'>نص حر عادي</option>'
+        + '<option value="choiceDetails" '+(mode==='choiceDetails'?'selected':'')+'>اختيارات مع خانة تفاصيل عند إجابة معينة</option>'
+        + '</select>'
+        + '<label>الاختيارات - كل اختيار في سطر</label>'
+        + '<textarea id="choice_opts_'+id+'">'+esc(opts||'نعم\nلا')+'</textarea>'
+        + '<label>الإجابة التي تظهر بعدها خانة التفاصيل</label>'
+        + '<input id="detail_trigger_'+id+'" value="'+esc(cfg.detailTriggerValue||'نعم')+'">'
+        + '<label>النص داخل خانة التفاصيل</label>'
+        + '<input id="detail_ph_'+id+'" value="'+esc(cfg.detailPlaceholder||cfg.placeholder||'اكتب التفاصيل')+'">'
+        + '<label>صيغة الملخص عند الإجابة التي لها تفاصيل</label>'
+        + '<textarea id="summary_yes_'+id+'">'+esc(cfg.summaryYes||'')+'</textarea>'
+        + '<label>صيغة الملخص عند الإجابة بلا</label>'
+        + '<textarea id="summary_no_'+id+'">'+esc(cfg.summaryNo||'')+'</textarea>'
+        + '<small>استخدم {details} لمكان التفاصيل، و {answer} للإجابة، و {label} لاسم الخانة.</small>'
+        + '</div>';
+    }
+    html += '</div>';
+  });
+  html += '<div class="field"><label>إخفاء حمل/رضاعة لو النوع يساوي - كل قيمة في سطر</label><textarea id="hide_gender">'+esc((r.pregnancyHideForGender||['ذكر']).join('\n'))+'</textarea></div>';
+  html += '<div class="field"><label>القيم التي تعتبر أنثى لأسئلة البريود - كل قيمة في سطر</label><textarea id="female_values">'+esc((r.femaleGenderValues||['أنثى']).join('\n'))+'</textarea></div>';
+  html += '<div class="field"><label>إخفاء حمل/رضاعة لو السن أقل من</label><input id="age_min" type="number" inputmode="numeric" min="0" max="120" value="'+esc(r.pregnancyAgeMin??17)+'"></div>';
+  html += '<div class="field"><label>إخفاء حمل/رضاعة لو السن أكبر من</label><input id="age_max" type="number" inputmode="numeric" min="0" max="120" value="'+esc(r.pregnancyAgeMax??50)+'"></div>';
+  html += '<div class="field"><label>قيمة حمل في اختيارات حمل/رضاعة</label><input id="preg_value" value="'+esc(r.pregnancyValue||'حمل')+'"></div>';
+  html += '<div class="field"><label>قيمة لا يوجد عند إخفاء حمل/رضاعة</label><input id="preg_no" value="'+esc(r.pregnancyNoValue||'لا يوجد')+'"></div>';
+  el('editor').innerHTML='<div class="settingsGrid">'+html+'</div>';
+}
+async function saveSettings(){
+  const next=mergeSettings(defaultFieldSettings,fieldSettings);
+  Object.keys(next.fields).forEach(id=>{
+    if(el('label_'+id)) next.fields[id].label=el('label_'+id).value.trim();
+    if(el('ph_'+id)) next.fields[id].placeholder=el('ph_'+id).value.trim();
+    if(el('opts_'+id)) next.fields[id].options=splitLines(el('opts_'+id).value,next.fields[id].options||[]);
+    if(isConfigurableChoiceFieldV115(id)){
+      next.fields[id].inputMode=el('mode_'+id)?.value||'text';
+      next.fields[id].options=splitLines(el('choice_opts_'+id)?.value,next.fields[id].options||['نعم','لا']);
+      next.fields[id].detailTriggerValue=el('detail_trigger_'+id)?.value.trim()||'نعم';
+      next.fields[id].detailPlaceholder=el('detail_ph_'+id)?.value.trim()||next.fields[id].placeholder||'اكتب التفاصيل';
+      next.fields[id].summaryYes=el('summary_yes_'+id)?.value.trim()||next.fields[id].summaryYes||'';
+      next.fields[id].summaryNo=el('summary_no_'+id)?.value.trim()||next.fields[id].summaryNo||'';
+    }
+  });
+  next.rules.pregnancyHideForGender=splitLines(el('hide_gender')?.value,['ذكر']);
+  next.rules.femaleGenderValues=splitLines(el('female_values')?.value,['أنثى']);
+  next.rules.pregnancyAgeMin=Number(el('age_min')?.value||17);
+  next.rules.pregnancyAgeMax=Number(el('age_max')?.value||50);
+  next.rules.pregnancyValue=el('preg_value')?.value.trim()||'حمل';
+  next.rules.pregnancyNoValue=el('preg_no')?.value.trim()||'لا يوجد';
+  fieldSettings=next;
+  await setDoc(DATA_REF,{fieldSettingsV14:next,updatedAt:new Date().toISOString(),updatedBy:auth.currentUser.email},{merge:true});
+  alert('تم حفظ إعدادات الحقول');
+}
+function toggleUserDropdown(e){
+  if(e) e.stopPropagation();
+  const wrap=document.getElementById('hdrUserWrap');
+  if(!wrap) return;
+  const isOpen=wrap.classList.toggle('open');
+  const pill=document.getElementById('hdrUserPill');
+  if(pill) pill.setAttribute('aria-expanded', isOpen?'true':'false');
+}
+document.addEventListener('click', function(e){
+  const wrap=document.getElementById('hdrUserWrap');
+  if(wrap && !wrap.contains(e.target)) wrap.classList.remove('open');
+});
+onAuthStateChanged(auth,async user=>{
+  if(user && user.email===ADMIN_EMAIL){
+    el('loginView').classList.add('hidden');
+    el('settingsView').classList.remove('hidden');
+    const name = user.displayName || user.email.split('@')[0];
+    const hw = el('hdrUserWrap');
+    if(hw){
+      el('hdrUserAvatar').textContent = name.charAt(0).toUpperCase();
+      el('hdrUserName').textContent = name;
+      el('hdrDropdownName').textContent = name;
+      el('hdrDropdownEmail').textContent = user.email;
+      hw.classList.remove('hidden');
+    }
+    await loadSettings();
+  }else{
+    el('hdrUserWrap')?.classList.add('hidden');
+    el('settingsView').classList.add('hidden');
+    el('loginView').classList.remove('hidden');
+    if(user && user.email!==ADMIN_EMAIL){
+      el('msg').textContent='هذا الحساب ليس حساب الأدمن.';
+      await signOut(auth);
+    }
+  }
+});
+function setupEnterLoginHandlers(){
+  ['email','password'].forEach(id=>{
+    const x=document.getElementById(id);
+    if(x) x.addEventListener('keydown',e=>{if(e.key==='Enter') login();});
+  });
+}
+setupEnterLoginHandlers();
+
+function setupGlobalEnterLogin_settings(){
+  document.addEventListener('keydown', e=>{
+    if(e.key!=='Enter') return;
+    const loginView = document.getElementById('loginView');
+    if(loginView && loginView.classList.contains('hidden')) return;
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    if(document.activeElement===email || document.activeElement===password){
+      e.preventDefault();
+      login();
+    }
+  });
+}
+setupGlobalEnterLogin_settings();
+
+
+function strongEnterHandler_settings(){
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Enter') return;
+    const loginView = document.getElementById('loginView');
+    if(loginView && loginView.classList.contains('hidden')) return;
+    const id = document.activeElement ? document.activeElement.id : '';
+    if(id==='email' || id==='password'){
+      e.preventDefault();
+      login();
+    }
+  }, true);
+}
+strongEnterHandler_settings();
+
+
+function setupCleanSettingsEnterV33(){
+  document.addEventListener('keydown', function(e){
+    if(e.key !== 'Enter') return;
+    const active = document.activeElement;
+    const id = active ? active.id : '';
+    if(id === 'email' || id === 'password'){
+      e.preventDefault();
+      login();
+    }
+  }, true);
+}
+setupCleanSettingsEnterV33();
+
+Object.assign(window,{login,logout,toggleUserDropdown,saveSettings});
+function applyV65CleanFinalFixes(){
+  // 1) Center "إجابات الأسئلة" title inside opened consultation
+  document.querySelectorAll('h1,h2,h3,h4,.title,div,span').forEach(el=>{
+    const t = String(el.textContent || '').trim();
+    if(t === 'إجابات الأسئلة' || t.includes('إجابات الأسئلة')){
+      // Avoid applying to huge containers
+      if(t.length <= 40) el.classList.add('v65-center-title');
+    }
+  });
+
+  // 2) Convert plain status text into colored badges
+  document.querySelectorAll('td,span,div').forEach(el=>{
+    if(el.children.length > 0) return;
+    const t = String(el.textContent || '').trim();
+    if(t === 'تم الاعتماد'){
+      el.classList.add('v65-status-approved');
+    }
+    if(t === 'يحتاج استكمال' || t === 'استكمال' || t === 'قيد المراجعة'){
+      el.classList.add(t === 'قيد المراجعة' ? 'v65-status-review' : 'v65-status-followup');
+    }
+  });
+
+  // 3) Make sure selected symptom labels remain visible without pseudo overlay
+  document.querySelectorAll('.symbtn').forEach(btn=>{
+    const label = (btn.getAttribute('data-label') || btn.textContent || '').trim();
+    if(label){
+      btn.setAttribute('data-label', label);
+      btn.style.fontSize = '';
+    }
+  });
+
+  // 4) Force white text for dark boxes that were created dynamically
+  document.querySelectorAll('.summary,[style*="background:#06152b"],[style*="background:#07182f"],[style*="background:#111827"],[style*="background:#0d1f3c"]').forEach(box=>{
+    box.style.color = '#fff';
+    box.querySelectorAll('*').forEach(child=>child.style.color = '#fff');
+  });
+}
+
+applyV65CleanFinalFixes();
+setTimeout(applyV65CleanFinalFixes, 250);
+setTimeout(applyV65CleanFinalFixes, 900);
+setTimeout(applyV65CleanFinalFixes, 1800);
+function applyV66FinalCleanPatch(){
+  // 1) Restore selected symptom label if any CSS/previous pseudo overlay hid it.
+  document.querySelectorAll('.symbtn').forEach(btn=>{
+    let label = (btn.getAttribute('data-label') || btn.getAttribute('title') || btn.textContent || '').trim();
+    if(label){
+      btn.setAttribute('data-label', label);
+      btn.setAttribute('title', label);
+      if((btn.classList.contains('sel') || btn.classList.contains('active') || btn.classList.contains('selected')) && !btn.textContent.trim()){
+        btn.textContent = label;
+      }
+      btn.style.fontSize = '';
+      btn.style.textIndent = '0';
+      btn.style.color = btn.classList.contains('sel') || btn.classList.contains('active') || btn.classList.contains('selected') ? '#fff' : '';
+    }
+  });
+
+  // 2) Dark boxes forced readable.
+  const darkSelectors = [
+    '.summary',
+    '.reviewSummary',
+    '.darkBox',
+    '.dark-section',
+    '.medBox',
+    '.adviceBox',
+    '[style*="background:#06152b"]',
+    '[style*="background: #06152b"]',
+    '[style*="background:#07182f"]',
+    '[style*="background: #07182f"]',
+    '[style*="background:#111827"]',
+    '[style*="background: #111827"]',
+    '[style*="background:#0d1f3c"]',
+    '[style*="background: #0d1f3c"]'
+  ].join(',');
+
+  document.querySelectorAll(darkSelectors).forEach(box=>{
+    box.classList.add('v66-dark-readable');
+    box.style.color = '#fff';
+    box.style.webkitTextFillColor = '#fff';
+    box.querySelectorAll('*').forEach(child=>{
+      child.style.color = '#fff';
+      child.style.webkitTextFillColor = '#fff';
+    });
+  });
+
+  // 3) Center title "إجابات الأسئلة".
+  document.querySelectorAll('h1,h2,h3,h4,div,span').forEach(el=>{
+    const t = String(el.textContent || '').trim();
+    if((t === 'إجابات الأسئلة' || t.includes('إجابات الأسئلة')) && t.length <= 50){
+      el.classList.add('v66-center-title');
+    }
+  });
+
+  // 4) Colored status badges when text is plain.
+  document.querySelectorAll('td,span,div').forEach(el=>{
+    if(el.children.length > 0) return;
+    const t = String(el.textContent || '').trim();
+    if(t === 'تم الاعتماد'){
+      el.classList.add('v66-status-approved');
+    }
+    if(t === 'يحتاج استكمال' || t === 'استكمال' || t === 'قيد المراجعة'){
+      el.classList.add(t === 'قيد المراجعة' ? 'v66-status-review' : 'v66-status-followup');
+    }
+  });
+
+  // 5) Add border class to major sections in opened consultation if they are div based.
+  document.querySelectorAll('#consultationDetails > div,#finalConsultation > div,.consultationDetails > div,.finalConsultation > div,.printForm > div,.formPreview > div').forEach(div=>{
+    const txt = String(div.textContent || '').trim();
+    if(txt && txt.length > 8 && !div.classList.contains('summary')){
+      div.classList.add('v66-bordered-section');
+    }
+  });
+}
+
+applyV66FinalCleanPatch();
+setTimeout(applyV66FinalCleanPatch, 200);
+setTimeout(applyV66FinalCleanPatch, 700);
+setTimeout(applyV66FinalCleanPatch, 1500);
+function applyV95PanelScrollFix(){
+  document.querySelectorAll('.panel').forEach(panel=>{
+    panel.style.setProperty('overflow','hidden','important');
+    const title = panel.querySelector(':scope > .title, .title:first-child');
+    if(title){
+      title.style.setProperty('border-radius','16px 16px 0 0','important');
+      title.style.setProperty('overflow','hidden','important');
+      title.style.setProperty('background-clip','padding-box','important');
+    }
+    const body = panel.querySelector(':scope > .body, .body');
+    if(body){
+      body.style.setProperty('max-width','100%','important');
+      body.style.setProperty('overflow-x','auto','important');
+      body.style.setProperty('overflow-y','visible','important');
+    }
+  });
+}
+setTimeout(applyV95PanelScrollFix,100);
+setTimeout(applyV95PanelScrollFix,500);
+setTimeout(applyV95PanelScrollFix,1200);
+
+function applyV103ActionButtonsFix(){
+  document.querySelectorAll('table').forEach(table=>{
+    const txt = table.textContent || '';
+    if(!(txt.includes('فتح الاستشارة') || txt.includes('مسح'))) return;
+    table.classList.add('v103-fixed-table');
+
+    Array.from(table.rows || []).forEach(tr=>{
+      Array.from(tr.cells || []).forEach(td=>{
+        const cellText = (td.textContent || '').trim();
+        const hasAction = td.querySelector('button,.btn,a.btn') && (
+          cellText.includes('فتح الاستشارة') ||
+          cellText === 'فتح' ||
+          cellText.includes('مسح')
+        );
+        if(!hasAction) return;
+
+        td.classList.remove('v96-row-action-cell','v97-action-cell','v86-action-cell','v87-agent-action-cell','v84-action-cell','v83-action-cell','v82-action-cell','v81-action-cell');
+        td.classList.add('v103-action-cell');
+
+        if(!td.querySelector(':scope > .v103-action-stack')){
+          const stack = document.createElement('div');
+          stack.className = 'v103-action-stack';
+          Array.from(td.children).filter(ch=>{
+            const t = (ch.textContent || '').trim();
+            return ch.matches('button,.btn,a.btn') || t.includes('فتح الاستشارة') || t === 'مسح';
+          }).forEach(ch=>stack.appendChild(ch));
+          td.appendChild(stack);
+        }
+
+        td.querySelectorAll('button,.btn,a.btn').forEach(btn=>{
+          btn.style.setProperty('position','static','important');
+          btn.style.setProperty('transform','none','important');
+          btn.style.setProperty('float','none','important');
+          btn.style.setProperty('margin','0 auto','important');
+        });
+      });
+    });
+  });
+}
+setTimeout(applyV103ActionButtonsFix,50);
+setTimeout(applyV103ActionButtonsFix,250);
+setTimeout(applyV103ActionButtonsFix,900);
+setTimeout(applyV103ActionButtonsFix,1800);
+document.addEventListener('DOMContentLoaded',applyV103ActionButtonsFix);
+console.log('V103_CLEAN_BMI_SYMPTOM_ACTIVE');
+
+/* ── V104 — consolidated debounced dispatcher for the click/input-triggered
+   UI patches above. Same functions, same output — coalesced into ONE scheduled
+   batch per interaction instead of several independent full-DOM scans firing
+   in parallel on every click/keystroke. ── */
+(function(){
+  let t = null;
+  function runAll(){
+    applyV65CleanFinalFixes();
+    applyV66FinalCleanPatch();
+    applyV95PanelScrollFix();
+    applyV103ActionButtonsFix();
+  }
+  function schedule(delay){
+    clearTimeout(t);
+    t = setTimeout(runAll, delay);
+  }
+  document.addEventListener('click', ()=>schedule(100), true);
+  document.addEventListener('input', ()=>schedule(300), true);
+})();
+
+
+console.log('V106_ADMIN_SAVE_BMI_SUMMARY_FIX_ACTIVE');
+</script>
+</body>
+</html>
+
