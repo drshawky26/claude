@@ -213,13 +213,111 @@ h4.sub-h{color:var(--ink);font-size:14px;margin:16px 0 6px}
 .bulkbf-btn:active{transform:translateY(1px) scale(.985)}
 .bulkbf-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
 .bulkbf-btn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-/* select الزميل: native select — لازم خلفية صلبة في الدارك وإلا الليست بتفتح بيضا ومايبانش الاسم */
-#bulkBfAgent{font-family:inherit;font-size:14px;font-weight:700;color:var(--text);background:var(--card-2);
-  border:1px solid var(--border);border-radius:10px;padding:9px 11px;width:100%;cursor:pointer}
-#bulkBfAgent:focus{outline:none;border-color:var(--fb)}
-[data-theme="dark"] #bulkBfAgent{background:#0e1a30;color:var(--ink)}
-[data-theme="dark"] #bulkBfAgent option{background:#0f1c34;color:var(--ink)}
-.bulkbf-card input[type=date]{color-scheme:light dark}
+/* multi-select زملاء — شيبس بريميوم بدل select عشان اختيار أكتر من زميل */
+.bulkbf-agents-lbl{display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:800;color:var(--muted);margin:2px 2px 8px}
+.bulkbf-agents-actions{margin-inline-start:auto;display:flex;gap:6px}
+.bulkbf-agents-actions button{font-family:inherit;font-size:11.5px;font-weight:800;color:var(--fb);background:color-mix(in srgb,var(--fb) 10%,transparent);
+  border:1px solid color-mix(in srgb,var(--fb) 30%,transparent);border-radius:8px;padding:4px 10px;cursor:pointer;transition:.15s}
+.bulkbf-agents-actions button:hover{background:color-mix(in srgb,var(--fb) 18%,transparent)}
+.bulkbf-chips{display:flex;flex-wrap:wrap;gap:7px}
+.bulkbf-chip{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--text);
+  background:var(--card-2);border:1px solid var(--border);border-radius:999px;padding:6px 13px;cursor:pointer;user-select:none;transition:.15s}
+.bulkbf-chip:hover{border-color:color-mix(in srgb,var(--fb) 45%,var(--border))}
+.bulkbf-chip::before{content:"";width:14px;height:14px;border-radius:5px;border:1.5px solid var(--muted);flex:none;transition:.15s;
+  background-position:center;background-repeat:no-repeat;background-size:10px}
+.bulkbf-chip.on{color:#fff;border-color:transparent;background:linear-gradient(135deg,var(--fb),color-mix(in srgb,var(--fb) 55%,#000));
+  box-shadow:0 4px 12px -4px color-mix(in srgb,var(--fb) 60%,transparent)}
+.bulkbf-chip.on::before{border-color:#fff;background-color:#fff;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231877f2' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 13 4 4L19 7'/%3E%3C/svg%3E")}
+[data-theme="dark"] .bulkbf-chip{background:#0e1a30;color:var(--ink)}
+.bulkbf-card input[type=date],.bulkbf-card input[type=time]{color-scheme:light dark}
+
+/* ══ Capacity & Workload modal — سوبر بريميوم ══ */
+.cap-ov{z-index:240}
+.cap-box{background:var(--card);border:1px solid var(--border2);border-radius:22px;box-shadow:var(--shadow-lg);
+  width:100%;max-width:1000px;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;animation:pt-pop .34s cubic-bezier(.2,.8,.2,1) both}
+.cap-hero{position:relative;display:flex;align-items:center;gap:14px;padding:22px 24px;
+  background:linear-gradient(135deg,color-mix(in srgb,#a855f7 20%,var(--card)),color-mix(in srgb,var(--fb) 12%,var(--card)));
+  border-bottom:1px solid var(--border)}
+.cap-hero::after{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,transparent,#a855f7,var(--fb),var(--teal),transparent);background-size:200% 100%;animation:bulkbfSheen 5s linear infinite}
+@media(prefers-reduced-motion:reduce){.cap-hero::after{animation:none}}
+.cap-hero-ic{width:52px;height:52px;border-radius:15px;flex:none;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(135deg,#a855f7,#7c3aed);box-shadow:0 10px 24px -8px color-mix(in srgb,#a855f7 70%,transparent)}
+.cap-hero-ic svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cap-hero-t{flex:1;min-width:0}
+.cap-hero-t h2{font-size:19px;font-weight:900;color:var(--ink);margin:0 0 3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cap-hero-t p{font-size:12.5px;color:var(--muted);font-weight:700;line-height:1.5}
+.cap-x{align-self:flex-start;font-size:26px}
+.cap-scroll{overflow-y:auto;padding:18px 22px 24px}
+.cap-bar{margin-bottom:16px}
+.cap-empty{padding:36px 18px;text-align:center;color:var(--muted);font-weight:800;font-size:14px}
+.cap-verdict{border-radius:16px;padding:16px 20px;margin-bottom:16px;font-weight:800;display:flex;align-items:center;gap:14px;font-size:14px;line-height:1.6}
+.cap-verdict .cv-ic{font-size:30px;flex:none}
+.cap-verdict.ok{background:color-mix(in srgb,var(--green) 12%,transparent);border:1px solid color-mix(in srgb,var(--green) 35%,transparent);color:var(--green)}
+.cap-verdict.warn{background:color-mix(in srgb,var(--amber) 13%,transparent);border:1px solid color-mix(in srgb,var(--amber) 38%,transparent);color:var(--amber)}
+.cap-verdict.over{background:color-mix(in srgb,var(--red) 12%,transparent);border:1px solid color-mix(in srgb,var(--red) 38%,transparent);color:var(--red)}
+.cap-verdict b{color:var(--ink)}
+.cap-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
+.cap-kpi{background:var(--card-2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;position:relative;overflow:hidden}
+.cap-kpi .ck-v{font-size:26px;font-weight:900;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.1}
+.cap-kpi .ck-l{font-size:11.5px;color:var(--muted);font-weight:800;margin-top:4px}
+.cap-kpi .ck-x{font-size:11px;color:var(--muted);font-weight:700;margin-top:2px;opacity:.85}
+.cap-kpi.accent{background:linear-gradient(135deg,color-mix(in srgb,#a855f7 14%,var(--card-2)),var(--card-2));border-color:color-mix(in srgb,#a855f7 30%,var(--border))}
+.cap-card{background:var(--card-2);border:1px solid var(--border);border-radius:16px;padding:16px 18px;margin-bottom:14px}
+.cap-card-h{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.cap-card-h h3{font-size:14.5px;font-weight:900;color:var(--ink);margin:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cap-sub{font-size:11.5px;color:var(--muted);font-weight:700}
+.cap-hours{display:flex;align-items:flex-end;gap:4px;height:150px;padding:6px 2px 0;overflow-x:auto}
+.cap-hbar{flex:1;min-width:15px;display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;justify-content:flex-end}
+.cap-hbar .chb-fill{width:100%;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,var(--fb),color-mix(in srgb,var(--fb) 55%,#7c3aed));min-height:3px;transition:height .5s cubic-bezier(.2,.8,.2,1);position:relative}
+.cap-hbar .chb-fill.peak{background:linear-gradient(180deg,#f59e0b,#d97706)}
+.cap-hbar .chb-in{width:100%;border-radius:6px 6px 0 0;background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--red) 55%,transparent),color-mix(in srgb,var(--red) 55%,transparent) 4px,color-mix(in srgb,var(--red) 30%,transparent) 4px,color-mix(in srgb,var(--red) 30%,transparent) 8px);min-height:0;transition:height .5s cubic-bezier(.2,.8,.2,1)}
+.cap-hbar .chb-v{font-size:10px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.cap-hbar .chb-h{font-size:9.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+.cap-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:11.5px;font-weight:700;color:var(--muted)}
+.cap-legend span{display:inline-flex;align-items:center;gap:6px}
+.cap-legend i{width:13px;height:13px;border-radius:4px;display:inline-block}
+.cap-fetch-btn{margin-inline-start:auto;font-family:inherit;font-size:12px;font-weight:800;color:#fff;
+  background:linear-gradient(135deg,var(--red),#b91c1c);border:none;border-radius:10px;padding:8px 14px;cursor:pointer;transition:.15s;white-space:nowrap}
+.cap-fetch-btn:hover{transform:translateY(-1px)}
+.cap-fetch-btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.cap-fetch-status{font-size:11.5px;font-weight:800;color:var(--muted);margin-top:8px;min-height:16px}
+.cap-table-wrap{overflow-x:auto}
+.cap-table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:520px}
+.cap-table th{text-align:start;padding:9px 10px;font-size:11px;font-weight:900;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap}
+.cap-table td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.cap-table tr:last-child td{border-bottom:none}
+.cap-table tr:hover td{background:color-mix(in srgb,#a855f7 5%,transparent)}
+.cap-table .ct-name{font-weight:900;color:var(--ink)}
+.cap-table .ct-num{font-variant-numeric:tabular-nums;font-weight:800;color:var(--ink)}
+.cap-hrs-in{width:66px;font-family:inherit;font-size:12.5px;font-weight:800;text-align:center;color:var(--ink);
+  background:var(--card);border:1px solid var(--border);border-radius:8px;padding:5px 6px}
+.cap-hrs-in:focus{outline:none;border-color:#a855f7}
+[data-theme="dark"] .cap-hrs-in{background:#0e1a30}
+.cap-load{display:inline-flex;align-items:center;gap:7px;min-width:120px}
+.cap-load-bar{flex:1;height:7px;border-radius:999px;background:color-mix(in srgb,var(--muted) 22%,transparent);overflow:hidden;min-width:60px}
+.cap-load-bar i{display:block;height:100%;border-radius:999px;transition:width .5s}
+.cap-load-pct{font-size:11px;font-weight:900;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cap-grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cap-chans{display:flex;flex-direction:column;gap:8px}
+.cap-chan-row{display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:800}
+.cap-chan-row .cc-nm{min-width:90px;color:var(--ink)}
+.cap-chan-row .cc-bar{flex:1;height:9px;border-radius:999px;background:color-mix(in srgb,var(--muted) 18%,transparent);overflow:hidden}
+.cap-chan-row .cc-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--fb),#a855f7);border-radius:999px}
+.cap-chan-row .cc-v{font-variant-numeric:tabular-nums;color:var(--muted);min-width:64px;text-align:end}
+.cap-set-row{display:flex;flex-direction:column;gap:6px;font-size:12.5px;font-weight:800;color:var(--muted)}
+.cap-set-row input{font-family:inherit;font-size:15px;font-weight:900;color:var(--ink);background:var(--card);border:1px solid var(--border);border-radius:10px;padding:9px 12px;width:120px}
+.cap-set-row input:focus{outline:none;border-color:#a855f7}
+[data-theme="dark"] .cap-set-row input{background:#0e1a30}
+.cap-set-note{font-size:11.5px;color:var(--muted);font-weight:700;margin-top:8px;line-height:1.5}
+.cap-perm-list{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
+.cap-perm-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--card);border:1px solid var(--border);border-radius:10px;font-size:12.5px;font-weight:800;color:var(--ink)}
+.cap-perm-item .cpi-del{margin-inline-start:auto;cursor:pointer;color:var(--red);font-weight:900;font-size:16px;background:none;border:none}
+.cap-perm-add{display:flex;gap:8px}
+.cap-perm-add input{flex:1;font-family:inherit;font-size:13px;font-weight:700;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:10px;padding:9px 12px}
+.cap-perm-add input:focus{outline:none;border-color:#a855f7}
+[data-theme="dark"] .cap-perm-add input{background:#0e1a30}
+@media(max-width:720px){.cap-grid2{grid-template-columns:1fr}}
 
 /* ── Custom searchable dropdown ── */
 .cust-sel{position:relative;user-select:none}
@@ -274,6 +372,13 @@ h4.sub-h{color:var(--ink);font-size:14px;margin:16px 0 6px}
 .sc-pill .pn{font-size:17px;font-variant-numeric:tabular-nums}
 .sc-pill .pl{font-size:10.5px;font-weight:800;opacity:.8}
 .slot-card .sc-hint{font-size:11px;color:var(--muted);font-weight:700;margin-top:6px}
+.slot-card .sc-chan{font-size:10.5px;font-weight:800;padding:2px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:4px;
+  background:color-mix(in srgb,var(--fb) 12%,transparent);color:var(--fb);white-space:nowrap}
+.slot-card .sc-chan.ch-notif{background:color-mix(in srgb,var(--amber) 16%,transparent);color:var(--amber)}
+.slot-card .sc-chan.ch-comment{background:color-mix(in srgb,#7c6eff 16%,transparent);color:#9d92ff}
+.slot-card .sc-chan.ch-insta{background:color-mix(in srgb,#e1306c 16%,transparent);color:#e1306c}
+.slot-card .sc-chan.ch-task{background:color-mix(in srgb,var(--teal) 15%,transparent);color:var(--teal)}
+.slot-card .sc-chan.ch-none{background:color-mix(in srgb,var(--muted) 14%,transparent);color:var(--muted)}
 
 /* ── Modal ── */
 .modal-ov{position:fixed;inset:0;z-index:200;background:rgba(8,15,30,.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:18px}
@@ -851,6 +956,7 @@ section.collapsed{padding-bottom:16px}
     <button class="iconbtn" id="agentTagsBtn" style="display:none" title="إدارة هشتاجات الفريق"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg><span>هشتاجات</span></button>
     <button class="iconbtn" id="branchMgrBtn" style="display:none;border-color:color-mix(in srgb,var(--blue) 40%,var(--border));color:var(--blue)" title="إدارة الفروع (أدمن)"><svg viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h1"/><path d="M14 9h1"/><path d="M9 13h1"/><path d="M14 13h1"/><path d="M10 21v-4h4v4"/></svg><span>الفروع</span></button>
     <button class="iconbtn" id="ordersDrawerBtn" style="display:none;background:linear-gradient(135deg,color-mix(in srgb,var(--teal) 12%,var(--card)),var(--card));border-color:color-mix(in srgb,var(--teal) 40%,var(--border));color:var(--teal);font-weight:900" title="أوردراتنا كلنا"><svg viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg><span>أوردراتنا كلنا</span></button>
+    <button class="iconbtn" id="capacityBtn" style="display:none;background:linear-gradient(135deg,color-mix(in srgb,#a855f7 14%,var(--card)),var(--card));border-color:color-mix(in srgb,#a855f7 42%,var(--border));color:#a855f7;font-weight:900" title="تحليل السعة والحِمل — هل نحتاج زملاء أكتر؟"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="7" rx="1"/><rect x="12" y="7" width="3" height="11" rx="1"/><rect x="17" y="4" width="3" height="14" rx="1"/></svg><span>السعة والحِمل</span></button>
     <button class="iconbtn" id="themeBtn" title="الوضع الليلي"><svg id="themeIco" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
     <div class="hdr-user"><div class="av" id="hdrAv">U</div></div>
   </div>
@@ -996,14 +1102,20 @@ section.collapsed{padding-bottom:16px}
       <div class="bulkbf-h">
         <div class="bulkbf-ico"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
         <div>
-          <h3 style="margin:0">جلب دفعة واحدة لزميل <span class="tag fb">أدمن</span></h3>
-          <div class="bulkbf-sub">لزميل عنده سلوتات كتير من غير عدد ردود متسجّل (زي فترة طويلة اتنسيت). بيمسح فيسبوك <b>مرة واحدة بس</b> لكل الفترة ويوزّع الردود تلقائيًا على كل سلوت بتاعه حسب وقته — أسرع بكتير من جلب كل سلوت لوحده.</div>
+          <h3 style="margin:0">جلب دفعة واحدة <span class="tag fb">أدمن</span></h3>
+          <div class="bulkbf-sub">اختار <b>زميل أو أكتر</b> + الفترة (تاريخ وساعة). بيمسح فيسبوك <b>مرة واحدة بس</b> لكل الفترة (المسح ~٣٠٠٠ رسالة هو التقيل) ويوزّع الردود تلقائيًا على سلوتات كل زميل حسب وقته — فبدل ما تعمل مسح كامل لكل زميل، اختارهم كلهم مرة واحدة والمسح يتعمل مرة واحدة.</div>
         </div>
       </div>
-      <div class="frm">
-        <label>الزميل<select id="bulkBfAgent"></select></label>
+      <div class="bulkbf-agents-lbl">
+        <span>الزملاء</span>
+        <span class="bulkbf-agents-actions"><button type="button" id="bulkBfAll">تحديد الكل</button><button type="button" id="bulkBfNone">مسح</button></span>
+      </div>
+      <div class="bulkbf-chips" id="bulkBfChips"></div>
+      <div class="frm" style="grid-template-columns:1fr 1fr;margin-top:12px">
         <label>من تاريخ<input type="date" id="bulkBfFrom"></label>
         <label>لـ تاريخ<input type="date" id="bulkBfTo"></label>
+        <label>من ساعة<input type="time" id="bulkBfFromTime" value="00:00"></label>
+        <label>لـ ساعة<input type="time" id="bulkBfToTime" value="23:59"></label>
       </div>
       <label class="bulkbf-toggle">
         <input type="checkbox" id="bulkBfOverwrite"> أعد حساب حتى السلوتات اللي ليها رقم متسجّل بالفعل
@@ -1030,7 +1142,7 @@ section.collapsed{padding-bottom:16px}
           <input type="hidden" id="eAgent">
         </label>
         <label>القناة *<select id="eChannel"><option value="">— اختر —</option><option>إنبوكس</option><option>نوتيفيكيشن</option><option>كومنت</option><option>إنستجرام</option><option>تاسك</option></select></label>
-        <label>عدد الرسائل <small style="color:var(--muted);font-weight:600">(اختياري)</small><input type="number" id="eMsgs" min="0" max="3000" placeholder="اتركه فاضي أو أدخل الرقم"></label>
+        <label>عدد الرسائل <small style="color:var(--muted);font-weight:600">(اختياري)</small><input type="number" id="eMsgs" min="0" max="10000000" placeholder="اتركه فاضي أو أدخل الرقم"></label>
         <label>من<input type="time" id="eFrom"></label>
         <label>إلى<input type="time" id="eTo"></label>
         <label>أوردرات<input type="number" id="eOrders" min="0" max="500" placeholder="اختياري"></label>
@@ -1106,6 +1218,7 @@ section.collapsed{padding-bottom:16px}
       <div id="batchBar" style="display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:10px 14px;background:var(--card-2);border:1px solid var(--border);border-radius:var(--radius-sm)">
         <button class="btnp" id="batchFetchBtn" style="background:var(--teal);border-color:var(--teal)">📊 جلب ردود كل الشفتات دفعة واحدة</button>
         <span id="batchStatus" style="font-size:12.5px;font-weight:800;color:var(--teal)"></span>
+        <button class="btnp" id="sheetImportOpenBtn" style="background:var(--fb);border-color:var(--fb)">📋 استيراد شيت يدوي</button>
         <span style="flex:1"></span>
         <span style="font-size:11.5px;color:var(--muted);font-weight:700">بيجيب المحادثات مرة واحدة ويعدّ ردود كل زميل في وقته</span>
       </div>
@@ -1204,10 +1317,143 @@ section.collapsed{padding-bottom:16px}
     </div>
     <div class="m-actions">
       <button class="btnp ghost" id="smFetchBtn" style="background:var(--teal);border-color:var(--teal);color:#fff">📊 جيب عدد الردود</button>
+      <button class="btnp ghost" id="smDiagBtn" style="background:var(--amber);border-color:var(--amber);color:#3a2a00">🔍 تشخيص العدّ</button>
       <button class="btnp" id="smSaveBtn">💾 حفظ</button>
       <span id="smStatus" style="font-size:12.5px;font-weight:800;color:var(--fb);align-self:center"></span>
     </div>
     <div class="note" id="smNote" style="margin-top:12px;display:none"></div>
+    <div class="note amber" id="smDiag" style="margin-top:12px;display:none;font-size:12.5px;line-height:1.7"></div>
+  </div>
+</div>
+
+<!-- ░░ Sheet Import Modal (admin only) ░░ -->
+<div class="modal-ov" id="sheetImportModal">
+  <div class="modal-box modal-box-lg">
+    <div class="atm-hdr">
+      <h3>📋 استيراد شيت يدوي
+        <span class="tag fb" style="font-size:10px;padding:2px 8px;margin-inline-start:2px">أدمن</span>
+        <button class="modal-x" id="simClose" style="margin-inline-start:auto">×</button>
+      </h3>
+      <p>لو خلصت الكوتا وسجّلتوا في شيت يدوي — نزّل القالب (بنفس شكل شيت المتابعة اللي بتستخدموه)، املأه بالمقرر والفعلي واسم الزميل والقناة، وارفعه هنا. بيتسجّل في <b>fbLog</b> بالظبط زي أي سلوت اتعمل من الموقع، ويتضاف فوق الموجود من غير ما يمسح حاجة. <b>عدد الرسائل مش لازم تكتبه</b> — بعد الاستيراد دوس «📊 جلب ردود كل الشفتات دفعة واحدة» فوق وهيتحسب تلقائيًا من فيسبوك. القناة نص حر — لو الزميل شغّال قناة مش في القائمة الأساسية اكتبها زي ما هي وهتتسجّل عادي.</p>
+    </div>
+
+    <div class="note" style="margin-top:0">
+      <b>خطوات:</b> 1) نزّل القالب 2) افتحه بالإكسيل واملأ صف لكل سلوت (أو لو شيت المتابعة بتاعك بنفس الأعمدة أصلاً، افتحه على طول واعمل عليه Save As) 3) ارفعه هنا واضغط «معاينة» 4) راجع الصفوف واضغط «استورد».
+      <br><b>لو Save As مفيهاش «CSV UTF-8»:</b> اختار بدالها <b>Unicode Text (*.txt)</b> من نفس قائمة النوع (موجودة في كل نسخ الإكسيل) واحفظ بيها — ارفع الملف <code>.txt</code> اللي طلع بدل الـCSV، هيشتغل بنفس الطريقة بالظبط.
+      <br><b>المقرر:</b> زي <code>12:30 AM - 12:40 AM</code>. <b>الفعلي:</b> عمودين منفصلين بنفس صيغة <code>1:13 AM</code>. سيب أي خانة فاضية أو حط <code>***</code> لو مش معروفة.
+      <br><b>التاريخ:</b> يوم/شهر بس زي <code>7/8</code> (وهياخد السنة من الخانة تحت) أو تاريخ كامل <code>2026-07-08</code> — لو الخانة فاضية هياخد «التاريخ الافتراضي».
+    </div>
+
+    <div class="atm-add-bar" style="grid-template-columns:.7fr 1fr 1fr auto">
+      <label>سنة التواريخ (لو الشيت كاتب يوم/شهر بس)
+        <input type="number" id="simYear" min="2020" max="2100" style="padding:9px 11px">
+      </label>
+      <label>التاريخ الافتراضي (للصفوف الفاضية تمامًا)
+        <input type="date" id="simDefaultDate">
+      </label>
+      <label>ملف الشيت (CSV)
+        <input type="file" id="simFile" accept=".csv,.txt" style="padding:7px 8px">
+      </label>
+      <button class="btnp" id="simTemplateBtn" style="margin-top:auto;padding:9px 18px;white-space:nowrap">⬇️ تنزيل القالب</button>
+    </div>
+
+    <div id="simPreviewWrap" style="margin-top:16px;display:none">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+        <span id="simSummary" style="font-size:12.5px;font-weight:800;color:var(--muted)"></span>
+        <span style="flex:1"></span>
+        <button class="btnp" id="simImportBtn">💾 استورد الصفوف دي</button>
+      </div>
+      <div style="max-height:340px;overflow:auto;border:1px solid var(--border);border-radius:var(--radius-sm)">
+        <table class="atm-table" id="simTable" style="margin-bottom:0"></table>
+      </div>
+    </div>
+
+    <span id="simMsg" style="display:block;margin-top:12px;font-size:12.5px;font-weight:800;min-height:18px"></span>
+  </div>
+</div>
+
+<!-- ░░ Capacity & Workload Dashboard (أدمن + مصرّح لهم) ░░ -->
+<div class="modal-ov cap-ov" id="capModal">
+  <div class="cap-box">
+    <div class="cap-hero">
+      <div class="cap-hero-ic"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="7" rx="1"/><rect x="12" y="7" width="3" height="11" rx="1"/><rect x="17" y="4" width="3" height="14" rx="1"/></svg></div>
+      <div class="cap-hero-t">
+        <h2>تحليل السعة والحِمل <span class="tag" style="background:color-mix(in srgb,#a855f7 18%,transparent);color:#c084fc;font-size:10px">أدمن</span></h2>
+        <p>كام رسالة بتيجي · كل زميل بيرد كام في الساعة · هل التيم متحمّل زيادة ومحتاجين زملاء أكتر؟</p>
+      </div>
+      <button class="modal-x cap-x" id="capClose">×</button>
+    </div>
+
+    <div class="cap-scroll">
+      <!-- Period bar -->
+      <div class="lvbar cap-bar">
+        <label>من<input type="date" id="capFrom"></label>
+        <label>إلى<input type="date" id="capTo"></label>
+        <span class="btnp-apply-wrap"><button class="btnp-apply" id="capApply"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg><span>تحليل</span></button></span>
+        <span class="sp" style="flex:1"></span>
+        <button class="lvchip" id="capCycle">الدورة ٢٠→</button>
+        <button class="lvchip" id="capLast7">آخر ٧ أيام</button>
+        <button class="lvchip on" id="capToday">النهاردة</button>
+      </div>
+
+      <div id="capBody">
+        <div class="cap-empty" id="capEmpty">🕹️ اختر الفترة واضغط «تحليل» — أو دوس شيب سريع.</div>
+
+        <!-- Verdict banner -->
+        <div class="cap-verdict" id="capVerdict" style="display:none"></div>
+
+        <!-- KPI grid -->
+        <div class="cap-kpis" id="capKpis" style="display:none"></div>
+
+        <!-- Hourly demand chart -->
+        <div class="cap-card" id="capHourlyCard" style="display:none">
+          <div class="cap-card-h">
+            <h3>📈 توزيع الرسائل على ساعات اليوم <span class="cap-sub" id="capHourlySub"></span></h3>
+            <button class="cap-fetch-btn" id="capFetchBtn" title="جلب حجم الرسائل الداخلة الحقيقي من فيسبوك">🔴 جلب الحجم الداخل الحقيقي</button>
+          </div>
+          <div class="cap-hours" id="capHours"></div>
+          <div class="cap-legend" id="capLegend"></div>
+          <div class="cap-fetch-status" id="capFetchStatus"></div>
+        </div>
+
+        <!-- Per-agent table -->
+        <div class="cap-card" id="capAgentsCard" style="display:none">
+          <div class="cap-card-h">
+            <h3>👥 كل زميل — الحِمل في الساعة</h3>
+            <span class="cap-sub">اكتب ساعات شغل كل زميل يدوي (بتتحفظ) عشان نحسب المعدّل بالساعة</span>
+          </div>
+          <div class="cap-table-wrap"><table class="cap-table" id="capAgents"></table></div>
+        </div>
+
+        <!-- Channels + settings row -->
+        <div class="cap-grid2">
+          <div class="cap-card" id="capChanCard" style="display:none">
+            <div class="cap-card-h"><h3>📡 القنوات</h3></div>
+            <div class="cap-chans" id="capChans"></div>
+          </div>
+          <div class="cap-card" id="capSettingsCard" style="display:none">
+            <div class="cap-card-h"><h3>⚙️ الإعدادات</h3></div>
+            <label class="cap-set-row">الطاقة المريحة لكل زميل في الساعة (رسالة/ساعة)
+              <input type="number" id="capTarget" min="1" max="500" value="15">
+            </label>
+            <div class="cap-set-note">دي المرجع اللي بنقارن بيه الحِمل الفعلي — لو المعدّل عدّاها يبقى التيم متحمّل زيادة.</div>
+            <button class="btnp" id="capSaveSettings" style="margin-top:10px">💾 حفظ الإعدادات</button>
+            <span id="capSetMsg" style="display:block;margin-top:8px;font-size:12px;font-weight:800;min-height:16px"></span>
+          </div>
+        </div>
+
+        <!-- Permissions (admin only) -->
+        <div class="cap-card" id="capPermCard" style="display:none">
+          <div class="cap-card-h"><h3>🔑 الصلاحيات <span class="cap-sub">مين يقدر يفتح التحليل ده غير الأدمن</span></h3></div>
+          <div class="cap-perm-list" id="capPermList"></div>
+          <div class="cap-perm-add">
+            <input id="capPermInput" placeholder="إيميل الزميل اللي هيشوف التحليل (زي name@gmail.com)" autocomplete="off">
+            <button class="btnp" id="capPermAddBtn">+ إضافة</button>
+          </div>
+          <span id="capPermMsg" style="display:block;margin-top:8px;font-size:12px;font-weight:800;min-height:16px"></span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1311,7 +1557,7 @@ async function analyzeAgentReplies(){
   try{
     anStatusSet("⏳ جارٍ جلب المحادثات…");
     const convIds=[]; const seenConvIds=new Set(); const convCustomers={}; let after="";
-    while(convIds.length<3000){
+    while(convIds.length<10000000){
       const params={ fields:"id,updated_time,participants", limit:200 };
       if(after) params.after=after;
       const data=await gFetch(`${fbPageId}/conversations`, params);
@@ -1580,6 +1826,7 @@ async function loadRoster(){
   }catch(e){ console.error("roster",e); fbRoster = SEED_ROSTER.map(n => ({name:n, active:true})); }
   renderRoster(); fillAgentSelect();
   if(typeof fillScheduleAgentSelect==="function") fillScheduleAgentSelect();
+  if(fbIsAdmin && el("bulkBfCard") && typeof renderBulkBfChips==="function") renderBulkBfChips();
   // لو البوديوم اترسم قبل ما الروستر يوصل، ارسمه تاني بالصور
   if(_podLastResults && _podLastResults.length) renderFbPodium(_podLastResults);
 }
@@ -1669,7 +1916,7 @@ async function saveEntry(){
   if(!agent)   return fbMsg("entryMsg","اختر الزميل", false);
   if(!channel) return fbMsg("entryMsg","اختر القناة (إجباري)", false);
   const m = msgsRaw==="" ? 0 : Number(msgsRaw);
-  if(!Number.isFinite(m) || m<0 || m>3000) return fbMsg("entryMsg","عدد رسائل غير صحيح (0–3000)", false);
+  if(!Number.isFinite(m) || m<0 || m>10000000) return fbMsg("entryMsg","عدد رسائل غير صحيح (0–10000000)", false);
   let o = 0;
   if(ordRaw!==""){ o = Number(ordRaw); if(!Number.isFinite(o) || o<0 || o>500) return fbMsg("entryMsg","عدد أوردرات غير صحيح (0–500)", false); }
   const date = el("eDate").value || todayISO();
@@ -1767,13 +2014,14 @@ function initEntry(){
   if(fbIsAdmin && el("rosterCard")) el("rosterCard").style.display = "";
   if(fbIsAdmin && el("bulkBfCard")){
     el("bulkBfCard").style.display = "";
-    const sel=el("bulkBfAgent");
-    if(sel && !sel.options.length){
-      sel.innerHTML = `<option value="">— اختر الزميل —</option>` +
-        Object.values(AGENT_TAGS).sort((a,b)=>a.localeCompare(b,'ar')).map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join("");
-    }
+    renderBulkBfChips();
     const bfBtn=el("bulkBfBtn");
-    if(bfBtn && !bfBtn.dataset.wired){ bfBtn.dataset.wired="1"; bfBtn.onclick=bulkBackfillReplies; }
+    if(bfBtn && !bfBtn.dataset.wired){
+      bfBtn.dataset.wired="1";
+      bfBtn.onclick=bulkBackfillReplies;
+      if(el("bulkBfAll"))  el("bulkBfAll").onclick  = () => setAllBulkBfChips(true);
+      if(el("bulkBfNone")) el("bulkBfNone").onclick = () => setAllBulkBfChips(false);
+    }
   }
   loadRoster();
   loadFbPhotos();
@@ -2349,6 +2597,20 @@ function listenShifts(){
   }, e => console.warn("shifts",e));
 }
 /* «سجّل سلوت لزميل» اتشال (2026-07-05) — الزميل بيسجّل سلوته بنفسه من my-fb.html */
+/* بادچ القناة على كارت السلوت — نفس القنوات المستخدمة في فورم الإدخال/my-fb */
+function chanBadge(channel){
+  const c = String(channel||"").trim();
+  if(!c) return '';
+  const MAP = {
+    "إنبوكس":       {ic:"📥", cls:""},
+    "نوتيفيكيشن":   {ic:"🔔", cls:"ch-notif"},
+    "كومنت":        {ic:"💬", cls:"ch-comment"},
+    "إنستجرام":     {ic:"📸", cls:"ch-insta"},
+    "تاسك":         {ic:"📋", cls:"ch-task"}
+  };
+  const m = MAP[c] || {ic:"📡", cls:"ch-none"};
+  return `<span class="sc-chan ${m.cls}">${m.ic} ${esc(c)}</span>`;
+}
 function renderShifts(rows){
   const box = el("shiftsCards"); if(!box) return;
   if(el("shiftDateLbl")) el("shiftDateLbl").textContent = shiftRangeLabel();
@@ -2385,9 +2647,10 @@ function renderShifts(rows){
     const badge = done ? '<span class="sc-badge done">مكتمل</span>' : '<span class="sc-badge pending">بانتظار</span>';
     const nightBadge = isOvernight ? '<span class="sc-badge" style="background:color-mix(in srgb,#7c6eff 16%,transparent);color:#9d92ff">🌙 ليلية</span>' : '';
     const msgs = (+r.messages>0) ? `<div class="sc-stats"><span class="sc-pill p-msgs"><span class="pn">${(+r.messages).toLocaleString('ar-EG')}</span><span class="pl">رد</span></span><span class="sc-pill p-convs"><span class="pn">${(+(r.convs||0)).toLocaleString('ar-EG')}</span><span class="pl">محادثة</span></span></div>` : '';
+    const chan = chanBadge(r.channel);
     return `<div class="slot-card ${done?'done':'pending'}" data-id="${esc(r.id)}">
       <div class="sc-top"><span class="sc-name">${esc(r.agent||'?')}</span>${badge}${nightBadge}</div>
-      <div class="sc-row">📅 <span class="sc-date">${esc(r.date||'—')}</span></div>
+      <div class="sc-row">📅 <span class="sc-date">${esc(r.date||'—')}</span>${chan?`<span style="margin-inline-start:auto">${chan}</span>`:''}</div>
       <div class="sc-row">🕐 مقرر: <b>${slot}</b></div>
       <div class="sc-row">✅ فعلي: <b>${actual}</b></div>
       ${msgs}
@@ -2401,13 +2664,14 @@ function openSlotModal(id){
   _smId = id;
   el("smName").textContent = r.agent || "—";
   const slot = (r.fromTime||r.toTime) ? `السلوت المقرر ${fmtRange(r.fromTime,r.toTime)}` : "بدون سلوت مقرر";
-  el("smSub").innerHTML = `${esc(r.date||'')} · ${slot}`;
+  el("smSub").innerHTML = `${esc(r.date||'')} · ${slot}${r.channel?` · ${chanBadge(r.channel)}`:''}`;
   el("smActualFrom").value = r.actualFrom || r.fromTime || "";
   el("smActualTo").value   = r.actualTo || r.toTime || "";
   el("smMsgs").value = (r.messages!=null && r.messages!=="") ? r.messages : "";
   _smLastConvs = +(r.convs||0);
   el("smStatus").textContent = "";
   el("smNote").style.display = "none";
+  if(el("smDiag")){ el("smDiag").style.display="none"; el("smDiag").innerHTML=""; }
   const tag = NAME_TO_TAG[r.agent];
   if(!tag){ el("smNote").style.display=""; el("smNote").textContent = "⚠ مفيش هاشتاج معرّف للزميل ده — زر «جيب عدد الردود» مش هيشتغل."; }
   const canSave = fbIsAdmin || r.by === fbEmail;
@@ -2459,43 +2723,79 @@ async function countAgentReplies(tag, fromMs, toMs, statusFn){
   }
   return {msgs, convs:convSet.size, scanned:convIds.length};
 }
-/* ── جلب دفعة واحدة لزميل (بدل جلب كل سلوت لوحده — أسرع بكتير لزميل عنده سلوتات كتير
-   من غير عدد ردود). مسح شبكة واحد بس يغطي كل فترة السلوتات، وبعدين كل رد بيتوزّع
-   على السلوت المناسب حسب created_time بتاعه. ── */
+/* ── جلب دفعة واحدة لزميل أو أكتر (بدل جلب كل سلوت/كل زميل لوحده — أسرع بكتير).
+   مسح شبكة واحد بس يغطي كل فترة السلوتات لكل الزملاء المختارين، وبعدين كل رد بيتوزّع
+   على سلوت الزميل الصح (حسب هاشتاجه + created_time بتاعه). المسح (~٣٠٠٠ رسالة) هو التقيل،
+   فاختيار كذا زميل مع بعض بيعمل المسح ده مرة واحدة بدل مرة لكل زميل. ── */
+const _bulkBfSelected = new Set();
+function bulkBfNames(){
+  // الزملاء اللي ليهم هاشتاج بس (اللي بلا هاشتاج مش هينعدّ ليهم رد)
+  return [...new Set(fbRoster.map(a=>a.name).filter(Boolean).concat(Object.values(AGENT_TAGS)))]
+    .filter(n=>NAME_TO_TAG[n]).sort((a,b)=>a.localeCompare(b,'ar'));
+}
+function renderBulkBfChips(){
+  const box=el("bulkBfChips"); if(!box) return;
+  const names=bulkBfNames();
+  // نظّف أي اسم مختار اتشال من الروستر
+  [..._bulkBfSelected].forEach(n=>{ if(!names.includes(n)) _bulkBfSelected.delete(n); });
+  box.innerHTML = names.map(n=>`<span class="bulkbf-chip ${_bulkBfSelected.has(n)?'on':''}" data-n="${esc(n)}">${esc(n)}</span>`).join("")
+    || '<div class="note" style="margin:0">مفيش زملاء بهاشتاج بعد — ضيف الهاشتاجات من «هشتاجات الفريق».</div>';
+  box.querySelectorAll(".bulkbf-chip").forEach(c=>{
+    c.onclick=()=>{
+      const n=c.dataset.n;
+      if(_bulkBfSelected.has(n)){ _bulkBfSelected.delete(n); c.classList.remove("on"); }
+      else { _bulkBfSelected.add(n); c.classList.add("on"); }
+    };
+  });
+}
+function setAllBulkBfChips(on){
+  _bulkBfSelected.clear();
+  if(on) bulkBfNames().forEach(n=>_bulkBfSelected.add(n));
+  renderBulkBfChips();
+}
 let bulkBfBusy=false;
 async function bulkBackfillReplies(){
   if(bulkBfBusy) return;
-  const name=el("bulkBfAgent").value;
-  const tag=NAME_TO_TAG[name];
-  const fromDate=el("bulkBfFrom").value, toDate=el("bulkBfTo").value;
-  const overwrite=el("bulkBfOverwrite").checked;
   const st=t=>{ const e=el("bulkBfStatus"); if(e){ e.style.display=""; e.textContent=t; } };
-  if(!name){ st("⚠ اختر الزميل"); return; }
-  if(!tag){ st("⚠ مفيش هاشتاج معرّف لاسم الزميل ده"); return; }
+  const names=[..._bulkBfSelected];
+  const fromDate=el("bulkBfFrom").value, toDate=el("bulkBfTo").value;
+  const fromTime=el("bulkBfFromTime").value||"00:00", toTime=el("bulkBfToTime").value||"23:59";
+  const overwrite=el("bulkBfOverwrite").checked;
+  if(!names.length){ st("⚠ اختر زميل واحد على الأقل"); return; }
   if(!fromDate||!toDate){ st("⚠ اختر من تاريخ ولـ تاريخ"); return; }
   if(fromDate>toDate){ st("⚠ البداية بعد النهاية"); return; }
   if(!fbToken||!fbPageId){ st("⚠ إعدادات فيسبوك مش متظبطة — التوكن من صفحة اللايف"); return; }
+  const winFrom=new Date(`${fromDate}T${fromTime}:00+03:00`).getTime();
+  const winTo  =new Date(`${toDate}T${toTime}:59+03:00`).getTime();
+  if(!Number.isFinite(winFrom)||!Number.isFinite(winTo)||winFrom>winTo){ st("⚠ نطاق الساعة مش صحيح"); return; }
   bulkBfBusy=true; const btn=el("bulkBfBtn"); if(btn) btn.disabled=true;
   try{
-    st("⏳ جارٍ جلب سلوتات الزميل…");
-    const q1=query(collection(db,"fbLog"),where("agent","==",name),where("date",">=",fromDate),where("date","<=",toDate));
-    const snap=await getDocs(q1);
-    const slots=[];
-    snap.forEach(d=>{
-      const r=d.data();
-      if(!r.actualFrom||!r.actualTo) return;               // سلوت لسه ماخلصش (مفيش وقت فعلي)
-      if(!overwrite && r.messages!=null) return;           // متعدود بالفعل
-      const fMs=new Date(`${r.date}T${r.actualFrom}:00+03:00`).getTime();
-      const tMs=new Date(`${r.date}T${r.actualTo}:59+03:00`).getTime();
-      if(!Number.isFinite(fMs)||!Number.isFinite(tMs)||fMs>tMs) return;
-      slots.push({id:d.id, fromMs:fMs, toMs:tMs, convSet:new Set(), msgs:0});
-    });
-    if(!slots.length){ st("ℹ️ مفيش سلوتات محتاجة جلب في الفترة دي (أو كلها متعدودة بالفعل — استخدم «أعد الحساب» لو عايز تراجعها)."); return; }
+    st(`⏳ جارٍ جلب سلوتات ${names.length} زميل…`);
+    const slots=[]; const slotsByTag={};
+    for(const name of names){
+      const tag=NAME_TO_TAG[name]; if(!tag) continue;
+      const q1=query(collection(db,"fbLog"),where("agent","==",name),where("date",">=",fromDate),where("date","<=",toDate));
+      const snap=await getDocs(q1);
+      snap.forEach(d=>{
+        const r=d.data();
+        if(!r.actualFrom||!r.actualTo) return;               // سلوت لسه ماخلصش (مفيش وقت فعلي)
+        if(!overwrite && +r.messages>0) return;              // متعدود بالفعل (0 = لسه ماتجابش، زي سلوتات الشيت المستورد)
+        const fMs=new Date(`${r.date}T${r.actualFrom}:00+03:00`).getTime();
+        const tMs=new Date(`${r.date}T${r.actualTo}:59+03:00`).getTime();
+        if(!Number.isFinite(fMs)||!Number.isFinite(tMs)||fMs>tMs) return;
+        if(tMs<winFrom||fMs>winTo) return;                   // بره نطاق الساعة المختار
+        const slot={id:d.id, agent:name, tag, fromMs:fMs, toMs:tMs, convSet:new Set(), msgs:0};
+        slots.push(slot);
+        (slotsByTag[tag]=slotsByTag[tag]||[]).push(slot);
+      });
+    }
+    if(!slots.length){ st("ℹ️ مفيش سلوتات محتاجة جلب في الفترة دي (أو كلها متعدودة بالفعل — استخدم «أعد الحساب»، أو وسّع نطاق الساعة)."); return; }
     slots.sort((a,b)=>a.fromMs-b.fromMs);
     const globalFrom=slots[0].fromMs, globalTo=Math.max(...slots.map(s=>s.toMs));
-    st(`⏳ ${slots.length} سلوت — جارٍ جلب المحادثات (مرة واحدة لكل الفترة)…`);
+    const selTags=new Set(names.map(n=>NAME_TO_TAG[n]).filter(Boolean));
+    st(`⏳ ${slots.length} سلوت لـ ${names.length} زميل — جارٍ جلب المحادثات (مرة واحدة للكل)…`);
     const convIds=[]; const seenConvIds=new Set(); let after="";
-    while(convIds.length<3000){
+    while(convIds.length<10000000){
       const params={ fields:"id,updated_time", limit:200 };
       if(after) params.after=after;
       const data=await gFetch(`${fbPageId}/conversations`, params);
@@ -2524,8 +2824,9 @@ async function bulkBackfillReplies(){
           if(mt<globalFrom){ hitOld=true; break; }
           if(mt>globalTo) continue;
           if(String(m.from?.id)!==String(fbPageId)) continue;
-          if(extractAgentTag(m.message||"")!==tag) continue;
-          const slot=slots.find(s=>mt>=s.fromMs&&mt<=s.toMs);
+          const mtag=extractAgentTag(m.message||"");
+          if(!mtag||!selTags.has(mtag)) continue;
+          const slot=(slotsByTag[mtag]||[]).find(s=>mt>=s.fromMs&&mt<=s.toMs);
           if(slot){ slot.msgs++; slot.convSet.add(convIds[i]); }
         }
         msgAfter=md.paging?.cursors?.after||"";
@@ -2539,8 +2840,12 @@ async function bulkBackfillReplies(){
       saved++;
       if(saved%10===0) st(`💾 ${saved}/${slots.length}…`);
     }
+    // ملخّص لكل زميل
+    const perAgent={};
+    slots.forEach(s=>{ perAgent[s.agent]=(perAgent[s.agent]||0)+s.msgs; });
+    const summary=Object.entries(perAgent).map(([n,v])=>`${n.split(" ")[0]}: ${v}`).join(" · ");
     const totMsgs=slots.reduce((a,s)=>a+s.msgs,0);
-    st(`✅ خلصنا — ${slots.length} سلوت اتحدّث (${totMsgs} رد إجمالي) من مسح ${convIds.length} محادثة بس.`);
+    st(`✅ خلصنا — ${slots.length} سلوت لـ ${names.length} زميل (${totMsgs} رد إجمالي) من مسح ${convIds.length} محادثة مرة واحدة${summary?` | ${summary}`:""}`);
   }catch(e){ st("❌ "+e.message); }
   finally{ bulkBfBusy=false; const b=el("bulkBfBtn"); if(b) b.disabled=false; }
 }
@@ -2565,6 +2870,96 @@ async function smFetchReplies(){
     st(`✅ ${res.msgs} رد · ${res.convs} محادثة (فحصنا ${res.scanned})`);
   }catch(e){ st("❌ "+e.message); }
   finally{ smBusy=false; b.disabled=false; }
+}
+/* ── تشخيص العدّ لسلوت واحد — بيوضّح ليه الرقم طلع كده: كل رسائل الصفحة في الفترة،
+   كام اتحسبت لك (#tag)، وكام رسالة صفحة معدّتش وليه (بدون هاشتاج / هاشتاج مش في الآخر /
+   هاشتاج زميل تاني). بيقرا بس — مابيحفظش حاجة. ── */
+async function smDiagnose(){
+  if(smBusy) return;
+  const r=_shiftRows[_smId]; if(!r) return;
+  const tag=NAME_TO_TAG[r.agent];
+  const from=el("smActualFrom").value, to=el("smActualTo").value;
+  const date=r.date||todayISO();
+  const st=t=>{ el("smStatus").textContent=t; };
+  const box=el("smDiag");
+  if(!tag){ st("⚠ مفيش هاشتاج معرّف للزميل ده"); return; }
+  if(!from||!to){ st("⚠ حدّد «بدأ فعلي» و«انتهى فعلي» أول"); return; }
+  if(!fbToken||!fbPageId){ st("⚠ إعدادات فيسبوك مش متظبطة — التوكن من صفحة اللايف"); return; }
+  const fromMs=new Date(`${date}T${from}:00+03:00`).getTime();
+  const toMs  =new Date(`${date}T${to}:59+03:00`).getTime();
+  if(fromMs>toMs){ st("⚠ البداية بعد النهاية"); return; }
+  smBusy=true; const b=el("smDiagBtn"); if(b) b.disabled=true;
+  if(box){ box.style.display=""; box.innerHTML="⏳ جارٍ التشخيص…"; }
+  const PAD=30*60000;                 // ٣٠ دقيقة قبل/بعد الفترة عشان نكشف الردود «القريّبة بس بره الحدود»
+  const padFrom=fromMs-PAD, padTo=toMs+PAD;
+  try{
+    // اجمع المحادثات (بنافذة أوسع ٣٠ دقيقة عشان نمسك الردود اللي قبل/بعد الفترة بشوية)
+    const convIds=[]; const seen=new Set(); let after=""; const CAP=3000;
+    while(convIds.length<CAP){
+      const params={fields:"id,updated_time",limit:200}; if(after)params.after=after;
+      const data=await gFetch(`${fbPageId}/conversations`,params);
+      const convs=data.data||[]; if(!convs.length)break;
+      let old=false;
+      for(const c of convs){ const t=new Date(c.updated_time).getTime(); if(t<padFrom){old=true;break;} if(seen.has(c.id))continue; seen.add(c.id); convIds.push(c.id); }
+      after=data.paging?.cursors?.after||"";
+      if(old||!data.paging?.next||!after)break;
+    }
+    const capHit = convIds.length>=CAP;
+    let pageMsgs=0, mine=0, nearMine=0, otherTag=0, noTag=0;
+    const perConv={};                 // convId → عدد ردودك المتهشتجة جوّه الفترة
+    const nearConv=new Set();          // محادthات فيها ردّ ليك بره الفترة بشوية
+    const misses=[], nears=[];         // أمثلة
+    for(let i=0;i<convIds.length;i++){
+      if(i%10===0) st(`⏳ فحص ${i+1}/${convIds.length} محادثة…`);
+      let ma="";
+      while(true){
+        const mp={fields:"from,created_time,message",limit:50}; if(ma)mp.after=ma;
+        const md=await gFetch(`${convIds[i]}/messages`,mp);
+        let old=false;
+        for(const m of (md.data||[])){
+          const mt=new Date(m.created_time).getTime();
+          if(mt<padFrom){old=true;break;}
+          if(mt>padTo)continue;
+          if(String(m.from?.id)!==String(fbPageId))continue;    // رسايل الصفحة بس
+          const inWin = mt>=fromMs && mt<=toMs;
+          const mtag=extractAgentTag(m.message||"");
+          if(mtag===tag){
+            if(inWin){ mine++; perConv[convIds[i]]=(perConv[convIds[i]]||0)+1; }
+            else { nearMine++; nearConv.add(convIds[i]); const side=mt<fromMs?"قبل البداية":"بعد النهاية"; if(nears.length<20)nears.push({why:side, text:m.message||""}); }
+          } else if(inWin){
+            pageMsgs++;                 // رسالة صفحة جوّه الفترة بس مش ردّك المتهشتج
+            if(mtag){ otherTag++; if(misses.length<20)misses.push({why:`هاشتاج زميل تاني #${mtag}`, text:m.message||""}); }
+            else { noTag++; if(misses.length<20)misses.push({why:"بدون هاشتاج (أو مش في آخر الرسالة)", text:m.message||""}); }
+          }
+        }
+        ma=md.paging?.cursors?.after||"";
+        if(old||!md.paging?.next||!ma)break;
+      }
+    }
+    pageMsgs+=mine;                    // إجمالي رسائل الصفحة جوّه الفترة = ردودك + غيرها
+    const convWithMine=Object.keys(perConv).length;
+    const multi=Object.values(perConv).filter(v=>v>1).length;
+    let html=`<b>الفترة ${fmt12(from)} → ${fmt12(to)}</b> · فحصنا ${convIds.length} محادثة${capHit?' <b style="color:var(--red)">(وصلنا الحد الأقصى — ممكن يكون فيه محادثات أقدم اتفوّتت)</b>':''}<br>`;
+    html+=`📨 إجمالي رسائل الصفحة جوّه الفترة: <b>${pageMsgs}</b><br>`;
+    html+=`✅ ردودك المتهشتجة جوّه الفترة (#${tag}): <b>${mine}</b> في <b>${convWithMine}</b> محادثة — `;
+    html+= multi ? `<b>${multi}</b> محادثة فيها أكتر من رد ✔️` : `كل محادثة فيها رد متهشتج واحد`;
+    html+=`<br>🕒 <b>ردودك المتهشتجة القريّبة بس بره الفترة (±٣٠ق): <span style="color:${nearMine?'var(--amber)':'var(--muted)'}">${nearMine}</span></b> في ${nearConv.size} محادثة`;
+    if(nearMine>0){
+      html+=`<br><span style="color:var(--muted)"><b>دي غالبًا سبب فرق الشيت اليدوي:</b> ردود ليك فعلًا بس وقتها قبل «بدأ فعلي» أو بعد «انتهى فعلي» — العدّ اليدوي كان بيعدّها، والنظام بيحصرها جوّه وقت السلوت بالظبط. لو عايز تضمّها، وسّع «بدأ/انتهى فعلي» في السلوت وأعد الجلب.</span>`;
+    }
+    html+=`<br>↩️ رسائل صفحة بهاشتاج زميل تاني: <b>${otherTag}</b> · ⚠️ رسائل صفحة مش متهشتجة ليك: <b style="color:${noTag?'var(--red)':'var(--green)'}">${noTag}</b>`;
+    if(noTag>0){
+      html+=`<br><span style="color:var(--muted)">لو دي ردود ليك، يبقى الهاشتاج مش في <b>آخر</b> الرسالة (فيه كلام بعده) أو ناقص — النظام بيعدّ بس الرسالة اللي بتنتهي بالهاشتاج.</span>`;
+    }
+    const ex = [...nears.map(x=>({...x,kind:'near'})), ...misses.map(x=>({...x,kind:'miss'}))];
+    if(ex.length){
+      html+=`<hr style="border:none;border-top:1px solid var(--border);margin:8px 0">أمثلة:`;
+      html+=ex.map(x=>`<div style="margin:4px 0;padding-inline-start:8px;border-inline-start:2px solid ${x.kind==='near'?'var(--amber)':'var(--border)'}"><span style="color:var(--muted);font-size:11px">[${x.kind==='near'?'ردّك بره الفترة — '+esc(x.why):esc(x.why)}]</span><br>${esc((x.text||"").replace(/\s+/g," ").slice(0,90))||"<em>(رسالة بدون نص — صورة/ملف)</em>"}</div>`).join("");
+    }
+    box.innerHTML=html;
+    st(`✅ تشخيص: ${mine} جوّه الفترة${nearMine?` · ${nearMine} قريّبة بره الفترة`:''}`);
+  }catch(e){ st("❌ "+e.message); if(box) box.innerHTML="❌ "+esc(e.message); }
+  finally{ smBusy=false; if(b) b.disabled=false; }
 }
 async function smSave(){
   const r = _shiftRows[_smId]; if(!r) return;
@@ -2619,10 +3014,217 @@ async function batchFetchShiftReplies(){
   finally{ if(btn) btn.disabled=false; }
 }
 
+/* ── استيراد شيت يدوي: نفس شكل شيت المتابعة (شيفتات) اللي بيتسجّل فيه وقت خلوص الكوتا ←
+   يترفع ← يتاستورد identical لسلوت اتسجّل من الموقع. عدد الردود مش جزء من الشيت — بيتحسب
+   بعد الاستيراد بزرار «جلب ردود كل الشفتات دفعة واحدة» الموجود بالفعل. ── */
+const SIM_COLS = ["date","agent","slot","actualFromRaw","actualToRaw","channel"];
+const SIM_HEADER = ["التاريخ","الاسم","المقرر","بداية الفترة الفعلية","نهاية الفترة الفعلية","القناة"];
+let _simRows = [];
+
+function simCsvLine(cells){
+  return cells.map(c => {
+    c = String(c==null?"":c);
+    return /[",\n]/.test(c) ? '"'+c.replace(/"/g,'""')+'"' : c;
+  }).join(",");
+}
+function downloadSheetTemplate(){
+  const examples = [
+    ["7/8","Mohamed Khalifa","12:30 AM - 12:40 AM","12:40 AM","1:13 AM","إنبوكس"],
+    ["7/8","Ali M Ibrahim","","3:39 AM","3:50 AM","كومنت"],
+    ["7/8","Sherif Ahmed","12:40 AM - 12:50 AM","***","1:18 AM","إنبوكس"]
+  ];
+  const csv = "﻿" + [SIM_HEADER, ...examples].map(simCsvLine).join("\r\n") + "\r\n";
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "fb-sheet-template.csv";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+}
+// بارسر CSV بسيط بيراعي quotes وفاصلة/تاب جوّه الخلية
+function simParseCSV(text){
+  const delim = text.includes("\t") && !text.split(/\r?\n/)[0].includes(",") ? "\t" : ",";
+  const lines = text.replace(/^﻿/,"").split(/\r?\n/).filter(l => l.trim()!=="");
+  return lines.map(line => {
+    const cells = []; let cur = ""; let inQ = false;
+    for(let i=0;i<line.length;i++){
+      const ch = line[i];
+      if(inQ){
+        if(ch === '"'){ if(line[i+1] === '"'){ cur+='"'; i++; } else inQ=false; }
+        else cur += ch;
+      } else {
+        if(ch === '"') inQ = true;
+        else if(ch === delim){ cells.push(cur); cur=""; }
+        else cur += ch;
+      }
+    }
+    cells.push(cur);
+    return cells.map(c => c.trim());
+  });
+}
+function simMatchAgent(raw){
+  const r = String(raw||"").trim();
+  if(!r) return "";
+  const names = fbRoster.map(a=>a.name).concat(Object.values(AGENT_TAGS));
+  let hit = names.find(n => n.toLowerCase() === r.toLowerCase());
+  if(hit) return hit;
+  hit = names.find(n => n.toLowerCase().includes(r.toLowerCase()) || r.toLowerCase().includes(n.toLowerCase()));
+  return hit || "";
+}
+// "1:13 AM" / "12:00 PM" → "13:13" / "12:00" (24h، زي input[type=time]). "***"/"--"/فاضي → "" من غير تحذير.
+function simTo24h(raw){
+  const t = String(raw||"").trim();
+  if(!t || t==="***" || t==="--") return {val:"", issue:false};
+  const m = t.match(/^(\d{1,2}):(\d{2})\s*([AaPp][Mm])$/);
+  if(!m) return {val:"", issue:true};
+  let h = +m[1]; const mm = m[2]; const ap = m[3].toUpperCase();
+  if(ap==="AM"){ if(h===12) h=0; } else if(h!==12) h+=12;
+  return {val:String(h).padStart(2,"0")+":"+mm, issue:false};
+}
+// "12:30 AM - 12:40 AM" → {from,to,issue}. فاضي = بدون سلوت مقرر (زي إدخالات النوتيفيكيشن/كومنت).
+function simSplitSlot(raw){
+  const t = String(raw||"").trim();
+  if(!t) return {from:"", to:"", issue:false};
+  const parts = t.split(/\s+-\s+/);
+  if(parts.length !== 2) return {from:"", to:"", issue:true};
+  const a = simTo24h(parts[0]), b = simTo24h(parts[1]);
+  return {from:a.val, to:b.val, issue:a.issue||b.issue};
+}
+// "7/8" (يوم/شهر بلا سنة) + سنة ← "2026-07-08". تاريخ ISO كامل بيرجع زي ما هو.
+function simToISODate(raw, year){
+  const t = String(raw||"").trim();
+  if(!t) return "";
+  if(/^\d{4}-\d{2}-\d{2}$/.test(t)) return t;
+  const m = t.match(/^(\d{1,2})\/(\d{1,2})$/);
+  if(m && year) return `${year}-${String(+m[1]).padStart(2,"0")}-${String(+m[2]).padStart(2,"0")}`;
+  return t;
+}
+function simBuildRows(raw){
+  let lines = simParseCSV(raw);
+  if(lines.length && lines[0][0] && lines[0][0] === SIM_HEADER[0]) lines = lines.slice(1);
+  const defDate = el("simDefaultDate").value || todayISO();
+  const year = el("simYear").value || todayISO().slice(0,4);
+  return lines.map(cells => {
+    const c = {}; SIM_COLS.forEach((k,i)=>{ c[k] = (cells[i]||"").trim(); });
+    const agentMatch = simMatchAgent(c.agent);
+    const date = simToISODate(c.date, year) || defDate;
+    const dateOk = /^\d{4}-\d{2}-\d{2}$/.test(date);
+    const slot = simSplitSlot(c.slot);
+    const af = simTo24h(c.actualFromRaw), at = simTo24h(c.actualToRaw);
+    const timeIssue = slot.issue || af.issue || at.issue;
+    return {
+      date,
+      agent: agentMatch || c.agent,
+      agentRaw: c.agent,
+      agentMatched: !!agentMatch,
+      channel: c.channel,
+      fromTime: slot.from, toTime: slot.to,
+      actualFrom: af.val, actualTo: at.val,
+      timeIssue,
+      ok: dateOk && !!agentMatch && !!c.channel.trim()
+    };
+  });
+}
+function renderSimPreview(){
+  const names = fbRoster.map(a=>a.name);
+  const okCount = _simRows.filter(r=>r.ok).length;
+  const timeIssues = _simRows.filter(r=>r.timeIssue).length;
+  el("simSummary").textContent = `${_simRows.length} صف — ${okCount} جاهز للاستيراد` +
+    (_simRows.length-okCount>0 ? ` · ⚠ ${_simRows.length-okCount} محتاج مراجعة (الاسم/القناة)` : "") +
+    (timeIssues ? ` · ⏰ ${timeIssues} وقت مش مفهوم (هيتسجّل فاضي)` : "");
+  el("simTable").innerHTML = `<tr><th>#</th><th>التاريخ</th><th>الاسم</th><th>القناة</th><th>مقرر</th><th>فعلي</th><th>حالة</th></tr>` +
+    _simRows.map((r,i)=>{
+      const slot = r.fromTime||r.toTime ? `${esc(r.fromTime)}–${esc(r.toTime)}` : "—";
+      const actual = r.actualFrom||r.actualTo ? `${esc(r.actualFrom)}–${esc(r.actualTo)}` : "—";
+      const agentCell = r.agentMatched
+        ? `<b>${esc(r.agent)}</b>`
+        : `<select data-i="${i}" class="sim-agent-fix" style="font-family:inherit;font-size:12.5px;font-weight:700;background:var(--card-2);border:1px solid var(--red);border-radius:6px;padding:3px 6px">
+             <option value="">— ${esc(r.agentRaw)||"فاضي"} (اختر) —</option>
+             ${names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join("")}
+           </select>`;
+      const badge = (r.ok ? '<span class="tag good">✓</span>' : '<span class="tag bad">⚠</span>') + (r.timeIssue ? ' ⏰' : '');
+      return `<tr>
+        <td style="color:var(--muted)">${i+1}</td>
+        <td>${esc(r.date)}</td>
+        <td>${agentCell}</td>
+        <td>${esc(r.channel)||'<span style="color:var(--red)">فاضي</span>'}</td>
+        <td>${slot}</td>
+        <td>${actual}</td>
+        <td>${badge}</td>
+      </tr>`;
+    }).join("");
+  el("simTable").querySelectorAll(".sim-agent-fix").forEach(sel=>{
+    sel.onchange = () => {
+      const i = +sel.dataset.i;
+      _simRows[i].agent = sel.value; _simRows[i].agentMatched = !!sel.value;
+      _simRows[i].ok = _simRows[i].agentMatched && /^\d{4}-\d{2}-\d{2}$/.test(_simRows[i].date) && !!_simRows[i].channel.trim();
+      renderSimPreview();
+    };
+  });
+  el("simPreviewWrap").style.display = "";
+}
+function simHandleFile(file){
+  const reader = new FileReader();
+  reader.onload = () => {
+    _simRows = simBuildRows(String(reader.result||""));
+    if(!_simRows.length){ el("simMsg").textContent = "⚠ الملف فاضي أو الصيغة غلط"; return; }
+    el("simMsg").textContent = "";
+    renderSimPreview();
+  };
+  reader.onerror = () => { el("simMsg").textContent = "❌ تعذّرت قراءة الملف"; };
+  reader.readAsText(file, "UTF-8");
+}
+let simImportBusy = false;
+async function simImportRows(){
+  if(simImportBusy) return;
+  const rows = _simRows.filter(r=>r.ok);
+  if(!rows.length){ el("simMsg").textContent = "⚠ مفيش صفوف جاهزة (راجع الأسماء الحمرا فوق)"; return; }
+  if(!confirm(`هيتسجّل ${rows.length} سلوت في fbLog فوق الموجود بالفعل — متأكد؟`)) return;
+  simImportBusy = true;
+  const btn = el("simImportBtn"); if(btn) btn.disabled = true;
+  let done = 0, failed = 0;
+  for(const r of rows){
+    try{
+      await addDoc(collection(db,"fbLog"), {
+        date: r.date, ym: ymOf(r.date), agent: r.agent, channel: r.channel.trim(),
+        fromTime: r.fromTime, toTime: r.toTime,
+        actualFrom: r.actualFrom, actualTo: r.actualTo,
+        messages: 0, orders: 0, note: "",
+        by: fbEmail, at: serverTimestamp()
+      });
+      done++;
+    }catch(e){ console.error("sim import row failed", r, e); failed++; }
+    el("simMsg").textContent = `⏳ ${done+failed}/${rows.length}…`;
+  }
+  el("simMsg").textContent = failed
+    ? `⚠ اتسجّل ${done} واتفشل ${failed} — افتح الـ console للتفاصيل`
+    : `✅ اتسجّل ${done} سلوت في fbLog — دلوقتي دوس «📊 جلب ردود كل الشفتات دفعة واحدة» فوق عشان يتحسب عدد الردود`;
+  simImportBusy = false; if(btn) btn.disabled = false;
+  _simRows = [];
+  el("simPreviewWrap").style.display = "none";
+  if(el("simFile")) el("simFile").value = "";
+}
+function openSheetImportModal(){
+  if(!el("simDefaultDate").value) el("simDefaultDate").value = todayISO();
+  if(!el("simYear").value) el("simYear").value = todayISO().slice(0,4);
+  el("simMsg").textContent = ""; el("simPreviewWrap").style.display = "none"; _simRows = [];
+  el("sheetImportModal").classList.add("open");
+}
+function closeSheetImportModal(){ el("sheetImportModal").classList.remove("open"); }
+function initSheetImport(){
+  if(el("sheetImportOpenBtn")) el("sheetImportOpenBtn").onclick = openSheetImportModal;
+  if(el("simClose"))    el("simClose").onclick    = closeSheetImportModal;
+  if(el("simTemplateBtn")) el("simTemplateBtn").onclick = downloadSheetTemplate;
+  if(el("simImportBtn")) el("simImportBtn").onclick = simImportRows;
+  if(el("simFile")) el("simFile").onchange = e => { if(e.target.files[0]) simHandleFile(e.target.files[0]); };
+  if(el("sheetImportModal")) el("sheetImportModal").addEventListener("click", e=>{ if(e.target===el("sheetImportModal")) closeSheetImportModal(); });
+}
+
 function initShifts(){
   if(!shAssignSetup){
     shAssignSetup = true;
     if(fbIsAdmin && el("batchBar"))     el("batchBar").style.display="flex";
+    initSheetImport();
     // فترة كروت الشفتات — الديفولت النهاردة (تاريخ + وقت)، والمستخدم يقدر يغيّرها
     if(el("shvFromDate")) el("shvFromDate").value = shvFrom;
     if(el("shvToDate"))   el("shvToDate").value   = shvTo;
@@ -2641,6 +3243,7 @@ function initShifts(){
     const af=el("shiftAgentFilter"); if(af) af.onchange=()=>renderShifts(_allShiftRows);
     if(el("smClose"))    el("smClose").onclick    = closeSlotModal;
     if(el("smFetchBtn")) el("smFetchBtn").onclick = smFetchReplies;
+    if(el("smDiagBtn"))  el("smDiagBtn").onclick  = smDiagnose;
     if(el("smSaveBtn"))  el("smSaveBtn").onclick  = smSave;
     if(el("slotModal"))  el("slotModal").addEventListener("click", e=>{ if(e.target===el("slotModal")) closeSlotModal(); });
   }
@@ -2655,6 +3258,326 @@ function showGate(title, msg){
   el("gateTitle").textContent = title;
   el("gateMsg").textContent = msg;
 }
+/* ═══════════ تحليل السعة والحِمل (Capacity & Workload) ═══════════
+   الهدف: نعرف كام رسالة بتيجي، كل زميل بيرد كام في الساعة، وهل التيم متحمّل زيادة ومحتاجين
+   زملاء أكتر. مصدرين: (١) فوري من السلوتات المسجّلة في fbLog · (٢) اختياري: جلب حجم الرسائل
+   الداخلة الحقيقي من فيسبوك. ساعات كل زميل تتدخل يدوي وتتخزن في appConfig/fbCapacityConfig.
+   الوصول: أدمن + إيميلات مصرّح لها (تتدار من نفس الموديل). ══════════════════════════ */
+const CAP_CFG_REF = doc(db,"appConfig","fbCapacityConfig");
+let _capCfg = { hours:{}, target:15, grants:[] };
+let _capData = null;        // آخر تحليل سلوتات
+let _capIncoming = null;    // آخر جلب لحجم الرسائل الداخلة (مصفوفة ٢٤ ساعة)
+let capSetup = false, capBusy = false;
+const capFmt = n => Number(n||0).toLocaleString('ar-EG');
+const capCanEdit = () => fbIsAdmin;
+function capHasAccess(){
+  if(fbIsAdmin) return true;
+  const e=(fbEmail||"").trim().toLowerCase();
+  return Array.isArray(_capCfg.grants) && _capCfg.grants.map(x=>String(x).trim().toLowerCase()).includes(e);
+}
+async function loadCapConfig(){
+  try{
+    const s=await getDoc(CAP_CFG_REF);
+    if(s.exists()){
+      const d=s.data();
+      _capCfg = { hours:d.hours||{}, target:+d.target||15, grants:Array.isArray(d.grants)?d.grants:[] };
+    }
+  }catch(e){ console.warn("capacity config",e); }
+}
+function initCapacity(){
+  // البوابة: يظهر الزرار للأدمن أو المصرّح لهم بس
+  loadCapConfig().then(()=>{
+    if(capHasAccess() && el("capacityBtn")) el("capacityBtn").style.display="";
+  });
+  if(capSetup) return; capSetup=true;
+  if(el("capacityBtn")) el("capacityBtn").onclick = openCapModal;
+  if(el("capClose"))    el("capClose").onclick    = closeCapModal;
+  if(el("capModal"))    el("capModal").addEventListener("click", e=>{ if(e.target===el("capModal")) closeCapModal(); });
+  if(el("capApply"))    el("capApply").onclick    = () => { const a=el("capFrom").value, b=el("capTo").value; if(!a&&!b){ toast("اختر الفترة","err"); return; } capSetRange(a||b, b||a, ""); };
+  if(el("capCycle"))    el("capCycle").onclick    = () => { const [a,b]=cycleFrom20(); capSetRange(a,b,"capCycle"); };
+  if(el("capLast7"))    el("capLast7").onclick    = () => { const b=todayISO(), a=isoOf(new Date(Date.now()-6*86400000)); capSetRange(a,b,"capLast7"); };
+  if(el("capToday"))    el("capToday").onclick    = () => capSetRange(todayISO(), todayISO(), "capToday");
+  if(el("capFetchBtn")) el("capFetchBtn").onclick = capFetchIncoming;
+  if(el("capSaveSettings")) el("capSaveSettings").onclick = capSaveSettings;
+  if(el("capPermAddBtn"))   el("capPermAddBtn").onclick   = capAddPerm;
+}
+function openCapModal(){
+  if(!capHasAccess()){ toast("مالكش صلاحية للتحليل ده","err"); return; }
+  el("capModal").classList.add("open");
+  if(el("capTarget")) el("capTarget").value = _capCfg.target||15;
+  // إظهار كروت الأدمن بس
+  if(el("capSettingsCard")) el("capSettingsCard").style.display = fbIsAdmin ? "" : "none";
+  if(el("capPermCard"))     el("capPermCard").style.display     = fbIsAdmin ? "" : "none";
+  if(fbIsAdmin) capRenderPerms();
+  if(!_capData){ const [a,b]=cycleFrom20(); capSetRange(a,b,"capCycle"); }
+}
+function closeCapModal(){ el("capModal").classList.remove("open"); }
+function capSetRange(a,b,chip){
+  if(a>b){ const t=a; a=b; b=t; }
+  if(el("capFrom")) el("capFrom").value=a;
+  if(el("capTo"))   el("capTo").value=b;
+  ["capCycle","capLast7","capToday"].forEach(x=>{ const e=el(x); if(e) e.classList.toggle("on", x===chip); });
+  capAnalyze();
+}
+async function capAnalyze(){
+  const from=el("capFrom").value, to=el("capTo").value;
+  const setEmpty=t=>{ if(el("capEmpty")){ el("capEmpty").style.display=""; el("capEmpty").textContent=t; } };
+  if(!from||!to){ setEmpty("اختر الفترة واضغط «تحليل»."); return; }
+  setEmpty("⏳ جارٍ تحليل السلوتات…");
+  try{
+    const q=query(collection(db,"fbLog"), where("date",">=",from), where("date","<=",to));
+    const snap=await getDocs(q);
+    const rows=snap.docs.map(d=>d.data());
+    const agents={}, chan={}, days=new Set();
+    const hourly=new Array(24).fill(0), hourlyConv=new Array(24).fill(0);
+    let totalReplies=0, totalConvs=0;
+    rows.forEach(r=>{
+      if(r.date) days.add(r.date);
+      const name=r.agent||"؟";
+      const a=agents[name]=agents[name]||{replies:0,convs:0,slots:0,mins:0};
+      const rep=+r.messages||0, cv=+r.convs||0;
+      a.replies+=rep; a.convs+=cv; a.slots++;
+      totalReplies+=rep; totalConvs+=cv;
+      // مدة السلوت الفعلية (للعرض المرجعي بس — الساعات المعتمدة يدوية)
+      const fm=_hm(r.actualFrom||r.fromTime), tm=_hm(r.actualTo||r.toTime);
+      if(fm!=null&&tm!=null&&tm>=fm) a.mins+=(tm-fm);
+      const c=(r.channel||"").trim()||"غير محدد";
+      chan[c]=(chan[c]||0)+rep;
+      const h=parseInt(String(r.actualFrom||r.fromTime||"").split(":")[0]);
+      if(!isNaN(h)&&h>=0&&h<24){ hourly[h]+=rep; hourlyConv[h]+=cv; }
+    });
+    _capData={ agents, chan, hourly, hourlyConv, numDays:days.size||1, from, to, totalReplies, totalConvs };
+    _capIncoming=null;   // فترة جديدة — امسح الجلب القديم
+    if(el("capEmpty")) el("capEmpty").style.display="none";
+    capRender();
+  }catch(e){ console.error(e); setEmpty("❌ تعذّر التحليل — تأكد إن الـ rules منشورة. "+e.message); }
+}
+function capAgentHours(name){ return +(_capCfg.hours?.[name])||0; }
+function capRender(){
+  if(!_capData) return;
+  const d=_capData;
+  const names=Object.keys(d.agents).sort((a,b)=>d.agents[b].replies-d.agents[a].replies);
+  const teamSize=names.length;
+  const totalHours=names.reduce((s,n)=>s+capAgentHours(n),0);
+  const target=+_capCfg.target||15;
+  const perDay = d.numDays ? d.totalReplies/d.numDays : 0;
+  const throughput = totalHours>0 ? d.totalReplies/totalHours : 0;  // رد لكل ساعة-زميل
+
+  // ── Verdict ──
+  const vb=el("capVerdict");
+  if(vb){
+    vb.style.display="";
+    if(totalHours<=0){
+      vb.className="cap-verdict warn";
+      vb.innerHTML=`<span class="cv-ic">✍️</span><div>أدخل <b>ساعات شغل كل زميل</b> في الجدول تحت الأول — من غيرها مش هنقدر نحسب الحِمل في الساعة ولا نعرف إذا كنتوا محتاجين زملاء أكتر.</div>`;
+    } else {
+      const loadPct=Math.round(throughput/target*100);
+      let cls,ic,msg;
+      if(loadPct<=75){ cls="ok"; ic="✅"; msg=`التيم مرتاح — بيرد <b>${throughput.toFixed(1)}</b> رد/ساعة لكل زميل، وده <b>${loadPct}%</b> من الطاقة المريحة (${target}/ساعة). فيه مساحة لو زاد الشغل.`; }
+      else if(loadPct<=105){ cls="warn"; ic="⚠️"; msg=`التيم شغّال قريّب من الحد — <b>${throughput.toFixed(1)}</b> رد/ساعة لكل زميل (<b>${loadPct}%</b> من الطاقة المريحة ${target}/ساعة). راقب، وأي زيادة هتضغط عليهم.`; }
+      else {
+        const neededHours=d.totalReplies/target;
+        const extraHours=Math.max(0,neededHours-totalHours);
+        const avgPerAgent=totalHours/teamSize;
+        const extraAgents=avgPerAgent>0?Math.ceil(extraHours/avgPerAgent):0;
+        cls="over"; ic="🔴";
+        msg=`التيم <b>متحمّل زيادة</b> — بيرد <b>${throughput.toFixed(1)}</b> رد/ساعة لكل زميل، وده <b>${loadPct}%</b> من الطاقة المريحة (${target}/ساعة). عشان ترجع لمستوى مريح محتاج تقريبًا <b>${capFmt(Math.ceil(extraHours))}</b> ساعة شغل زيادة${extraAgents?` ≈ <b>${capFmt(extraAgents)}</b> زميل إضافي`:''} على نفس الفترة.`;
+      }
+      vb.className="cap-verdict "+cls;
+      vb.innerHTML=`<span class="cv-ic">${ic}</span><div>${msg}</div>`;
+    }
+  }
+
+  // ── KPIs ──
+  const kp=el("capKpis");
+  if(kp){
+    kp.style.display="";
+    const avgHr=teamSize?totalHours/teamSize:0;
+    kp.innerHTML=[
+      ["👥",capFmt(teamSize),"عدد التيم","زميل شغّال في الفترة"],
+      ["⏱️",totalHours?capFmt(totalHours):"—","إجمالي ساعات الشغل",totalHours?`متوسط ${avgHr.toFixed(1)} ساعة/زميل`:"أدخلها يدوي تحت"],
+      ["💬",capFmt(d.totalReplies),"إجمالي الردود",`${capFmt(Math.round(perDay))} رد/يوم في المتوسط`],
+      ["🗨️",capFmt(d.totalConvs),"إجمالي المحادثات","العملاء اللي اترد عليهم"],
+      ["⚡",totalHours?throughput.toFixed(1):"—","رد/ساعة لكل زميل",totalHours?`الطاقة المريحة ${target}`:"محتاج الساعات"],
+      ["📅",capFmt(d.numDays),"عدد الأيام",`${d.from} → ${d.to}`]
+    ].map((k,i)=>`<div class="cap-kpi${i===4?' accent':''}"><div class="ck-v">${k[0]} ${k[1]}</div><div class="ck-l">${k[2]}</div><div class="ck-x">${k[3]}</div></div>`).join("");
+  }
+
+  capRenderHourly();
+  capRenderAgents(names, target);
+  capRenderChans();
+}
+function capRenderHourly(){
+  const card=el("capHourlyCard"); if(!card||!_capData) return;
+  card.style.display="";
+  const d=_capData, nd=d.numDays||1;
+  const repAvg=d.hourly.map(v=>v/nd);
+  const inAvg=_capIncoming ? _capIncoming.map(v=>v/nd) : null;
+  // النطاق النشط
+  let lo=0, hi=23;
+  const active=h=>repAvg[h]>0||(inAvg&&inAvg[h]>0);
+  while(lo<23&&!active(lo)) lo++;
+  while(hi>0&&!active(hi)) hi--;
+  if(lo>hi){ lo=0; hi=23; }
+  const maxV=Math.max(1,...repAvg,...(inAvg||[0]));
+  let bars="";
+  for(let h=lo;h<=hi;h++){
+    const rv=repAvg[h], iv=inAvg?inAvg[h]:0;
+    const peak = rv>0 && rv===Math.max(...repAvg);
+    const fillH=Math.round(rv/maxV*100);
+    const extra=inAvg?Math.max(0,iv-rv):0;
+    const extraH=Math.round(extra/maxV*100);
+    const title=`الساعة ${fmt12(h+":00")} — رد: ${rv.toFixed(1)}/يوم${inAvg?` · داخل: ${iv.toFixed(1)}/يوم`:''}`;
+    bars+=`<div class="cap-hbar" title="${esc(title)}">
+      <div class="chb-v">${rv>=1?Math.round(rv):(rv>0?rv.toFixed(1):"")}</div>
+      <div style="width:100%;display:flex;flex-direction:column;justify-content:flex-end;flex:1">
+        ${extraH>0?`<div class="chb-in" style="height:${extraH}%"></div>`:''}
+        <div class="chb-fill ${peak?'peak':''}" style="height:${fillH}%"></div>
+      </div>
+      <div class="chb-h">${fmt12(h+":00")}</div>
+    </div>`;
+  }
+  el("capHours").innerHTML=bars;
+  if(el("capHourlySub")) el("capHourlySub").textContent = `(متوسط اليوم · ${d.numDays} يوم)`;
+  if(el("capLegend")) el("capLegend").innerHTML =
+    `<span><i style="background:var(--fb)"></i> ردود الفريق (اتخدمت)</span>`+
+    (inAvg?`<span><i style="background:repeating-linear-gradient(45deg,var(--red),var(--red) 3px,transparent 3px,transparent 6px)"></i> رسائل داخلة زيادة عن اللي اترد (نقص تغطية)</span>`
+          :`<span style="opacity:.75">دوس «جلب الحجم الداخل الحقيقي» عشان تقارن الطلب باللي اترد فعلاً</span>`);
+}
+function capRenderAgents(names, target){
+  const box=el("capAgents"); if(!box||!_capData) return;
+  el("capAgentsCard").style.display="";
+  const d=_capData, canEdit=capCanEdit();
+  let rows=`<tr><th>الزميل</th><th>ساعات الشغل</th><th>ردود</th><th>محادثات</th><th>رد/ساعة</th><th>الحِمل</th></tr>`;
+  rows+=names.map(n=>{
+    const a=d.agents[n], hrs=capAgentHours(n);
+    const perHr=hrs>0?a.replies/hrs:0;
+    const pct=hrs>0?Math.round(perHr/target*100):0;
+    const col=pct>105?'var(--red)':pct>75?'var(--amber)':'var(--green)';
+    const hoursCell=canEdit
+      ? `<input class="cap-hrs-in" type="number" min="0" max="24" step="0.5" value="${hrs||''}" placeholder="—" data-n="${esc(n)}">`
+      : `<span class="ct-num">${hrs?capFmt(hrs):'—'}</span>`;
+    const loadCell=hrs>0
+      ? `<span class="cap-load"><span class="cap-load-bar"><i style="width:${Math.min(100,pct)}%;background:${col}"></i></span><span class="cap-load-pct" style="color:${col}">${pct}%</span></span>`
+      : `<span class="cap-sub">محتاج ساعات</span>`;
+    return `<tr>
+      <td class="ct-name">${esc(n)}</td>
+      <td>${hoursCell}</td>
+      <td class="ct-num">${capFmt(a.replies)}</td>
+      <td class="ct-num">${capFmt(a.convs)}</td>
+      <td class="ct-num">${hrs>0?perHr.toFixed(1):'—'}</td>
+      <td>${loadCell}</td>
+    </tr>`;
+  }).join("");
+  box.innerHTML=rows;
+  if(canEdit){
+    box.querySelectorAll(".cap-hrs-in").forEach(inp=>{
+      inp.onchange=async()=>{
+        const n=inp.dataset.n, v=Math.max(0,Math.min(24,+inp.value||0));
+        _capCfg.hours=_capCfg.hours||{};
+        if(v>0) _capCfg.hours[n]=v; else delete _capCfg.hours[n];
+        try{ await setDoc(CAP_CFG_REF,{hours:_capCfg.hours, updatedAt:serverTimestamp(), updatedBy:fbEmail},{merge:true}); }
+        catch(e){ toast("فشل حفظ الساعات (صلاحية؟)","err"); }
+        capRender();   // إعادة حساب الحِمل والـverdict
+      };
+    });
+  }
+}
+function capRenderChans(){
+  const box=el("capChans"); if(!box||!_capData) return;
+  el("capChanCard").style.display="";
+  const ent=Object.entries(_capData.chan).sort((a,b)=>b[1]-a[1]);
+  const tot=ent.reduce((s,[,v])=>s+v,0)||1;
+  box.innerHTML=ent.map(([c,v])=>{
+    const pct=Math.round(v/tot*100);
+    return `<div class="cap-chan-row"><span class="cc-nm">${esc(c)}</span><span class="cc-bar"><i style="width:${pct}%"></i></span><span class="cc-v">${capFmt(v)} · ${pct}%</span></div>`;
+  }).join("") || '<div class="cap-sub">لا بيانات قنوات.</div>';
+}
+async function capFetchIncoming(){
+  if(capBusy) return;
+  if(!_capData){ toast("اعمل تحليل الأول","err"); return; }
+  const status=t=>{ if(el("capFetchStatus")) el("capFetchStatus").textContent=t; };
+  if(!fbToken||!fbPageId){ status("⚠ التوكن مش متظبط — من صفحة اللايف"); return; }
+  const from=_capData.from, to=_capData.to;
+  const fromMs=new Date(`${from}T00:00:00+03:00`).getTime();
+  const toMs  =new Date(`${to}T23:59:59+03:00`).getTime();
+  const dayspan=(toMs-fromMs)/86400000;
+  if(dayspan>7 && !confirm(`الفترة ${Math.ceil(dayspan)} يوم — الجلب هيمسح كل المحادثات فيها وممكن ياخد وقت طويل. تكمّل؟`)) return;
+  capBusy=true; const btn=el("capFetchBtn"); if(btn) btn.disabled=true;
+  try{
+    status("⏳ جارٍ جلب المحادثات…");
+    const convIds=[]; const seen=new Set(); let after="";
+    while(convIds.length<8000){
+      const params={fields:"id,updated_time",limit:200}; if(after)params.after=after;
+      const data=await gFetch(`${fbPageId}/conversations`,params);
+      const convs=data.data||[]; if(!convs.length)break;
+      let old=false;
+      for(const c of convs){ const t=new Date(c.updated_time).getTime(); if(t<fromMs){old=true;break;} if(seen.has(c.id))continue; seen.add(c.id); convIds.push(c.id); }
+      after=data.paging?.cursors?.after||"";
+      if(old||!data.paging?.next||!after)break;
+    }
+    const inHour=new Array(24).fill(0); let total=0;
+    for(let i=0;i<convIds.length;i++){
+      if(i%20===0) status(`⏳ فحص ${i+1}/${convIds.length} محادثة…`);
+      let ma="";
+      while(true){
+        const mp={fields:"from,created_time",limit:50}; if(ma)mp.after=ma;
+        const md=await gFetch(`${convIds[i]}/messages`,mp);
+        let old=false;
+        for(const m of (md.data||[])){
+          const mt=new Date(m.created_time).getTime();
+          if(mt<fromMs){old=true;break;}
+          if(mt>toMs)continue;
+          if(String(m.from?.id)===String(fbPageId))continue;   // رسايل العملاء بس (مش الصفحة)
+          const h=new Date(mt+3*3600000).getUTCHours();
+          inHour[h]++; total++;
+        }
+        ma=md.paging?.cursors?.after||"";
+        if(old||!md.paging?.next||!ma)break;
+      }
+    }
+    _capIncoming=inHour;
+    capRenderHourly();
+    status(`✅ ${capFmt(total)} رسالة عميل داخلة في الفترة (من ${capFmt(convIds.length)} محادثة)`);
+  }catch(e){ status("❌ "+e.message); }
+  finally{ capBusy=false; const b=el("capFetchBtn"); if(b) b.disabled=false; }
+}
+async function capSaveSettings(){
+  if(!fbIsAdmin) return;
+  const t=Math.max(1,Math.min(500,+el("capTarget").value||15));
+  _capCfg.target=t;
+  try{
+    await setDoc(CAP_CFG_REF,{target:t, updatedAt:serverTimestamp(), updatedBy:fbEmail},{merge:true});
+    if(el("capSetMsg")){ el("capSetMsg").textContent="✅ اتحفظ"; el("capSetMsg").style.color="var(--green)"; }
+    capRender();
+  }catch(e){ if(el("capSetMsg")){ el("capSetMsg").textContent="❌ فشل الحفظ"; el("capSetMsg").style.color="var(--red)"; } }
+}
+function capRenderPerms(){
+  const box=el("capPermList"); if(!box) return;
+  const gr=Array.isArray(_capCfg.grants)?_capCfg.grants:[];
+  box.innerHTML = gr.length
+    ? gr.map(e=>`<div class="cap-perm-item">📧 ${esc(e)}<button class="cpi-del" data-e="${esc(e)}" title="إزالة">×</button></div>`).join("")
+    : '<div class="cap-sub">مفيش حد مصرّح له غير الأدمن. أضف إيميلات تحت.</div>';
+  box.querySelectorAll(".cpi-del").forEach(b=>{ b.onclick=()=>capDelPerm(b.dataset.e); });
+}
+async function capAddPerm(){
+  if(!fbIsAdmin) return;
+  const inp=el("capPermInput"); const e=(inp.value||"").trim().toLowerCase();
+  const msg=(t,ok)=>{ if(el("capPermMsg")){ el("capPermMsg").textContent=t; el("capPermMsg").style.color=ok?"var(--green)":"var(--red)"; } };
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){ msg("⚠ إيميل غير صحيح",false); return; }
+  _capCfg.grants=Array.isArray(_capCfg.grants)?_capCfg.grants:[];
+  if(_capCfg.grants.map(x=>x.toLowerCase()).includes(e)){ msg("موجود بالفعل",false); return; }
+  _capCfg.grants.push(e);
+  try{ await setDoc(CAP_CFG_REF,{grants:_capCfg.grants, updatedAt:serverTimestamp(), updatedBy:fbEmail},{merge:true}); inp.value=""; msg("✅ اتضاف",true); capRenderPerms(); }
+  catch(err){ msg("❌ فشل الحفظ",false); }
+}
+async function capDelPerm(email){
+  if(!fbIsAdmin) return;
+  _capCfg.grants=(_capCfg.grants||[]).filter(x=>x.toLowerCase()!==String(email).toLowerCase());
+  try{ await setDoc(CAP_CFG_REF,{grants:_capCfg.grants, updatedAt:serverTimestamp(), updatedBy:fbEmail},{merge:true}); capRenderPerms(); }
+  catch(e){ toast("فشل الحفظ","err"); }
+}
+
 function showApp(displayName){
   el("gate").style.display = "none";
   el("mainHdr").style.display = "";
@@ -2665,6 +3588,7 @@ function showApp(displayName){
   initScrollSpy();
   loadAgentTags();
   initOrdersDrawer();
+  initCapacity();
   if(fbIsAdmin){ initTagsModal(); loadFbBranches().then(()=>{ renderBrmModal(); }); initBranchMgr(); }
 }
 
@@ -2697,6 +3621,7 @@ async function loadAgentTags(){
       NAME_TO_TAG = Object.fromEntries(Object.entries(AGENT_TAGS).map(([t,n])=>[n,t]));
     }
   }catch(e){ /* fallback to hardcoded */ }
+  if(fbIsAdmin && el("bulkBfCard") && typeof renderBulkBfChips==="function") renderBulkBfChips();
 }
 
 /* ── Modal ── */
