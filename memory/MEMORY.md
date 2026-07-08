@@ -10,3 +10,4 @@
 - [softec-edara-rpa](softec-edara-rpa.md) — الملف الرئيسي: الهدف، نتائج فحص سوفتيك، خريطة ربط الحقول إدارة↔سوفتيك، الـ workflow، المعمار
 - [softec-edara-branch-rdp-map](softec-edara-branch-rdp-map.md) — خريطة الفروع/IPs/بيانات دخول RDP
 - [softec-edara-safety-feedback](softec-edara-safety-feedback.md) — قاعدة صارمة: مفيش فعل حقيقي على سوفتيك/إدارة من غير إذن صريح لكل خطوة
+- [codes-automation](codes-automation.md) — نظرة عامة نظيفة (بدون أسرار) على مشروع أتمتة الأكواد + حالة البناء الحالية
